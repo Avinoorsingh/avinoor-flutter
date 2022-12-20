@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class LocationList {
   bool? success;
   List<LocationData>? data;
@@ -6,7 +8,9 @@ class LocationList {
 
   LocationList.fromJson(var json) {
     data =  [];
-    print(json);
+    if (kDebugMode) {
+      print(json);
+    }
     for(var data1 in json){
       data?.add(LocationData.fromJson(data1));    
       }

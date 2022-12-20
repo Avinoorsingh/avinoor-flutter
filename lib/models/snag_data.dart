@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class SnagData {
   String? status;
   List<FetchSnagData>? data;
@@ -10,8 +12,10 @@ class SnagData {
       try {
          data?.add(FetchSnagData.fromJson(data1));   
       } catch (e) {
-        print("Errorrrrrrr!!!!");
-        print(e);
+        if (kDebugMode) {
+            print("Errorrrrrrr!!!!");
+          print(e);
+        }
       } 
       }
   }

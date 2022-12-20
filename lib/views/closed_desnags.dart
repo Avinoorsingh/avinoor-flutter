@@ -36,10 +36,9 @@ class _NewSnagState extends State<ClosedDeSnags> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');;
+    var outputFormat = DateFormat('dd/MM/yyyy');
     return GetBuilder<GetClosedSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
-     print(signInController.getSnagDataClosedList!.data);
      if(signInController.getSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getSnagDataClosedList!.data!.length;i++){
        subLocationName.add(signInController.getSnagDataClosedList!.data![i].subLocation!.subLocationName);

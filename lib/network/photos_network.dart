@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:colab/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -83,13 +81,13 @@ class PhotosNetwork {
       //   //             : null,
       //     },
       //     token: token!);
-      print("upload photo success");
-      print(response);
       return response;
     } catch (e) {
       EasyLoading.dismiss();
-      print('nhi hui upload');
-      print(e);
+      if (kDebugMode) {
+        print('nhi hui upload');
+           print(e);
+      }
     }
   }
 }

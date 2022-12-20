@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class SubLocationList {
   String? status;
   List<SubLocationData>? data;
@@ -6,7 +8,9 @@ class SubLocationList {
 
   SubLocationList.fromJson(var json) {
     data =  [];
-    print(json);
+    if (kDebugMode) {
+      print(json);
+    }
     for(var data1 in json){
       data?.add(SubLocationData.fromJson(data1));    
       }

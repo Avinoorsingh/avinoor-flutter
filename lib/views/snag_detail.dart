@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:colab/views/activity_head.dart';
@@ -70,6 +69,7 @@ class _SnagState extends State<SnagDetail> {
  
    List<bool> isCardEnabled = [];
    List<bool> isCardEnabled2 = [];
+   List<String> deSnagImages=[];
    List<String> category=[
     "Safety",
     "Execution",
@@ -151,6 +151,7 @@ setState(() => this.image = imageTemp);
         viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].id,'deSnagImage':[]});
         if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
         viewpointID.add(widget.snagModel.snagViewpoint[i].id);
+        deSnagImages.add(widget.snagModel.snagViewpoint[i].desnagsFileName);
         }
       }
     }
@@ -213,7 +214,7 @@ setState(() => this.image = imageTemp);
             ),
             child: 
             Row(children: [
-             Text("Snag Creation Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse('${creationController.text}'))}",style: textStyleBodyText1,),
+             Text("Snag Creation Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(creationController.text))}",style: textStyleBodyText1,),
             ])
           ),
             Container(
@@ -295,7 +296,7 @@ setState(() => this.image = imageTemp);
             Center(child: Text(contractorInput.text.isEmpty?"Contractor":contractorInput.text,style: textStyleBodyText1,),),
             ])
           ),
-          if(markController.text.isNotEmpty && markController.text!=null)
+          if(markController.text.isNotEmpty)
             Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
@@ -313,7 +314,6 @@ setState(() => this.image = imageTemp);
             child:
             GestureDetector(
             onTap: () async {
-              print(markController.text);
               await showDialog(
                 useSafeArea: true,
                 context: context,
@@ -368,6 +368,15 @@ setState(() => this.image = imageTemp);
                     ],
                   ),
                     child:
+                    Column(children: [
+                          Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                        Center(child: Text("Snag Image",style: textStyleBodyText1,),),
+                        const SizedBox(width: 10,),
+                        Center(child: Text("De-Snag Image",style: textStyleBodyText1,),),
+                  ],),
+                  const SizedBox(height: 10,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -375,8 +384,7 @@ setState(() => this.image = imageTemp);
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(child: Text("Snag Image",style: textStyleBodyText1,),),
-                      Container(
+                      SizedBox(
                         // height: 200,
                         width: 100,
                         child:
@@ -410,7 +418,8 @@ setState(() => this.image = imageTemp);
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Center(child: Text("De-Snag Image",style: textStyleBodyText1,),),
+                      // ignore: unnecessary_null_comparison
+                      deSnagImages[outerIndex]==null ?
                        GestureDetector(
                       onTap: () async {
                         await showDialog(
@@ -435,7 +444,7 @@ setState(() => this.image = imageTemp);
                     stops: [0.0, 1.0],
                   ),
                 ),
-                child: widget.from!='new'?
+                child: widget.from!='new'  ?
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
@@ -476,14 +485,14 @@ setState(() => this.image = imageTemp);
                     child: Text(
                       'Upload Image',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 10,
                         color: Color(0xffffffff),
                         letterSpacing: -0.3858822937011719,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ): Container()
+                ):  Container()
               ):
                   SizedBox(
                    height: 100,
@@ -514,11 +523,17 @@ setState(() => this.image = imageTemp);
                     ),
                   ]
                 ),
-              ),
+              ):SizedBox(
+                  height: 150,
+                  width: 60,
+                  child: Image.network("https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}"),
+                    ),
             ],
           ),
         ]
       )
+                    ]
+                    )
                   // ),
                 ),
               ],
@@ -1000,12 +1015,13 @@ setState(() => this.image = imageTemp);
                       "snag_status": widget.from=="desnagnew"?"O":"N",
                             }
                             );
-                    print(res.statusCode);
                     EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom);          
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
-                     print(e); 
+                     if (kDebugMode) {
+                       print(e);
+                     } 
                     }
                 },
                 style: ElevatedButton.styleFrom(
@@ -1059,12 +1075,16 @@ setState(() => this.image = imageTemp);
                       "snag_status": "CWD",
                             }
                           );
-                    print(res.statusCode);
+                    if (kDebugMode) {
+                      print(res.statusCode);
+                    }
                     EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom);          
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
-                     print(e); 
+                     if (kDebugMode) {
+                       print(e);
+                     } 
                     }
               }, 
               style: ElevatedButton.styleFrom(
@@ -1104,12 +1124,16 @@ setState(() => this.image = imageTemp);
                       "snag_status": "C",
                             }
                             );
-                    print(res.statusCode);
+                    if (kDebugMode) {
+                      print(res.statusCode);
+                    }
                     EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom);          
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
-                     print(e); 
+                     if (kDebugMode) {
+                       print(e);
+                     } 
                     }
               }, 
               style: ElevatedButton.styleFrom(
@@ -1151,12 +1175,16 @@ setState(() => this.image = imageTemp);
                       "snag_status": "N",
                             }
                             );
-                    print(res.statusCode);
+                    if (kDebugMode) {
+                      print(res.statusCode);
+                    }
                     EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);          
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
-                     print(e); 
+                     if (kDebugMode) {
+                       print(e);
+                     } 
                     }
                   },
                 style: ElevatedButton.styleFrom(

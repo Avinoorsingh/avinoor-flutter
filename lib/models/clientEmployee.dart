@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ClientEmployee {
   bool? success;
   List<EmployeeData>? data;
@@ -10,8 +12,10 @@ class ClientEmployee {
       try {
       data?.add(EmployeeData.fromJson(data1)); 
       } catch (e) {
-        print("error is here!");
-        print(e);
+        if (kDebugMode) {
+          print("error is here!");
+             print(e);
+        }
       }   
       }
   }

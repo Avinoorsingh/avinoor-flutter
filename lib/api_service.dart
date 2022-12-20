@@ -116,8 +116,10 @@ static Future postJwtForm({
     );
     return {'status': response.statusCode, 'body': response.data};
     } catch (e) {
-      print("///////////////");
-      print(e);
+      if (kDebugMode) {
+        print("///////////////");
+        print(e);
+      }
     }
   }
 }

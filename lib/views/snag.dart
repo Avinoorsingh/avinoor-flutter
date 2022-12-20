@@ -1,21 +1,14 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:colab/views/ClosedSnags.dart';
 import 'package:colab/views/newSnags.dart';
 import 'package:colab/views/openedSnags.dart';
-import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../controller/signInController.dart';
-import '../network/client_project.dart';
 import '../services/bottom_tab_bar.dart';
 import '../services/helper/dependency_injector.dart';
+
 GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 
 class Snags extends StatefulWidget {

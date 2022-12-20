@@ -2,8 +2,6 @@ import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -66,8 +64,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   Widget build(BuildContext context) {
     return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
-      print("I am here!!");
-      print(signInController.getProjectData?.snagCount);
      EasyLoading.dismiss();
     return
     signInController.getProjectData?.clientid!=null?

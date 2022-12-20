@@ -146,7 +146,8 @@ class _NewSnagState extends State<NewSnag> {
                                     color:  Colors.grey[300],
                                     borderRadius: BorderRadius.circular(10)
                                   ),
-                            child:
+                            child:Container(
+                              child: 
                             InkWell(
                               onTap: (){
                                 context.pushNamed('SNAGDETAIL',
@@ -155,15 +156,18 @@ class _NewSnagState extends State<NewSnag> {
                                 print(snagData[index].snagViewpoint);
                               },
                               child: 
-                             Row(children: [
-                              Text("Snag Remark: ",style: textStyleHeadline4,overflow: TextOverflow.clip,),
+                             Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                              Text("Snag Remark: ",style: textStyleHeadline4,overflow: TextOverflow.ellipsis,),
                               Container(
-                                width: 330,
                                 child: 
-                               Text("${remark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,
+                               Text("${remark[index]}",overflow: TextOverflow.ellipsis,
+                               style: textStyleBodyText3.copyWith(fontSize: 14,color:Colors.black) ,
                                ))
                              ],)
                             ),
+                            )
                             ),
                             ]
                           )

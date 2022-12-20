@@ -38,7 +38,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['contractor_name'] = contractorName;
-    data['id'] = this.id;
+    data['id'] = id;
     return data;
   }
 }

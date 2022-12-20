@@ -50,6 +50,7 @@ class _MyProfilePageState extends State<AddSnag> {
   final projectId=TextEditingController();
   final clientId = TextEditingController();
   final categoryIDController=TextEditingController();
+  // ignore: non_constant_identifier_names
   final linking_activity_id=TextEditingController();
   final remarkController = TextEditingController();
   final debitToController=TextEditingController();
@@ -183,7 +184,6 @@ setState(() => this.image = imageTemp);
           assignedToList.add(signInController.getEmployeeList!.data![i].userId.toString());
           assignedToListIndex.add(signInController.getEmployeeList!.data![i].id!);
         }
-        print(assignedToList);
       }
       if(signInController.getCategoryList!.data!.isNotEmpty && categoryNew.isEmpty && categoryNew.isEmpty){
         List<Data>? categoryList=signInController.getCategoryList?.data;
@@ -198,7 +198,6 @@ setState(() => this.image = imageTemp);
         for(var data in locationList1!){
           locationList.add(data.locationName!);
         }
-        print(locationList);
       }
      EasyLoading.dismiss();
    // print(dropDownNotifier.value);
@@ -418,13 +417,8 @@ setState(() => this.image = imageTemp);
     ),
               isExpanded: true,
               items: null,
+              // ignore: unnecessary_null_comparison
               hint: Text(subV==null||subV.isEmpty?dropdownvalue2:subV, style:const TextStyle(color: Colors.black),),
-              // location2.map((String items){
-              //   return DropdownMenuItem(
-              //     value: items,
-              //     child: Text(items),
-              //   );
-              // }).toList(),
               onChanged: (String? newValue){
                 setState(() {
                   subLocationController.text=newValue!;
@@ -445,7 +439,7 @@ setState(() => this.image = imageTemp);
              setState(() {
               linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
               subSubV=value.substring(0,value.indexOf('}'));
-              subSubLocationController.text=value.substring(0,value.indexOf('}'));;
+              subSubLocationController.text=value.substring(0,value.indexOf('}'));
              });
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
@@ -501,7 +495,9 @@ setState(() => this.image = imageTemp);
                         }
                       }
                     } catch (e) {
-                      print(e);
+                      if (kDebugMode) {
+                        print(e);
+                      }
                     }
                   }
                           } catch (e) {
@@ -538,6 +534,7 @@ setState(() => this.image = imageTemp);
             ),
               isExpanded: true,
               items: null,
+              // ignore: unnecessary_null_comparison
               hint:  Text(subSubV==null||subSubV.isEmpty?dropdownvalue3:subSubV, style:const TextStyle(color: Colors.black),),
               onChanged: (String? newValue){
                 setState(() {
@@ -666,7 +663,6 @@ setState(() => this.image = imageTemp);
               shrinkWrap: true,
                 itemCount: viewpoints2.length,
                 itemBuilder: (context, index1) {
-                  print(viewpoints2);
                   return 
                   Column(children: [
         Row(children: [
@@ -882,9 +878,9 @@ setState(() => this.image = imageTemp);
                     lastDate: DateTime(2100));
  
                 if (pickedDate != null) {
-                  print(pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  //pickedDate output format => 2021-03-10 00:00:00.000
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                  print(formattedDate); //formatted date output using intl package =>  2021/03/16
+                  //formatted date output using intl package =>  2021/03/16
                   setState(() {
                     dateInput.text =formattedDate;
                      //set output date to TextField value.
@@ -986,7 +982,9 @@ setState(() => this.image = imageTemp);
                    setState(() {
                     snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)-1].toString();
                      dropdownvalueAssignedTo = newValue;
-                     print(assignedToListIndex[assignedToList.indexOf(newValue)]);
+                     if (kDebugMode) {
+                       print(assignedToListIndex[assignedToList.indexOf(newValue)]);
+                     }
                    });
                  },
                ),
@@ -1084,7 +1082,6 @@ setState(() => this.image = imageTemp);
                 }
                     if(viewpointsToSent.isNotEmpty){
                     for (var item in viewpointsToSent) {
-                      print(VID);
                       formData.files.add(
                         MapEntry("viewpoint_${VID[viewpointsToSent.indexOf(item)]}", await MultipartFile.fromFile(viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1), filename: 'image1'))
                       );
@@ -1119,7 +1116,7 @@ setState(() => this.image = imageTemp);
                    )
                    );
                   try {
-                    var response = await dio.post(
+                    await dio.post(
                   "http://nodejs.hackerkernel.com/colab/api/add_snags",
                   data: formData,
                   options: Options(
@@ -1137,7 +1134,9 @@ setState(() => this.image = imageTemp);
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
-                     print(e); 
+                     if (kDebugMode) {
+                       print(e);
+                     } 
                     }
                 }, 
                style: ElevatedButton.styleFrom(
@@ -1243,7 +1242,9 @@ return Dialog(
               final fullPath = '$directory/sample/$n1/image.png';
               final imgFile = File(fullPath);
               imgFile.writeAsBytesSync(image);
-              print(imgFile.path);
+              if (kDebugMode) {
+                print(imgFile.path);
+              }
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               sharedPreferences.setString("imgPath", imgFile.path);
               Navigator.of(context, rootNavigator: true,).pop('dialog');

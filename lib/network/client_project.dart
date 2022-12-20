@@ -61,8 +61,10 @@ class GetClientProject extends GetxController {
       // EasyLoading.dismiss();
       isLoading = false;
       update();
-      print('getClientData nhi chali !!');
-      print(e);
+      if (kDebugMode) {
+        print('getClientData nhi chali !!');
+          print(e);
+      }
     }
   }
 
@@ -104,7 +106,6 @@ class GetClientProject extends GetxController {
       update();
            }
             else if(resSuccess['data'].length<=1){
-              print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                    sharedPreferences.setString("projectIdd",resSuccess['data'][0]['project_id'].toString());
                var result= ClientProfileData.fromJson(resSuccess['data']);
@@ -114,8 +115,10 @@ class GetClientProject extends GetxController {
       // EasyLoading.dismiss();
       isLoading = false;
       update();
-      print('getProject data nhi chali !!');
-      print(e);
+      if (kDebugMode) {
+        print('getProject data nhi chali !!');
+          print(e);
+      }
     }
   }
 }
@@ -141,7 +144,6 @@ class GetUserProfileNetwork extends GetxController{
         isClient=false;
       }
      LoginUserModel model= LoginUserModel(userId: email, password: password);
-     print("token::::"'$email+$password');
    Map<String, String> requestHeaders={
       'Content-Type':'application/json',
       "Accept": "application/json",
@@ -156,7 +158,6 @@ class GetUserProfileNetwork extends GetxController{
     headers: requestHeaders,
     body: jsonEncode(model.toJson())
     );
-    print("Client level");
     Map<String,dynamic>  cData= jsonDecode(response.body);
     LoginResponseModel result = LoginResponseModel.fromJson(cData['data']);
     signInController.getClientProfile = result;
@@ -165,8 +166,6 @@ class GetUserProfileNetwork extends GetxController{
     await getClientProjectsController.getSelectedProjects(context: context,selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var projectID=sharedPreferences.getString('projectIdd');
-    print("I am here fvfwdwwcwew");
-    print(projectID);
     if(signInController.getProjectData?.clientid!=null || projectID!=null){
        var getCategoryListUrl=Uri.parse("${Config.getCategoryListApi}${signInController.getProjectData!.clientid}/${signInController.getProjectData!.projectid??"1"}");
        var res=await http.get(
@@ -194,15 +193,14 @@ class GetUserProfileNetwork extends GetxController{
               "project_id":projectID,
             }
             );
-            print('here');
-            print(res.body);
           Map<String,dynamic> cData3=jsonDecode(res.body);
           LocationList result3=LocationList.fromJson(cData3['data']);
           signInController.getLocationList=result3;    
             } catch (e) {
-              print("error in getting location list");
-              print(e);
-              print("error in getting location list");
+              if (kDebugMode) {
+                print("error in getting location list");
+                  print(e);
+              }
             }
     try {
      var getEmployeesUrl=Uri.parse("${Config.getEmployees}$projectID");
@@ -216,12 +214,12 @@ class GetUserProfileNetwork extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           ClientEmployee result4=ClientEmployee.fromJson(cData4['data']);
           signInController.getEmployeeList=result4;  
-          print(":::::???????????????:::");
-          print(result4);
           // print(cData4['data'][0]['user_id']);  
             } catch (e) {
-              print("error in getting employee list");
-              print(e);
+              if (kDebugMode) {
+                print("error in getting employee list");
+                 print(e);
+              }
             }
      update();
     } catch (e) {
@@ -297,11 +295,6 @@ class GetOpenedSnag extends GetxController{
       }
       try {
       var getSnagsUrl=Uri.parse("${Config.getSnagByStatusApi}$clientID/${projectID??"1"}/O/$isClient");
-      print("}}}}}}}}}}}{{");
-      print(projectID);
-      print(isClient);
-      print(clientID);
-       print("}}}}}}}}}}}{{");
         var res=await http.get(
             getSnagsUrl,
             headers:{
@@ -312,7 +305,6 @@ class GetOpenedSnag extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getSnagDataOpenedList=result5;  
-          print("getting opened snag data"); 
             } catch (e) {
               if (kDebugMode) {
                 print("error in opened snag list");

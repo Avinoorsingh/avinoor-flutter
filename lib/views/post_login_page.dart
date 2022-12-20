@@ -29,12 +29,15 @@ class _SplashScreenState extends State<SplashScreen> {
     void goToHome()async {
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
    if(sharedPreferences.getBool('isAdminSignedIn')==true){
+    // ignore: use_build_context_synchronously
     context.goNamed('SUPERADMINPAGE');
    }
     if(sharedPreferences.getBool('isClientSignedIn')==true){
+    // ignore: use_build_context_synchronously
     context.goNamed('CLIENTLEVELPAGE');
    }
     if(sharedPreferences.getBool('isProjectSignedIn')==true){
+    // ignore: use_build_context_synchronously
     context.goNamed('PROJECTLEVELPAGE');
    }
    else if(sharedPreferences.getBool('isProjectSignedIn')!=true&&sharedPreferences.getBool('isAdminSignedIn')!=true&&sharedPreferences.getBool('isClientSignedIn')!=true){

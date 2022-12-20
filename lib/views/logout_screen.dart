@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +29,7 @@ class _LogoutScreenState extends State<LogoutScreen> {
                   SharedPreferences sharedPreferences =
                       await SharedPreferences.getInstance();
                   sharedPreferences.clear();
+                  // ignore: use_build_context_synchronously
                   context.pushNamed('LOGINPAGE');
                 }, 
               ),  

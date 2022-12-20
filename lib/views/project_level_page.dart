@@ -1,4 +1,3 @@
-import 'package:colab/models/snag_data.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/page1.dart';
 import 'package:colab/views/page2.dart';
@@ -19,7 +18,7 @@ class ProjectLevelPage extends StatefulWidget {
   dynamic clientData;
 
   @override
-  State<ProjectLevelPage> createState() => _ProjectLevelPageState(this.clientData);
+  State<ProjectLevelPage> createState() => _ProjectLevelPageState(clientData);
 }
 
 class _ProjectLevelPageState extends State<ProjectLevelPage> {
@@ -35,8 +34,8 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   _ProjectLevelPageState(clientData){
      List pages = [
     ProjectLevelPage1(clientData: clientData,),
-    ProjectLevelPage2(),
-    ProjectLevelPage3(),
+    const ProjectLevelPage2(),
+    const ProjectLevelPage3(),
   ];
     // this.clientDataGet=clientData;
     this.pages=pages;

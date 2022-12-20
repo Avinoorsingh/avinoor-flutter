@@ -1,16 +1,12 @@
 import 'package:colab/services/bottom_tab_bar2.dart';
-import 'package:colab/views/ClosedSnags.dart';
 import 'package:colab/views/closed_desnags.dart';
-import 'package:colab/views/newSnags.dart';
 import 'package:colab/views/new_deSnags.dart';
-import 'package:colab/views/openedSnags.dart';
 import 'package:colab/views/opened_de_snags.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/bottom_tab_bar.dart';
 import '../services/helper/dependency_injector.dart';
 GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 

@@ -18,7 +18,6 @@ class _SubLocationState extends State<SubLocation> {
       final signInController=Get.find<SignInController>();
       List<String> subLocation=[];
       var subSubLocation=[];
-      var subSubLocationName=[];
        if(signInController.getSubLocationList!.data!.isNotEmpty && subLocation.isEmpty){
         List<SubLocationData>? subLocationList=signInController.getSubLocationList?.data;
         for(var data in subLocationList!){
@@ -30,16 +29,12 @@ class _SubLocationState extends State<SubLocation> {
       body: ListView.builder(
         itemCount: subLocation.length,
         itemBuilder: (context, i) {
-          var subSubLocation2=[];
-          print(subSubLocation);
           // for(int i=0;i<subSubLocation.length;i++){
           // for(var data in subSubLocation[3]){
           //   subSubLocation2.add(data.subSubLocationName);
           // }
           // break;
         // }
-        print('here1');
-        print(subSubLocation2);
           return ExpansionTile(
             title: Text(subLocation[i], style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal,),),
             children: <Widget>[
@@ -63,39 +58,4 @@ class _SubLocationState extends State<SubLocation> {
   }
      );
   }
-
-  _buildExpandableContent( vehicle) {
-    List<Widget> columnContent = [];
-
-    for (String content in vehicle.contents) {
-      columnContent.add(
-        ListTile(
-          onTap: () {
-           Navigator.pop(context,content);
-          },
-          title: Text(content, style: const TextStyle(fontSize: 12.0,color: Colors.black54),),
-        ),
-      );
-    }
-
-    return columnContent;
-  }
 }
-
-class Vehicle {
-  final String title;
-  List<String> contents = [];
-
-  Vehicle(this.title, this.contents,);
-}
-
-List<Vehicle> vehicles = [
-  Vehicle(
-    'Bike',
-    ['Vehicle no. 1', 'Vehicle no. 2', 'Vehicle no. 7', 'Vehicle no. 10'],
-  ),
-  Vehicle(
-    'Cars',
-    ['Vehicle no. 3', 'Vehicle no. 4', 'Vehicle no. 6'],
-  ),
-];

@@ -8,7 +8,6 @@ import 'package:colab/theme/text_styles.dart';
 import 'package:colab/theme/theme.dart';
 import '../constants/constants.dart';
 import '../controller/signInController.dart';
-import '../services/helper/dependency_injector.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
