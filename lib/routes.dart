@@ -1,0 +1,13 @@
+const String loginPage = '/loginPage';
+const String snags = '/Snags';
+const String desnags= '/DeSnags';
+const String addSnags = '/addSnags';
+const String myProfilePage= '/myProfilePage';
+const String splash = '/';
+const String homePage = '/HomePage';
+const String superAdmin = '/SuperAdmin';
+const String clientLevel = '/ClientLevel';
+const String logout = '/LogOut';
+const String subLocation = '/SubLocation';
+const String snagDetail = '/SnagDetail';
+const String subSubLocation='/SubSubLocation';
