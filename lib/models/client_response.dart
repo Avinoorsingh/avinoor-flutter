@@ -89,7 +89,7 @@ class ClientProfileData {
 
     ClientProfileData({this.clientid, this.projectid, this.companyid, this.projectname, this.projectgroupname, this.projecttype, this.phase, this.website, this.country, this.state, this.geocordinates, this.projectvideourl, this.contracttype, this.projectowner, this.projectstatedate, this.projectenddate, this.billStartdate, this.projectstatus, this.projectlogoname, this.createdby, this.updatedby, this.createdat, this.updatedat, this.snagCount, this.progressPrwCount, this.progressMissCount, this.progressDepartCount, this.areaOfConern, this.donutArr, this.nonProductiveCount, this.productiveCount, this.snagTotalCount, this.areaOfConernTotal, this.totalPwrLabourCount, this.totalDeptLabourCount, this.totalMisscLabourCount}); 
 
-    ClientProfileData.fromJson(Map<String, dynamic> json) {
+    ClientProfileData.fromJson(var json) {
         clientid = json['client_id'];
         projectid = json['project_id'];
         companyid = json['company_id'];

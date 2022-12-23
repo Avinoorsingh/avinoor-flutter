@@ -3,6 +3,7 @@ import 'package:colab/views/client_level.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
+import 'package:colab/views/newSnags.dart';
 import 'package:colab/views/post_login_page.dart';
 import 'package:colab/views/project_level_page.dart';
 import 'package:colab/views/login_page.dart';
@@ -38,6 +39,13 @@ class CustomRouter {
         name: 'SNAGS',
         path: snags,
         builder: (context, state) => Snags(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name: 'NEWSNAG',
+        path: newSnags,
+        builder: (context, state) => NewSnag(
           key: state.pageKey,
         ),
       ),

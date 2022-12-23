@@ -1,5 +1,6 @@
 const String loginPage = '/loginPage';
 const String snags = '/Snags';
+const String newSnags = '/NewSnags';
 const String desnags= '/DeSnags';
 const String addSnags = '/addSnags';
 const String myProfilePage= '/myProfilePage';

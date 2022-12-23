@@ -193,9 +193,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                               top: 40,
                               left: 10,
                               right: 10,
-                              // bottom: 20,
-                              // left: 310,
-                              //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
                                 child:  Center(

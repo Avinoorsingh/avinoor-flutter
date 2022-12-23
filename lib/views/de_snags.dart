@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:colab/services/bottom_tab_bar2.dart';
 import 'package:colab/views/closed_desnags.dart';
 import 'package:colab/views/new_deSnags.dart';
@@ -18,11 +20,7 @@ class DeSnags extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<DeSnags> {
-  final fullNameController = TextEditingController();
-  final emergencyContactPersonController = TextEditingController();
-  final emergencyContactMobileNumberController = TextEditingController();
-  final emergencyAlternateMobileNumberController= TextEditingController();
-  
+
     @override
   void initState() {
     super.initState(); 
@@ -53,9 +51,10 @@ class _MyProfilePageState extends State<DeSnags> {
       ),
 
         key: ScaffoldStateKey,
-        body:  const TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
+        body:  TabBarView(
+          key: Key(Random().nextInt(1000).toString()),
+                physics:const NeverScrollableScrollPhysics(),
+                children: const [
                 NewDeSnag(),
                 OpenedDeSnags(),
                 ClosedDeSnags(),

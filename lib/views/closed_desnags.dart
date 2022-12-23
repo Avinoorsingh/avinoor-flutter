@@ -18,7 +18,7 @@ bool show=false;
 late var tapped;
 
 class _NewSnagState extends State<ClosedDeSnags> {
-  final getSnag = Get.find<GetNewSnag>();
+  final getSnag = Get.find<GetClosedSnag>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
@@ -27,16 +27,19 @@ class _NewSnagState extends State<ClosedDeSnags> {
   List<String?> remark=[];
   List<String?> deSnagRemark=[];
   List<String?> closingDeSnagRemark=[];
+  List snagData=[];
+  List dateDifference=[];
  
  @override
  void initState(){
   super.initState();
-  getSnag.getSnagData(context: context);
+  getSnag.getClosedSnagData(context: context);
  }
 
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
     return GetBuilder<GetClosedSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
      if(signInController.getSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
@@ -49,6 +52,8 @@ class _NewSnagState extends State<ClosedDeSnags> {
        closingDeSnagRemark.add(signInController.getSnagDataClosedList!.data![i].closeSnagRemark);
        dueDates.add(signInController.getSnagDataClosedList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataClosedList!.data![i].createdAt);
+       snagData.add(signInController.getSnagDataClosedList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataClosedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataClosedList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -110,7 +115,7 @@ class _NewSnagState extends State<ClosedDeSnags> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                      Text("Date: ${outputFormat.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
+                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       ],
                                     ),
@@ -125,11 +130,11 @@ class _NewSnagState extends State<ClosedDeSnags> {
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  const Center(
+                                child: Center(
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.red,
-                                    radius: 15.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                                  backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
+                                  radius: 15.0,
+                                  child: Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -141,7 +146,7 @@ class _NewSnagState extends State<ClosedDeSnags> {
                         Container(
                             padding: const EdgeInsets.only(left: 10,right: 10,top: 0),
                             margin: const EdgeInsets.only(bottom: 20),
-                            height: 50,
+                            height: 70,
                             width: 330,
                             decoration: BoxDecoration(
                                     color:  Colors.grey[300],
@@ -150,22 +155,24 @@ class _NewSnagState extends State<ClosedDeSnags> {
                             child:
                             InkWell(
                               onTap: (){
-                                context.pushNamed('SNAGDETAIL');
+                                context.pushNamed('SNAGDETAIL',
+                                // queryParams: {"from": "openedDeSnag"},
+                                extra: snagData[index]);
                               },
-                              child: 
-                                  Column(children: [
+                              child:
+                              Column(children: [
                               const  SizedBox(height: 10,),
                              Row(children: [
                               Text("Snag Remark: ",style: textStyleHeadline4,),
-                              Text("${remark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],),
                               Row(children: [
                               Text("De-Snag Remark: ",style: textStyleHeadline4,),
-                              Text(deSnagRemark[index] ?? "",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                              Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}...":deSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                               ]),
                              Row(children: [
                               Text("Closing Remark: ",style: textStyleHeadline4,),
-                               Text("${closingDeSnagRemark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
+                               Text((closingDeSnagRemark[index]!=null?(closingDeSnagRemark[index]!.length>30?"${closingDeSnagRemark[index]!.substring(0,29)}...":closingDeSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
                              ],)
                             ]),
                             ),

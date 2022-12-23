@@ -18,7 +18,7 @@ bool show=false;
 late var tapped;
 
 class _NewSnagState extends State<OpenedSnags> {
-  final getSnag = Get.find<GetNewSnag>();
+  final getSnag = Get.find<GetOpenedSnag>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
@@ -26,20 +26,20 @@ class _NewSnagState extends State<OpenedSnags> {
   List<String?> createdDates=[];
   List<String?> remark=[];
   List snagData=[];
+  List dateDifference=[];
  
  @override
  void initState(){
   super.initState();
-  getSnag.getSnagData(context: context);
+  getSnag.getOpenedSnagData(context: context);
  }
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');;
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
     return GetBuilder<GetOpenedSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
-      print("HHHHHHHHHHHHHHHHHHHHHHH");
-     print(signInController.getSnagDataOpenedList!.data);
      if(signInController.getSnagDataOpenedList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getSnagDataOpenedList!.data!.length;i++){
        subLocationName.add(signInController.getSnagDataOpenedList!.data![i].subLocation!.subLocationName);
@@ -49,6 +49,7 @@ class _NewSnagState extends State<OpenedSnags> {
        dueDates.add(signInController.getSnagDataOpenedList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataOpenedList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataOpenedList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataOpenedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataOpenedList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -110,7 +111,7 @@ class _NewSnagState extends State<OpenedSnags> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                      Text("Date: ${outputFormat.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
+                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       ],
                                     ),
@@ -125,11 +126,11 @@ class _NewSnagState extends State<OpenedSnags> {
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  const Center(
+                                child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
                                     radius: 15.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                                    child: Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -157,8 +158,8 @@ class _NewSnagState extends State<OpenedSnags> {
                               },
                               child: 
                              Row(children: [
-                              Text("Snag Remark: ",style: textStyleHeadline4,),
-                               Text("${remark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
+                               Text("Snag Remark: ",style: textStyleHeadline4,),
+                               Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],)
                             ),
                             ),

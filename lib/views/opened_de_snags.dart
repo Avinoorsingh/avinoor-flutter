@@ -18,7 +18,7 @@ bool show=false;
 late var tapped;
 
 class _NewSnagState extends State<OpenedDeSnags> {
-  final getSnag = Get.find<GetNewSnag>();
+  final getSnag = Get.find<GetOpenedSnag>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
@@ -26,16 +26,19 @@ class _NewSnagState extends State<OpenedDeSnags> {
   List<String?> createdDates=[];
   List<String?> remark=[];
   List<String?> deSnagRemark=[];
+  List snagData=[];
+  List dateDifference=[];
  
  @override
  void initState(){
   super.initState();
-  getSnag.getSnagData(context: context);
+  getSnag.getOpenedSnagData(context: context);
  }
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');;
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
     return GetBuilder<GetOpenedSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
      print(signInController.getSnagDataOpenedList!.data);
@@ -48,6 +51,8 @@ class _NewSnagState extends State<OpenedDeSnags> {
        deSnagRemark.add(signInController.getSnagDataOpenedList!.data![i].deSnagRemark);
        dueDates.add(signInController.getSnagDataOpenedList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataOpenedList!.data![i].createdAt);
+       snagData.add(signInController.getSnagDataOpenedList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataOpenedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataOpenedList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -109,7 +114,7 @@ class _NewSnagState extends State<OpenedDeSnags> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                      Text("Date: ${outputFormat.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
+                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       ],
                                     ),
@@ -124,11 +129,11 @@ class _NewSnagState extends State<OpenedDeSnags> {
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  const Center(
+                                child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
                                     radius: 15.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                                    child:Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -149,18 +154,20 @@ class _NewSnagState extends State<OpenedDeSnags> {
                             child:
                             InkWell(
                               onTap: (){
-                                context.pushNamed('SNAGDETAIL');
+                                context.pushNamed('SNAGDETAIL',
+                                queryParams: {"from": "openedDeSnag"},
+                                extra: snagData[index]);
                               },
                               child: 
                               Column(children: [
                               const  SizedBox(height: 10,),
                              Row(children: [
                               Text("Snag Remark: ",style: textStyleHeadline4,),
-                              Text("${remark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],),
                               Row(children: [
                               Text("De-Snag Remark: ",style: textStyleHeadline4,),
-                              Text(deSnagRemark[index] ?? "",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                              Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}...":deSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                               ]),
                              ]),
                             ),

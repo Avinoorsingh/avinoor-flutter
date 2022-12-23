@@ -1,4 +1,3 @@
-import 'package:colab/models/snag_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,7 @@ import '../network/client_project.dart';
 import '../theme/text_styles.dart';
 
 class NewSnag extends StatefulWidget {
-  const NewSnag({Key? key}) : super(key: key);
+  const NewSnag({Key? key,}) : super(key: key);
 
   @override
   State<NewSnag> createState() => _NewSnagState();
@@ -17,6 +16,7 @@ class NewSnag extends StatefulWidget {
 
 bool show=false;
 late var tapped;
+var update;
 
 class _NewSnagState extends State<NewSnag> {
   final getSnag = Get.find<GetNewSnag>();
@@ -27,6 +27,7 @@ class _NewSnagState extends State<NewSnag> {
   List<String?> createdDates=[];
   List<String?> remark=[];
   List snagData=[];
+  List dateDifference=[];
  
  @override
  void initState(){
@@ -36,8 +37,10 @@ class _NewSnagState extends State<NewSnag> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');;
-    return GetBuilder<GetNewSnag>(builder: (_){
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
+    return 
+    GetBuilder<GetNewSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
      if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
@@ -48,6 +51,7 @@ class _NewSnagState extends State<NewSnag> {
        dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -64,14 +68,14 @@ class _NewSnagState extends State<NewSnag> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: subLocationName.length,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (BuildContext context, int index){
                 return 
                 FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: 
-                          Column(
-                            children:[
-                              Center(child: 
+                  fit: BoxFit.fitWidth,
+                  child: 
+                    Column(
+                      children:[
+                        Center(child: 
                         Stack(
                           clipBehavior: Clip.none,
                           children: [ 
@@ -109,7 +113,7 @@ class _NewSnagState extends State<NewSnag> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                      Text("Date: ${outputFormat.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
+                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       ],
                                     ),
@@ -124,11 +128,11 @@ class _NewSnagState extends State<NewSnag> {
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  const Center(
+                                child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
                                     radius: 15.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                                    child: Text(dateDifference[index].toString(),style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -146,27 +150,19 @@ class _NewSnagState extends State<NewSnag> {
                                     color:  Colors.grey[300],
                                     borderRadius: BorderRadius.circular(10)
                                   ),
-                            child:Container(
-                              child: 
-                            InkWell(
+                            child:InkWell(
                               onTap: (){
                                 context.pushNamed('SNAGDETAIL',
                                 queryParams: {"from": "new"},
                                 extra: snagData[index]);
-                                print(snagData[index].snagViewpoint);
                               },
                               child: 
                              Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                               Text("Snag Remark: ",style: textStyleHeadline4,overflow: TextOverflow.ellipsis,),
-                              Container(
-                                child: 
-                               Text("${remark[index]}",overflow: TextOverflow.ellipsis,
-                               style: textStyleBodyText3.copyWith(fontSize: 14,color:Colors.black) ,
-                               ))
+                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],)
-                            ),
                             )
                             ),
                             ]

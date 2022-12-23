@@ -6,6 +6,7 @@ import 'package:colab/models/location_list.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/models/login_user.dart';
 import 'package:colab/models/snag_data.dart';
+import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -106,10 +107,16 @@ class GetClientProject extends GetxController {
       update();
            }
             else if(resSuccess['data'].length<=1){
-                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                   sharedPreferences.setString("projectIdd",resSuccess['data'][0]['project_id'].toString());
+              try {
+              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+              sharedPreferences.setString("projectIdd",resSuccess['data'][0]['project_id'].toString());
                var result= ClientProfileData.fromJson(resSuccess['data']);
-               getSingleProjectData=result;
+               getSingleProjectData=result; 
+              } catch (e) {
+                if (kDebugMode) {
+                  print(e);
+                }
+              }
             }
     } catch (e) {
       // EasyLoading.dismiss();
@@ -236,11 +243,8 @@ class GetNewSnag extends GetxController{
   final signInController = Get.find<SignInController>();
   static var client=http.Client();
   Future getSnagData({token, required BuildContext context}) async {
-    final getClientProjectsController = Get.find<GetClientProject>();
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
      var token=sharedPreferences.getString('token');
-     var email=sharedPreferences.getString('userName');
-     var password=sharedPreferences.getString('password');
      bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
      var projectID=sharedPreferences.getString('projectIdd');
      var clientID=sharedPreferences.getString('client_id');
@@ -263,7 +267,8 @@ class GetNewSnag extends GetxController{
           );
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
-          signInController.getSnagDataList=result5; 
+          signInController.getSnagDataList=result5;
+          update(); 
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting new snag list");
@@ -277,11 +282,8 @@ class GetOpenedSnag extends GetxController{
   final signInController = Get.find<SignInController>();
   static var client=http.Client();
   Future getOpenedSnagData({token, required BuildContext context}) async {
-     final getClientProjectsController = Get.find<GetClientProject>();
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
      var token=sharedPreferences.getString('token');
-     var email=sharedPreferences.getString('userName');
-     var password=sharedPreferences.getString('password');
      bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
      var projectID=sharedPreferences.getString('projectIdd');
      var clientID=sharedPreferences.getString('client_id');
@@ -293,6 +295,7 @@ class GetOpenedSnag extends GetxController{
       if(isProjectSignedIn==true){
         isClient=false;
       }
+       update(); 
       try {
       var getSnagsUrl=Uri.parse("${Config.getSnagByStatusApi}$clientID/${projectID??"1"}/O/$isClient");
         var res=await http.get(
@@ -302,9 +305,11 @@ class GetOpenedSnag extends GetxController{
               "Authorization": "Bearer $token",
             },
           );
+           update(); 
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getSnagDataOpenedList=result5;  
+          update(); 
             } catch (e) {
               if (kDebugMode) {
                 print("error in opened snag list");
@@ -321,8 +326,6 @@ class GetClosedSnag extends GetxController{
      final getClientProjectsController = Get.find<GetClientProject>();
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
      var token=sharedPreferences.getString('token');
-     var email=sharedPreferences.getString('userName');
-     var password=sharedPreferences.getString('password');
      bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
      await getClientProjectsController.getSelectedProjects(context: context,selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()));
      var projectID=sharedPreferences.getString('projectIdd');
@@ -346,7 +349,8 @@ class GetClosedSnag extends GetxController{
           );
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
-          signInController.getSnagDataClosedList=result5;  
+          signInController.getSnagDataClosedList=result5;
+          update();   
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting closed snag list");

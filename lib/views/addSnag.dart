@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
+import 'package:colab/routes.dart';
+import 'package:colab/views/newSnags.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
 import 'package:colab/models/location_list.dart';
@@ -31,13 +33,16 @@ import '../network/client_project.dart';
 import '../network/photos_network.dart';
 
 class AddSnag extends StatefulWidget {
-  AddSnag({Key? key,}) : super(key: key);
+  AddSnag({Key? key,from}) : super(key: key);
+
+  var from;
 
   @override
   State<AddSnag> createState() => _MyProfilePageState();
 }
 
 class _MyProfilePageState extends State<AddSnag> {
+  final getSnag = Get.find<GetNewSnag>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -73,20 +78,6 @@ class _MyProfilePageState extends State<AddSnag> {
   final assignedTo=["Select Name","Name 1"];
   String dropdownvalueAssignedTo="Select Name";
   final ValueNotifier<String?> dropDownNotifier = ValueNotifier(null);
-
-  //  List _imageList = [];
-  //  List imageData=[];
-
-  // void _addImage(File image, int index1){
-  //   setState(() {
-  //     _imageList.add(image);
-  //   });
-  // }
-  //  void _addImageData(String imagepath, int index1) {
-  //   setState(() {
-  //     imageData.add(imagepath);
-  //   });
-  // }
  
    List<bool> isCardEnabled = [];
    List<bool> isCardEnabled2 = [];
@@ -269,12 +260,15 @@ setState(() => this.image = imageTemp);
                         borderRadius: BorderRadius.circular(8)
                     ),
                     child: Center(
-                      child: Text(categoryNew[index],textAlign: TextAlign.center,
+                      child: 
+                      FittedBox(child:
+                      Text(categoryNew[index],textAlign: TextAlign.center,
                         style: TextStyle(
                             color: isCardEnabled[index]?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
                           fontSize: 16
                         ),
                       ),
+                      )
                     ),
                   ),
                 )
@@ -766,7 +760,7 @@ setState(() => this.image = imageTemp);
                     child: Text(
                       'Upload Image',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 10,
                         color: Color(0xffffffff),
                         letterSpacing: -0.3858822937011719,
                       ),
@@ -1064,12 +1058,33 @@ setState(() => this.image = imageTemp);
                 backgroundColor: Colors.white
               ),
               child: const Text("Cancel",style: TextStyle(color: Colors.black),)),
-              ElevatedButton(onPressed: ()
-              async{
+              ElevatedButton(onPressed: () async{
+                if(categoryIDController.text.isEmpty){
+                  EasyLoading.showToast("Please select Category",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(locationId.text.isEmpty){
+                  EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast("Please select Sub Location",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subSubLocationId.text.isEmpty){
+                  EasyLoading.showToast("Please select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(remarkController.text.isEmpty){
+                  EasyLoading.showToast("Please enter a remark",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(debitAmountController.text.isEmpty){
+                  EasyLoading.showToast("Please enter debit amount",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(snapAssignedToController.text.isEmpty){
+                  EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
                 List VID=[];
-                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
-                  var createdById=sharedPreferences.getString('id');
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var createdById=sharedPreferences.getString('id');
                 FormData formData=FormData(); 
                 var dio = Dio();
                 for(int i=0;i<viewpoints2.length;i++){
@@ -1093,7 +1108,7 @@ setState(() => this.image = imageTemp);
                   formData.fields.add(const MapEntry('markup_file', ''));
                 }
                 formData.fields.add(MapEntry('snags_data', jsonEncode({
-                       "client_id":int.parse(clientId.text),
+                      "client_id":int.parse(clientId.text),
                       "project_id": int.parse(projectId.text),
                       "category_id": int.parse(categoryIDController.text),
                       "location_id": int.parse(locationId.text),
@@ -1101,7 +1116,7 @@ setState(() => this.image = imageTemp);
                       "sub_sub_loc_id": int.parse(subSubLocationId.text),
                       "activity_head_id": 1,
                       "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
-                      "contractor_id": int.parse(contractorID.text.toString()),
+                      "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
                       'debet_contractor_id':2,
                       "remark": remarkController.text,
                       "debit_note": "this is debit note",
@@ -1130,7 +1145,12 @@ setState(() => this.image = imageTemp);
                     },
                   ),
                     );
-                    EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom);          
+                    EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
+                    // await getSnag.getSnagData(context: context);
+                    await getSnag.getSnagData(context: context);
+                    Get.put(GetNewSnag()); 
+                         // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
@@ -1138,7 +1158,8 @@ setState(() => this.image = imageTemp);
                        print(e);
                      } 
                     }
-                }, 
+                }
+              }, 
                style: ElevatedButton.styleFrom(
                 minimumSize: const Size(150,40),
                 backgroundColor: const Color.fromARGB(255, 91, 235, 96)

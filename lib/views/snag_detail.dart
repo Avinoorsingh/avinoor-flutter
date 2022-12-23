@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/views/activity_head.dart';
 import 'package:colab/views/sub_location.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../network/client_project.dart';
 import '../network/photos_network.dart';
 
 class SnagDetail extends StatefulWidget {
@@ -25,6 +28,8 @@ class SnagDetail extends StatefulWidget {
 }
 
 class _SnagState extends State<SnagDetail> {
+  final getSnag = Get.find<GetNewSnag>();
+  final getOpenedSnag = Get.find<GetOpenedSnag>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -142,12 +147,12 @@ setState(() => this.image = imageTemp);
     remarkController.text=widget.snagModel?.remark??"";
     deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
-    debitAmountController.text=widget.snagModel.debitAmount.toString();
+    debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text="";
-    snagAssignedToController.text=widget.snagModel?.employee.name??"";
+    snagAssignedToController.text=widget.snagModel?.employee?.name??"";
     priorityController.text=widget.snagModel?.snagPriority;
-    if(widget.snagModel?.snagViewpoint.length!=0 && widget.snagModel?.snagViewpoint!=null){
-      for(int i=0;i<widget.snagModel?.snagViewpoint.length;i++){
+    if(widget.snagModel?.snagViewpoint?.length!=0 && widget.snagModel?.snagViewpoint!=null){
+      for(int i=0;i<widget.snagModel?.snagViewpoint?.length;i++){
         viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].id,'deSnagImage':[]});
         if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
         viewpointID.add(widget.snagModel.snagViewpoint[i].id);
@@ -523,17 +528,27 @@ setState(() => this.image = imageTemp);
                     ),
                   ]
                 ),
-              ):SizedBox(
-                  height: 150,
-                  width: 60,
-                  child: Image.network("https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}"),
+              ):
+                 GestureDetector(
+                      onTap: () async {
+                        await showDialog(
+                          useSafeArea: true,
+                          context: context,
+                          builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}' , context));
+                        },
+                        child:
+                        SizedBox(
+                          height: 100,
+                          width: 50,
+                          child: Image.network("https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}"),
+                            ),
+                        )
+                    ],
                     ),
-            ],
-          ),
-        ]
-      )
-                    ]
-                    )
+                  ]
+                )
+              ]
+            )
                   // ),
                 ),
               ],
@@ -719,6 +734,61 @@ setState(() => this.image = imageTemp);
             ),
           ])
             ),
+            if(widget.from=='openedSnag')    
+            Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
+            padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Colors.black),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: 
+            Column(
+              children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("Snag Priority",style: textStyleBodyText1,),
+              ],),),
+               const SizedBox(height: 10,),
+           SizedBox(
+            height: 75,child: 
+          ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.only(top: 15,bottom: 15,left: 0,right: 0),
+          itemCount: 3,
+          itemBuilder: (BuildContext context, int index){
+            isCardEnabled2.add(false);
+            return GestureDetector(
+                onTap: (){
+                  // print(priority[index].toString().substring(0,2).toUpperCase());
+                },
+                child: SizedBox(
+                  height: 10,
+                  width: 100,
+                  child: Container(
+                   decoration: BoxDecoration(
+                     color: priority[index].toString().substring(0,2).toUpperCase()==priorityController.text? const Color.fromRGBO(255, 192, 0, 1):Colors.white,
+                     border: Border.all(width: 1.2,color:  const Color.fromRGBO(255, 192, 0, 1),),
+                    ),
+                    child: Center(
+                      child: Text(priority[index],textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: priority[index].toString().substring(0,2).toUpperCase()==priorityController.text?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
+                          fontSize: 16
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+            );
+          }),
+          ),
+          ]),
+            ),
               Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left:20.0,right: 20),
@@ -807,6 +877,7 @@ setState(() => this.image = imageTemp);
             ),
           ])
             ),
+            if(widget.from!='openedSnag')
             Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
@@ -827,9 +898,9 @@ setState(() => this.image = imageTemp);
            SizedBox(
             height: 75,child: 
           ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.only(top: 15,bottom: 15,left: 0,right: 0),
           itemCount: 3,
           itemBuilder: (BuildContext context, int index){
@@ -849,7 +920,7 @@ setState(() => this.image = imageTemp);
                     child: Center(
                       child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: priority[index].toString().substring(0,2).toUpperCase()==priorityController.text?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
+                          color: priority[index].toString().substring(0,2).toUpperCase()==priorityController.text?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
                           fontSize: 16
                         ),
                       ),
@@ -877,7 +948,7 @@ setState(() => this.image = imageTemp);
                 children: [
                 Text("DE-SNAG REMARK",style: textStyleBodyText1,),
               ],),),
-               const SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             TextField(
               enabled: true,
               controller: deSnagRemarkController,
@@ -905,7 +976,7 @@ setState(() => this.image = imageTemp);
             ),
           ])
             ),
-                Container(
+            Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
             padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
@@ -913,7 +984,7 @@ setState(() => this.image = imageTemp);
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   ElevatedButton(onPressed: (){
+                ElevatedButton(onPressed: (){
                 Navigator.pop(context);
               }, 
               style: ElevatedButton.styleFrom(
@@ -927,6 +998,7 @@ setState(() => this.image = imageTemp);
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
+                if(deSnagRemarkController.text.isNotEmpty){
                 // FormData formData=FormData(); 
                 // var dio = Dio();
                 // List viewpointsToSent=[];
@@ -1015,7 +1087,11 @@ setState(() => this.image = imageTemp);
                       "snag_status": widget.from=="desnagnew"?"O":"N",
                             }
                             );
-                    EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom);          
+                    EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom); 
+                    await getSnag.getSnagData(context: context);
+                    Get.put(GetNewSnag()); 
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);               
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
@@ -1023,6 +1099,10 @@ setState(() => this.image = imageTemp);
                        print(e);
                      } 
                     }
+                }
+                else{
+                  EasyLoading.showToast("De-Snag remark cannot be empty",toastPosition: EasyLoadingToastPosition.bottom);
+                }
                 },
                 style: ElevatedButton.styleFrom(
                 minimumSize: const Size(150,40),
@@ -1043,7 +1123,8 @@ setState(() => this.image = imageTemp);
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(onPressed: () async{
+                  ElevatedButton(
+                    onPressed: () async{
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
                   var createdById=sharedPreferences.getString('id');
@@ -1078,7 +1159,11 @@ setState(() => this.image = imageTemp);
                     if (kDebugMode) {
                       print(res.statusCode);
                     }
-                    EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom);          
+                    EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom); 
+                    await getOpenedSnag.getOpenedSnagData(context: context);
+                    Get.put(GetOpenedSnag()); 
+                         // ignore: use_build_context_synchronously
+                    Navigator.pop(context);                
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
@@ -1088,10 +1173,11 @@ setState(() => this.image = imageTemp);
                     }
               }, 
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(150,40),
+                minimumSize: const Size(150,50),
                 backgroundColor: Colors.white
               ),
               child: const Text("Close with debit",style: TextStyle(color: Colors.black),)),
+              //------------------------------------------------------------------
                   ElevatedButton(onPressed: ()async{
                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
@@ -1127,7 +1213,11 @@ setState(() => this.image = imageTemp);
                     if (kDebugMode) {
                       print(res.statusCode);
                     }
-                    EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom);          
+                    EasyLoading.showToast("Closed without debit",toastPosition: EasyLoadingToastPosition.bottom);  
+                    await getOpenedSnag.getOpenedSnagData(context: context);
+                    Get.put(GetOpenedSnag()); 
+                         // ignore: use_build_context_synchronously
+                    Navigator.pop(context);      
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
@@ -1137,14 +1227,15 @@ setState(() => this.image = imageTemp);
                     }
               }, 
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(150,40),
+                minimumSize: const Size(150,50),
                 backgroundColor: Colors.white
               ),
               child: const Text("Close without debit",style: TextStyle(color: Colors.black),)),
               ],),
                 const SizedBox(height: 10,),
+                //--------------------------------------------------------------
                   ElevatedButton(onPressed: ()async{
-                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
                   var createdById=sharedPreferences.getString('id');
                    try {
@@ -1178,7 +1269,12 @@ setState(() => this.image = imageTemp);
                     if (kDebugMode) {
                       print(res.statusCode);
                     }
-                    EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);          
+                    EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);   
+                    // ignore: use_build_context_synchronously
+                    await getOpenedSnag.getOpenedSnagData(context: context);
+                    Get.put(GetOpenedSnag()); 
+                         // ignore: use_build_context_synchronously
+                    Navigator.pop(context);       
                     } catch (e) {
                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
@@ -1188,8 +1284,8 @@ setState(() => this.image = imageTemp);
                     }
                   },
                 style: ElevatedButton.styleFrom(
-                minimumSize: const Size(150,40),
-                backgroundColor: const Color.fromARGB(255, 233, 78, 129)
+                minimumSize: Size(MediaQuery.of(context).size.width,50),
+                backgroundColor: const Color.fromARGB(255, 229, 78, 128)
               ), 
                 child: const Text("Reject",style: TextStyle(color: Colors.black),),
                 )

@@ -1,6 +1,12 @@
+import 'dart:math';
+
+import 'package:colab/network/client_project.dart';
 import 'package:colab/views/ClosedSnags.dart';
 import 'package:colab/views/newSnags.dart';
 import 'package:colab/views/openedSnags.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -19,15 +25,10 @@ class Snags extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<Snags> {
-  final fullNameController = TextEditingController();
-  final emergencyContactPersonController = TextEditingController();
-  final emergencyContactMobileNumberController = TextEditingController();
-  final emergencyAlternateMobileNumberController= TextEditingController();
   
     @override
   void initState() {
     super.initState(); 
-    DependencyInjector.initializeControllers();
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
  
@@ -52,11 +53,11 @@ class _MyProfilePageState extends State<Snags> {
         backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
       title: Text("Snags",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
-
         key: ScaffoldStateKey,
-        body:  const TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
+        body: TabBarView(
+                key: Key(Random().nextInt(1000).toString()),
+                physics:const NeverScrollableScrollPhysics(),
+                children:const [
                 NewSnag(),
                 OpenedSnags(),
                 ClosedSnags(),

@@ -26,7 +26,7 @@ class _NewSnagState extends State<NewDeSnag> {
   List<String?> createdDates=[];
   List<String?> remark=[];
   List snagData=[];
- 
+  List dateDifference=[]; 
  @override
  void initState(){
   super.initState();
@@ -35,7 +35,8 @@ class _NewSnagState extends State<NewDeSnag> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');;
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
     return GetBuilder<GetNewSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
      if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
@@ -47,6 +48,7 @@ class _NewSnagState extends State<NewDeSnag> {
        dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -108,7 +110,7 @@ class _NewSnagState extends State<NewDeSnag> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                      Text("Date: ${outputFormat.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
+                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
                                       ],
                                     ),
@@ -123,11 +125,11 @@ class _NewSnagState extends State<NewDeSnag> {
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  const Center(
+                                child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
                                     radius: 15.0,
-                                    child: Text("-1",style: TextStyle(color: Colors.black),),
+                                    child: Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -155,7 +157,7 @@ class _NewSnagState extends State<NewDeSnag> {
                               child: 
                              Row(children: [
                               Text("Snag Remark: ",style: textStyleHeadline4,),
-                               Text("${remark[index]}",style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
+                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],)
                             ),
                             ),

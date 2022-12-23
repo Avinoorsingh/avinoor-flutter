@@ -1,5 +1,9 @@
 
+import 'package:colab/network/client_project.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import '../controller/signInController.dart';
 import '../theme/text_styles.dart';
 
 
@@ -11,6 +15,10 @@ class BottomTabBar2 extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar2 > {
+   final getSnag = Get.find<GetNewSnag>();
+   final getOpenedSnag=Get.find<GetOpenedSnag>();
+   final getClosedSnag=Get.find<GetClosedSnag>();
+   final signInController=Get.find<SignInController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,9 +49,9 @@ class _BottomTabBarState extends State<BottomTabBar2 > {
             borderRadius: BorderRadius.all(Radius.circular(40)),
             color: Color.fromRGBO(255, 192, 0, 1),
             boxShadow: [
-            BoxShadow(
-                color: Colors.black,
-                spreadRadius: 1),
+            // BoxShadow(
+            //     color: Colors.black,
+            //     spreadRadius: 1),
           ],
             // boxShadow: [
             //   BoxShadow(
@@ -59,13 +67,13 @@ class _BottomTabBarState extends State<BottomTabBar2 > {
           unselectedLabelColor: Colors.black,
           tabs:  [
             Tab(
-              child: Text("NEW",style:textStyleBodyText1 ,),
+              child: Text("NEW",style:textStyleBodyText2 ,),
             ),
             Tab(
-            child: Text("IN REVIEW",style:textStyleBodyText1 ,),
+            child: Text("IN REVIEW",style:textStyleBodyText2 ,),
             ),
             Tab(
-              child: Text("CLOSED",style:textStyleBodyText1 ,),
+              child: Text("CLOSED",style:textStyleBodyText2 ,),
             ),
           ],
         ),
