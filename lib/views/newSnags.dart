@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -38,7 +39,7 @@ class _NewSnagState extends State<NewSnag> {
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetNewSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -130,7 +131,7 @@ class _NewSnagState extends State<NewSnag> {
                                 onTap: () {},
                                 child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
                                     radius: 15.0,
                                     child: Text(dateDifference[index].toString(),style: const TextStyle(color: Colors.black),),
                                   ),
@@ -178,7 +179,7 @@ class _NewSnagState extends State<NewSnag> {
           context.pushNamed('ADDSNAG');
           // Add your onPressed code here!
         },
-        backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+        backgroundColor:AppColors.primary,
         child: const Icon(Icons.add,color: Colors.black,),
       ),);
       }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
+import '../constants/colors.dart';
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
 import '../theme/text_styles.dart';
@@ -36,7 +37,7 @@ void initState(){
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-              colors: [Colors.white,Colors.white,],
+              colors:[AppColors.white,AppColors.white,],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight),
           borderRadius: BorderRadius.all(Radius.circular(40)),

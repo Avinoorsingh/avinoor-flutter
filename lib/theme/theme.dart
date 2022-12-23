@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:colab/theme/button_themes.dart';
 import 'package:colab/theme/text_styles.dart';
 
+import '../constants/colors.dart';
+
 ThemeData lightThemeData = ThemeData(
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: AppColors.white,
   fontFamily: 'Roboto',
   textTheme: TextTheme(
     headline1: textStyleHeadline1.copyWith(color: fontColor),
@@ -18,14 +20,14 @@ ThemeData lightThemeData = ThemeData(
   colorScheme: ColorScheme(
     brightness: Brightness.light,
     primary: Colors.greenAccent,
-    onPrimary: Colors.white,
+    onPrimary: AppColors.white,
     secondary: const Color(0xff8A00D0),
-    onSecondary: Colors.white,
+    onSecondary: AppColors.white,
     error: Colors.red,
-    onError: Colors.white,
-    background: Colors.white,
+    onError: AppColors.white,
+    background: AppColors.white,
     onBackground: const Color(0xff1D2028),
-    surface: Colors.white,
+    surface: AppColors.white,
     onSurface: const Color(0xff1D2028),
   ),
   // elevatedButtonTheme: roundedButtonTheme,

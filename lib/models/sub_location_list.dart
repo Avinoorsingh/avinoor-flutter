@@ -9,7 +9,7 @@ class SubLocationList {
   SubLocationList.fromJson(var json) {
     data =  [];
     if (kDebugMode) {
-      print(json);
+      // print(json);
     }
     for(var data1 in json){
       data?.add(SubLocationData.fromJson(data1));    

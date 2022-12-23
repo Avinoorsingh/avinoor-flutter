@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/text_styles.dart';
@@ -58,7 +59,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
             ],
           ),
           toolbarHeight: 80,
-          backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+          backgroundColor:AppColors.primary,
           leading: const Icon(
             Icons.notifications,
             size: 28,

@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,7 @@ bool show=false;
 late var tapped;
 
 class _NewSnagState extends State<NewDeSnag> {
-  final getSnag = Get.find<GetNewSnag>();
+  final getSnag = Get.find<GetNewDeSnag>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
@@ -36,19 +37,19 @@ class _NewSnagState extends State<NewDeSnag> {
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
-    return GetBuilder<GetNewSnag>(builder: (_){
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
+    return GetBuilder<GetNewDeSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
-     if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
-      for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
-       subLocationName.add(signInController.getSnagDataList!.data![i].subLocation!.subLocationName);
-       subSubLocationName.add(signInController.getSnagDataList!.data![i].subSubLocation!.subSubLocationName);
-       locationName.add(signInController.getSnagDataList!.data![i].location!.locationName);
-       remark.add(signInController.getSnagDataList!.data![i].remark);
-       dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
-       createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
-       snagData.add(signInController.getSnagDataList!.data![i]);
-       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
+     if(signInController.getDeSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
+      for(int i=0;i<signInController.getDeSnagDataList!.data!.length;i++){
+       subLocationName.add(signInController.getDeSnagDataList!.data![i].subLocation!.subLocationName);
+       subSubLocationName.add(signInController.getDeSnagDataList!.data![i].subSubLocation!.subSubLocationName);
+       locationName.add(signInController.getDeSnagDataList!.data![i].location!.locationName);
+       remark.add(signInController.getDeSnagDataList!.data![i].remark);
+       dueDates.add(signInController.getDeSnagDataList!.data![i].dueDate);
+       createdDates.add(signInController.getDeSnagDataList!.data![i].createdAt);
+       snagData.add(signInController.getDeSnagDataList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getDeSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getDeSnagDataList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -127,7 +128,7 @@ class _NewSnagState extends State<NewDeSnag> {
                                 onTap: () {},
                                 child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
                                     radius: 15.0,
                                     child: Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),

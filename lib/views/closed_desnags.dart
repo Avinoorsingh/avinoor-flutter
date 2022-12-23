@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -39,21 +40,21 @@ class _NewSnagState extends State<ClosedDeSnags> {
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy h:mm a');
-    return GetBuilder<GetClosedSnag>(builder: (_){
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
+    return GetBuilder<GetClosedDeSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
-     if(signInController.getSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
-      for(int i=0;i<signInController.getSnagDataClosedList!.data!.length;i++){
-       subLocationName.add(signInController.getSnagDataClosedList!.data![i].subLocation!.subLocationName);
-       subSubLocationName.add(signInController.getSnagDataClosedList!.data![i].subSubLocation!.subSubLocationName);
-       locationName.add(signInController.getSnagDataClosedList!.data![i].location!.locationName);
-       remark.add(signInController.getSnagDataClosedList!.data![i].remark);
-       deSnagRemark.add(signInController.getSnagDataClosedList!.data![i].deSnagRemark);
-       closingDeSnagRemark.add(signInController.getSnagDataClosedList!.data![i].closeSnagRemark);
-       dueDates.add(signInController.getSnagDataClosedList!.data![i].dueDate);
-       createdDates.add(signInController.getSnagDataClosedList!.data![i].createdAt);
-       snagData.add(signInController.getSnagDataClosedList!.data![i]);
-       dateDifference.add(DateTime.parse(signInController.getSnagDataClosedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataClosedList!.data![i].createdAt!)).inDays);
+     if(signInController.getDeSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
+      for(int i=0;i<signInController.getDeSnagDataClosedList!.data!.length;i++){
+       subLocationName.add(signInController.getDeSnagDataClosedList!.data![i].subLocation!.subLocationName);
+       subSubLocationName.add(signInController.getDeSnagDataClosedList!.data![i].subSubLocation!.subSubLocationName);
+       locationName.add(signInController.getDeSnagDataClosedList!.data![i].location!.locationName);
+       remark.add(signInController.getDeSnagDataClosedList!.data![i].remark);
+       deSnagRemark.add(signInController.getDeSnagDataClosedList!.data![i].deSnagRemark);
+       closingDeSnagRemark.add(signInController.getDeSnagDataClosedList!.data![i].closeSnagRemark);
+       dueDates.add(signInController.getDeSnagDataClosedList!.data![i].dueDate);
+       createdDates.add(signInController.getDeSnagDataClosedList!.data![i].createdAt);
+       snagData.add(signInController.getDeSnagDataClosedList!.data![i]);
+       dateDifference.add(DateTime.parse(signInController.getDeSnagDataClosedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getDeSnagDataClosedList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -132,7 +133,7 @@ class _NewSnagState extends State<ClosedDeSnags> {
                                 onTap: () {},
                                 child: Center(
                                   child: CircleAvatar(
-                                  backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:const Color.fromRGBO(255, 192, 0, 1),
+                                  backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
                                   radius: 15.0,
                                   child: Text(dateDifference[index].toString(),style:const TextStyle(color: Colors.black),),
                                   ),

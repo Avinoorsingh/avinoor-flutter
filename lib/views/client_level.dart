@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:colab/controller/signInController.dart';
 import 'package:colab/models/client_response.dart';
 import 'package:colab/models/login_response_model.dart';
@@ -103,7 +104,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
             ],
           ),
           toolbarHeight: 80,
-          backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+          backgroundColor: AppColors.primary,
           leading: const Icon(
             Icons.notifications,
             size: 28,
@@ -146,10 +147,10 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                     builder: (BuildContext context, Widget? child) {
                     return Theme(
                       data: ThemeData.light().copyWith(
-                          primaryColor: const Color.fromRGBO(255, 192, 0, 1),
+                          primaryColor: AppColors.primary,
                           buttonTheme: const ButtonThemeData(
                             textTheme: ButtonTextTheme.primary
-                          ), colorScheme: const ColorScheme.light(primary:Color.fromRGBO(255, 192, 0, 1),).copyWith(secondary: const Color(0xFF8CE7F1)),
+                          ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
                       ),
                      child: child!,
                     );
@@ -247,7 +248,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                             // crossAxisAlignment: CrossAxisAlignment.center,  //used for aligning the children vertically
                                             children: [
                                               FittedBox(fit: BoxFit.fitWidth,child: 
-                                             SizedBox(width: 200, child: Center(child: Text(clientData[index].projectname??'Building name',textAlign: TextAlign.center, style: const TextStyle(fontSize: 22,fontWeight: FontWeight.w600,color: Colors.white))))),
+                                             SizedBox(width: 200, child: Center(child: Text(clientData[index].projectname??'Building name',textAlign: TextAlign.center, style: const TextStyle(fontSize: 22,fontWeight: FontWeight.w600,color: AppColors.white))))),
                                             ],
                                           ),
                                            FittedBox(fit: BoxFit.fitWidth,child: 
@@ -257,7 +258,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                           animation: true, //animate when it shows progress indicator first
                                           percent: int.parse('${clientData[index].progressDepartCount??"0"}')/100, //vercentage value: 0.6 for 60% (60/100 = 0.6)
                                           center: Text("${clientData[index].progressDepartCount??"0"}%",style: const TextStyle(
-                                            fontWeight: FontWeight.bold, fontSize: 12.0,color: Colors.white),
+                                            fontWeight: FontWeight.bold, fontSize: 12.0,color: AppColors.white),
                                           ), //center text, you can set Icon as well
                                           // footer: const Text("", style:TextStyle( 
                                           //   fontWeight: FontWeight.bold, fontSize: 17.0),
@@ -269,7 +270,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                            )
                                         ],),
                                         const Divider(
-                                          color: Colors.white,
+                                          color: AppColors.white,
                                         ),
                                            FittedBox(
                                           fit: BoxFit.fitWidth,child: 
@@ -280,37 +281,37 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                           Padding(
                                               padding: const EdgeInsets.only(top: 3.0,left:12,right: 12,bottom: 3.0),
                                               child: Column(children: [
-                                                Text("${clientData[index].totalPwrLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w400)),
-                                                Text("PRW",style: textStyleHeadline4.copyWith(color: Colors.white)),
+                                                Text("${clientData[index].totalPwrLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: AppColors.white,fontSize: 20,fontWeight: FontWeight.w400)),
+                                                Text("PRW",style: textStyleHeadline4.copyWith(color: AppColors.white)),
                                               ])),
                                           Padding(
                                              padding: const EdgeInsets.only(top: 3.0,left:12,right: 12,bottom: 3.0),
                                               child: Column(children: [
-                                                Text("${clientData[index].totalDeptLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w400)),
-                                                Text("Dept.",style: textStyleHeadline4.copyWith(color: Colors.white)),
+                                                Text("${clientData[index].totalDeptLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: AppColors.white,fontSize: 20,fontWeight: FontWeight.w400)),
+                                                Text("Dept.",style: textStyleHeadline4.copyWith(color: AppColors.white)),
                                               ])),
                                           Padding(
                                               padding: const EdgeInsets.only(top: 3.0,left:12,right: 12,bottom: 3.0),
                                               child: Column(children: [
-                                                Text("${clientData[index].totalMisscLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w400),),
-                                                Text("Misc.",style: textStyleHeadline4.copyWith(color: Colors.white)),
+                                                Text("${clientData[index].totalMisscLabourCount??'0'}",style: textStyleHeadline1.copyWith(color: AppColors.white,fontSize: 20,fontWeight: FontWeight.w400),),
+                                                Text("Misc.",style: textStyleHeadline4.copyWith(color: AppColors.white)),
                                               ])),
                                           Padding(
                                               padding: const EdgeInsets.only(top: 3.0,left:25,right: 20,bottom: 3.0),
                                               child: Column(children: [
-                                                Text("${clientData[index].areaOfConernTotal??'0'}",style: textStyleHeadline1.copyWith(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w400)),
-                                                Text("Act. Count",style: textStyleHeadline4.copyWith(color: Colors.white)),
+                                                Text("${clientData[index].areaOfConernTotal??'0'}",style: textStyleHeadline1.copyWith(color: AppColors.white,fontSize: 20,fontWeight: FontWeight.w400)),
+                                                Text("Act. Count",style: textStyleHeadline4.copyWith(color: AppColors.white)),
                                               ])),
                                                Padding(
                                               padding: const EdgeInsets.only(left: 30,right: 5,bottom: 5,top: 3.0),
                                               child: Column(children: [
-                                                Text("--",style: textStyleHeadline1.copyWith(color: Colors.white,fontSize: 20,fontWeight: FontWeight.w400)),
-                                                Text("BCWP",style: textStyleHeadline4.copyWith(color: Colors.white)),
+                                                Text("--",style: textStyleHeadline1.copyWith(color: AppColors.white,fontSize: 20,fontWeight: FontWeight.w400)),
+                                                Text("BCWP",style: textStyleHeadline4.copyWith(color: AppColors.white)),
                                               ])),
                                         ]), 
                                            ),  
                                             const Divider(
-                                          color: Colors.white,
+                                          color: AppColors.white,
                                         ),
                                         const Padding(padding: EdgeInsets.all(5)),                                        
                                         Row(
@@ -321,7 +322,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                             Row(
                                               children:  [
                                               SizedBox(width: 100,child: 
-                                              Text("Pending Areas of Concern.",style: textStyleBodyText3.copyWith(fontWeight: FontWeight.bold,color: Colors.white),)
+                                              Text("Pending Areas of Concern.",style: textStyleBodyText3.copyWith(fontWeight: FontWeight.bold,color: AppColors.white),)
                                               ),
                                               const SizedBox(width: 10,),
                                               FittedBox(child: 
@@ -330,7 +331,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                                 height: 35.0,
                                                 decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(5.0),
-                                                  color: Colors.white,
+                                                  color: AppColors.white,
                                                 ),
                                                 child: Center(
                                                   child: Text(
@@ -352,7 +353,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                                 const Padding(padding: EdgeInsets.all(10)),
                                               SizedBox(width: 80,
                                               child: 
-                                              Text("New Snag",style: textStyleBodyText3.copyWith(fontWeight: FontWeight.bold,color: Colors.white),)
+                                              Text("New Snag",style: textStyleBodyText3.copyWith(fontWeight: FontWeight.bold,color: AppColors.white),)
                                               ),
                                               const SizedBox(width: 10,),
                                               FittedBox(child: 
@@ -361,7 +362,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                                 height: 35.0,
                                                 decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(5.0),
-                                                  color: Colors.white,
+                                                  color: AppColors.white,
                                                 ),
                                                 child: Center(
                                                   child: Text(

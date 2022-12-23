@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -23,7 +24,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
-            ChartData('Steve', 40,"40.0\n Work \nDone %",const Color.fromRGBO(255, 192, 0, 1)),
+            ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
             // ChartData('Jack', 34, const Color.fromRGBO(228,0,124,1)),
             // ChartData('Others', 52, const Color.fromRGBO(255,189,57,1))
         ];
@@ -62,6 +63,12 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   
   @override
   Widget build(BuildContext context) {
+  final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+  final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+  final getClosedSnagDataController=Get.find<GetClosedSnag>();
+  final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
     return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
      EasyLoading.dismiss();
@@ -112,7 +119,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         Card(
                           margin: const EdgeInsets.all(8),
                           shadowColor: Colors.transparent,
-                          color: Colors.white,
+                          color: AppColors.white,
                           elevation: 10,
                           child: 
                         MaterialButton(onPressed: (){},
@@ -121,7 +128,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child: Center(child:Text(ButtonText[i],
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.normal,
                           fontSize: 12,
                           ),
@@ -140,7 +147,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 onTap: () {},
                                 child:  const Center(
                                   child: CircleAvatar(
-                                    backgroundColor:Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor:AppColors.primary,
                                     radius: 12.0,
                                     child: Text("0",style: TextStyle(color: Colors.black),),
                                   ),
@@ -158,6 +165,9 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           children:[ 
                             GestureDetector(
                               onTap: (){
+                                getNewSnagDataController.getSnagData(context: context);
+                                getOpenedSnagDataController.getOpenedSnagData(context: context);
+                                getClosedSnagDataController.getClosedSnagData(context: context);
                                 context.pushNamed('SNAGS');
                               },
                               child: 
@@ -170,7 +180,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         Card(
                           margin: const EdgeInsets.all(8),
                           shadowColor: Colors.transparent,
-                          color: Colors.white,
+                          color: AppColors.white,
                           elevation: 10,
                           child: 
                         MaterialButton(onPressed: (){
@@ -181,7 +191,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child: Center(child:Text(ButtonText[i],
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                           ),
@@ -197,7 +207,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 onTap: () {},
                                 child:  Center(
                                   child: CircleAvatar(
-                                    backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor:AppColors.primary,
                                     radius: 12.0,
                                     child: Text( signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
                                   ),
@@ -209,6 +219,9 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             ),
                                GestureDetector(
                               onTap: (){
+                              getNewDeSnagDataController.getSnagData(context: context);
+                              getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                              getClosedDeSnagDataController.getClosedSnagData(context: context);
                                 context.pushNamed('DESNAGS');
                               },
                               child: 
@@ -221,7 +234,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         Card(
                           margin: const EdgeInsets.all(8),
                           shadowColor: Colors.transparent,
-                          color: Colors.white,
+                          color: AppColors.white,
                           elevation: 10,
                           child: 
                         MaterialButton(onPressed: (){
@@ -232,7 +245,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child: Center(child:Text("DESNAG",
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
                           ),
@@ -251,7 +264,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 onTap: () {},
                                 child:  const Center(
                                   child: CircleAvatar(
-                                    backgroundColor:Color.fromRGBO(255, 192, 0, 1),
+                                    backgroundColor:AppColors.primary,
                                     radius: 12.0,
                                     child: Text("0",style: TextStyle(color: Colors.black),),
                                   ),
@@ -305,7 +318,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                               Row(children: const [Icon(Icons.square,color: Colors.green,size: 10), Text(" Work Done %    ",style: TextStyle(fontSize: 10),)],),
-                              Row(children: const [Icon(Icons.square,color: Color.fromRGBO(255, 192, 0, 1),size: 10), Text(" Balance %    ",style: TextStyle(fontSize: 10),)],)
+                              Row(children: const [Icon(Icons.square,color:AppColors.primary,size: 10), Text(" Balance %    ",style: TextStyle(fontSize: 10),)],)
                             ],)
                           ],),
                           Stack(
@@ -332,7 +345,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                     // Renders the data label
                                     textStyle: TextStyle(fontSize: 10,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                                    color: AppColors.white),
                                     isVisible: true
                                 )
                             )
@@ -382,7 +395,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           decimalPlaces: 2,enableAutoIntervalOnZooming: true),
                         series: <ChartSeries>[
                     StackedColumn100Series<ExpenseData, DateTime>(
-                        color:  const Color.fromRGBO(255, 192, 0, 1),
+                        color: AppColors.primary,
                         dataSource: _chartData,
                         xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
                         yValueMapper: (ExpenseData exp, _) => exp.mother,

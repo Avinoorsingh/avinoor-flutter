@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -20,7 +21,7 @@ class _LoadingDataScreenState extends State<LoadingDataScreen> {
   Widget build(BuildContext context) {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     return const Scaffold(
-      backgroundColor:  Color.fromRGBO(255, 192, 0, 1),
+      backgroundColor:  AppColors.primary,
     );
   }
 }

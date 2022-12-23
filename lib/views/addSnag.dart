@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
@@ -115,8 +116,8 @@ class _MyProfilePageState extends State<AddSnag> {
     uiSettings: [
       AndroidUiSettings(
           toolbarTitle: 'Edit Image',
-          toolbarColor: Colors.white,
-          toolbarWidgetColor: const Color.fromRGBO(255, 192, 0, 1),
+          toolbarColor: AppColors.white,
+          toolbarWidgetColor: AppColors.primary,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false),
       IOSUiSettings(
@@ -195,7 +196,7 @@ setState(() => this.image = imageTemp);
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+        backgroundColor: AppColors.primary,
       title: Text("Create Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
@@ -254,9 +255,9 @@ setState(() => this.image = imageTemp);
                   width: 90,
                   child: Card(
                     elevation: 5,
-                    color: isCardEnabled[index]? const Color.fromRGBO(255, 192, 0, 1):Colors.white,
+                    color: isCardEnabled[index]? AppColors.primary:AppColors.white,
                     shape: RoundedRectangleBorder(
-                      side: const BorderSide(color:  Color.fromRGBO(255, 192, 0, 1),width: 1),
+                      side: const BorderSide(color:  AppColors.primary,width: 1),
                         borderRadius: BorderRadius.circular(8)
                     ),
                     child: Center(
@@ -264,7 +265,7 @@ setState(() => this.image = imageTemp);
                       FittedBox(child:
                       Text(categoryNew[index],textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: isCardEnabled[index]?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
+                            color: isCardEnabled[index]?Colors.black: AppColors.primary,
                           fontSize: 16
                         ),
                       ),
@@ -290,7 +291,7 @@ setState(() => this.image = imageTemp);
               color: Colors.black,
               fontSize: 14
             ), 
-          dropdownColor: Colors.white,
+          dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
@@ -401,7 +402,7 @@ setState(() => this.image = imageTemp);
               color: Colors.black,
               fontSize: 14
             ), 
-          dropdownColor: Colors.white,
+          dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
@@ -518,7 +519,7 @@ setState(() => this.image = imageTemp);
               color: Colors.black,
               fontSize: 14
             ), 
-            dropdownColor: Colors.white,
+            dropdownColor: AppColors.white,
             decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
             borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
@@ -740,6 +741,7 @@ setState(() => this.image = imageTemp);
                 ),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    splashFactory: NoSplash.splashFactory,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
                     backgroundColor: Colors.transparent,
                       disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
@@ -751,7 +753,7 @@ setState(() => this.image = imageTemp);
                       viewpoints2[index1]['image'].add(imagefile);
                         setState(() { });
                       if (kDebugMode) {
-                        print(viewpoints2);
+                        // print(viewpoints2);
                       }
                       // _addImage(imagefile,index1);
                       // _addImageData(_image.name,index1);
@@ -802,7 +804,7 @@ setState(() => this.image = imageTemp);
                  color: Colors.black,
                  fontSize: 14
                ), 
-          dropdownColor: Colors.white,
+          dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
@@ -858,10 +860,10 @@ setState(() => this.image = imageTemp);
                     builder: (BuildContext context, Widget? child) {
                     return Theme(
                       data: ThemeData.light().copyWith(
-                          primaryColor: const Color.fromRGBO(255, 192, 0, 1),
+                          primaryColor: AppColors.primary,
                           buttonTheme: const ButtonThemeData(
                             textTheme: ButtonTextTheme.primary
-                          ), colorScheme: const ColorScheme.light(primary:Color.fromRGBO(255, 192, 0, 1),).copyWith(secondary: const Color(0xFF8CE7F1)),
+                          ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
                       ),
                      child: child!,
                     );
@@ -957,7 +959,7 @@ setState(() => this.image = imageTemp);
                  color: Colors.black,
                  fontSize: 14
                ), 
-          dropdownColor: Colors.white,
+          dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
@@ -976,9 +978,9 @@ setState(() => this.image = imageTemp);
                    setState(() {
                     snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)-1].toString();
                      dropdownvalueAssignedTo = newValue;
-                     if (kDebugMode) {
-                       print(assignedToListIndex[assignedToList.indexOf(newValue)]);
-                     }
+                    //  if (kDebugMode) {
+                    //    print(assignedToListIndex[assignedToList.indexOf(newValue)]);
+                    //  }
                    });
                  },
                ),
@@ -1023,13 +1025,13 @@ setState(() => this.image = imageTemp);
                   width: 100,
                   child: Container(
                    decoration: BoxDecoration(
-                     color: isCardEnabled2[index]? const Color.fromRGBO(255, 192, 0, 1):Colors.white,
-                     border: Border.all(width: 1.2,color:  const Color.fromRGBO(255, 192, 0, 1),),
+                     color: isCardEnabled2[index]? AppColors.primary:AppColors.white,
+                     border: Border.all(width: 1.2,color:  AppColors.primary,),
                     ),
                     child: Center(
                       child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: isCardEnabled2[index]?Colors.black: const Color.fromRGBO(255, 192, 0, 1),
+                            color: isCardEnabled2[index]?Colors.black: AppColors.primary,
                           fontSize: 16
                         ),
                       ),
@@ -1055,7 +1057,7 @@ setState(() => this.image = imageTemp);
               }, 
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(150,40),
-                backgroundColor: Colors.white
+                backgroundColor: AppColors.white
               ),
               child: const Text("Cancel",style: TextStyle(color: Colors.black),)),
               ElevatedButton(onPressed: () async{
@@ -1079,6 +1081,9 @@ setState(() => this.image = imageTemp);
                 }
                 else if(snapAssignedToController.text.isEmpty){
                   EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(viewpoints2[0]['image'].isEmpty){
+                  EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else{
                 List VID=[];
@@ -1123,13 +1128,14 @@ setState(() => this.image = imageTemp);
                       "debit_amount":int.parse(debitAmountController.text),
                       "due_date": dateInput.text,
                       "assigned_to": int.parse(snapAssignedToController.text),
-                      "created_by": createdById,
+                      "created_by": int.parse(createdById!),
                       "snag_status": "N",
                       "snag_priority": priorityController.text== "Critical"?'CR':priorityController.text=="Major"?'MA':priorityController.text=="Minor"?'MI':"",
                    }
                    )
                    )
                    );
+                    print(formData.fields);
                   try {
                     await dio.post(
                   "http://nodejs.hackerkernel.com/colab/api/add_snags",
@@ -1226,8 +1232,8 @@ return Dialog(
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop('dialog');
               },
-              style: ElevatedButton.styleFrom(backgroundColor:  const Color.fromRGBO(255, 192, 0, 1),),
-              child: const Text("CANCEL",style: TextStyle(color: Colors.white),),
+              style: ElevatedButton.styleFrom(backgroundColor:  AppColors.primary,),
+              child: const Text("CANCEL",style: TextStyle(color: AppColors.white),),
             ),
           ],
         ),
@@ -1263,9 +1269,9 @@ return Dialog(
               final fullPath = '$directory/sample/$n1/image.png';
               final imgFile = File(fullPath);
               imgFile.writeAsBytesSync(image);
-              if (kDebugMode) {
-                print(imgFile.path);
-              }
+              // if (kDebugMode) {
+              //   print(imgFile.path);
+              // }
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               sharedPreferences.setString("imgPath", imgFile.path);
               Navigator.of(context, rootNavigator: true,).pop('dialog');

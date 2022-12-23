@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -45,8 +46,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
     uiSettings: [
       AndroidUiSettings(
           toolbarTitle: 'Edit Image',
-          toolbarColor: Colors.white,
-          toolbarWidgetColor: const Color.fromRGBO(255, 192, 0, 1),
+          toolbarColor: AppColors.white,
+          toolbarWidgetColor: AppColors.primary,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false),
       IOSUiSettings(
@@ -95,7 +96,7 @@ setState(() => this.image = imageTemp);
         return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+        backgroundColor:AppColors.primary,
       title: Text("My Profile",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
@@ -156,7 +157,7 @@ setState(() => this.image = imageTemp);
                   const Positioned(
                     bottom: -12,
                     right: -7,
-                    child:CircleAvatar(foregroundColor: Colors.grey,backgroundColor: Colors.white,child: Icon(Icons.camera_alt,),)
+                    child:CircleAvatar(foregroundColor: Colors.grey,backgroundColor: AppColors.white,child: Icon(Icons.camera_alt,),)
                   ),
                   }
                   ]
@@ -568,7 +569,7 @@ setState(() => this.image = imageTemp);
                   });
         },
         elevation: 5,
-        child: Text("LOGOUT",style: textStyleBodyText1.copyWith(fontSize: 20,color: Colors.white),),
+        child: Text("LOGOUT",style: textStyleBodyText1.copyWith(fontSize: 20,color: AppColors.white),),
       ),
        ),
       )

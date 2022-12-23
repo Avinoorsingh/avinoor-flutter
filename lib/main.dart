@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:colab/router.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.white,
+    systemNavigationBarColor: AppColors.white,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
   DependencyInjector.initializeControllers();
@@ -31,11 +32,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  statusBarColor: Color.fromRGBO(255, 192, 0, 1),
+  statusBarColor: AppColors.primary,
 ));
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp]); //Forcing orientation to Portrait.
     return MaterialApp(
+      color: AppColors.primary,
       navigatorKey: contextKey,
       debugShowCheckedModeBanner: false,
       home: MaterialApp.router(

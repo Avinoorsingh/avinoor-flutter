@@ -10,4 +10,5 @@ class Config{
   static const String getEmployees="http://nodejs.hackerkernel.com/colab/api/drawing_employees/";
   static const String getViewpoints="http://nodejs.hackerkernel.com/colab/api/getViewPointMaster";
   static const String getSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_snags_data_by_status/";
+  static const String getDeSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_assign_snags_data/";
 }

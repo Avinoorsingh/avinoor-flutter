@@ -13,7 +13,7 @@ class SnagData {
          data?.add(FetchSnagData.fromJson(data1));   
       } catch (e) {
         if (kDebugMode) {
-            print("Errorrrrrrr!!!!");
+          print("Errorrrrrrr!!!!");
           print(e);
         }
       } 
@@ -183,9 +183,9 @@ class FetchSnagData {
     employee = json['employee'] != null
         ? Employee.fromJson(json['employee'])
         : null;
-    createdby2 = (json['createdby2'] != null
-        ? CreatedBy.fromJson(json['createdby2'])
-        : null) as int?;
+    createdBy1 = json['createdBy'] != null
+        ? CreatedBy.fromJson(json['createdBy'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -920,7 +920,7 @@ class CreatedBy {
   String? emailId;
   int? roleId;
   int? status;
- String? userType;
+  int? userType;
  String? lastName;
   int? designation;
  String? altMobileNo;
@@ -962,7 +962,7 @@ class CreatedBy {
     clientId = json['client_id'];
     userId = json['user_id'];
     password = json['password'];
-    name = json['name']??"";
+    name = json['name']??"unavailable";
     rm = json['rm'];
     mobileNo = json['mobile_no'];
     emailId = json['email_id'];

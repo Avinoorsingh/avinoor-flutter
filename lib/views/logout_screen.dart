@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,13 +17,13 @@ class _LogoutScreenState extends State<LogoutScreen> {
           appBar: AppBar(
           title: const Text("User Profile"),
           toolbarHeight: 80,
-          backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+          backgroundColor: AppColors.primary,
         ),
           body: Center(child: Column(children: <Widget>[  
             Container(  
               margin: const EdgeInsets.all(25),  
               child: MaterialButton( 
-                textColor: Colors.white, 
+                textColor: AppColors.white, 
                 color: Colors.red,elevation: 5,
                 child: const Text('Log Out', style: TextStyle(fontSize: 20.0),),  
                onPressed: () async {

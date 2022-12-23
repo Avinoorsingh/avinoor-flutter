@@ -1,3 +1,4 @@
+import 'package:colab/constants/colors.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/page1.dart';
 import 'package:colab/views/page2.dart';
@@ -26,8 +27,11 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
+  final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
   var clientDataGet;
   List pages=[];
   
@@ -49,8 +53,11 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
     getNewSnagDataController.getSnagData(context: context);
+    getNewDeSnagDataController.getSnagData(context: context);
     getOpenedSnagDataController.getOpenedSnagData(context: context);
+    getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
+    getClosedDeSnagDataController.getClosedSnagData(context: context);
   }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -78,6 +85,10 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   int current = 0;
   @override
   Widget build(BuildContext context) {
+    if(mounted){
+    getClientProfileController.getUserProfile(context: context);
+    getClientProjectsController.getUpcomingProjects(context: context);
+    }
      return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -220,7 +231,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                             // height: 50,
                             decoration: BoxDecoration(
                               color: current == index
-                                  ? Colors.white
+                                  ? AppColors.white
                                   : Colors.white54,
                               borderRadius: current == index
                                   ? BorderRadius.circular(15)
@@ -233,7 +244,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                             child: 
                             Card(
                               color: current == index
-                                  ? const Color.fromRGBO(255, 192, 0, 1)
+                                  ?AppColors.primary
                                   : Colors.white,
                               elevation: 5,
                               child: 
@@ -250,7 +261,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                               width: 5,
                               height: 5,
                               decoration: const BoxDecoration(
-                                  color:  Color.fromRGBO(255, 192, 0, 1),
+                                  color:AppColors.primary,
                                   shape: BoxShape.circle),
                             )),
                       ],

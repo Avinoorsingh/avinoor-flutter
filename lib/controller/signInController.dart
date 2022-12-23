@@ -29,6 +29,7 @@ class SignInController extends GetxController {
   RxString userIdProvider = ''.obs;
   late final getUserProfile = GetUserProfileNetwork();
   late final getNewSnagData=GetNewSnag();
+  late final getNewDeSnagData=GetNewDeSnag();
   late final getOpenedSnagData=GetOpenedSnag();
   late final getClosedSnagData=GetClosedSnag();
   LoginResponseModel? getClientProfile;
@@ -39,8 +40,11 @@ class SignInController extends GetxController {
   ActivityHead? getActivityHeadList;
   ClientEmployee? getEmployeeList;
   SnagData? getSnagDataList;
+  SnagData? getDeSnagDataList;
   SnagData? getSnagDataOpenedList;
+  SnagData? getDeSnagDataOpenedList;
   SnagData? getSnagDataClosedList;
+  SnagData? getDeSnagDataClosedList;
 
   
   @override

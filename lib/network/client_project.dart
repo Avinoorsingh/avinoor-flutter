@@ -64,7 +64,7 @@ class GetClientProject extends GetxController {
       update();
       if (kDebugMode) {
         print('getClientData nhi chali !!');
-          print(e);
+        print(e);
       }
     }
   }
@@ -124,7 +124,7 @@ class GetClientProject extends GetxController {
       update();
       if (kDebugMode) {
         print('getProject data nhi chali !!');
-          print(e);
+        print(e);
       }
     }
   }
@@ -206,7 +206,7 @@ class GetUserProfileNetwork extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting location list");
-                  print(e);
+                print(e);
               }
             }
     try {
@@ -225,7 +225,7 @@ class GetUserProfileNetwork extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting employee list");
-                 print(e);
+                print(e);
               }
             }
      update();
@@ -278,6 +278,45 @@ class GetNewSnag extends GetxController{
   }
 }
 
+
+class GetNewDeSnag extends GetxController{
+  final signInController = Get.find<SignInController>();
+  static var client=http.Client();
+  Future getSnagData({token, required BuildContext context}) async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     var id=sharedPreferences.getString('id');
+     var isClient=false;
+     if(isClientSignedIn==true){
+      isClient=true;
+     }
+      bool? isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+        isClient=false;
+      }
+      try {
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/N");
+        var res=await http.get(
+            getSnagsUrl,
+            headers:{
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+          );
+          Map<String,dynamic> cData4=jsonDecode(res.body);
+          SnagData result5=SnagData.fromJson(cData4['data']);
+          signInController.getDeSnagDataList=result5;
+          update(); 
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting new de snag list");
+                print(e);
+              }
+            }
+  }
+}
+
 class GetOpenedSnag extends GetxController{
   final signInController = Get.find<SignInController>();
   static var client=http.Client();
@@ -319,6 +358,47 @@ class GetOpenedSnag extends GetxController{
   }
 }
 
+class GetOpenedDeSnag extends GetxController{
+  final signInController = Get.find<SignInController>();
+  static var client=http.Client();
+  Future getOpenedSnagData({token, required BuildContext context}) async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     var projectID=sharedPreferences.getString('projectIdd');
+     var id=sharedPreferences.getString('id');
+     var isClient=false;
+     if(isClientSignedIn==true){
+      isClient=true;
+     }
+      bool? isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+        isClient=false;
+      }
+       update(); 
+      try {
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/O");
+        var res=await http.get(
+            getSnagsUrl,
+            headers:{
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+          );
+           update(); 
+          Map<String,dynamic> cData4=jsonDecode(res.body);
+          SnagData result5=SnagData.fromJson(cData4['data']);
+          signInController.getDeSnagDataOpenedList=result5;  
+          update(); 
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in opened de-snag list");
+                print(e);
+              }
+            }
+  }
+}
+
 class GetClosedSnag extends GetxController{
   final signInController = Get.find<SignInController>();
   static var client=http.Client();
@@ -350,6 +430,46 @@ class GetClosedSnag extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getSnagDataClosedList=result5;
+          update();   
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting closed snag list");
+                print(e);
+              }
+            }
+  }
+}
+
+class GetClosedDeSnag extends GetxController{
+  final signInController = Get.find<SignInController>();
+  static var client=http.Client();
+  Future getClosedSnagData({token, required BuildContext context}) async {
+     final getClientProjectsController = Get.find<GetClientProject>();
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     await getClientProjectsController.getSelectedProjects(context: context,selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()));
+     var id=sharedPreferences.getString('id');
+     var isClient=false;
+     if(isClientSignedIn==true){
+      isClient=true;
+     }
+      bool? isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+        isClient=false;
+      }
+      try {
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/C");
+        var res=await http.get(
+            getSnagsUrl,
+            headers:{
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+          );
+          Map<String,dynamic> cData4=jsonDecode(res.body);
+          SnagData result5=SnagData.fromJson(cData4['data']);
+          signInController.getDeSnagDataClosedList=result5;
           update();   
             } catch (e) {
               if (kDebugMode) {

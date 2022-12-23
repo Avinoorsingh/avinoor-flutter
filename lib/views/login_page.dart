@@ -132,8 +132,8 @@ class _LogInPageState extends State<LogInPage> {
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
                     backgroundColor: Colors.transparent,
                     splashFactory: NoSplash.splashFactory,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
+                    disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                    shadowColor: Colors.transparent,
                   ),
 
                   onPressed: ()async{

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:colab/constants/colors.dart';
 import 'package:colab/network/client_project.dart';
 import 'package:colab/views/ClosedSnags.dart';
 import 'package:colab/views/newSnags.dart';
@@ -50,7 +51,7 @@ class _MyProfilePageState extends State<Snags> {
       child: Scaffold(
         appBar: AppBar(
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+        backgroundColor:AppColors.primary,
       title: Text("Snags",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
         key: ScaffoldStateKey,

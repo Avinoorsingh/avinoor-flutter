@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:colab/constants/colors.dart';
 import 'package:colab/services/bottom_tab_bar2.dart';
 import 'package:colab/views/closed_desnags.dart';
 import 'package:colab/views/new_deSnags.dart';
@@ -46,7 +47,7 @@ class _MyProfilePageState extends State<DeSnags> {
       child: Scaffold(
         appBar: AppBar(
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromRGBO(255, 192, 0, 1),
+        backgroundColor: AppColors.primary,
       title: Text("De-snags",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
 

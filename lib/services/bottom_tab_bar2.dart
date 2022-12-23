@@ -1,4 +1,5 @@
 
+import 'package:colab/constants/colors.dart';
 import 'package:colab/network/client_project.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -15,9 +16,9 @@ class BottomTabBar2 extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar2 > {
-   final getSnag = Get.find<GetNewSnag>();
-   final getOpenedSnag=Get.find<GetOpenedSnag>();
-   final getClosedSnag=Get.find<GetClosedSnag>();
+   final getSnag = Get.find<GetNewDeSnag>();
+   final getOpenedSnag=Get.find<GetOpenedDeSnag>();
+   final getClosedSnag=Get.find<GetClosedDeSnag>();
    final signInController=Get.find<SignInController>();
   @override
   Widget build(BuildContext context) {
@@ -29,11 +30,11 @@ class _BottomTabBarState extends State<BottomTabBar2 > {
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-              colors: [Colors.white,Colors.white,],
+              colors:[AppColors.white,AppColors.white,],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight),
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          boxShadow: [
+          borderRadius:BorderRadius.all(Radius.circular(40)),
+          boxShadow:[
             BoxShadow(
                 color: Colors.black,
                 spreadRadius: 1),
@@ -47,7 +48,7 @@ class _BottomTabBarState extends State<BottomTabBar2 > {
           controller: DefaultTabController.of(context),
           indicator: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(40)),
-            color: Color.fromRGBO(255, 192, 0, 1),
+            color: AppColors.primary,
             boxShadow: [
             // BoxShadow(
             //     color: Colors.black,

@@ -2,6 +2,8 @@ import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../constants/colors.dart';
+
 class ProjectLevelPage2 extends StatefulWidget {
   const ProjectLevelPage2 ({Key? key}) : super(key: key);
 
@@ -47,7 +49,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage2 > {
                       center: const Text("80%",style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 25.0),
                       ), //center text, you can set Icon as well/footer text 
-                      backgroundColor: Colors.white, //backround of progress bar//corner shape of progress bar at start/end
+                      backgroundColor: AppColors.white, //backround of progress bar//corner shape of progress bar at start/end
                       progressColor: const Color.fromARGB(255, 29, 51, 88), //progress bar color
                     )
                   ),

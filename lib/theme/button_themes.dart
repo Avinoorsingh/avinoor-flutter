@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:colab/theme/text_styles.dart';
 
+import '../constants/colors.dart';
+
 ElevatedButtonThemeData lightElevatedButtonTheme = ElevatedButtonThemeData(
   style: ButtonStyle(
       elevation: MaterialStateProperty.all<double>(0),
@@ -21,7 +23,7 @@ ElevatedButtonThemeData elevatedRoundedButtonTheme = ElevatedButtonThemeData(
       const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(100))),
     ),
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    backgroundColor: MaterialStateProperty.all<Color>(AppColors.white),
     textStyle: MaterialStateProperty.all<TextStyle>(textStyleButton2),
   ),
 );
@@ -52,7 +54,7 @@ OutlinedButtonThemeData darkOutlinedButtonTheme = OutlinedButtonThemeData(
       ),
     ),
     side: MaterialStateProperty.all<BorderSide>(
-        const BorderSide(width: 2, color: Colors.white)),
+        const BorderSide(width: 2, color: AppColors.white)),
   ),
 );
 

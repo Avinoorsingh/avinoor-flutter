@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -20,10 +21,16 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProfile = GetUserProfileNetwork();
   final getSnagData=GetNewSnag();
   final getProjectSnagData=Get.find<GetNewSnag>();
+  final getDeSnagData=GetNewDeSnag();
+  final getProjectDeSnagData=Get.find<GetNewDeSnag>();
   final getOpenedSnag=GetOpenedSnag();
   final getOpenedSnagData=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnag=GetOpenedDeSnag();
+  final getOpenedDeSnagData=Get.find<GetOpenedDeSnag>();
   final getClosedSnag=GetClosedSnag();
   final getClosedSnagData=Get.find<GetClosedSnag>();
+  final getClosedDeSnag=GetClosedDeSnag();
+  final getClosedDeSnagData=Get.find<GetClosedDeSnag>();
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
     void goToHome()async {
@@ -77,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
         padding: const EdgeInsets.symmetric(vertical: 40),
         decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors:  [Color.fromRGBO(255, 192, 0, 1), Color.fromRGBO(255, 192, 0, 1),],
+                colors:  [AppColors.primary,AppColors.primary,],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight)),
         child: Stack(children: [
@@ -88,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: Theme.of(context)
                   .textTheme
                   .subtitle1
-                  ?.copyWith(color: Colors.white),
+                  ?.copyWith(color: AppColors.white),
             ),
           ),
         ]),

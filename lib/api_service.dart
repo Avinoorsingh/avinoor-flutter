@@ -24,7 +24,7 @@ class APIService{
     if(response.statusCode==200){
       Map<String, dynamic> responseSuccess=jsonDecode(response.body);
       if (kDebugMode) {
-        print(responseSuccess);
+        // print(responseSuccess);
       }
       if(responseSuccess['success']==true){
           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -59,7 +59,7 @@ class APIService{
             clientData.add(ClientProfileData.fromJson(data));
            }
            if (kDebugMode) {
-             print(clientData);
+            //  print(clientData);
            }
             return "clientLevel";
            }
@@ -95,7 +95,7 @@ static Future postJwtForm({
     var dio = Dio();
     var formData = FormData.fromMap(body);
     if (kDebugMode) {
-      print(body);
+      // print(body);
     }
     try {
     var response = await dio.post(
@@ -117,7 +117,6 @@ static Future postJwtForm({
     return {'status': response.statusCode, 'body': response.data};
     } catch (e) {
       if (kDebugMode) {
-        print("///////////////");
         print(e);
       }
     }
