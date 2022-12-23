@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:http/http.dart' as http;
-import 'package:colab/views/activity_head.dart';
-import 'package:colab/views/sub_location.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -61,28 +59,12 @@ class _SnagState extends State<SnagDetail> {
   String dropdownvalueAssignedTo="Select Name";
   final ValueNotifier<String?> dropDownNotifier = ValueNotifier(null);
 
-   List<File> _imageList = [];
    List<String> imageData=[];
-
-  void _addImage(File _image) {
-    setState(() {
-      _imageList.add(_image);
-    });
-  }
-   void _addImageData(String _imagepath) {
-    setState(() {
-      imageData.add(_imagepath);
-    });
-  }
  
    List<bool> isCardEnabled = [];
    List<bool> isCardEnabled2 = [];
    List<String> deSnagImages=[];
-   List<String> category=[
-    "Safety",
-    "Execution",
-    "Quality",
-   ];
+
    List<String> priority=[
     "Critical",
     "Major",
@@ -151,7 +133,6 @@ setState(() => this.image = imageTemp);
     deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
-    print(widget.snagModel?.createdBy1);
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
     snagAssignedToController.text=widget.snagModel?.employee?.name??"";
     priorityController.text=widget.snagModel?.snagPriority;
@@ -473,7 +454,7 @@ setState(() => this.image = imageTemp);
                         formData.fields.add(MapEntry('viewpoint_id', viewpoints[outerIndex]['id'].toString()));
                         formData.files.add(
                         MapEntry("de_snag_image", await MultipartFile.fromFile(viewpoints[outerIndex]['deSnagImage'][0].path.split(': ')[0].substring(1,viewpoints[outerIndex]['deSnagImage'][0].path.split(': ')[0].length), filename: 'de_snag_image')));
-                         var response1=await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
+                        await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
                         data:formData,
                         options: Options(
                             followRedirects: false,
@@ -1005,7 +986,7 @@ setState(() => this.image = imageTemp);
                 var createdById=sharedPreferences.getString('id');
                 if(deSnagRemarkController.text.isNotEmpty){
                   try {
-                     var res=await http.post(
+                    await http.post(
                     Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
                      headers: {
                               "Accept": "application/json",
@@ -1503,61 +1484,23 @@ setState(() => this.image = imageTemp);
 }
 }
 
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const SubLocation(),
-   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  const begin = Offset(0.0, 1.0);
-  const end = Offset.zero;
-  final tween = Tween(begin: begin, end: end);
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-},
-  );
-}
-
-Route _createRoute2() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const ActivityHeadPage(),
-   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  const begin = Offset(0.0, 1.0);
-  const end = Offset.zero;
-  final tween = Tween(begin: begin, end: end);
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-},
-  );
-}
-
-
 Widget imageDialog(text, path, context) {
 return Dialog(
   backgroundColor: Colors.transparent,
   elevation: 0,
   child: Column(
     children: [
-      Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-              child: const Text("CANCEL",style: TextStyle(color: AppColors.white),),
-            ),
-          ],
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop('dialog');
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            child: const Text("CANCEL",style: TextStyle(color: AppColors.white),),
+          ),
+        ],
       ),
       SizedBox(
         width: MediaQuery.of(context).size.width,

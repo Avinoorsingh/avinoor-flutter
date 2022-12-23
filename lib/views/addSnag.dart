@@ -6,8 +6,6 @@ import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
-import 'package:colab/routes.dart';
-import 'package:colab/views/newSnags.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
 import 'package:colab/models/location_list.dart';

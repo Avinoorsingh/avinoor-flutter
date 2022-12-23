@@ -1,20 +1,15 @@
 import 'dart:math';
 
 import 'package:colab/constants/colors.dart';
-import 'package:colab/network/client_project.dart';
 import 'package:colab/views/ClosedSnags.dart';
 import 'package:colab/views/newSnags.dart';
 import 'package:colab/views/openedSnags.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/bottom_tab_bar.dart';
-import '../services/helper/dependency_injector.dart';
 
 GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 

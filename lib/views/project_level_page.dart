@@ -121,13 +121,12 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Container(
-                        child: Text(
+                    Text(
                       'Hi, ${signInController.getClientProfile?.name}',
                       textAlign: TextAlign.right,
                       overflow: TextOverflow.ellipsis,
                       style: textStyleHeadline4.copyWith(fontSize: 16),
-                    )),
+                    ),
                     Flexible(
                         child: Text(
                       'Last Login: ${signInController.getClientProfile?.updatedat!=null ? f.format(DateTime.parse(signInController.getClientProfile!.updatedat.toString())):f.format(DateTime.now())}',
@@ -193,103 +192,98 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           ),
         ),
       body:
+      Center(child: 
       Container(
-        // physics: const NeverScrollableScrollPhysics(),
-        // scrollDirection: Axis.vertical,
-        child: 
-        Center(child: 
-      Container(
-        width: double.infinity,
-        // height: double.infinity,
-        margin: const EdgeInsets.only(left:5,right: 5),
-        child: Column(
-          children: [
-            /// CUSTOM TABBAR
-            SizedBox(
-              width: double.infinity,
-              height: 90,
-              child:
-              Center(child: 
-               ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: items.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (ctx, index) {
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              current = index;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.all(5),
-                            width: 80,
-                            // height: 50,
-                            decoration: BoxDecoration(
-                              color: current == index
-                                  ? AppColors.white
-                                  : Colors.white54,
-                              borderRadius: current == index
-                                  ? BorderRadius.circular(15)
-                                  : BorderRadius.circular(10),
-                              border: current == index
-                                  ? Border.all(
-                                      color: Colors.white, width: 2)
-                                  : null,
-                            ),
+      width: double.infinity,
+      // height: double.infinity,
+      margin: const EdgeInsets.only(left:5,right: 5),
+      child: Column(
+        children: [
+          /// CUSTOM TABBAR
+          SizedBox(
+            width: double.infinity,
+            height: 90,
+            child:
+            Center(child: 
+             ListView.builder(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: items.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (ctx, index) {
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            current = index;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.all(5),
+                          width: 80,
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            color: current == index
+                                ? AppColors.white
+                                : Colors.white54,
+                            borderRadius: current == index
+                                ? BorderRadius.circular(15)
+                                : BorderRadius.circular(10),
+                            border: current == index
+                                ? Border.all(
+                                    color: Colors.white, width: 2)
+                                : null,
+                          ),
+                          child: 
+                          Card(
+                            color: current == index
+                                ?AppColors.primary
+                                : Colors.white,
+                            elevation: 5,
                             child: 
-                            Card(
-                              color: current == index
-                                  ?AppColors.primary
-                                  : Colors.white,
-                              elevation: 5,
-                              child: 
-                            Center(
-                              child: 
-                              Image.asset(items[index].toString())
-                            ),
-                            ),
+                          Center(
+                            child: 
+                            Image.asset(items[index].toString())
+                          ),
                           ),
                         ),
-                        Visibility(
-                            visible: current == index,
-                            child: Container(
-                              width: 5,
-                              height: 5,
-                              decoration: const BoxDecoration(
-                                  color:AppColors.primary,
-                                  shape: BoxShape.circle),
-                            )),
-                      ],
-                    );
-                  }),
-              )
-            ),
-             Visibility(child:  Center(child: Text(tabName[current],style: textStyleHeadline3,)),),
-            /// MAIN BODY
-            Expanded(
-              // width: double.infinity,
-              // child: 
-              // Expanded(child: 
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-                child: pages[current],
-                //   const SizedBox(
-                //     height: 10,
-                //   ),
-                // ],
-          //    ),
-            //  ),
-            ),
-          ],
-        ),
+                      ),
+                      Visibility(
+                          visible: current == index,
+                          child: Container(
+                            width: 5,
+                            height: 5,
+                            decoration: const BoxDecoration(
+                                color:AppColors.primary,
+                                shape: BoxShape.circle),
+                          )),
+                    ],
+                  );
+                }),
+            )
+          ),
+           Visibility(child:  Center(child: Text(tabName[current],style: textStyleHeadline3,)),),
+          /// MAIN BODY
+          Expanded(
+            // width: double.infinity,
+            // child: 
+            // Expanded(child: 
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+              child: pages[current],
+              //   const SizedBox(
+              //     height: 10,
+              //   ),
+              // ],
+        //    ),
+          //  ),
+          ),
+        ],
       ),
-        )
+      ),
       )
     ):const LoadingDataScreen();
   });

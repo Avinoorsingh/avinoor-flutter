@@ -173,6 +173,7 @@ class ClientProfileData {
         data['progressMissCount'] = progressMissCount;
         data['progressDepartCount'] = progressDepartCount;
         data['AreaOfConern'] = areaOfConern;
+        // ignore: unnecessary_null_comparison
         data['DonutArr'] =DonutArr != null ? donutArr!.map((v) => v?.toJson()).toList() : null;
         data['nonProductiveCount'] =nonProductiveCount != null ? nonProductiveCount!.map((v) => v?.toJson()).toList() : null;
         data['productiveCount'] =productiveCount != null ? productiveCount!.map((v) => v?.toJson()).toList() : null;

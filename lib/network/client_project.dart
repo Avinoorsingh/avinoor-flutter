@@ -6,10 +6,8 @@ import 'package:colab/models/location_list.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/models/login_user.dart';
 import 'package:colab/models/snag_data.dart';
-import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -150,6 +148,7 @@ class GetUserProfileNetwork extends GetxController{
       if(isProjectSignedIn==true){
         isClient=false;
       }
+      isClient;
      LoginUserModel model= LoginUserModel(userId: email, password: password);
    Map<String, String> requestHeaders={
       'Content-Type':'application/json',
@@ -295,6 +294,7 @@ class GetNewDeSnag extends GetxController{
       if(isProjectSignedIn==true){
         isClient=false;
       }
+      isClient;
       try {
       var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/N");
         var res=await http.get(
@@ -365,7 +365,6 @@ class GetOpenedDeSnag extends GetxController{
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
      var token=sharedPreferences.getString('token');
      bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
-     var projectID=sharedPreferences.getString('projectIdd');
      var id=sharedPreferences.getString('id');
      var isClient=false;
      if(isClientSignedIn==true){
@@ -375,6 +374,7 @@ class GetOpenedDeSnag extends GetxController{
       if(isProjectSignedIn==true){
         isClient=false;
       }
+      isClient;
        update(); 
       try {
       var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/O");
@@ -458,6 +458,7 @@ class GetClosedDeSnag extends GetxController{
       if(isProjectSignedIn==true){
         isClient=false;
       }
+      isClient;
       try {
       var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/C");
         var res=await http.get(

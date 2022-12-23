@@ -25,8 +25,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
             ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
-            // ChartData('Jack', 34, const Color.fromRGBO(228,0,124,1)),
-            // ChartData('Others', 52, const Color.fromRGBO(255,189,57,1))
         ];
     List<String> items = [
     "assets/images/labour_data_img.png",
@@ -37,7 +35,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     "assets/images/other_360.png",
     "assets/images/other_360.png",
   ];
-  List<String> ButtonText = [
+  List<String> buttonText = [
     "LABOUR DATA",
     "ACTIVITIES",
     "QUALITY CHECKLIST",
@@ -48,14 +46,12 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   ];
    List<String> iconText = [];
  late List<ExpenseData> _chartData;
-  late TooltipBehavior _tooltipBehavior;
 
   @override
   void initState() {
     _chartData = getChartData();
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getSelectedProjects(context: context);
-    _tooltipBehavior = TooltipBehavior(enable: true);
     super.initState();
   }
 
@@ -69,7 +65,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
-    return GetBuilder<GetUserProfileNetwork>(builder: (_){
+    return GetBuilder<GetUserProfileNetwork>(
+      builder: (_){
       final signInController=Get.find<SignInController>();
      EasyLoading.dismiss();
     return
@@ -93,8 +90,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
             width: 350,
             decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50)),
-            margin: const EdgeInsets.all(5),
-            //padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),  //padding: const EdgeInsets.all(5),
             child: Stack(
                   children: [
                   Column(
@@ -125,7 +121,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         MaterialButton(onPressed: (){},
                         height: 45,
                         color: const Color.fromARGB(255, 29, 51, 88),
-                        child: Center(child:Text(ButtonText[i],
+                        child: Center(child:Text(buttonText[i],
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(
                           color: AppColors.white,
@@ -140,9 +136,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                               top: 40,
                               left: 10,
                               right: 10,
-                              // bottom: 20,
-                              // left: 310,
-                              //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
                                 child:  const Center(
@@ -161,7 +154,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                          if(i==3)...{
                           FittedBox(child:
                         Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children:[ 
                             GestureDetector(
                               onTap: (){
@@ -188,7 +180,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         },
                         height: 45,
                         color: const Color.fromARGB(255, 29, 51, 88),
-                        child: Center(child:Text(ButtonText[i],
+                        child: Center(child:Text(buttonText[i],
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(
                           color: AppColors.white,
@@ -196,35 +188,36 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           fontSize: 16,
                           ),
                         )
-                        )
-                        ),
-                        ),
-                         Positioned(
-                              top: 40,
-                              left: 10,
-                              right: 10,
-                              child: InkWell(
-                                onTap: () {},
-                                child:  Center(
-                                  child: CircleAvatar(
-                                    backgroundColor:AppColors.primary,
-                                    radius: 12.0,
-                                    child: Text( signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
+                      )
+                    ),
+                  ),
+                Positioned(
+                  top: 40,
+                  left: 10,
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {},
+                    child:  Center(
+                    child: CircleAvatar(
+                        backgroundColor:AppColors.primary,
+                        radius: 12.0,
+                        child: Text( signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
                             ),
-                          ])
-                        ),
-                            ),
-                               GestureDetector(
-                              onTap: (){
-                              getNewDeSnagDataController.getSnagData(context: context);
-                              getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-                              getClosedDeSnagDataController.getClosedSnagData(context: context);
-                                context.pushNamed('DESNAGS');
-                              },
-                              child: 
+                          ]
+                        )
+                      ),
+                    ),
+                    GestureDetector(
+                        onTap: (){
+                        getNewDeSnagDataController.getSnagData(context: context);
+                        getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                        getClosedDeSnagDataController.getClosedSnagData(context: context);
+                        context.pushNamed('DESNAGS');
+                        },
+                        child: 
                          Container(
                            decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50))
@@ -237,7 +230,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           color: AppColors.white,
                           elevation: 10,
                           child: 
-                        MaterialButton(onPressed: (){
+                          MaterialButton(onPressed: ()
+                          {
                             context.pushNamed('DESNAGS');
                         },
                         height: 45,
@@ -250,42 +244,42 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           fontSize: 16,
                           ),
                         )
-                        )
-                        ),
-                        ),
-                          Positioned(
-                              top: 40,
-                              left: 10,
-                              right: 10,
+                      )
+                    ),
+                  ),
+                  Positioned(
+                        top: 40,
+                        left: 10,
+                        right: 10,
                               // bottom: 20,
                               // left: 310,
                               //MediaQuery.of(context).size.width/1.22,
-                              child: InkWell(
-                                onTap: () {},
-                                child:  const Center(
-                                  child: CircleAvatar(
-                                    backgroundColor:AppColors.primary,
-                                    radius: 12.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                        child: InkWell(
+                          onTap: () {},
+                          child:  const Center(
+                                child: CircleAvatar(
+                                backgroundColor:AppColors.primary,
+                                radius: 12.0,
+                                child: Text("0",style: TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
                             ),
                          ]
-                         )
-                        ),
-                               ),
-                        ]
-                        ),
-                          )
-                        },
-                  ],
+                        )
+                      ),
+                    ),
+                  ]
                 ),
-              ],
-            ),
-          ),
-        );
-      },
+              )
+            },
+          ],
+        ),
+      ],
+    ),
+  ),
+);
+},
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1.0,
@@ -319,15 +313,18 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                               children: [
                               Row(children: const [Icon(Icons.square,color: Colors.green,size: 10), Text(" Work Done %    ",style: TextStyle(fontSize: 10),)],),
                               Row(children: const [Icon(Icons.square,color:AppColors.primary,size: 10), Text(" Balance %    ",style: TextStyle(fontSize: 10),)],)
-                            ],)
-                          ],),
-                          Stack(
+                            ],
+                          )
+                        ],
+                      ),
+                      Stack(
                             alignment: Alignment.center,
                             children:[
                             Column(
                             children: [Text("Colab",style: textStyleBodyText1,),
                              const Text("Tools",style: TextStyle(color: Colors.grey),),
-                            ]),
+                            ]
+                          ),
                         SfCircularChart(
                            series: <CircularSeries>[
                             // Renders doughnut chart
@@ -348,12 +345,15 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                     color: AppColors.white),
                                     isVisible: true
                                 )
-                            )
+                              )
+                            ]
+                          ),
                         ]
-                    ),
-                        ]),
-                    ]),)
-                ),
+                      ),
+                    ]
+                  ),
+                )
+              ),
                 const SizedBox(height: 10,),
                 Container(
                   padding: const EdgeInsets.only(left: 10,right: 10,top: 8,bottom: 8),
@@ -376,8 +376,9 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [],)
-                          ],),
-                          Stack(children:[
+                          ],
+                        ),
+                        Stack(children:[
                         SfCartesianChart(
                           legend: Legend(isVisible: true,position: LegendPosition.bottom),
                           zoomPanBehavior: ZoomPanBehavior(  
@@ -445,18 +446,22 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         dataLabelSettings: const DataLabelSettings(        
                         isVisible: true,textStyle: TextStyle(color:Colors.red,))),
                         ]
-                    )
-                        ]),
-                    ]),)
-                )
-      ]
+                      )
+                    ]
+                  ),
+                ]
+              ),
+            )
+          )
+        ]
       ): Container();
-    });
+    }
+  );
   }
 }
 
 
- class ChartData {
+class ChartData {
         ChartData(this.x, this.y, this.z,this.color);
             final String x;
             final double y;
