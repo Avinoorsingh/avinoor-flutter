@@ -8,6 +8,7 @@ class SubLocation extends StatefulWidget {
    final Function(String,String)? onChanged;
    const SubLocation({Key? key,this.onChanged}) : super(key: key);
   @override
+  // ignore: library_private_types_in_public_api
   _SubLocationState createState() => _SubLocationState();
 }
 
@@ -29,12 +30,6 @@ class _SubLocationState extends State<SubLocation> {
       body: ListView.builder(
         itemCount: subLocation.length,
         itemBuilder: (context, i) {
-          // for(int i=0;i<subSubLocation.length;i++){
-          // for(var data in subSubLocation[3]){
-          //   subSubLocation2.add(data.subSubLocationName);
-          // }
-          // break;
-        // }
           return ExpansionTile(
             title: Text(subLocation[i], style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal,),),
             children: <Widget>[
@@ -48,14 +43,15 @@ class _SubLocationState extends State<SubLocation> {
                     },
                     title: Text(subSubLocation[i][j].subSubLocationName, style: const TextStyle(fontSize: 12.0,color: Colors.black54),),
                   ),
-              }],
-              ),
+                }
+              ],
+            ),
             ],
           );
         },
       ),
     );
   }
-     );
-  }
+);
+}
 }

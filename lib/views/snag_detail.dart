@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:colab/services/container.dart';
+import 'package:colab/services/container2.dart';
+import 'package:colab/services/textfield.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:http/http.dart' as http;
@@ -17,9 +20,11 @@ import '../constants/colors.dart';
 import '../network/client_project.dart';
 import '../network/photos_network.dart';
 
+// ignore: must_be_immutable
 class SnagDetail extends StatefulWidget {
   SnagDetail({Key? key, this.from, this.snagModel }) : super(key: key);
 
+ // ignore: prefer_typing_uninitialized_variables
  final from;
  dynamic snagModel;
   @override
@@ -80,9 +85,9 @@ class _SnagState extends State<SnagDetail> {
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-  croppedFile = await ImageCropper().cropImage(
-    sourcePath: image!.path,
-    aspectRatioPresets: [
+      croppedFile = await ImageCropper().cropImage(
+        sourcePath: image!.path,
+        aspectRatioPresets: [
       CropAspectRatioPreset.square,
       CropAspectRatioPreset.ratio3x2,
       CropAspectRatioPreset.original,
@@ -105,12 +110,12 @@ class _SnagState extends State<SnagDetail> {
     ],
   );
   var imageTemp = File(croppedFile!.path);
-setState(() => this.image = imageTemp);
-    } catch(e) {
-      if (kDebugMode) {
-        print('Failed to pick image: $e');
+  setState(() => this.image = imageTemp);
+      } catch(e) {
+        if (kDebugMode) {
+          print('Failed to pick image: $e');
+        }
       }
-    }
   }
     late List<bool> isSelected;
     final creationController = TextEditingController();
@@ -119,7 +124,6 @@ setState(() => this.image = imageTemp);
     @override
   void initState() {
     super.initState(); 
-    isSelected=[true,false,false];
     creationController.text=widget.snagModel?.createdAt??"";
     categoryController.text=widget.snagModel?.category?.name??"";
     locationController.text=widget.snagModel?.location.locationName??"";
@@ -182,7 +186,6 @@ setState(() => this.image = imageTemp);
   @override
   Widget build(BuildContext context) {
     EasyLoading.dismiss();
-   // print(dropDownNotifier.value);
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
@@ -194,28 +197,13 @@ setState(() => this.image = imageTemp);
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-               Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
+          CustomContainer(
             child: 
             Row(children: [
              Text("Snag Creation Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(creationController.text))}",style: textStyleBodyText1,),
             ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+          CustomContainer(child:
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -223,15 +211,7 @@ setState(() => this.image = imageTemp);
               const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer(child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -239,15 +219,7 @@ setState(() => this.image = imageTemp);
              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+          CustomContainer(child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -255,15 +227,7 @@ setState(() => this.image = imageTemp);
             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+          CustomContainer(child:
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -271,15 +235,7 @@ setState(() => this.image = imageTemp);
             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+          CustomContainer(child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -287,15 +243,7 @@ setState(() => this.image = imageTemp);
             ])
           ),
           if(markController.text.isNotEmpty)
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 0.2, color: Colors.blueGrey),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+          CustomContainer(child: 
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -345,10 +293,7 @@ setState(() => this.image = imageTemp);
                   Text("VIEWPOINT: $outerIndex",style: textStyleBodyText1,)
                 ],),
                 const SizedBox(height: 10,),
-                // IntrinsicHeight(
-                //   child:
                   Container(
-                    // margin: const EdgeInsets.only(left:20,right: 20),
                     padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
                     decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -375,11 +320,9 @@ setState(() => this.image = imageTemp);
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        // height: 200,
                         width: 100,
                         child:
                          ListView.builder(
-                        // padding: const EdgeInsets.only(bottom: 10,right: 120),
                         physics:const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                           itemCount: groupedViewpoints[outerKey]?.length,
@@ -543,14 +486,7 @@ setState(() => this.image = imageTemp);
             }
             ])
             ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(20.0),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
+            CustomContainer2(
             child: 
             Column(children: [
               Center(child: Row(
@@ -559,45 +495,11 @@ setState(() => this.image = imageTemp);
                 Text("REMARK",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              controller: remarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle: const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+               CustomTextField(enabled: false,controller: remarkController,)
           ])
             ),
             if(widget.from!="desnagnew")
-              Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20.0,),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+             CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -605,42 +507,10 @@ setState(() => this.image = imageTemp);
                 Text("DE-SNAG REMARK",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              controller: deSnagRemarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+               CustomTextField(enabled: false,controller: deSnagRemarkController,)
           ])
             ),
-              Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(20.0),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer2(child:
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -648,44 +518,11 @@ setState(() => this.image = imageTemp);
                 Text("DEBIT TO",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              // controller: priorityController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                suffixIcon:const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,),
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                  disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+               const CustomTextField(enabled: false,)
           ])
             ),
 
-              Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -693,43 +530,11 @@ setState(() => this.image = imageTemp);
                 Text("DEBIT AMOUNT",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              controller: debitAmountController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-               ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+              CustomTextField(enabled: false,controller: debitAmountController,)
           ])
             ),
             if(widget.from=='openedSnag')    
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
-            padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer2(child:
             Column(
               children: [
               Center(child: Row(
@@ -749,9 +554,7 @@ setState(() => this.image = imageTemp);
           itemBuilder: (BuildContext context, int index){
             isCardEnabled2.add(false);
             return GestureDetector(
-                onTap: (){
-                  // print(priority[index].toString().substring(0,2).toUpperCase());
-                },
+                onTap: (){},
                 child: SizedBox(
                   height: 10,
                   width: 100,
@@ -775,15 +578,7 @@ setState(() => this.image = imageTemp);
           ),
           ]),
             ),
-              Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -791,43 +586,10 @@ setState(() => this.image = imageTemp);
                 Text("SNAG ASSIGNED BY",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              controller: snagAssignedByController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                suffixIcon:const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,),
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-               ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+               CustomTextField(enabled: false,controller: snagAssignedByController,)
           ])
             ),
-              Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(20.0),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+            CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -835,44 +597,11 @@ setState(() => this.image = imageTemp);
                 Text("SNAG ASSIGNED TO",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-            TextField(
-              enabled: false,
-              controller: snagAssignedToController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                suffixIcon:const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,),
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                 disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+               CustomTextField(enabled: false,controller: snagAssignedToController,)
           ])
             ),
             if(widget.from!='openedSnag')
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
-            padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+           CustomContainer2(child: 
             Column(
               children: [
               Center(child: Row(
@@ -919,15 +648,7 @@ setState(() => this.image = imageTemp);
           ]),
             ),
             if(widget.from=="desnagnew")...{
-                  Container(
-            width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20.0,),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: 
+                 CustomContainer2(child:
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -935,31 +656,7 @@ setState(() => this.image = imageTemp);
                 Text("DE-SNAG REMARK",style: textStyleBodyText1,),
               ],),),
             const SizedBox(height: 10,),
-            TextField(
-              enabled: true,
-              controller: deSnagRemarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
+            CustomTextField(enabled: true,controller: deSnagRemarkController,)
           ])
             ),
             Container(

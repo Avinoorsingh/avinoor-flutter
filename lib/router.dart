@@ -1,12 +1,14 @@
-import 'package:colab/views/addSnag.dart';
+import 'package:colab/views/add_snag.dart';
 import 'package:colab/views/client_level.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
-import 'package:colab/views/newSnags.dart';
+import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/post_login_page.dart';
 import 'package:colab/views/project_level_page.dart';
 import 'package:colab/views/login_page.dart';
+import 'package:colab/views/quality_check_detail.dart';
+import 'package:colab/views/quality_checklist.dart';
 import 'package:colab/views/snag.dart';
 import 'package:colab/views/snag_detail.dart';
 import 'package:colab/views/sub_location.dart';
@@ -43,6 +45,13 @@ class CustomRouter {
         ),
       ),
        GoRoute(
+        name: 'QUALITYCHECKLIST',
+        path: qualityChecklist,
+        builder: (context, state) => QualityCheckList(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
         name: 'NEWSNAG',
         path: newSnags,
         builder: (context, state) => NewSnag(
@@ -70,6 +79,15 @@ class CustomRouter {
           key: state.pageKey,
           from: state.queryParams["from"],
           snagModel: state.extra,
+        ),
+      ),
+       GoRoute(
+        name: 'QUALITYCHECKDETAIL',
+        path: qualityCheckDetail,
+        builder: (context, state) => QualityCheckDetail(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          qualityModel: state.extra,
         ),
       ),
       //   GoRoute(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:colab/constants/colors.dart';
+import 'package:colab/network/quality_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProfile = GetUserProfileNetwork();
   final getSnagData=GetNewSnag();
   final getProjectSnagData=Get.find<GetNewSnag>();
+  final getNewQualityData=GetNewCheckList();
+  final getProjectNewQualityData=Get.find<GetNewCheckList>();
   final getDeSnagData=GetNewDeSnag();
   final getProjectDeSnagData=Get.find<GetNewDeSnag>();
   final getOpenedSnag=GetOpenedSnag();

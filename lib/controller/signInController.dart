@@ -4,6 +4,7 @@ import 'package:colab/models/category_list.dart';
 import 'package:colab/models/clientEmployee.dart';
 import 'package:colab/models/client_response.dart';
 import 'package:colab/models/location_list.dart';
+import 'package:colab/models/quality_new_checklist.dart';
 import 'package:colab/models/snag_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -45,6 +46,7 @@ class SignInController extends GetxController {
   SnagData? getDeSnagDataOpenedList;
   SnagData? getSnagDataClosedList;
   SnagData? getDeSnagDataClosedList;
+  Checklist? getCheckListData;
 
   
   @override

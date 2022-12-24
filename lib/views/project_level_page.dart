@@ -1,8 +1,8 @@
 import 'package:colab/constants/colors.dart';
 import 'package:colab/views/loading_data_screen.dart';
-import 'package:colab/views/page1.dart';
-import 'package:colab/views/page2.dart';
-import 'package:colab/views/page3.dart';
+import 'package:colab/views/project_level_page1.dart';
+import 'package:colab/views/project_level_page2.dart';
+import 'package:colab/views/project_level_page3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';

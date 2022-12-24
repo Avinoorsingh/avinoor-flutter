@@ -1,4 +1,5 @@
 import 'package:colab/constants/colors.dart';
+import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -61,6 +62,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   Widget build(BuildContext context) {
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+  final getNewQualityDataController=Get.find<GetNewCheckList>();
   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
@@ -118,9 +120,20 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           color: AppColors.white,
                           elevation: 10,
                           child: 
-                        MaterialButton(onPressed: (){},
-                        height: 45,
-                        color: const Color.fromARGB(255, 29, 51, 88),
+                        ElevatedButton(
+                          
+                          onPressed: ()async{
+                         if(i==2){
+                          await getNewQualityDataController.getCheckListData(context: context);
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed('QUALITYCHECKLIST');
+                         }
+                        },
+                        style: ElevatedButton.styleFrom(
+                        minimumSize:const Size(10,45),
+                        splashFactory: NoSplash.splashFactory,
+                        backgroundColor: const Color.fromARGB(255, 29, 51, 88),
+                        ),
                         child: Center(child:Text(buttonText[i],
                         textAlign: TextAlign.center,
                         style:textStyleButton.copyWith(

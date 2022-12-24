@@ -11,4 +11,5 @@ class Config{
   static const String getViewpoints="http://nodejs.hackerkernel.com/colab/api/getViewPointMaster";
   static const String getSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_snags_data_by_status/";
   static const String getDeSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_assign_snags_data/";
+  static const String getCheckListForTabsApi="http://nodejs.hackerkernel.com/colab/api/addCheckList/";
 }

@@ -1,5 +1,6 @@
 const String loginPage = '/loginPage';
 const String snags = '/Snags';
+const String qualityChecklist = '/QualityCheckList';
 const String newSnags = '/NewSnags';
 const String desnags= '/DeSnags';
 const String addSnags = '/addSnags';
@@ -11,4 +12,5 @@ const String clientLevel = '/ClientLevel';
 const String logout = '/LogOut';
 const String subLocation = '/SubLocation';
 const String snagDetail = '/SnagDetail';
+const String qualityCheckDetail = '/QualityCheckDetail';
 const String subSubLocation='/SubSubLocation';
