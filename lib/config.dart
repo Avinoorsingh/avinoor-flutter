@@ -12,4 +12,10 @@ class Config{
   static const String getSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_snags_data_by_status/";
   static const String getDeSnagByStatusApi="http://nodejs.hackerkernel.com/colab/api/get_assign_snags_data/";
   static const String getCheckListForTabsApi="http://nodejs.hackerkernel.com/colab/api/addCheckList/";
+  static const String getCheckListManualApi="http://nodejs.hackerkernel.com/colab/api/getChecklistManual/";
+  static const String getCheckListLocationApi="http://nodejs.hackerkernel.com/colab/api/location_list";
+  static const String getCheckListSubLocationApi="http://nodejs.hackerkernel.com/colab/api/sub_location_list";
+  static const String getCheckListSubSubLocationApi="http://nodejs.hackerkernel.com/colab/api/sub_sub_location_list";
+  static const String getCheckListActivityHeadApi="http://nodejs.hackerkernel.com/colab/api/activity_head";
+  static const String getCheckListActivityListApi="http://nodejs.hackerkernel.com/colab/api/get_sub_activity_for_app";
 }

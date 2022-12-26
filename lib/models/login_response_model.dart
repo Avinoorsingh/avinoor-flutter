@@ -54,7 +54,7 @@ class LoginResponseModel {
     }
 
     Map<String, dynamic> toJson() {
-        final Map<String, dynamic> data = Map<String, dynamic>();
+        final Map<String, dynamic> data = <String, dynamic>{};
         data['role_name'] = rolename;
         data['id'] = id;
         data['client_id'] = clientid;

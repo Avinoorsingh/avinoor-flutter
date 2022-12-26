@@ -22,46 +22,27 @@ class QualitySubLocationList {
 }
 
 class QualityCheckListSubLocationData {
-  int? locationId;
-  int? projectId;
-  int? clientId;
   String? locationName;
-  String? createdAt;
-  Null? updatedAt;
-  Null? createdBy;
-  Null? updatedBy;
+  String? subLocationName;
+  int? subLocationId;
 
   QualityCheckListSubLocationData(
-      {this.locationId,
-      this.projectId,
-      this.clientId,
-      this.locationName,
-      this.createdAt,
-      this.updatedAt,
-      this.createdBy,
-      this.updatedBy});
+      {this.locationName,
+      this.subLocationName,
+      this.subLocationId,
+     });
 
   QualityCheckListSubLocationData.fromJson(Map<String, dynamic> json) {
-    locationId = json['location_id'];
-    projectId = json['project_id'];
-    clientId = json['client_id'];
     locationName = json['location_name'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    createdBy = json['created_by'];
-    updatedBy = json['updated_by'];
+    subLocationName = json['sub_location_name'];
+    subLocationId = json['sub_loc_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['location_id'] = locationId;
-    data['project_id'] = projectId;
-    data['client_id'] = clientId;
     data['location_name'] = locationName;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
-    data['created_by'] = createdBy;
-    data['updated_by'] = updatedBy;
+    data['sub_location_name'] = subLocationName;
+    data['sub_loc_id'] = subLocationId;
     return data;
   }
 }

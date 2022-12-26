@@ -1133,7 +1133,9 @@ setState(() => this.image = imageTemp);
                    )
                    )
                    );
-                    print(formData.fields);
+                    if (kDebugMode) {
+                      print(formData.fields);
+                    }
                   try {
                     await dio.post(
                   "http://nodejs.hackerkernel.com/colab/api/add_snags",
@@ -1222,6 +1224,7 @@ return Dialog(
   elevation: 0,
   child: Column(
     children: [
+      // ignore: avoid_unnecessary_containers
       Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
