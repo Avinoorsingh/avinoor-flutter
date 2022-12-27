@@ -18,4 +18,5 @@ class Config{
   static const String getCheckListSubSubLocationApi="http://nodejs.hackerkernel.com/colab/api/sub_sub_location_list";
   static const String getCheckListActivityHeadApi="http://nodejs.hackerkernel.com/colab/api/activity_head";
   static const String getCheckListActivityListApi="http://nodejs.hackerkernel.com/colab/api/get_sub_activity_for_app";
+  static const String getSectionDataApi="http://nodejs.hackerkernel.com/colab/api/getAddCheckList/";
 }

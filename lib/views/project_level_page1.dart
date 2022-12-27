@@ -63,6 +63,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getNewQualityDataController=Get.find<GetNewCheckList>();
+  final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
+  final getClosedQualityDataController=Get.find<GetClosedCheckList>();
   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
@@ -125,6 +127,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           onPressed: ()async{
                          if(i==2){
                           await getNewQualityDataController.getCheckListData(context: context);
+                          await getOpenedQualityDataController.getCheckListData(context: context);
+                          await getClosedQualityDataController.getCheckListData(context: context);
                           // ignore: use_build_context_synchronously
                           context.pushNamed('QUALITYCHECKLIST');
                          }

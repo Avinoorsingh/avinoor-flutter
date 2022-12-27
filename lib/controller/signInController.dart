@@ -15,6 +15,7 @@ import '../api_service.dart';
 import '../constants/constants.dart';
 import '../models/login_response_model.dart';
 import '../models/login_user.dart';
+import '../models/section_detail.dart';
 import '../models/sub_location_list.dart';
 import '../network/client_project.dart';
 import '../services/helper/dependency_injector.dart';
@@ -47,6 +48,9 @@ class SignInController extends GetxController {
   SnagData? getSnagDataClosedList;
   SnagData? getDeSnagDataClosedList;
   Checklist? getCheckListData;
+  Checklist? getOpenedCheckListData;
+  Checklist? getClosedCheckListData;
+  SectionDetail? getSectionData;
 
   
   @override

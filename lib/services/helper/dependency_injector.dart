@@ -12,8 +12,10 @@ class DependencyInjector {
   static final getNewQualityCheckData=Get.put(GetNewCheckList());
   static final getOpenedSnagData=Get.put(GetOpenedSnag());
   static final getOpenedDeSnagData=Get.put(GetOpenedDeSnag());
+  static final getOpenedQualityCheckData=Get.put(GetOpenedCheckList());
   static final getClosedSnagData=Get.put(GetClosedSnag());
   static final getClosedDeSnagData=Get.put(GetClosedDeSnag());
+  static final getClosedQualityCheckData=Get.put(GetClosedCheckList());
 
   static void initializeControllers() {
     Get.put(SignInController());
@@ -24,8 +26,10 @@ class DependencyInjector {
     Get.put(GetNewCheckList());
     Get.put(GetOpenedSnag());
     Get.put(GetOpenedDeSnag());
+    Get.put(GetOpenedCheckList());
     Get.put(GetClosedSnag());
     Get.put(GetClosedDeSnag());
+    Get.put(GetClosedCheckList());
   }
 
    static void deleteControllers() {

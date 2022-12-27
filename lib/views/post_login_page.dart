@@ -24,6 +24,10 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProjectSnagData=Get.find<GetNewSnag>();
   final getNewQualityData=GetNewCheckList();
   final getProjectNewQualityData=Get.find<GetNewCheckList>();
+  final getOpenedQualityData=GetOpenedCheckList();
+  final getProjectOpenedQualityData=Get.find<GetOpenedCheckList>();
+  final getClosedQualityData=GetClosedCheckList();
+  final getProjectClosedQualityData=Get.find<GetClosedCheckList>();
   final getDeSnagData=GetNewDeSnag();
   final getProjectDeSnagData=Get.find<GetNewDeSnag>();
   final getOpenedSnag=GetOpenedSnag();

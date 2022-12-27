@@ -45,6 +45,7 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
   List dateDifference=[];
   List contractorNames=[];
   List workCompletionDate=[];
+  final getSectionDetail = GetSectionDetail();
  
  @override
  void initState(){
@@ -175,7 +176,9 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
                                     borderRadius: BorderRadius.circular(10)
                                   ),
                             child:InkWell(
-                              onTap: (){
+                              onTap: ()async{
+                                await getSectionDetail.getDetail(sectionId: qualityData[index].id.toString(), linkingActivtiyId: qualityData[index].linkActivityId.toString(), checkCode: qualityData[index].newCheckCode.toString());
+                                // ignore: use_build_context_synchronously
                                 context.pushNamed('QUALITYCHECKDETAIL',
                                 // queryParams: {"from": "new"},
                                 extra: qualityData[index]);
@@ -196,7 +199,10 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
                                   Text(contractorNames[index],style: textStyleHeadline3.copyWith(fontSize: 17,color: Colors.white),overflow: TextOverflow.ellipsis,textAlign: TextAlign.center,),
                                 ),
                                 const SizedBox(height: 10,),
-                                Text(("Work Completion date : ${workCompletionDate[index]!=null? (workCompletionDate[index]!.length>30?"${workCompletionDate[index]!.substring(0,29)}...":workCompletionDate[index] ?? ""):""}"),style: textStyleBodyText2.copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,),
+                                Row(children: [
+                                Text("Work Completion date :",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
+                                Text("${workCompletionDate[index]!=null? (workCompletionDate[index]!.length>30?"${workCompletionDate[index]!.substring(0,29)}...":workCompletionDate[index] ?? ""):""}",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis)
+                                ])
                                 ]),
                              ],)
                             )

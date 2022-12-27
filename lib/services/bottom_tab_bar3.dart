@@ -17,8 +17,8 @@ class BottomTabBar3 extends StatefulWidget {
 
 class _BottomTabBarState3 extends State<BottomTabBar3> {
    final getNewCheckList = Get.find<GetNewCheckList>();
-   final getOpenedSnag=Get.find<GetOpenedSnag>();
-   final getClosedSnag=Get.find<GetClosedSnag>();
+   final getOpenedCheckList=Get.find<GetOpenedCheckList>();
+   final getClosedCheckList=Get.find<GetClosedCheckList>();
    final signInController=Get.find<SignInController>();
 
 @override

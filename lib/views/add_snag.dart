@@ -684,7 +684,7 @@ setState(() => this.image = imageTemp);
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             viewpoints2[index1]['image'].isEmpty?
-             Image.asset('assets/images/ic_photo_black_48dp.png',height: 80,width: 80,):
+            Image.asset('assets/images/ic_photo_black_48dp.png',height: 80,width: 80,):
             ListView.builder(
               padding: const EdgeInsets.only(bottom: 10,right: 120),
               physics:const NeverScrollableScrollPhysics(),
@@ -750,11 +750,6 @@ setState(() => this.image = imageTemp);
                       final File imagefile = File(image!.path);
                       viewpoints2[index1]['image'].add(imagefile);
                         setState(() { });
-                      if (kDebugMode) {
-                        // print(viewpoints2);
-                      }
-                      // _addImage(imagefile,index1);
-                      // _addImageData(_image.name,index1);
                   },
                   child: const Center(
                     child: Text(
