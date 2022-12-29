@@ -22,7 +22,7 @@ class SectionDetail {
 }
 
 class SectionData {
-  String? cmStatus;
+  int? cmStatus;
   int? checklistSectionLinkingId;
   int? editId;
   int? cId;
@@ -31,8 +31,8 @@ class SectionData {
   String? sectionQuestion;
   int? id;
   int? cSId;
-  String? status;
-  String? checkedStatus;
+  int? status;
+  int? checkedStatus;
   int? lineCommentRequired;
   int? imageRequired;
   String? lineComment;

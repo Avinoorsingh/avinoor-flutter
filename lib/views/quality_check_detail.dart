@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../controller/signInController.dart';
+import '../network/quality_network.dart';
 
 // ignore: must_be_immutable
 class QualityCheckDetail extends StatefulWidget {
@@ -40,6 +41,10 @@ class _SnagState extends State<QualityCheckDetail> {
   final closingRemarkController=TextEditingController();
   final debitAmountController=TextEditingController(text: "0");
   final qualityCheckCreatedBy=TextEditingController();
+  final qualityCheckClosedBy=TextEditingController();
+  final closedDebitAmountController=TextEditingController();
+  final closedDebitToController=TextEditingController();
+  final qualityCheckRescheduledBy=TextEditingController();
   final debitToController=TextEditingController();
   ////////////////////////////////////////////////
   final checkListIDController=TextEditingController();
@@ -49,10 +54,13 @@ class _SnagState extends State<QualityCheckDetail> {
   final image=TextEditingController(text: "");
   final debetContractor=TextEditingController(text: "0");
   final dueDate=TextEditingController(text: "0");
+  final closedDate=TextEditingController(text: "0");
   final status=TextEditingController();
   final checkNewCode=TextEditingController();
   final userIDController=TextEditingController();
+  final editIDController=TextEditingController();
   TextEditingController dateInput = TextEditingController();
+  TextEditingController dateInput2 = TextEditingController();
   TextEditingController contractorInput = TextEditingController(text: "No Contractor");
   var sections = {};
   var combinedList=[];
@@ -67,6 +75,11 @@ class _SnagState extends State<QualityCheckDetail> {
   List questions=[];
   List cLSessionIDs=[];
   List comments=[];
+  List uploads=[];
+
+  final getNewQualityDataController=Get.find<GetNewCheckList>();
+  final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
+  final getClosedQualityDataController=Get.find<GetClosedCheckList>();
   List<List<Map<String, dynamic>>> sublists = [];
   Map<int, List<Map<String, dynamic>>> group = {};
 
@@ -79,6 +92,9 @@ class _SnagState extends State<QualityCheckDetail> {
   
   List<List<Map<String, dynamic>>> imageRequired = [];
   Map<int, List<Map<String, dynamic>>> groupImageRequired = {};
+
+  List<List<Map<String, dynamic>>> uploadedImageRequired = [];
+  Map<int, List<Map<String, dynamic>>> groupUploadedImageRequired = {};
 
   List<List<Map<String, dynamic>>> commentRequired = [];
   Map<int, List<Map<String, dynamic>>> groupCommentRequired = {};
@@ -98,6 +114,8 @@ class _SnagState extends State<QualityCheckDetail> {
   List<List<Map<String, dynamic>>> checkListQuestionIDs=[];
   Map<int, List<Map<String, dynamic>>> groupSessionIDs = {};
 
+  List requiredCommentsForSubmission=[];
+
   bool toggleButton=false;
   final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
   String dropdownvalueDebitTo = 'Select Debit to';  
@@ -115,6 +133,11 @@ class _SnagState extends State<QualityCheckDetail> {
     dueDateController.text=widget.qualityModel?.dueDate??"";
     debitToController.text="";
     qualityCheckCreatedBy.text=widget.qualityModel?.createdByName??"";
+    qualityCheckClosedBy.text=widget.qualityModel?.updatedByName??"";
+    qualityCheckRescheduledBy.text=widget.qualityModel?.updatedByName??"";
+    closedDate.text=widget.qualityModel?.closeDate??"";
+    closedDebitAmountController.text=widget.qualityModel?.debitAmount.toString()=='null'?"--":widget.qualityModel?.debitAmount;
+    closedDebitToController.text="--";
     dateInput.text =getFormatedDate(DateTime.now().toString());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
@@ -140,6 +163,7 @@ class _SnagState extends State<QualityCheckDetail> {
             sections[age]?.add(map);
           }
           combinedList=sections.values.toList();
+
           ////////////////controllers//////////////////
           checkListIDController.text=signInController.getSectionData!.data![0].cId.toString();
           checkListIDSessionController.text=signInController.getSectionData!.data![0].cSId.toString();
@@ -151,6 +175,7 @@ class _SnagState extends State<QualityCheckDetail> {
           status.text=signInController.getSectionData!.data![0].status.toString();
           checkNewCode.text=signInController.getSectionData!.data![0].newCheckCode.toString();
           userIDController.text="";
+          editIDController.text=signInController.getSectionData!.data![0].editId.toString();
           ////////////////sectionImages/////////////////////////
           for(int i=0;i<combinedList.length;i++){
             for(int j=0;j<combinedList[i].length;j++){
@@ -200,6 +225,7 @@ class _SnagState extends State<QualityCheckDetail> {
           for (List<Map<String, dynamic>> sublist in groupLineComment.values) {
             lineComment.add(sublist);
           }
+
           ///////////////////////Image required//////////////////////
            for(int i=0;i<combinedList.length;i++){
             for(int j=0;j<combinedList[i].length;j++){
@@ -215,6 +241,22 @@ class _SnagState extends State<QualityCheckDetail> {
           }
           for (List<Map<String, dynamic>> sublist in groupImageRequired.values) {
             imageRequired.add(sublist);
+          }
+          ////////////////////uploaded-Images////////////////////
+           for(int i=0;i<combinedList.length;i++){
+            for(int j=0;j<combinedList[i].length;j++){
+            uploads.add({'index':i,'uploaded':combinedList[i][j].image??""});
+            }
+          }
+          for (Map<String, dynamic> map in uploads) {
+            int index = map['index'];
+            if (!groupUploadedImageRequired.containsKey(index)) {
+              groupUploadedImageRequired[index] = [];
+            }
+            groupUploadedImageRequired[index]?.add(map);
+          }
+          for (List<Map<String, dynamic>> sublist in groupUploadedImageRequired.values) {
+            uploadedImageRequired.add(sublist);
           }
           ///////////////////CommentRequired//////////////
              for(int i=0;i<combinedList.length;i++){
@@ -261,7 +303,7 @@ class _SnagState extends State<QualityCheckDetail> {
             }
             groupCheckListID[index]?.add(map);
           }
-          for (List<Map<String, dynamic>> sublist in groupEditID.values) {
+          for (List<Map<String, dynamic>> sublist in groupCheckListID.values) {
             checkListID.add(sublist);
           }
            ///////////////////////////////sectionName///////////////////////////////
@@ -392,19 +434,19 @@ class _SnagState extends State<QualityCheckDetail> {
                     Text(combinedList[outerIndex][innerIndex].sectionQuestion,style: textStyleBodyText1,),
                     ),
                     Switch(
-                      value: checkedStatus[outerIndex][innerIndex]['buttonValue'],
+                      value: (checkedStatus[outerIndex][innerIndex]['buttonValue']==1||checkedStatus[outerIndex][innerIndex]['buttonValue']==true)?true:false,
                        // Initial value of the toggle button
-                      onChanged: (bool value) {
+                      onChanged: widget.from!="closed"?(bool value) {
                         setState(() {
                           checkedStatus[outerIndex][innerIndex]['buttonValue']=value;
-                          if (checkedStatus.every((sublist) => sublist.every((item) => item['buttonValue'] == true))) {
+                          if (checkedStatus.every((sublist) => sublist.every((item) => item['buttonValue'] == true ||item['buttonValue'] == 1))) {
                             toggleButton=true;
                           }
                           else{
                             toggleButton=false;
                           }
                         });
-                      },
+                      }:null,
                     ),
                   ],),
                   const SizedBox(height: 15,),
@@ -419,14 +461,14 @@ class _SnagState extends State<QualityCheckDetail> {
                    Container(
                     padding: const EdgeInsets.only(left: 10,right: 10),
                     child: 
-                   CustomTextField2(
+                  CustomTextField2(
                    onChanged: (String newValue) {
                     setState(() {
                       lineComment[outerIndex][innerIndex]['remarks']=newValue;
                     });
                   },
-                   enabled: true,
-                   hintText: "Remark",
+                   enabled: widget.from!="closed"?true:false,
+                   hintText: lineComment[outerIndex][innerIndex]['remarks'],
                    label: "Remark",
                    )
                    ),
@@ -437,14 +479,42 @@ class _SnagState extends State<QualityCheckDetail> {
                       Container(
                         margin:const EdgeInsets.only(right: 40),
                         child: 
-                      Text(combinedList[outerIndex][innerIndex].imageRequired==1?"Image Required *":"",
+                      Text(widget.from!="closed"?(combinedList[outerIndex][innerIndex].imageRequired==1?"Image Required *":""):"",
                       textAlign: TextAlign.start,
                       style: textStyleBodyText2.copyWith(fontSize: 14),),
                       )
                   ],),
+                  if(widget.from=="closed")...{
+                    Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    uploadedImageRequired[outerIndex][innerIndex]['uploaded'].isNotEmpty?
+                    Image.network('https://nodejs.hackerkernel.com/colab${uploadedImageRequired[outerIndex][innerIndex]['uploaded']}',height: 100,width: 100,):
+                    sublists[outerIndex][innerIndex]['image'].isEmpty?
+                    Image.asset('assets/images/no_image_icon.png',height: 100,width: 100,):
+                    FittedBox(
+                           child:
+                           Container(
+                            margin: const EdgeInsets.only(top:10),
+                            height: 150,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              image:DecorationImage(
+                                image:FileImage(File(sublists[outerIndex][innerIndex]['image'][0].path)),
+                              fit: BoxFit.cover,
+                              ),
+                            )
+                          )
+                        ),
+                ]),
+                  },
+                  if(widget.from!="closed")
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                    uploadedImageRequired[outerIndex][innerIndex]['uploaded'].isNotEmpty?
+                    Image.network('https://nodejs.hackerkernel.com/colab${uploadedImageRequired[outerIndex][innerIndex]['uploaded']}',height: 80,width: 80,):
                     sublists[outerIndex][innerIndex]['image'].isEmpty?
                     Image.asset('assets/images/no_image_icon.png',height: 80,width: 80,):
                     FittedBox(
@@ -510,6 +580,109 @@ class _SnagState extends State<QualityCheckDetail> {
       ]
     )
    ),
+     if(widget.from=="opened")...{
+     CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                const Text("Due Date:",),
+                SizedBox(width:100),
+                Container(
+                  height: 10,
+                  width: MediaQuery.of(context).size.width/2.5,
+                  child: 
+                TextField(
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.only(top: 35),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      ),
+                      readOnly: true,
+                      controller: dateInput,
+                      onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                              primaryColor: AppColors.primary,
+                              buttonTheme: const ButtonThemeData(
+                              textTheme: ButtonTextTheme.primary),
+                              colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
+                          ),
+                     child: child!,
+                    );
+                     }, 
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime(2100)
+                  );
+                if (pickedDate != null) {
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                  setState(() {
+                    dateInput.text =formattedDate;
+                    dateInput2.text=pickedDate.toString();
+                  });
+                } else {}
+              },
+              style:const TextStyle(fontSize: 16,fontWeight: FontWeight.normal),
+            ),
+                ),
+                const Text(""),
+              ],),),
+          ])
+            ),
+     CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("RESCHEDULED BY",style: textStyleBodyText1,),
+              ],),),
+               const SizedBox(height: 10,),
+              CustomTextField(enabled: false,controller: qualityCheckRescheduledBy,)
+          ])
+            ),
+     },
+     if(widget.from=="closed")...{
+        CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("DEBIT TO",style: textStyleBodyText1,),
+              ],),),
+               const SizedBox(height: 10,),
+              CustomTextField(enabled: false,controller: closedDebitToController,)
+          ])
+            ),
+             CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("DEBIT AMOUNT",style: textStyleBodyText1,),
+              ],),),
+               const SizedBox(height: 10,),
+              CustomTextField(enabled: false,controller: closedDebitAmountController,)
+          ])
+            ),
+             CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                const Text("Closed Date:",),
+                Text(closedDate.text),
+                const Text(""),
+              ],),),
+          ])
+            ),
+     },
            CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
@@ -521,6 +694,20 @@ class _SnagState extends State<QualityCheckDetail> {
               CustomTextField(enabled: false,controller: qualityCheckCreatedBy,)
           ])
             ),
+            if(widget.from=="closed")...{
+                CustomContainer2(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("CLOSED BY",style: textStyleBodyText1,),
+              ],),),
+               const SizedBox(height: 10,),
+              CustomTextField(enabled: false,controller: qualityCheckClosedBy,)
+          ])
+            ),
+            },
+            if(widget.from!="closed")...{
         // ignore: unrelated_type_equality_checks
         if (toggleButton==true)...{
           Container(
@@ -530,8 +717,152 @@ class _SnagState extends State<QualityCheckDetail> {
           style: ElevatedButton.styleFrom(
             minimumSize: Size(MediaQuery.of(context).size.width,40),
             backgroundColor: AppColors.secondary),
-          onPressed: () {
+          onPressed: () async {
             // Handle button press
+            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      var token=sharedPreferences.getString('token');
+                      var userId=sharedPreferences.getString('id');
+                      FormData formData=FormData(); 
+                      var dio = Dio();
+                      List checkDetails=[];
+                      List uploadFiles=[];
+                  
+                      if(sublists.isNotEmpty){
+                          for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(sublists[i][j]['image'].isNotEmpty && checkListID[i][j]['checkID']!='null'){
+                            formData.files.add(
+                              MapEntry("file${checkListID[i][j]['checkID'].toString()}", await MultipartFile.fromFile(sublists[i][j]['image'][0].toString().split(':')[1].replaceAll('\'', '').replaceAll('\'', '').trim(),filename: "sectionImage")
+                            ));
+                          }
+                        }}
+                      }
+                     
+                      for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                           var map = {
+                            "editId":int.parse(editID[i][j]["editID"].toString()),
+                            "c_id":int.parse(checkListIDController.text.toString()),
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "section_name":sectionNames[i][j]['sectionName'].toString(),
+                            "section_question":sectionQuestions[i][j]['sectionQuestions'].toString(),
+                            "checkList_question_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "cm_status":null,//to be handled correctlt
+                            "new_check_code":checkNewCode.text,
+                            "status":null,
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment_required":int.parse(commentRequired[i][j]['commentRequired'].toString()),
+                            "image_required":int.parse(imageRequired[i][j]["imageRequired"].toString()),
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
+                          };
+                          checkDetails.add(map);
+                        }
+                      }
+                      formData.fields.add(MapEntry('addcheckListInfo', jsonEncode({
+                      "checklist_id":"",
+                      "checklist_session_id": "",
+                      "line_comment":"",
+                      "link_activity_id":int.parse(lineActivityIDController.text),
+                      "image": "",
+                      "debet_contactor": null,
+                      // int.parse(debetContractor.text!='null'?debetContractor.text:"0").toString(),
+                      "debit_amount": null,
+                      "due_date": dateInput.text,
+                      "status":"",
+                      "check_new_code":checkNewCode.text,
+                      'remarks':remarkController.text,
+                      "closing_remark": closingRemarkController.text,
+                      "user_id": userId.toString(),
+                      "checkListDetails":checkDetails,
+                   })
+                   )
+                   );
+                     for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                           var map = {
+                            "c_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "status":null,
+                            "close_type":"Closed",
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "reject_count":0,
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "id":int.parse(editID[i][j]['editID']),//to be handled
+                            "new_check_code":checkNewCode.text,
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
+                          };
+                          uploadFiles.add(map);
+                        }
+                      }
+
+                   formData.fields.add(MapEntry('uploadFiles', jsonEncode(uploadFiles)));
+                   formData.fields.add(MapEntry('editId', jsonEncode(int.parse(editIDController.text))));
+                   formData.fields.add(MapEntry('due_date', jsonEncode(dateInput.text)));
+                   formData.fields.add(MapEntry('status', jsonEncode(null)));
+                   formData.files.add(MapEntry("file", MultipartFile.fromString("", filename: "image_name")));
+                   formData.files.add(MapEntry("check_image", MultipartFile.fromString("", filename: "image_name")));
+                    if (kDebugMode) {}
+                  try {
+                    bool shouldMakeRequest = true;
+                    bool shouldMakeRequestAfterImages = true;
+                    for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(commentRequired[i][j]['commentRequired'].toString())==1 
+                          && lineComment[i][j]["remarks"].isEmpty){
+                            shouldMakeRequest =false;
+                            break;
+                          }
+                        }
+                    }
+                     for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(imageRequired[i][j]["imageRequired"].toString())==1 
+                          && sublists[i][j]['image'].isEmpty && uploadedImageRequired[i][j].isEmpty){
+                            shouldMakeRequestAfterImages =false;
+                            break;
+                          }
+                        }
+                    }
+                    if (shouldMakeRequest==true && shouldMakeRequestAfterImages==true) {
+                      // Make the request here
+                 await dio.post(
+                  "http://nodejs.hackerkernel.com/colab/api/addCheckList",
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status){
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    EasyLoading.showToast("Closed successfully",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                      await getNewQualityDataController.getCheckListData(context: context);
+                      await getOpenedQualityDataController.getCheckListData(context: context);
+                      await getClosedQualityDataController.getCheckListData(context: context);
+                    // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    }
+                    else if(shouldMakeRequest==false){
+                        EasyLoading.showToast("Remark required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(shouldMakeRequestAfterImages==false){
+                        EasyLoading.showToast("Image required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                  }
+                  catch(e){
+                    if (kDebugMode) {
+                         EasyLoading.showToast("Error Occured",toastPosition: EasyLoadingToastPosition.bottom);
+                      print(e);
+                    }
+                  }
           },
           child:const Text('Close',style: TextStyle(color: AppColors.black),),
         )
@@ -622,6 +953,7 @@ class _SnagState extends State<QualityCheckDetail> {
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                   setState(() {
                     dateInput.text =formattedDate;
+                    dateInput2.text=pickedDate.toString();
                   });
                 } else {}
               },
@@ -680,77 +1012,112 @@ class _SnagState extends State<QualityCheckDetail> {
                       var dio = Dio();
                       List checkDetails=[];
                       List uploadFiles=[];
+
+                      if(sublists.isNotEmpty){
+                          for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(sublists[i][j]['image'].isNotEmpty && checkListID[i][j]['checkID']!='null'){
+                            formData.files.add(
+                              MapEntry("file${checkListID[i][j]['checkID'].toString()}", await MultipartFile.fromFile(sublists[i][j]['image'][0].toString().split(':')[1].replaceAll('\'', '').replaceAll('\'', '').trim(),filename: "sectionImage")
+                            ));
+                          }
+                        }}
+                      }
                       for(int i=0;i<combinedList.length;i++){
                         for(int j=0;j<combinedList[i].length;j++){
                            var map = {
-                            "checklist_session_id":checkListQuestionIDs[i][j]['cSID'],
-                            "section_name":sectionNames[i][j]['sectionName'],
-                            "section_question":sectionQuestions[i][j]['sectionQuestions'],
-                            "editId":editID[i][j]["editID"].toString(),
-                            "checkList_question_id":checkListID[i][j]['checkID'],
-                            "checklist_section_linking_id":checkListID[i][j]['checkID'],
-                            "image_required": imageRequired[i][j]["imageRequired"],
-                            "image":sublists[i][j]["image"],
+                            "editId":int.parse(editID[i][j]["editID"].toString()),
+                            "c_id":int.parse(checkListIDController.text.toString()),
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "section_name":sectionNames[i][j]['sectionName'].toString(),
+                            "section_question":sectionQuestions[i][j]['sectionQuestions'].toString(),
+                            "checkList_question_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "cm_status":null,//to be handled correctlt
                             "new_check_code":checkNewCode.text,
-                            "cm_status":0,//to be handled correctlt
-                            "c_id":0,
-                            "status":0,
-                            "line_comment":lineComment[i][j]["remarks"],
-                            "line_comment_required":commentRequired[i][j]['commentRequired'],
-                            "checked_status":checkedStatus[i][j]['buttonValue']?1:0,
+                            "status":null,
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment_required":int.parse(commentRequired[i][j]['commentRequired'].toString()),
+                            "image_required":int.parse(imageRequired[i][j]["imageRequired"].toString()),
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
                           };
                           checkDetails.add(map);
                         }
                       }
-                      formData.fields.add(MapEntry('addCheckList', jsonEncode({
+                      formData.fields.add(MapEntry('addcheckListInfo', jsonEncode({
                       "checklist_id":"",
                       "checklist_session_id": "",
-                      "image": image.text,
-                      "debet_contactor": int.parse(debetContractor.text!='null'?debetContractor.text:'0'),
-                      "debit_amount": int.parse(debitAmountController.text),
+                      "line_comment":"",
+                      "link_activity_id":int.parse(lineActivityIDController.text),
+                      "image": "",
+                      "debet_contactor": null,
+                      // int.parse(debetContractor.text!='null'?debetContractor.text:"0").toString(),
+                      "debit_amount": null,
                       "due_date": dateInput.text,
-                      "status":status.text,
+                      "status":"",
                       "check_new_code":checkNewCode.text,
                       'remarks':remarkController.text,
                       "closing_remark": closingRemarkController.text,
                       "user_id": userId.toString(),
                       "checkListDetails":checkDetails,
-                   }
-                   )
+                   })
                    )
                    );
                      for(int i=0;i<combinedList.length;i++){
                         for(int j=0;j<combinedList[i].length;j++){
                            var map = {
-                            "c_id":0,
-                            "checklist_session_id":checkListQuestionIDs[i][j]['cSID'],
-                            "status":0,
+                            "c_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "status":null,
                             "close_type":"Rescheduled",
-                            "checked_status":checkedStatus[i][j]['buttonValue']?1:0,
-                            "line_comment":lineComment[i][j]["remarks"],
-                            "reject_count":1,
-                            "checklist_section_linking_id":checkListID[i][j]['checkID'],
-                            "id":64,//to be handled
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "reject_count":0,
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "id":int.parse(editID[i][j]['editID']),//to be handled
                             "new_check_code":checkNewCode.text,
-                            "image":sublists[i][j]["image"],
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
                           };
                           uploadFiles.add(map);
                         }
                       }
-                   formData.fields.add(MapEntry('uploadFiles', jsonEncode({uploadFiles})));
-                   formData.fields.add(MapEntry('editId', jsonEncode({64})));
-                   formData.fields.add(MapEntry('due_date', jsonEncode({dateInput.text})));
-                   formData.fields.add(MapEntry('status', jsonEncode({0})));
-                    if (kDebugMode) {
-                      print(formData.fields);
-                    }
+
+                   formData.fields.add(MapEntry('uploadFiles', jsonEncode(uploadFiles)));
+                   formData.fields.add(MapEntry('editId', jsonEncode(int.parse(editIDController.text))));
+                   formData.fields.add(MapEntry('due_date', jsonEncode(dateInput.text)));
+                   formData.fields.add(MapEntry('status', jsonEncode(0)));
+                   formData.files.add(MapEntry("file", MultipartFile.fromString("", filename: "image_name")));
+                   formData.files.add(MapEntry("check_image", MultipartFile.fromString("", filename: "image_name")));
+                    if (kDebugMode) {}
                   try {
-                    await dio.post(
+                      bool shouldMakeRequest = true;
+                    bool shouldMakeRequestAfterImages = true;
+                    for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(commentRequired[i][j]['commentRequired'].toString())==1 
+                          && lineComment[i][j]["remarks"].isEmpty){
+                            shouldMakeRequest =false;
+                            break;
+                          }
+                        }
+                    }
+                     for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(imageRequired[i][j]["imageRequired"].toString())==1 
+                          && sublists[i][j]['image'].isEmpty && uploadedImageRequired[i][j].isEmpty){
+                            shouldMakeRequestAfterImages =false;
+                            break;
+                          }
+                        }
+                    }
+                    if (shouldMakeRequest==true && shouldMakeRequestAfterImages==true && remarkController.text.isNotEmpty) {
+                 await dio.post(
                   "http://nodejs.hackerkernel.com/colab/api/addCheckList",
                   data: formData,
                   options: Options(
                     followRedirects: false,
-                    validateStatus: (status) {
+                    validateStatus: (status){
                       return status! < 500;
                     },
                     headers: {
@@ -759,9 +1126,31 @@ class _SnagState extends State<QualityCheckDetail> {
                     },
                   ),
                     );
+                    EasyLoading.showToast("Rescheduled successfully",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                      await getNewQualityDataController.getCheckListData(context: context);
+                      await getOpenedQualityDataController.getCheckListData(context: context);
+                      await getClosedQualityDataController.getCheckListData(context: context);
+                    // ignore: use_build_context_synchronously
+                      Navigator.pop(context1);
+                    // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                  }
+                    else if(shouldMakeRequest==false){
+                        EasyLoading.showToast("Remark required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(shouldMakeRequestAfterImages==false){
+                        EasyLoading.showToast("Image required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(remarkController.text.isEmpty){
+                        EasyLoading.showToast("Remark required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
                   }
                   catch(e){
-                    print(e);
+                    if (kDebugMode) {
+                      print(e);
+                        EasyLoading.showToast("Error Occured",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
                   }
                   },
                   child: const Center(
@@ -915,7 +1304,155 @@ class _SnagState extends State<QualityCheckDetail> {
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
                     backgroundColor: Colors.transparent,disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),shadowColor: Colors.transparent,
                   ),
-                  onPressed: ()async{},
+                  onPressed: ()async{
+                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      var token=sharedPreferences.getString('token');
+                      var userId=sharedPreferences.getString('id');
+                      FormData formData=FormData(); 
+                      var dio = Dio();
+                      List checkDetails=[];
+                      List uploadFiles=[];
+
+                      if(sublists.isNotEmpty){
+                          for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(sublists[i][j]['image'].isNotEmpty && checkListID[i][j]['checkID']!='null'){
+                            formData.files.add(
+                              MapEntry("file${checkListID[i][j]['checkID'].toString()}", await MultipartFile.fromFile(sublists[i][j]['image'][0].toString().split(':')[1].replaceAll('\'', '').replaceAll('\'', '').trim(),filename: "sectionImage")
+                            ));
+                          }
+                        }}
+                      }
+                      for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                           var map = {
+                            "editId":int.parse(editID[i][j]["editID"].toString()),
+                            "c_id":int.parse(checkListIDController.text.toString()),
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "section_name":sectionNames[i][j]['sectionName'].toString(),
+                            "section_question":sectionQuestions[i][j]['sectionQuestions'].toString(),
+                            "checkList_question_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "cm_status":null,//to be handled correctlt
+                            "new_check_code":checkNewCode.text,
+                            "status":null,
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment_required":int.parse(commentRequired[i][j]['commentRequired'].toString()),
+                            "image_required":int.parse(imageRequired[i][j]["imageRequired"].toString()),
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
+                          };
+                          checkDetails.add(map);
+                        }
+                      }
+                      formData.fields.add(MapEntry('addcheckListInfo', jsonEncode({
+                      "checklist_id":"",
+                      "checklist_session_id": "",
+                      "line_comment":"",
+                      "link_activity_id":int.parse(lineActivityIDController.text),
+                      "image": "",
+                      "debet_contactor": null,
+                      // int.parse(debetContractor.text!='null'?debetContractor.text:"0").toString(),
+                      "debit_amount": null,
+                      "due_date": dateInput.text,
+                      "status":"",
+                      "check_new_code":checkNewCode.text,
+                      'remarks':remarkController.text,
+                      "closing_remark": closingRemarkController.text,
+                      "user_id": userId.toString(),
+                      "checkListDetails":checkDetails,
+                   })
+                   )
+                   );
+                     for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                           var map = {
+                            "c_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "checklist_session_id":int.parse(checkListQuestionIDs[i][j]['cSID'].toString()),
+                            "status":null,
+                            "close_type":"Force-Closed",
+                            "checked_status":checkedStatus[i][j]['buttonValue']==true?1:null,
+                            "line_comment":lineComment[i][j]["remarks"].toString(),
+                            "reject_count":0,
+                            "checklist_section_linking_id":int.parse(checkListID[i][j]['checkID'].toString()),
+                            "id":int.parse(editID[i][j]['editID']),//to be handled
+                            "new_check_code":checkNewCode.text,
+                            "image":uploadedImageRequired[i][j]['uploaded'].toString(),
+                          };
+                          uploadFiles.add(map);
+                        }
+                      }
+
+                   formData.fields.add(MapEntry('uploadFiles', jsonEncode(uploadFiles)));
+                   formData.fields.add(MapEntry('editId', jsonEncode(int.parse(editIDController.text))));
+                   formData.fields.add(MapEntry('due_date', jsonEncode(dateInput.text)));
+                   formData.fields.add(MapEntry('status', jsonEncode(1)));
+                   formData.files.add(MapEntry("file", MultipartFile.fromString("", filename: "image_name")));
+                   formData.files.add(MapEntry("check_image", MultipartFile.fromString("", filename: "image_name")));
+                    if (kDebugMode) {}
+                  try {
+                      bool shouldMakeRequest = true;
+                    bool shouldMakeRequestAfterImages = true;
+                    for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(commentRequired[i][j]['commentRequired'].toString())==1 
+                          && lineComment[i][j]["remarks"].isEmpty){
+                            shouldMakeRequest =false;
+                            break;
+                          }
+                        }
+                    }
+                     for(int i=0;i<combinedList.length;i++){
+                        for(int j=0;j<combinedList[i].length;j++){
+                          if(int.parse(imageRequired[i][j]["imageRequired"].toString())==1 
+                          && sublists[i][j]['image'].isEmpty && uploadedImageRequired[i][j].isEmpty){
+                            shouldMakeRequestAfterImages =false;
+                            break;
+                          }
+                        }
+                    }
+                if (shouldMakeRequest==true && shouldMakeRequestAfterImages==true && closingRemarkController.text.isNotEmpty) {
+                 await dio.post(
+                  "http://nodejs.hackerkernel.com/colab/api/addCheckList",
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status){
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                     EasyLoading.showToast("Force-Closed successfully",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                      await getNewQualityDataController.getCheckListData(context: context);
+                      await getOpenedQualityDataController.getCheckListData(context: context);
+                      await getClosedQualityDataController.getCheckListData(context: context);
+                    // ignore: use_build_context_synchronously
+                      Navigator.pop(context1);
+                    // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    }
+                    else if(shouldMakeRequest==false){
+                        EasyLoading.showToast("Remark required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(shouldMakeRequestAfterImages==false){
+                        EasyLoading.showToast("Image required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(closingRemarkController.text.isEmpty){
+                        EasyLoading.showToast("Closing remark required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                  }
+                  catch(e){
+                    if (kDebugMode) {
+                      EasyLoading.showToast("Error Occured",toastPosition: EasyLoadingToastPosition.bottom);
+                      print(e);
+                    }
+                  }
+                  },
                   child: const Center(
                     child: Text(
                       'OK',
@@ -942,6 +1479,7 @@ class _SnagState extends State<QualityCheckDetail> {
           )
           ])
         )}
+            }
         ]
         )
       )

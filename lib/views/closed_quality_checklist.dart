@@ -45,6 +45,8 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
   List dateDifference=[];
   List contractorNames=[];
   List workCompletionDate=[];
+  List closeDate=[];
+  final getSectionDetail = GetSectionDetail();
  
  @override
  void initState(){
@@ -55,7 +57,6 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('MMM-dd-yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetClosedCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -173,9 +174,11 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
                                     borderRadius: BorderRadius.circular(10)
                                   ),
                             child:InkWell(
-                              onTap: (){
+                              onTap: ()async{
+                                  await getSectionDetail.getDetail(sectionId: qualityData[index].id.toString(), linkingActivtiyId: qualityData[index].linkActivityId.toString(), checkCode: qualityData[index].newCheckCode.toString());
+                                // ignore: use_build_context_synchronously
                                 context.pushNamed('QUALITYCHECKDETAIL',
-                                // queryParams: {"from": "new"},
+                                queryParams: {"from": "closed"},
                                 extra: qualityData[index]);
                               },
                               child: 
@@ -196,6 +199,10 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
                                 const SizedBox(height: 10,),
                                 Row(children: [
                                 Text("Work Completion date :",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
+                                Text("${workCompletionDate[index]!=null? (workCompletionDate[index]!.length>30?"${workCompletionDate[index]!.substring(0,29)}...":workCompletionDate[index] ?? ""):""}",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis)
+                                ]),
+                                Row(children: [
+                                Text("Close date :",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis),
                                 Text("${workCompletionDate[index]!=null? (workCompletionDate[index]!.length>30?"${workCompletionDate[index]!.substring(0,29)}...":workCompletionDate[index] ?? ""):""}",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis)
                                 ])
                                 ]),

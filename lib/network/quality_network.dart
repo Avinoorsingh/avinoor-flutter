@@ -89,7 +89,7 @@ class GetClosedCheckList extends GetxController{
             },
           );
           var cData4=jsonDecode(res.body);
-          Checklist result5=Checklist.fromJson(cData4['Open']);
+          Checklist result5=Checklist.fromJson(cData4['Closed']);
           signInController.getClosedCheckListData=result5;
           update(); 
             } catch (e) {

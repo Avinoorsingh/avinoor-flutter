@@ -36,7 +36,7 @@ class ManaulCheckListData {
   int? activityHeadId;
   int? activityId;
   String? upload;
-  String? status;
+  int? status;
   String? import;
   String? scheduledTime;
   int? createdBy;
