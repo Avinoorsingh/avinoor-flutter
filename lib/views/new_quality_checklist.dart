@@ -55,8 +55,8 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('MMM-dd-yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
+    // var outputFormat = DateFormat('MMM-dd-yyyy');
+    // var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetNewCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -75,8 +75,8 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
       //  createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
       //  snagData.add(signInController.getSnagDataList!.data![i]);
       signInController.getCheckListData!.new1![i].dueDate!=null?
-       dateDifference.add((outputFormat.parse(signInController.getCheckListData!.new1![i].dueDate!)).difference(DateTime.parse(signInController.getCheckListData!.new1![i].createdAt!)).inDays):
-       dateDifference.add(0);
+      //  dateDifference.add((outputFormat.parse(signInController.getCheckListData!.new1![i].dueDate??"")).difference(DateTime.parse(signInController.getCheckListData!.new1![i].createdAt!)).inDays):
+       dateDifference.add(0):"";
       }
      }
     EasyLoading.dismiss();
@@ -236,6 +236,7 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
     context: context,
     builder: (context1) {
       return 
+      // ignore: sized_box_for_whitespace
       Container(
         height: 200,
         width: 200,

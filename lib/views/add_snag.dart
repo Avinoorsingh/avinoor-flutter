@@ -202,7 +202,7 @@ setState(() => this.image = imageTemp);
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                 Container(
+            Container(
             width: double.infinity,
             margin: const EdgeInsets.all(12.0),
             padding: const EdgeInsets.only(left: 10,right: 10,top: 3,bottom: 3),
@@ -863,20 +863,14 @@ setState(() => this.image = imageTemp);
                      }, 
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1950),
-                    //DateTime.now() - not to allow to choose before today.
                     lastDate: DateTime(2100));
- 
                 if (pickedDate != null) {
-                  //pickedDate output format => 2021-03-10 00:00:00.000
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                  //formatted date output using intl package =>  2021/03/16
                   setState(() {
                     dateInput.text =formattedDate;
-                     //set output date to TextField value.
                   });
                 } else {}
               },
-             // "Date:  ${getFormatedDate(DateTime.now().toString())}",
               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 20),
             ),
                )
@@ -971,9 +965,6 @@ setState(() => this.image = imageTemp);
                    setState(() {
                     snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)-1].toString();
                      dropdownvalueAssignedTo = newValue;
-                    //  if (kDebugMode) {
-                    //    print(assignedToListIndex[assignedToList.indexOf(newValue)]);
-                    //  }
                    });
                  },
                ),

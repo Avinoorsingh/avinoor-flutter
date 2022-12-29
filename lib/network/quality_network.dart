@@ -108,6 +108,7 @@ class GetSectionDetail{
      var token=sharedPreferences.getString('token');
       try {
       var getSectionDataUrl=Uri.parse("${Config.getSectionDataApi}$sectionId/$linkingActivtiyId/$checkCode");
+      print(getSectionDataUrl);
         var res=await http.get(
             getSectionDataUrl,
             headers:{
