@@ -29,8 +29,8 @@ import '../config.dart';
 import '../controller/signInController.dart';
 import '../models/category_list.dart';
 import '../network/client_project.dart';
-import '../network/photos_network.dart';
 
+// ignore: must_be_immutable
 class AddSnag extends StatefulWidget {
   AddSnag({Key? key,from}) : super(key: key);
 
@@ -96,7 +96,7 @@ class _MyProfilePageState extends State<AddSnag> {
    List<String> viewpointsID=[];
    List<String> viewpointImagesUrl=[];
   final imageKey = GlobalKey<ImagePainterState>();
-  final photos = PhotosNetwork();
+ 
   File? image;
   CroppedFile? croppedFile;
   Future pickImage() async {
@@ -151,14 +151,6 @@ setState(() => this.image = imageTemp);
       var outputFormat = DateFormat('yyyy-MM-dd');
     return outputFormat.format(inputDate);
     }
- 
-   void clearCache()async{
-    EasyLoading.show();
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.clear();
-       // ignore: use_build_context_synchronously
-       context.pushNamed('LOGINPAGE');
-      }
 
   bool iconPressed=false;
   @override

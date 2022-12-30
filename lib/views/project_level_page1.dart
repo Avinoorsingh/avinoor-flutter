@@ -1,4 +1,5 @@
 import 'package:colab/constants/colors.dart';
+import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getNewQualityDataController=Get.find<GetNewCheckList>();
+  final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
   final getClosedQualityDataController=Get.find<GetClosedCheckList>();
   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
@@ -131,6 +133,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           await getClosedQualityDataController.getCheckListData(context: context);
                           // ignore: use_build_context_synchronously
                           context.pushNamed('QUALITYCHECKLIST');
+                         }
+                         if(i==5){
+                          await getAreaOfConcernDataController.getAreaOfConcernData(context: context);
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed('AREASOFCONCERN');
                          }
                         },
                         style: ElevatedButton.styleFrom(

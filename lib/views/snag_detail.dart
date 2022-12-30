@@ -18,7 +18,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../network/client_project.dart';
-import '../network/photos_network.dart';
 
 // ignore: must_be_immutable
 class SnagDetail extends StatefulWidget {
@@ -78,7 +77,7 @@ class _SnagState extends State<SnagDetail> {
   List viewpoints=[];
   List deSnagImage=[];
   List viewpointID=[];
-  final photos = PhotosNetwork();
+
   File? image;
   CroppedFile? croppedFile;
   var groupedViewpoints = {};

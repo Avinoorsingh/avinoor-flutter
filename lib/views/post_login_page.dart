@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:colab/constants/colors.dart';
+import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -24,6 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProjectSnagData=Get.find<GetNewSnag>();
   final getNewQualityData=GetNewCheckList();
   final getProjectNewQualityData=Get.find<GetNewCheckList>();
+  final getAreaOfConcernData=GetAreaOfConcern();
+  final getProjectAreaOfConcernData=Get.find<GetAreaOfConcern>();
   final getOpenedQualityData=GetOpenedCheckList();
   final getProjectOpenedQualityData=Get.find<GetOpenedCheckList>();
   final getClosedQualityData=GetClosedCheckList();

@@ -1,4 +1,7 @@
+import 'package:colab/views/add_area_of_concern.dart';
 import 'package:colab/views/add_snag.dart';
+import 'package:colab/views/area_of_concern_detail.dart';
+import 'package:colab/views/areas_of_concern.dart';
 import 'package:colab/views/client_level.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/logout_screen.dart';
@@ -17,7 +20,6 @@ import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
 class CustomRouter {
-  // static final signInController = Get.find<SignInController>();
 
   GoRouter goRouter = GoRouter(
     urlPathStrategy: UrlPathStrategy.path,
@@ -44,35 +46,42 @@ class CustomRouter {
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
         name: 'QUALITYCHECKLIST',
         path: qualityChecklist,
         builder: (context, state) => QualityCheckList(
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
+        name: 'AREASOFCONCERN',
+        path: areaOfConcern,
+        builder: (context, state) => AreasOfConcern(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
         name: 'NEWSNAG',
         path: newSnags,
         builder: (context, state) => NewSnag(
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
         name: 'DESNAGS',
         path: desnags,
         builder: (context, state) => DeSnags(
           key: state.pageKey,
         ),
       ),
-        GoRoute(
+      GoRoute(
         name: 'SUBLOCATION',
         path: subLocation,
         builder: (context, state) => SubLocation(
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
         name: 'SNAGDETAIL',
         path: snagDetail,
         builder: (context, state) => SnagDetail(
@@ -81,7 +90,16 @@ class CustomRouter {
           snagModel: state.extra,
         ),
       ),
-       GoRoute(
+      GoRoute(
+        name: 'AREAOFCONCERNDETAIL',
+        path: areaOfConcernDetail,
+        builder: (context, state) => AreaOfConcernDetail(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          concernModel: state.extra,
+        ),
+      ),
+      GoRoute(
         name: 'QUALITYCHECKDETAIL',
         path: qualityCheckDetail,
         builder: (context, state) => QualityCheckDetail(
@@ -104,33 +122,39 @@ class CustomRouter {
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
+        name: 'ADDAREAOFCONCERN',
+        path: addAreaOfConcern,
+        builder: (context, state) => AddAreaOfConcern(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
         name: 'MYPROFILEPAGE',
         path: myProfilePage,
         builder: (context, state) => MyProfilePage(
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
         name: 'PROJECTLEVELPAGE',
         path: homePage,
         builder: (context, state) => ProjectLevelPage(
         clientData: state.extra,
           from: state.queryParams["from"],
         ),
-        //builder: (context, state) => const ProjectLevelPage(),
       ),
-       GoRoute(
+      GoRoute(
         name: 'CLIENTLEVELPAGE',
         path: clientLevel,
         builder: (context, state) => const ClientLevelPage(),
       ),
-        GoRoute(
+      GoRoute(
         name: 'SUPERADMINPAGE',
         path: superAdmin,
         builder: (context, state) => const SuperAdminPage(),
       ),
-       GoRoute(
+      GoRoute(
         name: 'LOGOUT',
         path: logout,
         builder: (context, state) => const LogoutScreen(),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:colab/models/activity_head.dart';
+import 'package:colab/models/area_of_concern_model.dart';
 import 'package:colab/models/category_list.dart';
 import 'package:colab/models/clientEmployee.dart';
 import 'package:colab/models/client_response.dart';
@@ -51,6 +52,7 @@ class SignInController extends GetxController {
   Checklist? getOpenedCheckListData;
   Checklist? getClosedCheckListData;
   SectionDetail? getSectionData;
+  AreaOfConcern? getAreaOfConcData;
 
   
   @override
