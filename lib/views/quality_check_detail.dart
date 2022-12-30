@@ -578,7 +578,7 @@ class _SnagState extends State<QualityCheckDetail> {
         );
     }),
       ]
-    )
+  )
    ),
      if(widget.from=="opened")...{
      CustomContainer2(child: 
