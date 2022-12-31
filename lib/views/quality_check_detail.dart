@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
-import 'package:colab/services/custom_dropdown.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -587,7 +586,8 @@ class _SnagState extends State<QualityCheckDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                 const Text("Due Date:",),
-                SizedBox(width:100),
+                const SizedBox(width:100),
+                // ignore: sized_box_for_whitespace
                 Container(
                   height: 10,
                   width: MediaQuery.of(context).size.width/2.5,

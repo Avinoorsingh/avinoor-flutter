@@ -8,4 +8,7 @@ class AppColors {
   static const Color green = Color.fromARGB(255, 14, 223, 14);
   static const Color tertiary = Color(0xFFFF0000);
   static const Color black = Colors.black;
+  static const Color navyblue = Color.fromRGBO(60, 70, 80, 1);
+  static const Color lightBlue=Color.fromRGBO(97,113,129, 1);
+  static const Color extraLightBlue=Color.fromRGBO(164,174,184,1);
 }

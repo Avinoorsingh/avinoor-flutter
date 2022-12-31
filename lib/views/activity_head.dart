@@ -17,12 +17,14 @@ class _ActivityHeadPageState extends State<ActivityHeadPage> {
      return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
       List<String> activityHead=[];
+      List<String> activityID=[];
       var activityHeadActivity=[];
        if(signInController.getActivityHeadList!.data!.isNotEmpty && activityHead.isEmpty){
         List<ACData>? subLocationList=signInController.getActivityHeadList?.data;
         for(var data in subLocationList!){
           activityHead.add(data.activityHead!);
           activityHeadActivity.add(data.subActivity);
+          activityID.add(data.activityId.toString());
         }
       }
     return Scaffold(
@@ -38,7 +40,7 @@ class _ActivityHeadPageState extends State<ActivityHeadPage> {
                   for(int j=0;j<activityHeadActivity[i].length;j++)...{
                   ListTile(
                     onTap: () {
-                    Navigator.pop(context,"${activityHead[i]}/${activityHeadActivity[i][j].activity}}${activityHeadActivity[i][j].linkingActivityId}:");
+                    Navigator.pop(context,"${activityHead[i]}/${activityHeadActivity[i][j].activity}}${activityHeadActivity[i][j].linkingActivityId}:${activityID[i]}|");
                     },
                     title: Text(activityHeadActivity[i][j].activity, style: const TextStyle(fontSize: 12.0,color: Colors.black54),),
                   ),

@@ -1,6 +1,7 @@
 const String loginPage = '/loginPage';
 const String snags = '/Snags';
 const String qualityChecklist = '/QualityCheckList';
+const String activities = '/Activities';
 const String areaOfConcern = '/AreaOfConcern';
 const String newSnags = '/NewSnags';
 const String desnags= '/DeSnags';

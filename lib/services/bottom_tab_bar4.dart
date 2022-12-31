@@ -1,24 +1,20 @@
-import 'package:colab/network/quality_network.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
 import '../constants/colors.dart';
-import '../controller/signInController.dart';
 import '../theme/text_styles.dart';
 
 
-class BottomTabBar3 extends StatefulWidget {
-  const BottomTabBar3({Key? key}) : super(key: key);
+class BottomTabBar4 extends StatefulWidget {
+  const BottomTabBar4({Key? key}) : super(key: key);
 
   @override
-  State<BottomTabBar3> createState() => _BottomTabBarState3();
+  State<BottomTabBar4> createState() => _BottomTabBarState4();
 }
 
-class _BottomTabBarState3 extends State<BottomTabBar3> {
-   final getNewCheckList = Get.find<GetNewCheckList>();
-   final getOpenedCheckList=Get.find<GetOpenedCheckList>();
-   final getClosedCheckList=Get.find<GetClosedCheckList>();
-   final signInController=Get.find<SignInController>();
+class _BottomTabBarState4 extends State<BottomTabBar4> {
+  //  final getNewCheckList = Get.find<GetNewCheckList>();
+  //  final getOpenedCheckList=Get.find<GetOpenedCheckList>();
+  //  final getClosedCheckList=Get.find<GetClosedCheckList>();
+  //  final signInController=Get.find<SignInController>();
 
 @override
 void initState(){
@@ -61,15 +57,19 @@ void initState(){
           labelColor:Colors.black,
           unselectedLabelStyle: textStyleTabLabel,
           unselectedLabelColor: Colors.black,
+          isScrollable: true,
           tabs:  [
             Tab(
-              child: Text("CLOSED",style:textStyleBodyText2 ,),
+              child: Text("COMPLETED",style:textStyleBodyText2 ,),
             ),
             Tab(
-            child: Text("NEW",style:textStyleBodyText2 ,),
+            child: Text("ON GOING",style:textStyleBodyText2 ,),
             ),
             Tab(
-              child: Text("OPEN",style:textStyleBodyText2 ,),
+              child: Text("IN QUALITY",style:textStyleBodyText2 ,),
+            ),
+            Tab(
+              child: Text("UPCOMING",style:textStyleBodyText2 ,),
             ),
           ],
         ),

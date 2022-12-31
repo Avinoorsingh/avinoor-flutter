@@ -6,7 +6,7 @@ import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/services/textfield.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
 import 'package:colab/models/location_list.dart';
@@ -17,11 +17,11 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
@@ -55,33 +55,22 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
   final clientId = TextEditingController();
   // ignore: non_constant_identifier_names
   final linking_activity_id=TextEditingController();
+  final activityId=TextEditingController();
   String dropdownvalue = 'Select Location';  
   String dropdownvalue2 = 'Select Sub Location';  
   String dropdownvalue3 = 'Select Activity Head';  
  
-   List<String> locationList=[];
-   List<String> assignedToList=[];
-   List<int> assignedToListIndex=[];
-   List<String> priority=[
-    "Critical",
-    "Major",
-    "Minor",
-   ];
-   List<String> viewpoints=[];
-   List viewpoints2=[];
-   List<String> viewpointsToSent=[];
-   List<String> viewpointsID=[];
-   List<String> viewpointImagesUrl=[];
+  List<String> locationList=[];
+  List<String> assignedToList=[];
+  List<int> assignedToListIndex=[];
   final imageKey = GlobalKey<ImagePainterState>();
 
   File?  _selectedImage;
 
   Future<void> _pickImage(ImageSource source) async {
-    // Use the ImagePicker plugin to select an image
     final image = await ImagePicker().pickImage(source: source);
     setState(() {
       _selectedImage =File(image!.path);
-      print(_selectedImage);
     });
   }
  
@@ -95,22 +84,10 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
  
-   void clearCache()async{
-    EasyLoading.show();
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.clear();
-       // ignore: use_build_context_synchronously
-       context.pushNamed('LOGINPAGE');
-      }
-
-  bool iconPressed=false;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
-      if (kDebugMode) {
-        print(signInController.getEmployeeList?.data!.first);
-      }
       if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
         for(int i=0;i<signInController.getEmployeeList!.data!.length;i++){
@@ -126,12 +103,12 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
         }
       }
      EasyLoading.dismiss();
-   // print(dropDownNotifier.value);
+
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.primary,
-      title: Text("Area of concern",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+        title: Text("Area of concern",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -157,14 +134,14 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
           dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
-              isExpanded: true,
-              items: locationList.map((String items){
-                return
+          isExpanded: true,
+          items: locationList.map((String items){
+              return
                 DropdownMenuItem(
                   value: items,
                   child: Text(items),
@@ -173,7 +150,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
               onChanged: (String? newValue) async{
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
-                setState(() {
+                  setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
                    });
@@ -295,12 +272,13 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                   if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute2());
              setState(() {
+              activityId.text=value.substring(value.indexOf(':')+1,value.indexOf('|'));
               linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
               subSubV=value.substring(0,value.indexOf('}'));
               subSubLocationController.text=value.substring(0,value.indexOf('}'));
              });    
             }
-             else if(locationController.text.isEmpty){
+            else if(locationController.text.isEmpty){
               EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
             }
             else if(subLocationId.text.isEmpty){
@@ -442,8 +420,10 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
             margin:const EdgeInsets.only(left: 20,right: 20),
               child: 
              ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-              onPressed: (){
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary,
+              elevation: 0,
+              splashFactory: NoSplash.splashFactory),
+              onPressed: () async{
                 if(locationController.text.isEmpty && otherLocationController.text.isEmpty){
                   EasyLoading.showToast("Please select location & specify other location",toastPosition: EasyLoadingToastPosition.bottom);
                 }
@@ -462,6 +442,73 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                  else if(descriptionController.text.isEmpty){
                    EasyLoading.showToast("Please add Description",toastPosition: EasyLoadingToastPosition.bottom);
                 }
+                else{
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var id=sharedPreferences.getString('id');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                FormData formData=FormData(); 
+                var dio = Dio();
+                    try {
+                formData.files.add(MapEntry("issueFile", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('issueFile', ''));
+                }
+                formData.fields.add(MapEntry('issueData', jsonEncode(
+                  [
+                    {
+                        "id": int.parse(clientID!),
+                        "client_id": int.parse(clientID),
+                        "project_id": int.parse(projectID!),
+                        "issuer_id": int.parse(id!),
+                        "issue_date": DateTime.now().toString(),
+                        "location_id":int.parse(locationId.text),
+                        "sub_location_id": int.parse(subLocationId.text),
+                        "sub_sub_location_id": int.parse(subSubLocationId.text),
+                        "activity_id": int.parse(activityId.text),
+                        "linking_activity_id": int.parse(linking_activity_id.text),
+                        "other_location": otherLocationController.text,
+                        "description": descriptionController.text,
+                        "status": "Read",
+                        "remark": "",
+                    }
+                ]
+                   )
+                   )
+                   );
+                    if (kDebugMode) {
+                      print(formData.fields);
+                    }
+                  try {
+                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  var res= await dio.post(
+                  "${Config.addAreaOfConcernApi.toString()}${date.toString()}",
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast("Concern saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                  if (kDebugMode) {
+                    print(e);
+                  }
+                }
+              }
               }, 
                child: Text("Submit",style: textStyleBodyText1.copyWith(color: AppColors.black),))
            ),
@@ -561,9 +608,6 @@ return Dialog(
               final fullPath = '$directory/sample/$n1/image.png';
               final imgFile = File(fullPath);
               imgFile.writeAsBytesSync(image);
-              // if (kDebugMode) {
-              //   print(imgFile.path);
-              // }
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               sharedPreferences.setString("imgPath", imgFile.path);
               Navigator.of(context, rootNavigator: true,).pop('dialog');

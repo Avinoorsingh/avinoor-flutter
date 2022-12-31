@@ -1,3 +1,4 @@
+import 'package:colab/views/activity_progress.dart';
 import 'package:colab/views/add_area_of_concern.dart';
 import 'package:colab/views/add_snag.dart';
 import 'package:colab/views/area_of_concern_detail.dart';
@@ -50,6 +51,13 @@ class CustomRouter {
         name: 'QUALITYCHECKLIST',
         path: qualityChecklist,
         builder: (context, state) => QualityCheckList(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name: 'ACTIVITIES',
+        path: activities,
+        builder: (context, state) => ActivitiesProgress(
           key: state.pageKey,
         ),
       ),

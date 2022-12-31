@@ -10,7 +10,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 GlobalKey<NavigatorState> contextKey = GlobalKey<NavigatorState>();
-GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

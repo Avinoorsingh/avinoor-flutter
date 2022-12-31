@@ -21,4 +21,5 @@ class Config{
   static const String getSectionDataApi="http://nodejs.hackerkernel.com/colab/api/getAddCheckList/";
   static const String addCheckList="http://nodejs.hackerkernel.com/colab/api/addCheckList";
   static const String getAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/get_issue_data/";
+  static const String addAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/mobile_projects/";
 }

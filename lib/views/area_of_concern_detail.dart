@@ -1,9 +1,17 @@
+import 'dart:convert';
+
+import 'package:colab/routes.dart';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:colab/theme/text_styles.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../config.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
@@ -29,7 +37,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
   final assignedToController=TextEditingController();
   final statusController = TextEditingController();
 
-    @override
+  @override
   void initState() {
     super.initState(); 
     statusController.text=widget.concernModel?.status??"";
@@ -130,6 +138,100 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
           ),
           ])
             ),
+            if(widget.concernModel?.status=="Pending")
+            const SizedBox(height: 20,),
+            if(widget.concernModel?.status=="Pending")
+            Container(
+            height: 45,
+            width: MediaQuery.of(context).size.width,
+            margin:const EdgeInsets.only(left: 20,right: 20),
+              child: 
+             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                splashFactory: NoSplash.splashFactory,
+                backgroundColor: AppColors.green),
+              onPressed: () async{
+                // if(locationController.text.isEmpty && otherLocationController.text.isEmpty){
+                //   EasyLoading.showToast("Please select location & specify other location",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                // else if(locationController.text.isEmpty){
+                //     EasyLoading.showToast("Please select location",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                //  else if(subLocationId.text.isEmpty){
+                //   EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                //   else if(subSubLocationController.text.isEmpty){
+                //   EasyLoading.showToast("Please Select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                // else if(otherLocationController.text.isEmpty){
+                //   EasyLoading.showToast("Please specify other location",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                //  else if(descriptionController.text.isEmpty){
+                //    EasyLoading.showToast("Please add Description",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                // else{
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var id=sharedPreferences.getString('id');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                FormData formData=FormData(); 
+                var dio = Dio();
+                    try {
+                // formData.files.add(MapEntry("issueFile", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('issueFile', ''));
+                }
+                formData.fields.add(MapEntry('issueData', jsonEncode(
+                  [
+                    {
+                        // "id": int.parse(clientID!),
+                        // "client_id": int.parse(clientID),
+                        // "project_id": int.parse(projectID!),
+                        // "issuer_id": int.parse(id!),
+                        // "issue_date": DateTime.now().toString(),
+                        // "location_id":int.parse(locationId.text),
+                        // "sub_location_id": int.parse(subLocationId.text),
+                        // "sub_sub_location_id": int.parse(subSubLocationId.text),
+                        // "activity_id": int.parse(activityId.text),
+                        // "linking_activity_id": int.parse(linking_activity_id.text),
+                        // "other_location": otherLocationController.text,
+                        // "description": descriptionController.text,
+                        // "status": "Read",
+                        // "remark": "",
+                    }
+                ]
+                   )
+                   )
+                   );
+                    if (kDebugMode) {
+                      print(formData.fields);
+                    }
+                  try {
+                  var res= await dio.post(
+                  "${Config.addAreaOfConcernApi}${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    print(res);
+                    EasyLoading.showToast("Concern resolved",toastPosition: EasyLoadingToastPosition.bottom);
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                  print(e);
+                }
+              }, 
+               child: Text("Resolved",style: textStyleBodyText1.copyWith(color: AppColors.black),))
+           ),
           ]
         ),
       )

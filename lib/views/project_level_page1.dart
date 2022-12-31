@@ -125,8 +125,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           elevation: 10,
                           child: 
                         ElevatedButton(
-                          
                           onPressed: ()async{
+                         if(i==1){
+                              context.pushNamed('ACTIVITIES');
+                            }
                          if(i==2){
                           await getNewQualityDataController.getCheckListData(context: context);
                           await getOpenedQualityDataController.getCheckListData(context: context);
