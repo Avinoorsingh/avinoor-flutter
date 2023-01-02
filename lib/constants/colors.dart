@@ -11,4 +11,5 @@ class AppColors {
   static const Color navyblue = Color.fromRGBO(60, 70, 80, 1);
   static const Color lightBlue=Color.fromRGBO(97,113,129, 1);
   static const Color extraLightBlue=Color.fromRGBO(164,174,184,1);
+  static const Color lightGrey=Color.fromRGBO(236,236,236,1);
 }

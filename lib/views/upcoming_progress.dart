@@ -1,6 +1,7 @@
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../theme/text_styles.dart';
 
@@ -13,7 +14,6 @@ class UpcomingProgress extends StatefulWidget {
 
 bool show=false;
 late var tapped;
-var update;
 
 class _UpcomingProgressState extends State<UpcomingProgress> {
   List<String?> locationName=[];
@@ -53,7 +53,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
     return 
     Scaffold(
     body: 
-    Container(margin: const EdgeInsets.only(top: 110),
+    Container(margin: const EdgeInsets.only(top: 90),
     child:
     ListView(
       children: [
@@ -62,18 +62,55 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: subLocationName.length,
+              itemCount: 4,
               itemBuilder: (BuildContext context, int index){
-                return 
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: 
-                    Column(
-                      children:[
-                        Center(child: 
-                        Stack(
+                return Stack(
                           clipBehavior: Clip.none,
-                          children: [ 
+                          children: [
+                             Card(
+                              color: Colors.orangeAccent,
+                              borderOnForeground: true,
+                                shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                              ),
+                              elevation: 0,
+                              child:
+                              Container(
+                                padding: const EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 0.5),
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(10)
+                                  ),
+                                // height: 0,
+                                width: 230,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(width: 200, 
+                                    decoration: BoxDecoration(
+                                    color: AppColors.navyblue,
+                                    border: Border.all(width: 0.5),
+                                    borderRadius: BorderRadius.circular(4)
+                                   ), 
+                                    child:Center(child: Text("Column Reinforcement",
+                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
+                                    const SizedBox(height: 10,),
+                                    Center(child:Text("Tower 2 / Gr Floor / Common 1",style: textStyleBodyText2),),
+                                    Center(child:Text("Irshad Khan-COMP 3",style: textStyleBodyText2,),),
+                                    Container(width: 200, 
+                                    decoration:const BoxDecoration(
+                                    color: Color.fromARGB(255, 6, 203, 6),
+                                   ), 
+                                   child:
+                                    Center(child:Text("Checklist Available",style: textStyleBodyText2,),),),
+                                    const SizedBox(height: 10,),
+                                  ],),
+                            )),
+                          Positioned(
+                           right: 0,
+                           left: 225,
+                              child:
                             InkWell(
                             splashColor: Colors.transparent,
                               onTap: () {
@@ -84,6 +121,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                               },
                               child:
                             Card(
+                              color: AppColors.extraLightBlue,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
@@ -93,90 +131,64 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                               Container(
                                 padding: const EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 0),
                                   decoration: BoxDecoration(
-                                    border: Border.all(width: 1),
+                                    border: Border.all(width: 0.5),
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(10)
                                   ),
                                 // height: 0,
-                                width: 335,
+                                width: 80,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
-                                    Text("${locationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
-                                    const SizedBox(height: 20,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                      Text("Date: ${outputFormat1.format(DateTime.parse(createdDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
-                                      Text("Due Date: ${outputFormat.format(DateTime.parse(dueDates[index]!))}",style: textStyleHeadline4.copyWith(fontSize: 10,color: Colors.grey),),
-                                      ],
+                                   Center(child: 
+                                   Text("Planned Start",
+                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
                                     ),
+                                    Container(width: 100, 
+                                    decoration: BoxDecoration(
+                                    color: AppColors.navyblue,
+                                    border: Border.all(width: 0.5),
+                                    borderRadius: BorderRadius.circular(4)
+                                   ), 
+                                    child:Center(child: Text("19/02/2022",
+                                    style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
+                                    Center(child: 
+                                    Text("Planned Finish",
+                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
+                                    ),
+                                     Container(width: 100, 
+                                    decoration: BoxDecoration(
+                                    color: AppColors.navyblue,
+                                    border: Border.all(width: 0.5),
+                                    borderRadius: BorderRadius.circular(4)
+                                   ), 
+                                    child:Center(child: Text("19/02/2022",
+                                    style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
+                                    const SizedBox(height: 12,),
                                   ],),
                             )),
                             ),
+                             ),
                             Positioned(
                               top: 10,
                               bottom: 20,
-                              left: 320,
+                              left: 355,
                               //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
-                                child:  Center(
-                                  child: CircleAvatar(
-                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
-                                    radius: 15.0,
-                                    child: Text(dateDifference[index].toString(),style: const TextStyle(color: Colors.black),),
+                                child: Center(
+                                  child: Container(
+                                    height: 25,
+                                    width: 25,
+                                    color:Colors.orange,
+                                    child: const Center(child:Text("-00",style: TextStyle(color: AppColors.white),),),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                              ),
-                              if(show==true && index==tapped)
-                        Container(
-                            padding: const EdgeInsets.only(left: 10,right: 10,top: 0),
-                            margin: const EdgeInsets.only(bottom: 20),
-                            height: 50,
-                            width: 330,
-                            decoration: BoxDecoration(
-                                    color:  Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(10)
-                                  ),
-                            child:InkWell(
-                              onTap: (){
-                                // context.pushNamed('SNAGDETAIL',
-                                // queryParams: {"from": "new"},
-                                // extra: snagData[index]);
-                              },
-                              child: 
-                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                              Text("Snag Remark: ",style: textStyleHeadline4,overflow: TextOverflow.ellipsis,),
-                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
-                             ],)
-                            )
-                            ),
-                            ]
-                          )
-                        );
-                    }
-                  )
-        ),
-      ],
-    )),
-    floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // context.pushNamed('ADDSNAG');
-          // Add your onPressed code here!
-        },
-        backgroundColor:AppColors.primary,
-        child: const Icon(Icons.add,color: Colors.black,),
-      ),);
-      }
-      // );
+                          ],);
+  }))])));
   }
-// }
+}

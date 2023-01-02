@@ -4,6 +4,8 @@ import 'package:colab/views/add_snag.dart';
 import 'package:colab/views/area_of_concern_detail.dart';
 import 'package:colab/views/areas_of_concern.dart';
 import 'package:colab/views/client_level.dart';
+import 'package:colab/views/completed_particular_progress.dart';
+import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
@@ -62,6 +64,15 @@ class CustomRouter {
         ),
       ),
       GoRoute(
+        name: 'COMPLETEDPARTICULARPROGRESS',
+        path: completedParticularProgress,
+        builder: (context, state) => CompletedParticularProgress(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          snagModel: state.extra,
+        ),
+      ),
+      GoRoute(
         name: 'AREASOFCONCERN',
         path: areaOfConcern,
         builder: (context, state) => AreasOfConcern(
@@ -102,6 +113,15 @@ class CustomRouter {
         name: 'AREAOFCONCERNDETAIL',
         path: areaOfConcernDetail,
         builder: (context, state) => AreaOfConcernDetail(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          concernModel: state.extra,
+        ),
+      ),
+       GoRoute(
+        name: 'COMPLETEDSITEPROGRESSDETAIL',
+        path: completedParticularProgressDetail,
+        builder: (context, state) => CompletedParticularProgressDetail(
           key: state.pageKey,
           from: state.queryParams["from"],
           concernModel: state.extra,

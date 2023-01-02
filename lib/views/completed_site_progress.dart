@@ -1,6 +1,7 @@
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../theme/text_styles.dart';
 
@@ -129,8 +130,14 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                         iconColor: Colors.transparent,
                         backgroundColor: AppColors.extraLightBlue,
                         trailing: null,
-                        title: Text('U1',style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
+                        title: InkWell(
+                          onTap: (){
+                            print("hello");
+                            context.pushNamed('COMPLETEDPARTICULARPROGRESS');
+                          },
+                          child:  Text('U1',style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
                       ),
+                        )
                         )
                     )
                   );

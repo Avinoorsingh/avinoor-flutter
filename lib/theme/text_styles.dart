@@ -20,6 +20,9 @@ TextStyle textStyleBodyText1 =
 
 TextStyle textStyleBodyText2 =
     const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, height: 1.3);
+    
+TextStyle textStyleBodyText4 =
+    const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, height: 1.3);
 TextStyle textStyleBodyText3 =
     const TextStyle(fontSize: 12, height: 1.3, color: Colors.grey);
 
