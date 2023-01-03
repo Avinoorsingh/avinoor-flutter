@@ -67,6 +67,11 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                 return Stack(
                           clipBehavior: Clip.none,
                           children: [
+                            InkWell(
+                              onTap: (){
+                                context.pushNamed("NEWPROGRESSENTRY");
+                              },
+                              child: 
                              Card(
                               color: Colors.orangeAccent,
                               borderOnForeground: true,
@@ -107,6 +112,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     const SizedBox(height: 10,),
                                   ],),
                             )),
+                            ),
                           Positioned(
                            right: 0,
                            left: 225,

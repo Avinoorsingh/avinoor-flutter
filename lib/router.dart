@@ -9,6 +9,7 @@ import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
+import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/post_login_page.dart';
 import 'package:colab/views/project_level_page.dart';
@@ -104,6 +105,15 @@ class CustomRouter {
         name: 'SNAGDETAIL',
         path: snagDetail,
         builder: (context, state) => SnagDetail(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          snagModel: state.extra,
+        ),
+      ),
+      GoRoute(
+        name:'NEWPROGRESSENTRY',
+        path: newProgressEntry,
+        builder: (context, state) => NewProgressEntry(
           key: state.pageKey,
           from: state.queryParams["from"],
           snagModel: state.extra,

@@ -26,6 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../controller/signInController.dart';
+import '../network/area_of_concern_network.dart';
 import '../network/client_project.dart';
 import '../services/container2.dart';
 
@@ -40,6 +41,7 @@ class AddAreaOfConcern extends StatefulWidget {
 }
 
 class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
+  final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final descriptionController=TextEditingController();
   final otherLocationController=TextEditingController();
   late String subV="";
@@ -357,7 +359,6 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                   elevation: 0,
                   backgroundColor: Colors.grey[300]),
                  onPressed: () {
-                   // Show the Cupertino modal pop-up when the button is pressed
                    showDialog(
                    context: context,
                    builder: (BuildContext context) {
@@ -458,10 +459,10 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                 formData.fields.add(MapEntry('issueData', jsonEncode(
                   [
                     {
-                        "id": int.parse(clientID!),
-                        "client_id": int.parse(clientID),
+                        "client_id": int.parse(clientID!),
                         "project_id": int.parse(projectID!),
                         "issuer_id": int.parse(id!),
+                        "assigned_to" : "",
                         "issue_date": DateTime.now().toString(),
                         "location_id":int.parse(locationId.text),
                         "sub_location_id": int.parse(subLocationId.text),
@@ -470,8 +471,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                         "linking_activity_id": int.parse(linking_activity_id.text),
                         "other_location": otherLocationController.text,
                         "description": descriptionController.text,
-                        "status": "Read",
-                        "remark": "",
+                        "status": "Pending",
                     }
                 ]
                    )
@@ -483,7 +483,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                   try {
                   var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
                   var res= await dio.post(
-                  "${Config.addAreaOfConcernApi.toString()}${date.toString()}",
+                  Config.addAreaOfConcernApi,
                   data: formData,
                   options: Options(
                     followRedirects: false,
@@ -498,6 +498,14 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                     );
                     if(res.statusCode==200){
                     EasyLoading.showToast("Concern saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    await getAreaOfConcernDataController.getAreaOfConcernData(context: context);
+                    Get.put(GetAreaOfConcern()); 
+                    // ignore: use_build_context_synchronously
+                    context.pop();
+                    // ignore: use_build_context_synchronously
+                    context.pop();
+                    // ignore: use_build_context_synchronously
+                    context.pushNamed('AREASOFCONCERN');
                     }
                     else{
                        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);

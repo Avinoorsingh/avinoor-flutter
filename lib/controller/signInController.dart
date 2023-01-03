@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api_service.dart';
 import '../constants/constants.dart';
+import '../models/completedProgress.dart';
 import '../models/login_response_model.dart';
 import '../models/login_user.dart';
 import '../models/section_detail.dart';
@@ -50,6 +51,7 @@ class SignInController extends GetxController {
   SnagData? getDeSnagDataClosedList;
   Checklist? getCheckListData;
   Checklist? getOpenedCheckListData;
+  CompletedProgress? getCompletedProgressData;
   Checklist? getClosedCheckListData;
   SectionDetail? getSectionData;
   AreaOfConcern? getAreaOfConcData;

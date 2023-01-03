@@ -64,12 +64,12 @@ class _InQualityProgressState extends State<InQualityProgress> {
               shrinkWrap: true,
               itemCount: 4,
               itemBuilder: (BuildContext context, int index){
-                return Card(
+              return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
-                       child:
-                       ClipRRect(
+                      child:
+                      ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: 
                         ExpansionTile(
@@ -82,17 +82,17 @@ class _InQualityProgressState extends State<InQualityProgress> {
                         trailing: null,
                         title: Text('Tower $index',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
                         children: [
-                          ListView.builder(
+                        ListView.builder(
                             shrinkWrap: true,
                             itemCount: 2,
                             itemBuilder: (BuildContext context, int index) {
                               return
-                          Card(
+                        Card(
                           color: AppColors.navyblue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                       child:
+                        child:
                         ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child:
@@ -106,58 +106,58 @@ class _InQualityProgressState extends State<InQualityProgress> {
                         trailing: null,
                         title: Text('Gr Floor',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
                         children: [
-                            ListView.builder(
+                          ListView.builder(
                             shrinkWrap: true,
                             itemCount: 2,
                             itemBuilder: (BuildContext context, int index) {
                               return
-                          Card(
-                          color: AppColors.extraLightBlue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                       child:
-                        ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child:
-                        Container(
-                          height: 60,
-                          child: 
-                        ExpansionTile(
-                        tilePadding: const EdgeInsets.only(left: 10,),
-                        collapsedBackgroundColor: AppColors.extraLightBlue,
-                        collapsedIconColor: Colors.transparent,
-                        iconColor: Colors.transparent,
-                        backgroundColor: AppColors.extraLightBlue,
-                        trailing: null,
-                        title: InkWell(
-                          onTap: (){
-                            print("hello");
-                            context.pushNamed('COMPLETEDPARTICULARPROGRESS');
-                          },
-                          child:  Text('U1',style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
-                      ),
-                        )
-                        )
-                    )
-                  );
-                          }
+                              Card(
+                              color: AppColors.extraLightBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                                child:
+                                ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child:
+                                Container(
+                                  height: 60,
+                                  child: 
+                                ExpansionTile(
+                                tilePadding: const EdgeInsets.only(left: 10,),
+                                collapsedBackgroundColor: AppColors.extraLightBlue,
+                                collapsedIconColor: Colors.transparent,
+                                iconColor: Colors.transparent,
+                                backgroundColor: AppColors.extraLightBlue,
+                                trailing: null,
+                                title: InkWell(
+                                  onTap: (){
+                                    context.pushNamed('COMPLETEDPARTICULARPROGRESS');
+                                  },
+                                  child:  Text('U1',style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
+                                ),
+                              )
+                            )
                           )
-                        ],
-                      ),
+                        );
+                      }
                     )
-                  );
-                          }
-                          )
-                         ],
-                      ),
-                    )
-                );
-                    }
-                  )
-        ),
+                  ],
+                ),
+              )
+            );
+          }
+        )
       ],
-    ))
-    );
-  }
+    ),
+  )
+);
+}
+)
+),
+],
+)
+)
+);
+}
 }

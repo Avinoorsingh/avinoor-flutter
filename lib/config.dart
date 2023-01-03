@@ -21,5 +21,9 @@ class Config{
   static const String getSectionDataApi="http://nodejs.hackerkernel.com/colab/api/getAddCheckList/";
   static const String addCheckList="http://nodejs.hackerkernel.com/colab/api/addCheckList";
   static const String getAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/get_issue_data/";
-  static const String addAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/mobile_projects/";
+  static const String addAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/add_issues";
+  static const String getLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_locations_progress/";
+  static const String getSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_sub_locations_progress/";
+  static const String getSubSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_subSub_locations_progress/";
+  static const String getTabUpcomingActivitiesApi="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add";
 }

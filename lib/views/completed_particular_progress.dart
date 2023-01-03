@@ -1,5 +1,4 @@
 import 'package:colab/constants/colors.dart';
-import 'package:colab/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
@@ -71,8 +70,13 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 Center(child: Text("Tower 1 / 1st Floor / U1",style: textStyleBodyText1.copyWith(color: AppColors.white,))),
-      ]))])),
-      const SizedBox(height: 20,),
+                ]
+              )
+            )
+          ]
+        )
+      ),
+        const SizedBox(height: 20,),
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
             ListView.builder(
@@ -136,143 +140,164 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                         ),
                         ]),
                         ),
-                        const SizedBox(height: 10,),
-                        Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.only(top: 0,bottom: 0),
-                          padding:const EdgeInsets.symmetric(vertical: 0),
-                          color: Colors.grey,
-                          child: Center(child: Text("CheckList NA",style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
-                        ]),
-                        children: [
-                          InkWell(
-                            onTap: (){
-                              context.pushNamed('COMPLETEDSITEPROGRESSDETAIL');
-                            },
-                            child:
-                          Column(children: [
-                          Container(
-                            padding:const EdgeInsets.only(left: 20,right: 20),
-                            color:AppColors.lightGrey,
-                            child: 
-                        Column(
-                          children: [
-                            const Text(""),
-                            Row(
-                              children: [Text("Quantity- 20 MT / 80 MT",style: textStyleBodyText1.copyWith(fontSize: 14),)],
-                            ),
-                        ])
-                          ),
-                             Container(
-                            padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
-                            color:AppColors.lightGrey,
-                            child: 
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                Text("Productivity",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("Rs. 600 / MT",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                               Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                                Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                                  Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                Text("Material consum.",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("40%",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                                Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                              ],),
-                            ],),
-                          ])),
+                            const SizedBox(height: 10,),
+                            Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(top: 0,bottom: 0),
+                              padding:const EdgeInsets.symmetric(vertical: 0),
+                              color: Colors.grey,
+                              child: Center(child: Text("CheckList NA",style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
+                            ]),
+                            children: [
+                              InkWell(
+                                onTap: (){
+                                  context.pushNamed('COMPLETEDSITEPROGRESSDETAIL');
+                                },
+                                child:
+                            Column(children: [
                               Container(
-                            padding:const EdgeInsets.only(left: 20,right: 20,top: 10),
-                            color:AppColors.lightGrey,
-                            child: 
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                padding:const EdgeInsets.only(left: 20,right: 20),
+                                color:AppColors.lightGrey,
+                                child: 
+                            Column(
                               children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
+                                const Text(""),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [Text("Quantity- 20 MT / 80 MT",style: textStyleBodyText1.copyWith(fontSize: 14),)],
+                                ),
+                            ])
+                              ),
+                            Container(
+                                    padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                                    color:AppColors.lightGrey,
+                                    child: 
+                            Column(
                                   children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                        Text("Productivity",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("Rs. 600 / MT",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                        Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                          Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                        Text("Material consum.",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("40%",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                        Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                      ],),
+                                    ],),
+                                  ]
+                                )
+                              ),
+                                Container(
+                                    padding:const EdgeInsets.only(left: 20,right: 20,top: 10),
+                                    color:AppColors.lightGrey,
+                                    child: 
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                Text("Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                Text("20 dec - 21",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                Text("PL Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-                                ]),
-                                ]),
-                              ],),
-                              Column(children: [Container(
-                                  height: 20,
-                                  width: 20,
-                                  color: Colors.deepOrangeAccent,
-                                  child:Center(child:FittedBox(child:Text("-10",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
-                             Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                Text("Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-                                Text("20 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),),
-                                Text("PL Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-                                Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-                                ]),
-                                ]),
-                              ],),
-                                Column(children: [Container(
-                                  height: 20,
-                                  width: 20,
-                                  color: Colors.greenAccent,
-                                  child:Center(child:FittedBox(child: Text("+26",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
-                            ],),
-                            
-                          ],
-                        )
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                        Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                        Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                        Text("Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                        Text("20 dec - 21",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                        Text("PL Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                        Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
+                                        ]),
+                                        ]),
+                                      ],),
+                                      Column(children: [
+                                        Container(
+                                          height: 20,
+                                          width: 20,
+                                          color: Colors.deepOrangeAccent,
+                                          child:Center(child:FittedBox(child:Text("-10",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                        Text("Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
+                                        Text("20 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),),
+                                        Text("PL Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
+                                        Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
+                                        ]
+                                      ),
+                                    ]
+                                  ),
+                                ],
+                              ),
+                            Column(children: [
+                              Container(
+                                height: 20,
+                                width: 20,
+                                color: Colors.greenAccent,
+                                child:Center(child:
+                                FittedBox(child: 
+                                Text("+26",
+                                style: textStyleBodyText4.copyWith(
+                                  color: AppColors.white),
+                                )
+                              ),
+                            )
                           )
+                        ],
+                      ),
+                    ],
+                    ),
+                  ],
+                )
+              )
             ]
           )
-        )])
-      ));
-    }
-  )
-)],
+        )
+]
+)
+)
+);
+}
+)
+)
+],
 )
 );
 }

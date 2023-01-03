@@ -7,10 +7,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../constants/colors.dart';
+import '../network/area_of_concern_network.dart';
 
 // ignore: must_be_immutable
 class AreaOfConcernDetail extends StatefulWidget {
@@ -24,7 +28,7 @@ class AreaOfConcernDetail extends StatefulWidget {
 }
 
 class _AreaOfConcernState extends State<AreaOfConcernDetail> {
-
+  final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
@@ -150,54 +154,27 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
                 splashFactory: NoSplash.splashFactory,
                 backgroundColor: AppColors.green),
               onPressed: () async{
-                // if(locationController.text.isEmpty && otherLocationController.text.isEmpty){
-                //   EasyLoading.showToast("Please select location & specify other location",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                // else if(locationController.text.isEmpty){
-                //     EasyLoading.showToast("Please select location",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                //  else if(subLocationId.text.isEmpty){
-                //   EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                //   else if(subSubLocationController.text.isEmpty){
-                //   EasyLoading.showToast("Please Select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                // else if(otherLocationController.text.isEmpty){
-                //   EasyLoading.showToast("Please specify other location",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                //  else if(descriptionController.text.isEmpty){
-                //    EasyLoading.showToast("Please add Description",toastPosition: EasyLoadingToastPosition.bottom);
-                // }
-                // else{
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
-                var id=sharedPreferences.getString('id');
-                var projectID=sharedPreferences.getString('projectIdd');
-                var clientID=sharedPreferences.getString('client_id');
                 FormData formData=FormData(); 
                 var dio = Dio();
-                    try {
-                // formData.files.add(MapEntry("issueFile", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
-                } catch (e) {
-                  formData.fields.add(const MapEntry('issueFile', ''));
-                }
+                formData.fields.add(MapEntry('id', widget.concernModel.id.toString()));
+                formData.fields.add(const MapEntry('issueFile', ''));
                 formData.fields.add(MapEntry('issueData', jsonEncode(
                   [
                     {
-                        // "id": int.parse(clientID!),
-                        // "client_id": int.parse(clientID),
-                        // "project_id": int.parse(projectID!),
-                        // "issuer_id": int.parse(id!),
-                        // "issue_date": DateTime.now().toString(),
-                        // "location_id":int.parse(locationId.text),
-                        // "sub_location_id": int.parse(subLocationId.text),
-                        // "sub_sub_location_id": int.parse(subSubLocationId.text),
-                        // "activity_id": int.parse(activityId.text),
-                        // "linking_activity_id": int.parse(linking_activity_id.text),
-                        // "other_location": otherLocationController.text,
-                        // "description": descriptionController.text,
-                        // "status": "Read",
-                        // "remark": "",
+                        "client_id": widget.concernModel.clientId,
+                        "project_id": widget.concernModel.projectId,
+                        "issuer_id": widget.concernModel.issuerId,
+                        "assigned_to" : "",
+                        "location_id":widget.concernModel.locationId,
+                        "sub_location_id": widget.concernModel.subLocationId,
+                        "sub_sub_location_id": widget.concernModel.subSubLocationId,
+                        "activity_id": widget.concernModel.activityId,
+                        "linking_activity_id": widget.concernModel.linkingActivityId,
+                        "other_location": otherLocationController.text,
+                        "description": descriptionController.text,
+                        "status": "Resolved",
                     }
                 ]
                    )
@@ -208,7 +185,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
                     }
                   try {
                   var res= await dio.post(
-                  "${Config.addAreaOfConcernApi}${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                  Config.addAreaOfConcernApi,
                   data: formData,
                   options: Options(
                     followRedirects: false,
@@ -221,8 +198,17 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
                     },
                   ),
                     );
-                    print(res);
+                      if(res.statusCode==200){
                     EasyLoading.showToast("Concern resolved",toastPosition: EasyLoadingToastPosition.bottom);
+                      await getAreaOfConcernDataController.getAreaOfConcernData(context: context);
+                    Get.put(GetAreaOfConcern()); 
+                    // ignore: use_build_context_synchronously
+                    context.pop();
+                    // ignore: use_build_context_synchronously
+                    context.pop();
+                    // ignore: use_build_context_synchronously
+                    context.pushNamed('AREASOFCONCERN');
+                    }
                 }catch(e){
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                   print(e);

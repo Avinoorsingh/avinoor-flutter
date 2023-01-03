@@ -143,32 +143,30 @@ class _OnProgressState extends State<OnGoingProgress> {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                        Text('U1',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18,fontWeight: FontWeight.normal),),
-                        index==0?Text("8 Activities ( 0 drafts )",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 10),):const Text("")
-                        ]),
-                      ),
-                        )
+                          Text('U1',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18,fontWeight: FontWeight.normal),),
+                          index==0?Text("8 Activities ( 0 drafts )",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 10),):const Text("")
+                          ]),
+                        ),
+                      )
                     )
                   );
-                          }
-                          )
-                        ],
-                      ),
-                    )
-                  );
-                          }
-                          )
-                         ],
-                      ),
-                    )
-                );
-                    }
-                  )
-        ),
-      ],
-    ))
-    );
-      }
-      // );
-  }
-// }
+                }
+              )
+            ],
+          ),
+        )
+      );
+    }
+  )
+],
+),
+)
+);
+}
+)
+),
+],
+))
+);
+}
+}

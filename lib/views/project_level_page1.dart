@@ -1,5 +1,6 @@
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
+import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getNewQualityDataController=Get.find<GetNewCheckList>();
+  final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
   final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
   final getClosedQualityDataController=Get.find<GetClosedCheckList>();
@@ -71,7 +73,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
-    return GetBuilder<GetUserProfileNetwork>(
+  return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
       final signInController=Get.find<SignInController>();
      EasyLoading.dismiss();
@@ -117,7 +119,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
                         child:
-                        Stack(children: [
+                        Stack(
+                          children: [
                         Card(
                           margin: const EdgeInsets.all(8),
                           shadowColor: Colors.transparent,
@@ -127,14 +130,16 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         ElevatedButton(
                           onPressed: ()async{
                          if(i==1){
-                              context.pushNamed('ACTIVITIES');
+                          await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed('ACTIVITIES');
                             }
                          if(i==2){
                           await getNewQualityDataController.getCheckListData(context: context);
                           await getOpenedQualityDataController.getCheckListData(context: context);
                           await getClosedQualityDataController.getCheckListData(context: context);
                           // ignore: use_build_context_synchronously
-                          context.pushNamed('QUALITYCHECKLIST');
+                             context.pushNamed('QUALITYCHECKLIST');
                          }
                          if(i==5){
                           await getAreaOfConcernDataController.getAreaOfConcernData(context: context);
