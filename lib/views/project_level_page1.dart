@@ -66,6 +66,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getNewQualityDataController=Get.find<GetNewCheckList>();
   final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgressDataController=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
   final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
   final getClosedQualityDataController=Get.find<GetClosedCheckList>();
@@ -131,6 +133,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           onPressed: ()async{
                          if(i==1){
                           await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+                          await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                          await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
                           // ignore: use_build_context_synchronously
                           context.pushNamed('ACTIVITIES');
                             }

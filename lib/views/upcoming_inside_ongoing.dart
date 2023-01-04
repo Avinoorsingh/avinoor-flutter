@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/config.dart';
 import 'package:colab/constants/colors.dart';
@@ -7,24 +6,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/progress_network.dart';
 import '../theme/text_styles.dart';
 
-class OnGoingProgress extends StatefulWidget {
-  const OnGoingProgress({Key? key,}) : super(key: key);
+class UpComingInsideOnGoing extends StatefulWidget {
+  const UpComingInsideOnGoing({Key? key,}) : super(key: key);
 
   @override
-  State<OnGoingProgress> createState() => _OnProgressState();
+  State<UpComingInsideOnGoing> createState() => _OnProgressState();
 }
 
 bool show=false;
 late var tapped;
 var update;
 
-class _OnProgressState extends State<OnGoingProgress> {
+class _OnProgressState extends State<UpComingInsideOnGoing> {
   List<String?> locationName=[];
   List<int?> locationDraft=[];
   List<int?> locationCount=[];
@@ -168,9 +166,9 @@ class _OnProgressState extends State<OnGoingProgress> {
                               var projectID=sharedPreferences.getString('projectIdd');
                               var clientID=sharedPreferences.getString('client_id');
                                 try {
-                                var getOnGoingProgressListUrl=Uri.parse("${Config.getSubSubLocationProgressApi}$clientID/${projectID??"1"}/${locationIDController.text}/${subLocationID[index]}/ONG");
+                                var getUpComingInsideOnGoingListUrl=Uri.parse("${Config.getSubSubLocationProgressApi}$clientID/${projectID??"1"}/${locationIDController.text}/${subLocationID[index]}/ONG");
                                   var res=await http.get(
-                                      getOnGoingProgressListUrl,
+                                      getUpComingInsideOnGoingListUrl,
                                       headers:{
                                         "Accept": "application/json",
                                         "Authorization": "Bearer $token",
@@ -231,21 +229,13 @@ class _OnProgressState extends State<OnGoingProgress> {
                         iconColor: Colors.transparent,
                         backgroundColor: AppColors.extraLightBlue,
                         trailing: null,
-                        title:
-                            InkWell(
-                            onTap: (){
-                              print('hello');
-                              context.pushNamed('ONGOINGHOMESCREEN');
-                            },
-                            child: 
-                         Row(
+                        title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                           Text(subSubLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
                           subSubLocationCount[index]!=null?Text("${subSubLocationCount[index]} Activities ( ${subSubLocationDraft[index]} drafts )    ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
                           ]),
                         ),
-                          )
                       )
                     )
                   );

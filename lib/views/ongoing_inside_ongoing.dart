@@ -1,33 +1,46 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:colab/config.dart';
 import 'package:colab/constants/colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/signInController.dart';
+import '../network/progress_network.dart';
 import '../services/container2.dart';
 import '../theme/text_styles.dart';
 
-// ignore: must_be_immutable
-class CompletedParticularProgress extends StatefulWidget {
-  CompletedParticularProgress({Key? key, this.from, this.snagModel }) : super(key: key);
+class OnGoingInsideOnGoing extends StatefulWidget {
+  const OnGoingInsideOnGoing({Key? key,}) : super(key: key);
 
-  final from;
-  dynamic snagModel;
   @override
-  State<CompletedParticularProgress> createState() => CompletedParticularProgressState();
+  State<OnGoingInsideOnGoing> createState() => _OnProgressState();
 }
 
 bool show=false;
 late var tapped;
+var update;
 
-class CompletedParticularProgressState extends State<CompletedParticularProgress> {
+class _OnProgressState extends State<OnGoingInsideOnGoing> {
   List<String?> locationName=[];
+  List<int?> locationDraft=[];
+  List<int?> locationCount=[];
   List<String?> subLocationName=[];
+  List<int?> subLocationCount=[];
+  List<int?> subLocationID=[];
+  List<int?> subLocationDraft=[];
   List<String?> subSubLocationName=[];
+  List<int?> subSubLocationCount=[];
+  List<int?> subSubLocationDraft=[];
   List<String?> dueDates=[];
   List<String?> createdDates=[];
+  List<int?> locationID=[];
   List<String?> remark=[];
   List snagData=[];
   List dateDifference=[];
+  TextEditingController locationIDController=TextEditingController();
  
  @override
  void initState(){
@@ -36,18 +49,23 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
+    return 
+    GetBuilder<GetOnGoingSiteProgress>(builder: (_){
+      final signInController=Get.find<SignInController>();
+     if(signInController.getOnGoingProcessData!.data!.isNotEmpty && locationName.isEmpty){
+      for(int i=0;i<signInController.getOnGoingProcessData!.data!.length;i++){
+       locationName.add(signInController.getOnGoingProcessData!.data![i].locationName!);
+       locationDraft.add(signInController.getOnGoingProcessData!.data![i].draftCount??0);
+       locationID.add(signInController.getOnGoingProcessData!.data![i].locationId!);
+       locationCount.add(signInController.getOnGoingProcessData!.data![i].count??0);
+     }
+     }
     EasyLoading.dismiss();
     return 
-    Scaffold(
-    appBar: AppBar(
-        foregroundColor: Colors.black,
-        backgroundColor:AppColors.primary,
-      title: Text("COMPLETED",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
-      ),
+     Scaffold(
     body: 
-    ListView(
+    Container(margin: const EdgeInsets.only(top: 90,),
+    child: ListView(
       children: [
         CustomContainer3(child: 
             Column(children: [
@@ -62,81 +80,90 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
         )
       ),
         const SizedBox(height: 20,),
-        Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
+        Stack(children: [
+        Container(
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: 1,
               itemBuilder: (BuildContext context, int index){
-                return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                return 
+                 Stack(children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 10,right: 25,),
+                    child:
+                Card(
+                    shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.black, width: 1),
+                    borderRadius: BorderRadius.circular(5.0),
                         ),
-                       child:
-                       ClipRRect(
+                    child:
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(5.0),
                       child: 
                         ExpansionTile(
-                        tilePadding:const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                        collapsedBackgroundColor: AppColors.navyblue,
+                        tilePadding:const EdgeInsets.only(right: 30),
                         collapsedIconColor: Colors.transparent,
                         iconColor: Colors.transparent,
-                        backgroundColor: AppColors.navyblue,
                         collapsedTextColor: AppColors.black,
+                        textColor: AppColors.black,
                         trailing: null,
                         title:
                         Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Container(
-                        height: 30,
-                        margin: const EdgeInsets.only(left: 10,right: 10),
-                        padding:const EdgeInsets.symmetric(vertical: 0),
-                        color:AppColors.primary,
-                        child:
-                        Row(children: [
-                        Text(' Sub Structure Excavation                  ',
-                        style: textStyleBodyText1.copyWith(color: AppColors.black),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                        Text('Slab Reinforcement',
+                        style: textStyleHeadline3.copyWith(fontSize: 16,color: AppColors.black),
                         overflow: TextOverflow.ellipsis,),
-                        ])),
-                        Container(
-                          margin:const EdgeInsets.only(right: 10),
-                          child: 
-                        Text("100%",style: textStyleBodyText1.copyWith(color:AppColors.white,fontSize: 18),),
-                        ),
                         ]),
                         subtitle:
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                          const SizedBox(height: 10,),
                         Center(
                           child: 
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children:[
-                            Text("",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-                            Text("D Series(D01 - D06) / Sub Level / D-01",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-                            Text("Contractor Not Available",style: textStyleBodyText2.copyWith(color: AppColors.white),)
-                          ],
-                        ),
+                          children: [
+                            // ignore: sized_box_for_whitespace
+                           Text("  In draft",style: textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500)),
+                           Text("        Submit",style: textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500)),
+                           Text("      Completed",style:textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500))
                         ]),
                         ),
-                            const SizedBox(height: 10,),
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(top: 0,bottom: 0),
-                              padding:const EdgeInsets.symmetric(vertical: 0),
-                              color: Colors.grey,
-                              child: Center(child: Text("CheckList NA",style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
+                        const SizedBox(height: 10,),
+                        Center(child:
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                width: 90,
+                                height: 5,
+                                color: Colors.grey,
+                              ),
+                              Container(
+                                width: 90,
+                                height: 5,
+                                color: AppColors.navyblue,
+                              ),
+                              Container(
+                                width: 90,
+                                height: 5,
+                                color: AppColors.navyblue,
+                              ),
+                            ],
+                          )
+                        ),
+                            const SizedBox(height: 30,),
                             ]),
                             children: [
                               InkWell(
                                 onTap: (){
-                                  context.pushNamed('COMPLETEDSITEPROGRESSDETAIL');
+                                  // context.pushNamed('COMPLETEDSITEPROGRESSDETAIL');
                                 },
                                 child:
                             Column(children: [
@@ -226,7 +253,7 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                                         ]),
                                         ]),
                                       ],),
-                                      Column(children: [
+                                    Column(children: [
                                         Container(
                                           height: 20,
                                           width: 20,
@@ -251,39 +278,81 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                                   ),
                                 ],
                               ),
-                            Column(children: [
-                              Container(
-                                height: 20,
-                                width: 20,
-                                color: Colors.greenAccent,
-                                child:Center(child:
-                                FittedBox(child: 
-                                Text("+26",
-                                style: textStyleBodyText4.copyWith(
-                                  color: AppColors.white),
-                                )
-                              ),
-                            )
-                          )
-                        ],
-                      ),
-                    ],
-                    ),
-                  ],
+                                Column(children: [
+                                  Container(
+                                    height: 20,
+                                    width: 20,
+                                    color: Colors.greenAccent,
+                                    child:Center(child:
+                                    FittedBox(child: 
+                                    Text("+26",
+                                        style: textStyleBodyText4.copyWith(
+                                        color: AppColors.white),
+                                        )
+                                      ),
+                                     )
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      )
+                    ]
+                  )
+                )
+              ], 
+            )
+          ),
+        ),
+        ),
+         Positioned(
+          top: 30,
+          right: 5,
+          child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.navyblue,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height:40,
+                width:50,
+                margin: const EdgeInsets.only(top: 0,bottom: 0),
+                child: Center(child: Text("0 %",style: textStyleBodyText1.copyWith(color: AppColors.white),
                 )
               )
-            ]
+            ),
+        ),
+        Positioned(
+          left: 0,
+          right: 20,
+          top: 80,
+          child: Center(
+            child:Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width:250,
+                height: 30,
+                margin: const EdgeInsets.only(top: 0,bottom: 0),
+    // padding:const EdgeInsets.symmetric(vertical: 10),
+                child: Center(child: Text("Checklist Closed",style: textStyleBodyText1.copyWith(color: AppColors.white),
+                )
+              )
+            ),
           )
         )
-]
+      ]);
+      }
+    )
+  ),
+      ])
+],
 )
 )
 );
 }
-)
-)
-],
-)
 );
 }
 }

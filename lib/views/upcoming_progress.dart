@@ -1,8 +1,16 @@
+import 'dart:convert';
+import 'package:colab/models/upcoming_progress.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/signInController.dart';
+import '../network/progress_network.dart';
 import '../theme/text_styles.dart';
 
 class UpcomingProgress extends StatefulWidget {
@@ -22,47 +30,110 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<String?> remark=[];
-  List snagData=[];
   List dateDifference=[];
+  UpcomingProgress1?  progressData;
+  List<UpcomingProgressData> List1=[];
+  // PageController for pagination
+  final scrollController=ScrollController();
+  // ignore: prefer_final_fields
+  int _page = 1;
+
+  
+  // Function to perform the POST request and update the data list
+  Future<void> _getData() async {
+     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var token=sharedPreferences.getString('token');
+    // Set up the POST request body
+    Map<String, String> body = {
+      'cid':'1',
+      'pid':'1',
+      'page_number':'$_page'
+    };
+    Map<String, String> requestHeaders={
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    };
+
+    // Perform the POST request
+    var response = await http.post(
+      Uri.parse('http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add'),
+      body: body,
+      headers: requestHeaders,
+    );
+    // Update the data list with the response data
+    setState(() {
+     progressData = UpcomingProgress1.fromJson(jsonDecode(response.body));
+     if(progressData!.data!=null){
+     List1=List1+progressData!.data!;
+     EasyLoading.dismiss();
+     }
+     else if(progressData!.data==null){
+      EasyLoading.dismiss();
+     }
+    });
+  }
+
  
  @override
  void initState(){
   super.initState();
+  scrollController.addListener(_scrollController);
+    // Get the initial data
+    _getData();
  }
+
+ void _scrollController(){
+  if(scrollController.position.pixels==scrollController.position.maxScrollExtent){
+    setState(() {
+      _page++;
+      _getData();
+    });
+  }
+  else{}
+ }
+
+ @override
+  void dispose() {
+    scrollController.dispose();
+    // Dispose of the PageController
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
     var outputFormat1 = DateFormat('dd/MM/yyyy');
-    // return 
-    // GetBuilder<GetCompletedSiteProgress>(builder: (_){
-    //   final signInController=Get.find<SignInController>();
-    //  if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
-    //   for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
-    //    subLocationName.add(signInController.getSnagDataList!.data![i].subLocation!.subLocationName);
-    //    subSubLocationName.add(signInController.getSnagDataList!.data![i].subSubLocation!.subSubLocationName);
-    //    locationName.add(signInController.getSnagDataList!.data![i].location!.locationName);
-    //    remark.add(signInController.getSnagDataList!.data![i].remark);
-    //    dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
-    //    createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
-    //    snagData.add(signInController.getSnagDataList!.data![i]);
-    //    dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
-    //   }
-    //  }
-    EasyLoading.dismiss();
     return 
+    GetBuilder<GetCompletedSiteProgress>(builder: (_){
+      final signInController=Get.find<SignInController>();
+     if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
+      for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
+       subLocationName.add(signInController.getSnagDataList!.data![i].subLocation!.subLocationName);
+       subSubLocationName.add(signInController.getSnagDataList!.data![i].subSubLocation!.subSubLocationName);
+       locationName.add(signInController.getSnagDataList!.data![i].location!.locationName);
+       remark.add(signInController.getSnagDataList!.data![i].remark);
+       dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
+       createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
+      }
+     }
+    EasyLoading.dismiss();
+    return
     Scaffold(
     body: 
     Container(margin: const EdgeInsets.only(top: 90),
-    child:
+    child:(signInController.getSnagDataList!.data!=null)?
     ListView(
+      controller: scrollController,
+      // physics: const NeverScrollableScrollPhysics(),
       children: [
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 4,
+              itemCount: List1.length,
               itemBuilder: (BuildContext context, int index){
                 return Stack(
                           clipBehavior: Clip.none,
@@ -98,17 +169,17 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text("Column Reinforcement",
+                                    child:Center(child: Text('${List1[index].activityHead!} ${List1[index].activity!}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
-                                    Center(child:Text("Tower 2 / Gr Floor / Common 1",style: textStyleBodyText2),),
-                                    Center(child:Text("Irshad Khan-COMP 3",style: textStyleBodyText2,),),
+                                    Center(child:Text('${List1[index].locationName!} / ${List1[index].subLocationName!} / ${List1[index].subSubLocationName!}',style: textStyleBodyText2),),
+                                    Center(child:Text(List1[index].contractorName??"No Contractor",style: textStyleBodyText2,),),
                                     Container(width: 200, 
-                                    decoration:const BoxDecoration(
-                                    color: Color.fromARGB(255, 6, 203, 6),
+                                    decoration:BoxDecoration(
+                                    color:List1[index].startTrigger!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
                                    ), 
                                    child:
-                                    Center(child:Text("Checklist Available",style: textStyleBodyText2,),),),
+                                    Center(child:Text(List1[index].startTrigger!=null? 'Checklist Available':'No Checklist Available',style: textStyleBodyText2,),),),
                                     const SizedBox(height: 10,),
                                   ],),
                             )),
@@ -157,7 +228,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text("19/02/2022",
+                                    child:Center(child: Text(outputFormat1.format(DateTime.parse(List1[index].createdAt.toString())),
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child: 
@@ -170,7 +241,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text("19/02/2022",
+                                    child:Center(child:Text(List1[index].updatedAt!=null?outputFormat1.format(DateTime.parse(List1[index].updatedAt.toString())):"",
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 12,),
                                   ],),
@@ -195,6 +266,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                               ),
                             ),
                           ],);
-  }))])));
+  }))]):Container()));
   }
+  );}
 }

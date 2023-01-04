@@ -11,6 +11,7 @@ import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
+import 'package:colab/views/ongoing_ongoing.dart';
 import 'package:colab/views/post_login_page.dart';
 import 'package:colab/views/project_level_page.dart';
 import 'package:colab/views/login_page.dart';
@@ -61,6 +62,13 @@ class CustomRouter {
         name: 'ACTIVITIES',
         path: activities,
         builder: (context, state) => ActivitiesProgress(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name: 'ONGOINGHOMESCREEN',
+        path: onGoingScreen,
+        builder: (context, state) => OnGoingOnGoingScreen(
           key: state.pageKey,
         ),
       ),

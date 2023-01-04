@@ -26,6 +26,10 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProjectSnagData=Get.find<GetNewSnag>();
   final getCompletedSiteProgress =GetCompletedSiteProgress();
   final getCompletedSiteProgressData=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgress =GetInEqualitySiteProgress();
+  final getInQualitySiteProgressData=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgress =GetOnGoingSiteProgress();
+  final getOnGoingSiteProgressData=Get.find<GetOnGoingSiteProgress>();
   final getNewQualityData=GetNewCheckList();
   final getProjectNewQualityData=Get.find<GetNewCheckList>();
   final getAreaOfConcernData=GetAreaOfConcern();

@@ -1,15 +1,15 @@
-class UpcomingProgress1 {
+class OnGoingUpcomingProgress {
   bool? success;
-  List<UpcomingProgressData>? data;
+  List<OnGoingUpcomingData>? data;
 
-  UpcomingProgress1({this.success, this.data});
+  OnGoingUpcomingProgress({this.success, this.data});
 
-  UpcomingProgress1.fromJson(Map<String, dynamic> json){
+  OnGoingUpcomingProgress.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     if (json['data'] != null) {
-      data = <UpcomingProgressData>[];
+      data = <OnGoingUpcomingData>[];
       json['data'].forEach((v) {
-        data!.add(UpcomingProgressData.fromJson(v));
+        data!.add(OnGoingUpcomingData.fromJson(v));
       });
     }
   }
@@ -24,9 +24,9 @@ class UpcomingProgress1 {
   }
 }
 
-class UpcomingProgressData {
+class OnGoingUpcomingData {
   int? progressId;
-  int? quantity;
+  var quantity;
   int? quantityId;
   String? locationName;
   String? contractorName;
@@ -52,7 +52,7 @@ class UpcomingProgressData {
   String? createdAt;
   String? updatedAt;
 
-  UpcomingProgressData(
+  OnGoingUpcomingData(
       {this.progressId,
       this.quantity,
       this.quantityId,
@@ -80,7 +80,7 @@ class UpcomingProgressData {
       this.createdAt,
       this.updatedAt});
 
-  UpcomingProgressData.fromJson(Map<String, dynamic> json) {
+  OnGoingUpcomingData.fromJson(Map<String, dynamic> json) {
     progressId = json['progress_id'];
     quantity = json['quantity'];
     quantityId = json['quantity_id'];

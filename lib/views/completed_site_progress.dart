@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/progress_network.dart';
@@ -43,8 +42,6 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetCompletedSiteProgress>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -144,7 +141,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               iconColor: Colors.transparent,
                               backgroundColor: AppColors.lightBlue,
                               trailing: null,
-                               onExpansionChanged:
+                              onExpansionChanged:
                               (bool t)async{
                              if(t==true){
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -153,7 +150,6 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               var clientID=sharedPreferences.getString('client_id');
                                 try {
                                 var getCompletedProgressListUrl=Uri.parse("${Config.getSubSubLocationProgressApi}$clientID/${projectID??"1"}/${locationIDController.text}/${subLocationID[index]}/COM");
-                                print(getCompletedProgressListUrl);
                                   var res=await http.get(
                                       getCompletedProgressListUrl,
                                       headers:{
@@ -171,10 +167,10 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                     setState(() {});
                                     }
                                     catch(e){
-                                      if (kDebugMode) {
                                         subSubLocationName.clear();
                                         subLocationID.clear();
                                         setState(() {});
+                                      if (kDebugMode) {
                                         print("Error is here");
                                         print(e);
                                       }

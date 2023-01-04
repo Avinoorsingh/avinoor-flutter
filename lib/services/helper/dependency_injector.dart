@@ -13,6 +13,8 @@ class DependencyInjector {
   static final getDeSnagData=Get.put(GetNewDeSnag());
   static final getNewQualityCheckData=Get.put(GetNewCheckList());
   static final getCompletedSiteProgress=Get.put(GetCompletedSiteProgress());
+  static final getOnGoingSiteProgress=Get.put(GetOnGoingSiteProgress());
+  static final getInEqualitySiteProgress=Get.put(GetInEqualitySiteProgress());
   static final getAreaOfConcernData=Get.put(GetAreaOfConcern());
   static final getOpenedSnagData=Get.put(GetOpenedSnag());
   static final getOpenedDeSnagData=Get.put(GetOpenedDeSnag());
@@ -36,6 +38,8 @@ class DependencyInjector {
     Get.put(GetClosedCheckList());
     Get.put(GetAreaOfConcern());
     Get.put(GetCompletedSiteProgress());
+    Get.put(GetOnGoingSiteProgress());
+    Get.put(GetInEqualitySiteProgress());
   }
 
    static void deleteControllers() {
