@@ -147,7 +147,8 @@ class _ProgressState extends State<EditProgressEntry> {
              const Icon(Icons.calendar_month),
             ])
             )
-          ),
+        ),
+        //done
         Column(
               children: [
               Center(child: Row(
