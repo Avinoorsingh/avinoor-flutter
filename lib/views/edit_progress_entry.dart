@@ -181,7 +181,7 @@ class _ProgressState extends State<EditProgressEntry> {
                    decoration: BoxDecoration(
                     borderRadius:const BorderRadius.all(Radius.circular(5)),
                      color:toggleList[index].toString()==priorityController.text? AppColors.primary:AppColors.white,
-                     border: Border.all(width: 1.2,color: AppColors.primary,),
+                     border: Border.all(width: 1.3,color: AppColors.primary,),
                     ),
                     child: Center(
                       child: Text(toggleList[index],textAlign: TextAlign.center,
