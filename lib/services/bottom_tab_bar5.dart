@@ -1,11 +1,15 @@
+import 'package:colab/services/container2.dart';
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../theme/text_styles.dart';
 
 
 class BottomTabBar5 extends StatefulWidget {
-  const BottomTabBar5({Key? key}) : super(key: key);
+  const BottomTabBar5({Key? key, this.locationName, this.subLocationName, this.subSubLocationName}) : super(key: key);
 
+  final locationName;
+  final subLocationName;
+  final subSubLocationName;
   @override
   State<BottomTabBar5> createState() => _BottomTabBarState5();
 }
@@ -23,13 +27,26 @@ void initState(){
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 100),
-      padding: const EdgeInsets.all(10),
+    return 
+    Container(
+      margin: const EdgeInsets.only(top: 150),
       color: Colors.transparent,
-      height: 65,
-      child: Container(
-        decoration: const BoxDecoration(
+      height: 150,
+      child: Column(
+        children:[
+        CustomContainer3(child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Center(child: Text(" ${widget.locationName} / ${widget.subLocationName} / ${widget.subSubLocationName}",style: textStyleBodyText1.copyWith(color: AppColors.white,))),
+                ]
+              )
+            ),]),),
+           const SizedBox(height: 10,),
+           Container(
+             margin: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
           gradient: LinearGradient(
               colors:[AppColors.white,AppColors.white,],
               begin: Alignment.topLeft,
@@ -73,7 +90,7 @@ void initState(){
             ),
           ],
         ),
-      ),
+      ),])
     );
   }
 }

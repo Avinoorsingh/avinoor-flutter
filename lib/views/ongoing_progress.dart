@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/progress_network.dart';
@@ -33,6 +32,7 @@ class _OnProgressState extends State<OnGoingProgress> {
   List<int?> subLocationID=[];
   List<int?> subLocationDraft=[];
   List<String?> subSubLocationName=[];
+  List<String?> subSubLocationID=[];
   List<int?> subSubLocationCount=[];
   List<int?> subSubLocationDraft=[];
   List<String?> dueDates=[];
@@ -42,6 +42,13 @@ class _OnProgressState extends State<OnGoingProgress> {
   List snagData=[];
   List dateDifference=[];
   TextEditingController locationIDController=TextEditingController();
+  TextEditingController subLocationIDController=TextEditingController();
+  TextEditingController clientIDController=TextEditingController();
+  TextEditingController projectIDController=TextEditingController();
+  TextEditingController subLocationNameController=TextEditingController();
+  TextEditingController subSubLocationNameController=TextEditingController();
+  TextEditingController locationNameController=TextEditingController();
+  
  
  @override
  void initState(){
@@ -63,7 +70,7 @@ class _OnProgressState extends State<OnGoingProgress> {
      }
     EasyLoading.dismiss();
     return 
-     Scaffold(
+    Scaffold(
     body: 
     Container(margin: const EdgeInsets.only(top: 90),
     child:
@@ -107,6 +114,7 @@ class _OnProgressState extends State<OnGoingProgress> {
                               var clientID=sharedPreferences.getString('client_id');
                                 try {
                                   locationIDController.text=locationID[index].toString();
+                                  locationNameController.text=locationName[index].toString();
                                 var getCompletedProgressListUrl=Uri.parse("${Config.getSubLocationProgressApi}$clientID/${projectID??"1"}/${locationID[index].toString()}/ONG");
                                   var res=await http.get(
                                       getCompletedProgressListUrl,
@@ -138,17 +146,17 @@ class _OnProgressState extends State<OnGoingProgress> {
                                     }
                                  }},
                         children: [
-                          ListView.builder(
+                        ListView.builder(
                             shrinkWrap: true,
                             itemCount: subLocationName.length,
                             itemBuilder: (BuildContext context, int index) {
                               return
-                          Card(
-                          color: AppColors.navyblue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                       child:
+                              Card(
+                              color: AppColors.navyblue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                          child:
                         ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child:
@@ -161,12 +169,16 @@ class _OnProgressState extends State<OnGoingProgress> {
                         backgroundColor: AppColors.lightBlue,
                         trailing: null,
                         onExpansionChanged:
-                              (bool t)async{
+                              (bool t)  async{
                              if(t==true){
+                             subLocationIDController.text=subLocationID[index].toString();
+                             subLocationNameController.text=subLocationName[index].toString();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
                               var clientID=sharedPreferences.getString('client_id');
+                              clientIDController.text=clientID.toString();
+                              projectIDController.text=projectID.toString();
                                 try {
                                 var getOnGoingProgressListUrl=Uri.parse("${Config.getSubSubLocationProgressApi}$clientID/${projectID??"1"}/${locationIDController.text}/${subLocationID[index]}/ONG");
                                   var res=await http.get(
@@ -180,11 +192,13 @@ class _OnProgressState extends State<OnGoingProgress> {
                                     subSubLocationName.clear();
                                     subSubLocationCount.clear();
                                     subSubLocationDraft.clear();
+                                    subSubLocationID.clear();
                                     if(cData4!=null){
                                       for(int i=0;i<cData4['data'].length;i++){
                                       subSubLocationName.add(cData4['data'][i]['sub_sub_location_name']);
                                       subSubLocationCount.add(cData4['data'][i]['count']);
                                       subSubLocationDraft.add(cData4['data'][i]['draft_count']);
+                                      subSubLocationID.add(cData4['data'][i]['sub_location_id'].toString());
                                     }
                                     }
                                     setState(() {});
@@ -234,8 +248,7 @@ class _OnProgressState extends State<OnGoingProgress> {
                         title:
                             InkWell(
                             onTap: (){
-                              print('hello');
-                              context.pushNamed('ONGOINGHOMESCREEN');
+                              context.pushNamed('ONGOINGHOMESCREEN',queryParams:{"cID":clientIDController.text,"pID":projectIDController.text,"locID":locationIDController.text.toString(),"subLocID":subLocationIDController.text.toString(),"subSubLocID":subSubLocationID[index]!,"loc":locationNameController.text,"subLoc":subLocationNameController.text,"subSubLoc":subSubLocationName[index]!} );
                             },
                             child: 
                          Row(

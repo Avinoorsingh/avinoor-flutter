@@ -25,37 +25,37 @@ class OnGoingOnGoingProgress {
 }
 
 class OnGoingOnGoingData {
-  int? checklistId;
-  int? checkStatus;
-  int? triggerId;
-  int? cmId;
+  num? checklistId;
+  num? checkStatus;
+  num? triggerId;
+  num? cmId;
   String? locationName;
   String? subLocationName;
   String? subSubLocationName;
   String? activity;
   String? activityHead;
   String? uomName;
-  int? dailyId;
-  int? progressId;
-  int? contractorId;
-  int? cumulativeQuantity;
-  int? achivedQuantity;
-  int? totalQuantity;
+  num? dailyId;
+  num? progressId;
+  num? contractorId;
+  num? cumulativeQuantity;
+  num? achivedQuantity;
+  num? totalQuantity;
   String? progressDate;
-  int? progressPercentage;
+  num? progressPercentage;
   var debetContactor;
-  int? progType;
+  num? progType;
   String? remarks;
-  int? draftStatus;
+  num? draftStatus;
   String? createdAt;
   String? updatedAt;
-  int? id;
-  int? clientId;
-  int? projectId;
-  int? type;
-  int? linkActivityId;
-  int? createdBy;
-  int? updatedBy;
+  num? id;
+  num? clientId;
+  num? projectId;
+  num? type;
+  num? linkActivityId;
+  num? createdBy;
+  num? updatedBy;
 
   OnGoingOnGoingData(
       {this.checklistId,

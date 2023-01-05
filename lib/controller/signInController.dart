@@ -5,7 +5,9 @@ import 'package:colab/models/category_list.dart';
 import 'package:colab/models/clientEmployee.dart';
 import 'package:colab/models/client_response.dart';
 import 'package:colab/models/location_list.dart';
+import 'package:colab/models/ongoing_completed_progress_data.dart';
 import 'package:colab/models/ongoing_process.dart';
+import 'package:colab/models/ongoing_upcoming_progress.dart';
 import 'package:colab/models/quality_new_checklist.dart';
 import 'package:colab/models/snag_data.dart';
 import 'package:colab/views/inquality_progress.dart';
@@ -20,6 +22,7 @@ import '../models/InEqualityProgess.dart';
 import '../models/completedProgress.dart';
 import '../models/login_response_model.dart';
 import '../models/login_user.dart';
+import '../models/ongoing_ongoing_progress_data.dart';
 import '../models/section_detail.dart';
 import '../models/sub_location_list.dart';
 import '../network/client_project.dart';
@@ -59,6 +62,9 @@ class SignInController extends GetxController {
   OnGoingProgress? getOnGoingProcessData;
   Checklist? getClosedCheckListData;
   SectionDetail? getSectionData;
+  OnGoingCompletedProgress? getOnGoingCompletedData;
+  OnGoingOnGoingProgress? getOnGoingOnGoingData;
+  OnGoingUpcomingProgress? getOnGoingUpComingData;
   AreaOfConcern? getAreaOfConcData;
 
   

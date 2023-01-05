@@ -26,5 +26,8 @@ class Config{
   static const String getSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_sub_locations_progress/";
   static const String getSubSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_subSub_locations_progress/";
   static const String getTabUpcomingActivitiesApi="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add";
-  static const String getOnGoingProgressApi="http://nodejs.hackerkernel.com/colab/api/get_ongoing_progress_add";
+  static const String getOnGoingOnGoingProgressApi="http://nodejs.hackerkernel.com/colab/api/get_ongoing_progress_add";
+  static const String getOnGoingCompletedProgressApi="http://nodejs.hackerkernel.com/colab/api/get_completed_progress_add";
+  static const String getOnGoingUpcomingProgressApi="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add_on_location";
+  static const String getOnGoingQualityProgressApi="http://nodejs.hackerkernel.com/colab/api/get_inquality_progress_add";
 }

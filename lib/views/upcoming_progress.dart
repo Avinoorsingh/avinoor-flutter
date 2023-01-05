@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:colab/models/upcoming_progress.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   List<String?> remark=[];
   List dateDifference=[];
   UpcomingProgress1?  progressData;
-  List<UpcomingProgressData> List1=[];
+  List<UpcomingProgressData> list1=[];
   // PageController for pagination
   final scrollController=ScrollController();
   // ignore: prefer_final_fields
@@ -65,7 +64,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
     setState(() {
      progressData = UpcomingProgress1.fromJson(jsonDecode(response.body));
      if(progressData!.data!=null){
-     List1=List1+progressData!.data!;
+     list1=list1+progressData!.data!;
      EasyLoading.dismiss();
      }
      else if(progressData!.data==null){
@@ -102,22 +101,10 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
     var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetCompletedSiteProgress>(builder: (_){
-      final signInController=Get.find<SignInController>();
-     if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
-      for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
-       subLocationName.add(signInController.getSnagDataList!.data![i].subLocation!.subLocationName);
-       subSubLocationName.add(signInController.getSnagDataList!.data![i].subSubLocation!.subSubLocationName);
-       locationName.add(signInController.getSnagDataList!.data![i].location!.locationName);
-       remark.add(signInController.getSnagDataList!.data![i].remark);
-       dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
-       createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
-       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
-      }
-     }
+    final signInController=Get.find<SignInController>();
     EasyLoading.dismiss();
     return
     Scaffold(
@@ -133,7 +120,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: List1.length,
+              itemCount: list1.length,
               itemBuilder: (BuildContext context, int index){
                 return Stack(
                           clipBehavior: Clip.none,
@@ -169,17 +156,17 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text('${List1[index].activityHead!} ${List1[index].activity!}',
+                                    child:Center(child: Text('${list1[index].activityHead!} ${list1[index].activity!}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
-                                    Center(child:Text('${List1[index].locationName!} / ${List1[index].subLocationName!} / ${List1[index].subSubLocationName!}',style: textStyleBodyText2),),
-                                    Center(child:Text(List1[index].contractorName??"No Contractor",style: textStyleBodyText2,),),
+                                    Center(child:Text('${list1[index].locationName!} / ${list1[index].subLocationName!} / ${list1[index].subSubLocationName!}',style: textStyleBodyText2),),
+                                    Center(child:Text(list1[index].contractorName??"No Contractor",style: textStyleBodyText2,),),
                                     Container(width: 200, 
                                     decoration:BoxDecoration(
-                                    color:List1[index].startTrigger!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
+                                    color:list1[index].startTrigger!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
                                    ), 
                                    child:
-                                    Center(child:Text(List1[index].startTrigger!=null? 'Checklist Available':'No Checklist Available',style: textStyleBodyText2,),),),
+                                    Center(child:Text(list1[index].startTrigger!=null? 'Checklist Available':'No Checklist Available',style: textStyleBodyText2,),),),
                                     const SizedBox(height: 10,),
                                   ],),
                             )),
@@ -228,7 +215,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text(outputFormat1.format(DateTime.parse(List1[index].createdAt.toString())),
+                                    child:Center(child: Text(outputFormat1.format(DateTime.parse(list1[index].createdAt.toString())),
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child: 
@@ -241,7 +228,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child:Text(List1[index].updatedAt!=null?outputFormat1.format(DateTime.parse(List1[index].updatedAt.toString())):"",
+                                    child:Center(child:Text(list1[index].updatedAt!=null?outputFormat1.format(DateTime.parse(list1[index].updatedAt.toString())):"",
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 12,),
                                   ],),

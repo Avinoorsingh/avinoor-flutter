@@ -7,6 +7,7 @@ import 'package:colab/views/client_level.dart';
 import 'package:colab/views/completed_particular_progress.dart';
 import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
+import 'package:colab/views/edit_progress_entry.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
@@ -70,6 +71,14 @@ class CustomRouter {
         path: onGoingScreen,
         builder: (context, state) => OnGoingOnGoingScreen(
           key: state.pageKey,
+          cID: state.queryParams['cID'],
+          pID: state.queryParams['pID'],
+          locID: state.queryParams['locID'],
+          subLocID: state.queryParams['subLocID'],
+          subSubLocID: state.queryParams['subSubLocID'],
+          locationName: state.queryParams['loc'],
+          subLocationName: state.queryParams['subLoc'],
+          subSubLocationName: state.queryParams['subSubLoc'],
         ),
       ),
       GoRoute(
@@ -125,6 +134,15 @@ class CustomRouter {
           key: state.pageKey,
           from: state.queryParams["from"],
           snagModel: state.extra,
+        ),
+      ),
+       GoRoute(
+        name:'EDITPROGRESSENTRY',
+        path: editProgressEntry,
+        builder: (context, state) => EditProgressEntry(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          editModel: state.extra,
         ),
       ),
       GoRoute(
