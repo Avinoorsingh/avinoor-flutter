@@ -187,7 +187,7 @@ setState(() => this.image = imageTemp);
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.primary,
-      title: Text("Create Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+        title: Text("Create Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -281,14 +281,14 @@ setState(() => this.image = imageTemp);
               color: Colors.black,
               fontSize: 14
             ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+                dropdownColor: AppColors.white,
+                decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
+                ),
+              ),
               isExpanded: true,
               items: locationList.map((String items){
                 return
@@ -364,7 +364,7 @@ setState(() => this.image = imageTemp);
                               "sub_loc_id":subLocationId.text,
                               "sub_sub_loc_id":subSubLocationId.text,
                             }
-                            );
+                          );
                   Map<String,dynamic> cData4=jsonDecode(res.body);
                   ActivityHead result4=ActivityHead.fromJson(cData4['data']);
                   signInController.getActivityHeadList=result4;
@@ -379,27 +379,27 @@ setState(() => this.image = imageTemp);
                   }
             },
               child: 
-           DropdownButtonFormField(
-            onTap: () {
-              context.pushNamed('SUBLOCATION');
-            },
-             icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14
-            ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder( //<-- SEE HERE
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+              DropdownButtonFormField(
+                onTap: () {
+                  context.pushNamed('SUBLOCATION');
+                },
+                icon: const Padding( 
+                  padding: EdgeInsets.only(left:20),
+                  child:Icon(Icons.arrow_drop_down_circle_outlined)
+                ), 
+                iconEnabledColor: Colors.grey,
+                style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14
+                ), 
+                dropdownColor: AppColors.white,
+                decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+                borderSide: BorderSide(color: Colors.grey, width: 1),
+                ),
+              focusedBorder: OutlineInputBorder( //<-- SEE HERE
+              borderSide: BorderSide(color: Colors.grey, width: 1),
+               ),
+                ),
               isExpanded: true,
               items: null,
               // ignore: unnecessary_null_comparison
@@ -413,7 +413,7 @@ setState(() => this.image = imageTemp);
             ),
             )
           ),
-           Container(
+          Container(
            margin: const EdgeInsets.only(left:20,right:20),
            padding: const EdgeInsets.only(top: 20,bottom: 20),
             child:
@@ -435,7 +435,7 @@ setState(() => this.image = imageTemp);
                               "Accept": "application/json",
                               "Authorization": "Bearer $token",
                             },
-                            );
+                          );
                   Map<String,dynamic> cData5=jsonDecode(res.body);
                   if(res.body.isNotEmpty){
                     try {

@@ -1,18 +1,13 @@
-import 'dart:convert';
 import 'package:colab/network/onGoingSiteProgress/ongoing_site_network.dart';
-import 'package:http/http.dart' as http;
-import 'package:colab/config.dart';
+import 'package:go_router/go_router.dart';
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../models/ongoing_upcoming_progress.dart';
-import '../network/progress_network.dart';
-import '../services/container2.dart';
 import '../theme/text_styles.dart';
 
 class UpComingInsideOnGoing extends StatefulWidget {
@@ -60,6 +55,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
   TextEditingController subLocationController=TextEditingController();
   TextEditingController subSubLocationController=TextEditingController();
   List<OnGoingUpcomingData> list1=[];
+  List upComingModel=[];
   int _page = 1;
  
  @override
@@ -72,7 +68,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
  }
 
    Future<void> _getData() async {
-     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
      await getDataController.getDetail(cID: widget.cID, pID: widget.pID, locID: widget.locID, subLocID: widget.subLocID, subSubLocID: widget.subSubLocID, pageNumber: _page.toString());
     setState(() {
      if(signInController.getOnGoingUpComingData!.data!=null){
@@ -122,6 +118,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
        checkListAvail.add(list1[i].startTrigger);
        plannedDates.add(list1[i].createdAt.toString());
        finishDates.add(list1[i].updatedAt.toString());
+       upComingModel.add(list1[i]);
      }
      if(list1.isNotEmpty){
      locationController.text=list1[0].locationName!;
@@ -164,10 +161,10 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                           children: [
                             InkWell(
                               onTap: (){
-                                // context.pushNamed("NEWPROGRESSENTRY");
+                                context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index] );
                               },
                               child: 
-                             Card(
+                              Card(
                               color: Colors.orangeAccent,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
@@ -197,7 +194,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child:Text('${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}',style: textStyleBodyText2),),
-                                    Center(child:Text(contractorName[index]!='null'?"${contractorName[index]}":"No Contractor",style: textStyleBodyText2,),),
+                                    Center(child:Text(contractorName[index]!='null'?"${contractorName[index]}":"Contractor Not Available",style: textStyleBodyText2,),),
                                     Container(width: 200, 
                                     decoration:BoxDecoration(
                                     color:checkListAvail[index]!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,

@@ -71,6 +71,14 @@ class _OnProgressState extends State<OnGoingProgress> {
     EasyLoading.dismiss();
     return 
     Scaffold(
+    floatingActionButton:FloatingActionButton(
+          onPressed: () {
+            // Add your onPressed code here!
+            context.pushNamed('ADDPROGRESSENTRY');
+          },
+          backgroundColor: AppColors.primary,
+          child: const Icon(Icons.add,color: AppColors.black,),
+        ),
     body: 
     Container(margin: const EdgeInsets.only(top: 90),
     child:

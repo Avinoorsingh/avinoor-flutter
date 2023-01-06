@@ -5,6 +5,7 @@ import 'package:colab/models/client_response.dart';
 import 'package:colab/models/location_list.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/models/login_user.dart';
+import 'package:colab/models/progress_location_data.dart';
 import 'package:colab/models/snag_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -205,6 +206,28 @@ class GetUserProfileNetwork extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting location list");
+                print(e);
+              }
+            }
+    try {
+     var getProgressLocationListUrl=Uri.parse(Config.getProgressLocationListApi);
+        var res=await http.post(
+            getProgressLocationListUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+            body: {
+              "client_id":signInController.getProjectData?.clientid.toString(),
+              "project_id":projectID,
+            }
+            );
+          Map<String,dynamic> cData3=jsonDecode(res.body);
+          ProgressLocationData result3=ProgressLocationData.fromJson(cData3);
+          signInController.getProgressLocationList=result3;    
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting progress location list");
                 print(e);
               }
             }

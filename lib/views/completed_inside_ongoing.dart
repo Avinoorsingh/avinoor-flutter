@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import '../controller/signInController.dart';
 import '../network/onGoingSiteProgress/ongoing_site_network.dart';
 import '../network/progress_network.dart';
@@ -58,6 +59,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
   final signInController=Get.find<SignInController>();
   final scrollController=ScrollController();
   final getDataController=GetOnGoingCompletedDetail();
+  List editModel=[];
    int _page = 1;
  
  @override
@@ -119,6 +121,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
             contractorName.add(list1[i].contractorId.toString());
             plannedDates.add(list1[i].createdAt.toString());
             finishDates.add(list1[i].updatedAt.toString());
+            editModel.add(list1[i]);
           }
           if(list1.isNotEmpty){
           locationController.text=list1[0].locationName!;
@@ -223,7 +226,9 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                             ]),
                             children: [
                               InkWell(
-                                onTap: (){ },
+                                onTap: (){ 
+                                  context.pushNamed('GETCOMPLETEDPROGRESSENTRY',extra: editModel[index]);
+                                },
                                 child:
                             Column(children: [
                               Container(

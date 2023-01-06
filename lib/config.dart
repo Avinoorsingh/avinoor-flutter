@@ -30,4 +30,9 @@ class Config{
   static const String getOnGoingCompletedProgressApi="http://nodejs.hackerkernel.com/colab/api/get_completed_progress_add";
   static const String getOnGoingUpcomingProgressApi="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add_on_location";
   static const String getOnGoingQualityProgressApi="http://nodejs.hackerkernel.com/colab/api/get_inquality_progress_add";
+  static const String getProgressLocationListApi="http://nodejs.hackerkernel.com/colab/api/location_list";
+  static const String getProgressSubLocationListApi="http://nodejs.hackerkernel.com/colab/api/sub_location_list";
+  static const String getProgressSubSubLocationListApi="http://nodejs.hackerkernel.com/colab/api/sub_sub_location_list";
+  static const String getProgressActivityHeadListApi="http://nodejs.hackerkernel.com/colab/api/activity_head";
+  static const String getProgressActivityListApi="http://nodejs.hackerkernel.com/colab/api/get_sub_activity_for_app";
 }

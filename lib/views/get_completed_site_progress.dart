@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
@@ -11,17 +12,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
-class EditProgressEntry extends StatefulWidget {
-  EditProgressEntry({Key? key, this.from, this.editModel }) : super(key: key);
+class GetCompletedSiteProgress extends StatefulWidget {
+  GetCompletedSiteProgress({Key? key, this.from, this.editModel }) : super(key: key);
 
  // ignore: prefer_typing_uninitialized_variables
  final from;
  dynamic editModel;
   @override
-  State<EditProgressEntry> createState() => _ProgressState();
+  State<GetCompletedSiteProgress> createState() => _ProgressState();
 }
 
-class _ProgressState extends State<EditProgressEntry> {
+class _ProgressState extends State<GetCompletedSiteProgress> {
 
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
@@ -86,32 +87,13 @@ class _ProgressState extends State<EditProgressEntry> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Edit Progress Entry",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("Completed Site Progress",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin:const EdgeInsets.only(right: 20,top: 10),
-                  child:
-                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:update==false? Colors.brown:Colors.green)
-                 ,onPressed: (){
-                  setState(() {
-                    if(update==false){
-                    update=true;
-                    }
-                    else{
-                      update=false;
-                    }
-                  });
-                 },child: Text("Update",style: textStyleButton,),)
-                )
-            ]),
           CustomContainer(
             child: 
             InkWell(
@@ -203,7 +185,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(locationController.text.isEmpty?"D Series (D01- D06)":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
+            Center(child: Text(locationController.text.isEmpty?"Location Unavailable":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
               const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
@@ -211,7 +193,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
+            Center(child: Text(subLocationController.text.isEmpty?"SubLocation Unavailable":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
@@ -219,7 +201,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-             Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
+             Center(child: Text(activityHeadController.text.isEmpty?"Activity / Activity Head Unavailable":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
@@ -540,8 +522,7 @@ class _ProgressState extends State<EditProgressEntry> {
           ),
           ])
             ),
-            const SizedBox(height: 20,),
-          if(_selectedImage != null)
+            if(_selectedImage != null)
             Container(
               margin:const EdgeInsets.only(top: 20),
               child: 
@@ -550,17 +531,14 @@ class _ProgressState extends State<EditProgressEntry> {
               children: [
               Image.file(_selectedImage!,height: 200,width: 100,),
             ],),),
-            Container(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20,bottom: 20, top: 20),
-              child: 
-             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
-              onPressed:(){
-                    showDialog(
+            const SizedBox(height: 20,),
+             Container(
+              margin: const EdgeInsets.only(left: 20,right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(onTap: (){
+                        showDialog(
                    context: context,
                    builder: (BuildContext context) {
                      return SimpleDialog(
@@ -573,7 +551,8 @@ class _ProgressState extends State<EditProgressEntry> {
                          SimpleDialogOption(
                             child: 
                             Column(
-                                children: <Widget>[     
+                                children: <Widget>[
+                                  
                                   const SizedBox(width: 10),
                                   const Icon(Icons.image,size: 70,color: Colors.grey,),
                                   Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
@@ -618,53 +597,37 @@ class _ProgressState extends State<EditProgressEntry> {
                        );
                      },
                    );
-              },
-              child: Text("Add Image",style: textStyleBodyText1.copyWith(color: AppColors.black),),
-             )
-             ),
-            Container(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20,),
-              child: 
-             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
-              child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
-             )
-             ),
-             if(update==true)
-            Container(
-            height: 35,
-            width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 20),
-              child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [ 
-             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
-                backgroundColor: const Color.fromARGB(255, 0, 203, 173),
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
-              child: Text("Save As Draft",style: textStyleBodyText4.copyWith(color: AppColors.black)),
-             ),
-              ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
-                backgroundColor:  AppColors.green,
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
-              child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
-             )
-             ]
-             )
-             )
+                  },
+                  child:
+                  Card(
+                    color: AppColors.primary,
+                    child: Row(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.edit),
+                        ),
+                        Text('EDIT IMAGE   '),
+                      ],
+                    ),
+                  )
+                  ),
+                    Card(
+                    color: AppColors.primary,
+                    child: Row(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.cloud_download),
+                        ),
+                        Text('SAVE IMAGE   '),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 20,),
           ]
         ),
       )

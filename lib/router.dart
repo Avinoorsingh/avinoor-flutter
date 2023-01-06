@@ -1,5 +1,6 @@
 import 'package:colab/views/activity_progress.dart';
 import 'package:colab/views/add_area_of_concern.dart';
+import 'package:colab/views/add_progress_entry.dart';
 import 'package:colab/views/add_snag.dart';
 import 'package:colab/views/area_of_concern_detail.dart';
 import 'package:colab/views/areas_of_concern.dart';
@@ -8,6 +9,7 @@ import 'package:colab/views/completed_particular_progress.dart';
 import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/edit_progress_entry.dart';
+import 'package:colab/views/get_completed_site_progress.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
@@ -22,6 +24,7 @@ import 'package:colab/views/snag.dart';
 import 'package:colab/views/snag_detail.dart';
 import 'package:colab/views/sub_location.dart';
 import 'package:colab/views/super_admin_page.dart';
+import 'package:colab/views/upcoming_progress_entry.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
@@ -136,10 +139,35 @@ class CustomRouter {
           snagModel: state.extra,
         ),
       ),
-       GoRoute(
+        GoRoute(
+        name:'ADDPROGRESSENTRY',
+        path: addProgressEntry,
+        builder: (context, state) => AddProgressEntry(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name:'UPCOMINGPROGRESSENTRY',
+        path: upcomingProgressEntry,
+        builder: (context, state) => UpComingEntry(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          editModel: state.extra,
+        ),
+      ),
+      GoRoute(
         name:'EDITPROGRESSENTRY',
         path: editProgressEntry,
         builder: (context, state) => EditProgressEntry(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          editModel: state.extra,
+        ),
+      ),
+      GoRoute(
+        name:'GETCOMPLETEDPROGRESSENTRY',
+        path: getCompletedProgressEntry,
+        builder: (context, state) => GetCompletedSiteProgress(
           key: state.pageKey,
           from: state.queryParams["from"],
           editModel: state.extra,

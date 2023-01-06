@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,44 +14,109 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
-class EditProgressEntry extends StatefulWidget {
-  EditProgressEntry({Key? key, this.from, this.editModel }) : super(key: key);
+class UpComingEntry extends StatefulWidget {
+  UpComingEntry({Key? key, this.from, this.editModel }) : super(key: key);
 
  // ignore: prefer_typing_uninitialized_variables
  final from;
  dynamic editModel;
   @override
-  State<EditProgressEntry> createState() => _ProgressState();
+  State<UpComingEntry> createState() => _SnagState();
 }
 
-class _ProgressState extends State<EditProgressEntry> {
-
+class _SnagState extends State<UpComingEntry> {
+  late String subV="";
+  late String subSubV="";
+  final categoryController=TextEditingController();
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
   final activityController = TextEditingController();
   final activityHeadController = TextEditingController();
-  final otherLocationController = TextEditingController();
-  final remarkController=TextEditingController();
-  final assignedToController=TextEditingController();
+  final remarkController = TextEditingController();
+  final deSnagRemarkController=TextEditingController();
+  final closingRemarkController=TextEditingController();
+  final markController=TextEditingController();
+  final debitToController=TextEditingController();
+  final debitAmountController=TextEditingController();
+  final snagAssignedByController=TextEditingController();
+  final snagAssignedToController=TextEditingController();
+  final priorityController=TextEditingController();
+  TextEditingController dateInput = TextEditingController();
+   final assignedToController=TextEditingController();
   final statusController = TextEditingController();
   final quantityController=TextEditingController();
-  final priorityController=TextEditingController();
-  TextEditingController dateInput=TextEditingController();
   final uomName=TextEditingController();
   final type=TextEditingController();
-  List<bool> isCardEnabled2 = [];
-  List<String> toggleList=[
+  TextEditingController contractorInput = TextEditingController(text: "No Contractor");
+  final location = ["Select Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
+  String dropdownvalue = 'Select Contractor Name';  
+  final location2 = ["Select Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
+  String dropdownvalue2 = 'Select Sub Location';  
+  final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
+  String dropdownvalue3 = 'Select Sub Sub Location';  
+  final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
+  String dropdownvalueDebitTo = 'Select Debit to';  
+  final assignedTo=["Select Name","Name 1"];
+  String dropdownvalueAssignedTo="Select Name";
+  final ValueNotifier<String?> dropDownNotifier = ValueNotifier(null);
+
+   List<String> imageData=[];
+ 
+   List<bool> isCardEnabled = [];
+   List<bool> isCardEnabled2 = [];
+   List<String> deSnagImages=[];
+
+   List<String> priority=[
     "Labour Supply",
     "PRW",
+    "Misc.",
    ];
+  List viewpoints=[];
+  List deSnagImage=[];
+  List viewpointID=[];
+  TextEditingController contractorController=TextEditingController();
   TextEditingController achivedQuantity=TextEditingController();
   TextEditingController comulativeQuantity=TextEditingController(); 
-  var _sliderValue=0.0;
-  bool? update=false;
-  List<String> contractorList=["Select Contractor Name"];
-  TextEditingController contractorController=TextEditingController();
-  String dropdownvalue = 'Select Contractor Name';  
+
+  File? image;
+  CroppedFile? croppedFile;
+  var groupedViewpoints = {};
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      croppedFile = await ImageCropper().cropImage(
+        sourcePath: image!.path,
+        aspectRatioPresets: [
+      CropAspectRatioPreset.square,
+      CropAspectRatioPreset.ratio3x2,
+      CropAspectRatioPreset.original,
+      CropAspectRatioPreset.ratio4x3,
+      CropAspectRatioPreset.ratio16x9
+    ],
+    uiSettings: [
+      AndroidUiSettings(
+          toolbarTitle: 'Edit Image',
+          toolbarColor: AppColors.white,
+          toolbarWidgetColor:AppColors.primary,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
+      IOSUiSettings(
+        title: 'Edit Image',
+      ),
+      WebUiSettings(
+        context: context,
+      ),
+    ],
+  );
+  var imageTemp = File(croppedFile!.path);
+  setState(() => this.image = imageTemp);
+      } catch(e) {
+        if (kDebugMode) {
+          print('Failed to pick image: $e');
+        }
+      }
+  }
   File?  _selectedImage;
 
   Future<void> _pickImage(ImageSource source) async {
@@ -57,28 +125,54 @@ class _ProgressState extends State<EditProgressEntry> {
       _selectedImage =File(image!.path);
     });
   }
-
-  @override
+    late List<bool> isSelected;
+    final creationController = TextEditingController();
+     List viewpoints2=[];
+     var array2=[];
+     var _sliderValue=0.0;
+     List<String> contractorList=["Select Contractor Name"];
+    @override
   void initState() {
     super.initState(); 
-    EasyLoading.dismiss();
+    priorityController.text="PRW";
     locationController.text=widget.editModel?.locationName??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
     subSubLocationController.text=widget.editModel?.subSubLocationName??"";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
-    quantityController.text=widget.editModel?.totalQuantity.toString()??"";
-    uomName.text=widget.editModel?.uomName??"";
-    achivedQuantity.text=widget.editModel?.achivedQuantity.toDouble().toString()??"";
-    comulativeQuantity.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
-    _sliderValue=double.parse(widget.editModel?.progressPercentage.toString()??"0.0");
-    remarkController.text=widget.editModel?.remarks??"";
-    type.text=widget.editModel?.type.toString()??"";
-    type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
+    quantityController.text="";
+    uomName.text="UNIT";
+    achivedQuantity.text="0.0";
+    comulativeQuantity.text="0.0";
+    _sliderValue=0.0;
+    remarkController.text="";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
-  }
-   
 
+     for (var map in viewpoints) {
+    // Check if the viewpoints is already in the map
+    if (groupedViewpoints.containsKey(map['id'])) {
+      // If it is, add the name to the list of names for that viewpoint
+      groupedViewpoints[map['id']]?.add(map['fileName']);
+    } else {
+      // If it isn't, create a new list of names for that viewpoint and add the name
+      groupedViewpoints[map['id']] = [map['fileName']];
+    }
+  }
+
+    // print("I am here, here is the viewpoint");
+    // print(groupedViewpoints);
+    // dateInput.text =getFormatedDate(DateTime.now().toString());
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+  }
+    final f = DateFormat('yyyy-MM-dd hh:mm a');
+   getFormatedDate(date) {
+      var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+      var inputDate = inputFormat.parse(date);
+      var outputFormat = DateFormat('yyyy-MM-dd');
+    return outputFormat.format(inputDate);
+    }
+ 
+  bool iconPressed=false;
   @override
   Widget build(BuildContext context) {
     EasyLoading.dismiss();
@@ -86,37 +180,34 @@ class _ProgressState extends State<EditProgressEntry> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Edit Progress Entry",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin:const EdgeInsets.only(right: 20,top: 10),
-                  child:
-                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:update==false? Colors.brown:Colors.green)
-                 ,onPressed: (){
-                  setState(() {
-                    if(update==false){
-                    update=true;
-                    }
-                    else{
-                      update=false;
-                    }
-                  });
-                 },child: Text("Update",style: textStyleButton,),)
-                )
-            ]),
-          CustomContainer(
+            const SizedBox(height: 10,),
+            Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(left:20.0,right: 20.0),
+            padding: const EdgeInsets.only(left: 10,right: 10,top: 3,bottom: 3),
+            decoration: BoxDecoration(
+              border: Border.all(width: 0.2, color: Colors.blueGrey),
+              borderRadius: BorderRadius.circular(5),
+            ),
             child: 
-            InkWell(
-              onTap:() async {
-                if(update==true){
+            TextField(
+              decoration: const InputDecoration(
+              suffixIcon: Icon(Icons.edit_calendar),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,),
+              readOnly: true,
+              controller: dateInput,
+              onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
                     context: context,
                     builder: (BuildContext context, Widget? child) {
@@ -134,61 +225,52 @@ class _ProgressState extends State<EditProgressEntry> {
                     firstDate: DateTime(1950),
                     lastDate: DateTime(2100));
                 if (pickedDate != null) {
-                  String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                   setState(() {
                     dateInput.text =formattedDate;
                   });
                 } else {}
-                }
               },
-              child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-             Text(dateInput.text,style: textStyleBodyText1.copyWith(fontSize: 18),),
-             const Icon(Icons.calendar_month),
-            ])
-            )
-        ),
-        //done
-        Column(
+              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 20),
+            ),
+               ),
+                const SizedBox(height: 10,),
+            Column(
               children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                ),),
            SizedBox(
-            height: 65,child: 
+            height: 75,
+            child: 
           ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.only(top: 15,bottom: 0,left: 0,right: 0),
-          itemCount: 2,
+          padding: const EdgeInsets.only(top: 15,bottom: 15,left: 0,right: 0),
+          itemCount: 3,
           itemBuilder: (BuildContext context, int index){
             isCardEnabled2.add(false);
             return GestureDetector(
                 onTap: (){
-                  if(update==true){
                   isCardEnabled2.replaceRange(0, isCardEnabled2.length, [for(int i = 0; i < isCardEnabled2.length; i++)false]);
                   isCardEnabled2[index]=true;
-                  priorityController.text=(toggleList[index]);
+                  priorityController.text=(priority[index]);
                   setState(() {});
-                  }
-                  else{}
                 },
                 child: SizedBox(
-                  height: 20,
-                  width: MediaQuery.of(context).size.width/2.2,
+                  height: 10,
+                  width: 120,
                   child: Container(
                    decoration: BoxDecoration(
                     borderRadius:const BorderRadius.all(Radius.circular(5)),
-                     color:toggleList[index].toString()==priorityController.text? AppColors.primary:AppColors.white,
+                     color: priority[index].toString()==priorityController.text? AppColors.primary:AppColors.white,
                      border: Border.all(width: 1.2,color: AppColors.primary,),
                     ),
                     child: Center(
-                      child: Text(toggleList[index],textAlign: TextAlign.center,
+                      child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: toggleList[index].toString()==priorityController.text?Colors.black:AppColors.primary,
+                          color: priority[index].toString()==priorityController.text?Colors.black:AppColors.primary,
                           fontSize: 16
                         ),
                       ),
@@ -199,11 +281,12 @@ class _ProgressState extends State<EditProgressEntry> {
           }),
           ),
           ]),
+          if(priorityController.text!="Misc.")...{
           CustomContainer(child:
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(locationController.text.isEmpty?"D Series (D01- D06)":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
+            Center(child: Text(locationController.text.isEmpty?"Location Unavailable":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
               const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
@@ -211,7 +294,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
+            Center(child: Text(subLocationController.text.isEmpty?"SubLocation Unavailable":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
@@ -219,59 +302,48 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-             Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
+             Center(child: Text(activityHeadController.text.isEmpty?"Activity / Activity Head Unavailable":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
             ])
           ),
-          CustomContainer2(
+           CustomContainer2(
             child:
           Column(children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Quantity: ${_sliderValue.toInt()} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
+              Text("Quantity: ${int.parse(_sliderValue.toInt().toString())} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
-            SizedBox(height: 50,
-            width: 350,
-            child:
-            FittedBox(
-              fit: BoxFit.cover,
-              child: 
             Slider(
               divisions: 100,
               activeColor: AppColors.primary,
               focusNode: null,
-              inactiveColor: AppColors.lightGrey,
+              inactiveColor: Colors.transparent,
                 value: _sliderValue,
                 onChanged: (newValue) {
                   setState(() {
-                   if(update==true){
                     _sliderValue = newValue;
-                   }
-                   else{}
                   });
                 },
                 min: 0,
                 max: 100,
               ),
-            ),
-            ),
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uomName.text}",style: textStyleBodyText1),
+              Text("0 UNIT",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
-              Text("${quantityController.text} ${uomName.text}",style: textStyleBodyText1)
+              Text("X UNIT",style: textStyleBodyText1),
             ],),
             const SizedBox(height: 30,),
             Container(
               margin:const EdgeInsets.only(left: 20,right:20),
               child: 
             Row(children: [
-               Text("TOTAL QUANTITY: ${quantityController.text}",style: textStyleBodyText1),
+               Text("TOTAL QUANTITY",style: textStyleBodyText4),
             ],)
             ),
             const SizedBox(height: 30,),
@@ -291,7 +363,7 @@ class _ProgressState extends State<EditProgressEntry> {
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text(achivedQuantity.text,style: textStyleBodyText1,),),
+                  child:Center(child: Text('0.0',style: textStyleBodyText4,),),
                 ),
                 ),
               ),
@@ -308,7 +380,7 @@ class _ProgressState extends State<EditProgressEntry> {
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text(comulativeQuantity.text,style: textStyleBodyText1,),),
+                  child:Center(child: Text('0.0',style: textStyleBodyText4,),),
                 ),
                 ),
               ),
@@ -321,58 +393,9 @@ class _ProgressState extends State<EditProgressEntry> {
             
           ],) 
             ),
-          const SizedBox(height: 20,),
-            if(update==true)...{
-            if(priorityController.text=='Labour Supply')...{
-            CustomContainer2(
-           child: Column(children: [
-            const SizedBox(height: 20,),
-            const Text("LABOUR",style: TextStyle(color: Colors.grey,fontSize: 16),),
-           DropdownButtonFormField(
-              value: contractorList[0],
-              icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 17
-            ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-            ),
-            ),
-              isExpanded: true,
-              items: contractorList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
-                setState(() {
-                  contractorController.text=newValue!;
-                  dropdownvalue = newValue;
-                   });
-              },
-            ),
-            const Text("Over-Time",style: TextStyle(color: Colors.grey,fontSize: 16),),
-            const SizedBox(height: 20,),
-            ])
-          ),
-            }
-            },
-            if(update==true)...{
-              if(priorityController.text=="PRW")...{
-                  CustomContainer2(
+          },
+          const SizedBox(height: 10,),
+          CustomContainer2(
             child:
           Column(children: [
             Row(
@@ -380,6 +403,7 @@ class _ProgressState extends State<EditProgressEntry> {
               children: [
               Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
+            if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
              Container(
            margin: const EdgeInsets.only(left:20,right:20,top: 20),
            padding: const EdgeInsets.only(bottom: 10,),
@@ -421,6 +445,50 @@ class _ProgressState extends State<EditProgressEntry> {
               },
             ),
           ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],)
+          },
+          if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
+                 Container(
+           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+           padding: const EdgeInsets.only(bottom: 10,),
+            child: 
+           DropdownButtonFormField(
+              value: contractorList[0],
+             icon: const Padding( 
+              padding: EdgeInsets.only(left:20),
+              child:Icon(Icons.arrow_drop_down_circle_outlined)
+             ), 
+            iconEnabledColor: Colors.grey,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 17
+            ), 
+          dropdownColor: AppColors.white,
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey, width: 1),
+      ),
+    ),
+              isExpanded: true,
+              items: contractorList.map((String items){
+                return
+                DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (String? newValue) async {
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                setState(() {
+                  contractorController.text=newValue!;
+                  dropdownvalue = newValue;
+                   });
+              },
+            ),
+          ),
             const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -437,7 +505,7 @@ class _ProgressState extends State<EditProgressEntry> {
                     decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
                     width: 120,
                     height: 40,
-                    child:Center(child: Text('Skilled',style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
+                    child:Center(child: Text('Skilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
                   ),
                 ),
                 Container(
@@ -476,7 +544,7 @@ class _ProgressState extends State<EditProgressEntry> {
                     decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
                     width: 120,
                     height: 40,
-                    child:Center(child: Text('Unskilled',style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
+                    child:Center(child: Text('Unskilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
                   ),
                 ),
                 Container(
@@ -506,42 +574,74 @@ class _ProgressState extends State<EditProgressEntry> {
                 ),
               ],
             )
+          }
           ],) 
             ),
-              }
-            },
-          const SizedBox(height: 20,),
             CustomContainer2(
             child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("Remark",style: textStyleBodyText1,),
+                Text("REMARK",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextField3(enabled:update==true? true:false,controller: remarkController,hintText: "Enter here",)
+               CustomTextField(enabled: true,controller: remarkController,hintText: "Enter here",)
           ])
             ),
-            CustomContainer2(child:
-            Column(children: [
+            if(priorityController.text=="Labour Supply" || priorityController.text=="Misc.")...{
+          CustomContainer2(
+            child:
+          Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 Text("DEBIT TO",style: textStyleBodyText1,),
               ],),),
-               CustomContainer(child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-            Center(child: Text(assignedToController.text.isEmpty?"":assignedToController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
-            ])
-          ),
-          ])
+               const SizedBox(height: 10,),
+             Container(
+           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+           padding: const EdgeInsets.only(bottom: 20,),
+            child: 
+           DropdownButtonFormField(
+              value: debitTo[0],
+             icon: const Padding( 
+              padding: EdgeInsets.only(left:20),
+              child:Icon(Icons.arrow_drop_down_circle_outlined)
+             ), 
+            iconEnabledColor: Colors.grey,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14
+            ), 
+          dropdownColor: AppColors.white,
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey, width: 1),
+      ),
+    ),
+              isExpanded: true,
+              items: debitTo.map((String items){
+                return
+                DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (String? newValue) async {
+                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                  var token=sharedPreferences.getString('token');
+                setState(() {
+                  contractorController.text=newValue!;
+                  dropdownvalueDebitTo = newValue;
+                   });
+              },
             ),
-            const SizedBox(height: 20,),
-          if(_selectedImage != null)
+          ),
+          ]))},
+             if(_selectedImage != null)
             Container(
               margin:const EdgeInsets.only(top: 20),
               child: 
@@ -573,7 +673,8 @@ class _ProgressState extends State<EditProgressEntry> {
                          SimpleDialogOption(
                             child: 
                             Column(
-                                children: <Widget>[     
+                                children: <Widget>[
+                                  
                                   const SizedBox(width: 10),
                                   const Icon(Icons.image,size: 70,color: Colors.grey,),
                                   Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
@@ -635,7 +736,6 @@ class _ProgressState extends State<EditProgressEntry> {
               child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
-             if(update==true)
             Container(
             height: 35,
             width: MediaQuery.of(context).size.width,
@@ -665,9 +765,9 @@ class _ProgressState extends State<EditProgressEntry> {
              ]
              )
              )
-          ]
-        ),
-      )
-    );
-  }
+]
+)
+)
+);
+}
 }
