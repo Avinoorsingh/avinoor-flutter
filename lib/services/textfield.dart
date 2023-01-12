@@ -201,6 +201,7 @@ class CustomTextFieldForNumber extends StatelessWidget {
   final TextEditingController? controller;
   // ignore: prefer_typing_uninitialized_variables
   final onChanged;
+  final onSubmitted;
 
   const CustomTextFieldForNumber({Key? key, 
      this.label,
@@ -208,11 +209,13 @@ class CustomTextFieldForNumber extends StatelessWidget {
      this.enabled,
      this.controller,
      this.onChanged,
+     this.onSubmitted,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: onSubmitted,
       keyboardType:TextInputType.number,
       onChanged: onChanged,
       enabled: enabled,

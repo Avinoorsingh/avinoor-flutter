@@ -26,7 +26,7 @@ class _activityHeadState extends State<SubSubLocationProgress> {
    List<String> subactivityHeadID=[];
    TextEditingController clientIDController=TextEditingController();
    TextEditingController projectIDController=TextEditingController();
-   List<bool> _isExpanded= [];
+   final List<bool> _isExpanded= [];
 
   @override
   Widget build(BuildContext context) {

@@ -35,4 +35,11 @@ class Config{
   static const String getProgressSubSubLocationListApi="http://nodejs.hackerkernel.com/colab/api/sub_sub_location_list";
   static const String getProgressActivityHeadListApi="http://nodejs.hackerkernel.com/colab/api/activity_head";
   static const String getProgressActivityListApi="http://nodejs.hackerkernel.com/colab/api/get_sub_activity_for_app";
+  static const String getProgressContractorApi="http://nodejs.hackerkernel.com/colab/api/get_contractor_for_debit";
+  static const String getProgressListForAllApi="http://nodejs.hackerkernel.com/colab/api/progress_add";
+  static const String getProgressQuantityApi="http://nodejs.hackerkernel.com/colab/api/quantity_for_add_progress_app";
+  static const String getProgressTradeApi="http://nodejs.hackerkernel.com/colab/api/trade";
+  static const String getLabourAttendanceApi="http://nodejs.hackerkernel.com/colab/api/labour_attendance/";
+  static const String saveLabourSupplyProgressApi="http://nodejs.hackerkernel.com/colab/api/progress_add2";
+  static const String getProgressPwrClientApi="http://nodejs.hackerkernel.com/colab/api/pwrClientList/";
 }

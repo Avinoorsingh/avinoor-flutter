@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'package:colab/models/category_list.dart';
 import 'package:colab/models/clientEmployee.dart';
 import 'package:colab/models/client_response.dart';
+import 'package:colab/models/labour_attendance.dart';
 import 'package:colab/models/location_list.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/models/login_user.dart';
+import 'package:colab/models/progress_contractor.dart';
 import 'package:colab/models/progress_location_data.dart';
+import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -228,6 +231,65 @@ class GetUserProfileNetwork extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting progress location list");
+                print(e);
+              }
+            }
+      try {
+     var getProgressContractorListUrl=Uri.parse(Config.getProgressContractorApi);
+        var res=await http.post(
+            getProgressContractorListUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+            body: {
+              "client_id":signInController.getProjectData?.clientid.toString(),
+              "project_id":projectID,
+            }
+            );
+          Map<String,dynamic> cData3=jsonDecode(res.body);
+          ProgressContractor result3=ProgressContractor.fromJson(cData3);
+          signInController.getProgressContractorList=result3;    
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting progress contractor list");
+                print(e);
+              }
+            }
+           try {
+     var getProgressTradeUrl=Uri.parse(Config.getProgressTradeApi);
+        var res=await http.get(
+            getProgressTradeUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+            );
+          Map<String,dynamic> cData3=jsonDecode(res.body);
+          ProgressTrade result3=ProgressTrade.fromJson(cData3);
+          signInController.getProgressTradeList=result3;    
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting progress contractor list");
+                print(e);
+              }
+            }
+      try {
+     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+     var getLabourAttendanceURL=Uri.parse('${Config.getLabourAttendanceApi}${dateFormat.format(DateTime.now())}/${signInController.getProjectData?.clientid.toString()}/$projectID');
+        var res=await http.get(
+            getLabourAttendanceURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+            );
+          Map<String,dynamic> cData3=jsonDecode(res.body);
+          LabourAttendance result3=LabourAttendance.fromJson(cData3);
+          signInController.getLabourAttendance=result3;    
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting labour attendance");
                 print(e);
               }
             }
