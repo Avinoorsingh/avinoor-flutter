@@ -8,10 +8,10 @@ import '../theme/text_styles.dart';
 
 // ignore: must_be_immutable
 class CompletedParticularProgress extends StatefulWidget {
-  CompletedParticularProgress({Key? key, this.from, this.snagModel }) : super(key: key);
+  CompletedParticularProgress({Key? key, this.from, this.completedModel }) : super(key: key);
 
   final from;
-  dynamic snagModel;
+  dynamic completedModel;
   @override
   State<CompletedParticularProgress> createState() => CompletedParticularProgressState();
 }
@@ -28,10 +28,31 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
   List<String?> remark=[];
   List snagData=[];
   List dateDifference=[];
+  List<String?> activity=[];
+  List<String?> activityHead=[];
+  List<int?> locationDraft=[];
+  List<int?> locationCount=[];
+  List<int?> subLocationCount=[];
+  List<int?> subLocationID=[];
+  List<int?> subLocationDraft=[];
+  List<String?> contractorName=[];
+  List<String?> checkListAvail=[];
+  List<int?> subSubLocationCount=[];
+  List<int?> subSubLocationDraft=[];
+  List<String?> plannedDates=[];
+  List<String?> finishDates=[];
+  List<int?> locationID=[];
+  TextEditingController locationIDController=TextEditingController();
+  TextEditingController locationController=TextEditingController();
+  TextEditingController subLocationController=TextEditingController();
+  TextEditingController subSubLocationController=TextEditingController();
+  TextEditingController subLocationIDController=TextEditingController();
+  TextEditingController subSubLocationIDController=TextEditingController();
  
  @override
  void initState(){
   super.initState();
+  print(widget.completedModel);
  }
 
   @override

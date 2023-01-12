@@ -11,7 +11,7 @@ import '../models/ongoing_upcoming_progress.dart';
 import '../theme/text_styles.dart';
 
 class UpComingInsideOnGoing extends StatefulWidget {
-  UpComingInsideOnGoing({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
+  const UpComingInsideOnGoing({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
 
   final cID;
   final pID;

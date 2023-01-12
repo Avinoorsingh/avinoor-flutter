@@ -32,8 +32,11 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<String?> remark=[];
-  List snagData=[];
+  List completedData=[];
   List dateDifference=[];
+  int? selectedIndex=-1;
+  int? selectedIndex1=-1;
+  int? selectedIndex2=-1;
  
  @override
  void initState(){
@@ -49,6 +52,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
       for(int i=0;i<signInController.getCompletedProgressData!.data!.length;i++){
        locationName.add(signInController.getCompletedProgressData!.data![i].locationName!);
        locationID.add(signInController.getCompletedProgressData!.data![i].locationId!);
+       completedData.add(signInController.getCompletedProgressData!.data![i]);
       }
      }
     EasyLoading.dismiss();
@@ -58,12 +62,14 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
     Container(margin: const EdgeInsets.only(top: 90),
     child:
     ListView(
+      key: Key(selectedIndex.toString()),
       children: [
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              key:Key(selectedIndex.toString()),
               itemCount: locationName.length,
               itemBuilder: (BuildContext context, int index){
               return Card(
@@ -75,6 +81,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                        borderRadius: BorderRadius.circular(10.0),
                        child: 
                         ExpansionTile(
+                        key:Key(selectedIndex.toString()),
+                        initiallyExpanded: index == selectedIndex,
                         childrenPadding:const EdgeInsets.only(left: 10,right: 10),
                         tilePadding: const EdgeInsets.only(bottom: 20,left: 10),
                         collapsedBackgroundColor: AppColors.navyblue,
@@ -87,6 +95,9 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                         onExpansionChanged:
                          (bool t)async{
                           if(t==true){
+                            setState(() {selectedIndex = index;});
+                             subLocationName.clear();
+                             subLocationID.clear();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
@@ -118,9 +129,13 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                         print(e);
                                       }
                                     }
-                                 }},
+                                 }
+                                else {
+                                setState(() => selectedIndex = -1);
+                            }},
                         children: [
                           ListView.builder(
+                            key:Key(selectedIndex1.toString()),
                             shrinkWrap: true,
                             itemCount: subLocationName.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -134,6 +149,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               borderRadius: BorderRadius.circular(10.0),
                               child:
                               ExpansionTile(
+                              key:Key(selectedIndex1.toString()),
+                              initiallyExpanded: index==selectedIndex1,
                               childrenPadding:const EdgeInsets.only(left: 10,right: 10,bottom: 10),
                               tilePadding: const EdgeInsets.only(left: 10,),
                               collapsedBackgroundColor: AppColors.lightBlue,
@@ -144,6 +161,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               onExpansionChanged:
                               (bool t)async{
                              if(t==true){
+                             setState(() {selectedIndex1 = index;});
+                             subSubLocationName.clear();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
@@ -175,14 +194,19 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                         print(e);
                                       }
                                     }
+                                 }else{
+                                  setState(() {
+                                     selectedIndex1=-1;
+                                  });
                                  }},
                               title: Text(subLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
                               children: [
-                                  ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: subSubLocationName.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return
+                              ListView.builder(
+                                key: Key(selectedIndex2.toString()),
+                                shrinkWrap: true,
+                                itemCount: subSubLocationName.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                return
                                 Card(
                                 color: AppColors.extraLightBlue,
                                 shape: RoundedRectangleBorder(
@@ -205,10 +229,10 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               trailing: null,
                               title: InkWell(
                                 onTap: (){
-                                  context.pushNamed('COMPLETEDPARTICULARPROGRESS',
+                                  context.pushNamed('COMPLETEDPARTICULARPROGRESS',extra: completedData[index],
                                   );
                                 },
-                                child:  Text(subSubLocationName[index]!,style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
+                                child: Text(subSubLocationName[index]!,style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
                                 ),
                               )
                             )

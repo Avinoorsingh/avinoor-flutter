@@ -34,6 +34,9 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
   List<String?> remark=[];
   List snagData=[];
   List dateDifference=[];
+  int? selectedIndex=-1;
+  int? selectedIndex1=-1;
+  int? selectedIndex2=-1;
  
  @override
  void initState(){
@@ -58,6 +61,7 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
     Container(margin: const EdgeInsets.only(top: 90),
     child:
     ListView(
+      key: Key(selectedIndex.toString()),
       children: [
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
@@ -65,62 +69,73 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: locationName.length,
+              key:Key(selectedIndex.toString()),
               itemBuilder: (BuildContext context, int index){
-              return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                       child:
-                       ClipRRect(
-                       borderRadius: BorderRadius.circular(10.0),
-                       child: 
-                        ExpansionTile(
-                        childrenPadding:const EdgeInsets.only(left: 10,right: 10),
-                        tilePadding: const EdgeInsets.only(bottom: 20,left: 10),
-                        collapsedBackgroundColor: AppColors.navyblue,
-                        collapsedIconColor: Colors.transparent,
-                        iconColor: Colors.transparent,
-                        backgroundColor: AppColors.navyblue,
-                        trailing: null,
-                        maintainState: false,
-                        title: Text('${locationName[index]}',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
-                        onExpansionChanged:
-                         (bool t)async{
-                          if(t==true){
-                             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              var token=sharedPreferences.getString('token');
-                              var projectID=sharedPreferences.getString('projectIdd');
-                              var clientID=sharedPreferences.getString('client_id');
-                                try {
-                                locationIDController.text=locationID[index].toString();
-                                var getCompletedProgressListUrl=Uri.parse("${Config.getSubLocationProgressApi}$clientID/${projectID??"1"}/${locationID[index].toString()}/INQ");
-                                  var res=await http.get(
-                                      getCompletedProgressListUrl,
-                                      headers:{
-                                        "Accept": "application/json",
-                                        "Authorization": "Bearer $token",
-                                      },
-                                    );
-                                    var cData4=jsonDecode(res.body);
-                                    if(cData4!=null){
-                                      subLocationName.clear();
-                                      subLocationID.clear();
-                                      for(int i=0;i<cData4['data'].length;i++){
-                                      subLocationName.add(cData4['data'][i]['sub_location_name']);
-                                      subLocationID.add(cData4['data'][i]['sub_loc_id']);
-                                    }
-                                    }
-                                    setState(() {});
-                                    }
-                                    catch(e){
-                                      if (kDebugMode) {
-                                        print("Error");
-                                        print(e);
-                                      }
-                                    }
-                                 }},
+              return 
+              Card(
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                ),
+                child:
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: 
+                    ExpansionTile(
+                    key:Key(selectedIndex.toString()),
+                    initiallyExpanded: index == selectedIndex,
+                    childrenPadding:const EdgeInsets.only(left: 10,right: 10),
+                    tilePadding: const EdgeInsets.only(bottom: 20,left: 10),
+                    collapsedBackgroundColor: AppColors.navyblue,
+                    collapsedIconColor: Colors.transparent,
+                    iconColor: Colors.transparent,
+                    backgroundColor: AppColors.navyblue,
+                    trailing: null,
+                    maintainState: true,
+                    title: Text('${locationName[index]}',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
+                    onExpansionChanged:
+                    (bool t)async{
+                    if(t==true){
+                      setState(() {selectedIndex = index;});
+                      subLocationName.clear();
+                      subLocationID.clear();
+                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      var token=sharedPreferences.getString('token');
+                      var projectID=sharedPreferences.getString('projectIdd');
+                      var clientID=sharedPreferences.getString('client_id');
+                        try {
+                            locationIDController.text=locationID[index].toString();
+                            var getCompletedProgressListUrl=Uri.parse("${Config.getSubLocationProgressApi}$clientID/${projectID??"1"}/${locationID[index].toString()}/INQ");
+                            var res=await http.get(getCompletedProgressListUrl,
+                                headers:{
+                                "Accept": "application/json",
+                                "Authorization": "Bearer $token",
+                                },
+                              );
+                            var cData4=jsonDecode(res.body);
+                            if(cData4!=null){
+                                subLocationName.clear();
+                                subLocationID.clear();
+                                for(int i=0;i<cData4['data'].length;i++){
+                                  subLocationName.add(cData4['data'][i]['sub_location_name']);
+                                  subLocationID.add(cData4['data'][i]['sub_loc_id']);
+                                  }
+                                }
+                              setState(() {});
+                            }
+                            catch(e){
+                              if (kDebugMode) {
+                                  print("Error");
+                                  print(e);
+                                }
+                              }
+                            }else{
+                              setState(() {
+                                selectedIndex=-1;
+                            });
+                          }},
                         children: [
                           ListView.builder(
+                            key: Key(selectedIndex1.toString()),
                             shrinkWrap: true,
                             itemCount: subLocationName.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -134,6 +149,8 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
                               borderRadius: BorderRadius.circular(10.0),
                               child:
                               ExpansionTile(
+                              key:Key(selectedIndex1.toString()),
+                              initiallyExpanded: index == selectedIndex1,
                               childrenPadding:const EdgeInsets.only(left: 10,right: 10,bottom: 10),
                               tilePadding: const EdgeInsets.only(left: 10,),
                               collapsedBackgroundColor: AppColors.lightBlue,
@@ -141,9 +158,12 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
                               iconColor: Colors.transparent,
                               backgroundColor: AppColors.lightBlue,
                               trailing: null,
+                              maintainState: true,
                               onExpansionChanged:
                               (bool t)async{
                              if(t==true){
+                             setState(() {selectedIndex1 = index;});
+                             subSubLocationName.clear();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
@@ -175,20 +195,25 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
                                         print(e);
                                       }
                                     }
+                                 }else{
+                                  setState(() {
+                                     selectedIndex1=-1;
+                                  });
                                  }},
                               title: Text(subLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
                               children: [
-                                  ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: subSubLocationName.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return
+                              ListView.builder(
+                                key: Key(selectedIndex2.toString()),
+                                shrinkWrap: true,
+                                itemCount: subSubLocationName.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                return
                                 Card(
                                 color: AppColors.extraLightBlue,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                            child:
+                              child:
                               ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child:
@@ -197,6 +222,7 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
                                 height: 60,
                                 child: 
                               ExpansionTile(
+                              maintainState: true,
                               tilePadding: const EdgeInsets.only(left: 10,),
                               collapsedBackgroundColor: AppColors.extraLightBlue,
                               collapsedIconColor: Colors.transparent,

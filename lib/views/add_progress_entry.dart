@@ -283,8 +283,8 @@ class _AddProgressState extends State<AddProgressEntry> {
       }
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.black,
-        backgroundColor:AppColors.primary,
+      foregroundColor: Colors.black,
+      backgroundColor:AppColors.primary,
       title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
       body: SingleChildScrollView(
@@ -456,8 +456,8 @@ class _AddProgressState extends State<AddProgressEntry> {
            margin: const EdgeInsets.only(left:20,right:20),
             child: 
             InkWell(
-                onTap: () async {
-                  if(locationController.text.isNotEmpty){
+             onTap: () async {
+             if(locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute(locationId.text));
              setState(() {
                   if(value.isNotEmpty){

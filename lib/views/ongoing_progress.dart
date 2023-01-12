@@ -41,6 +41,9 @@ class _OnProgressState extends State<OnGoingProgress> {
   List<String?> remark=[];
   List snagData=[];
   List dateDifference=[];
+  int? selectedIndex=-1;
+  int? selectedIndex1=-1;
+  int? selectedIndex2=-1;
   TextEditingController locationIDController=TextEditingController();
   TextEditingController subLocationIDController=TextEditingController();
   TextEditingController clientIDController=TextEditingController();
@@ -83,6 +86,7 @@ class _OnProgressState extends State<OnGoingProgress> {
     Container(margin: const EdgeInsets.only(top: 90),
     child:
     ListView(
+      key: Key(selectedIndex.toString()),
       children: [
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
@@ -90,16 +94,20 @@ class _OnProgressState extends State<OnGoingProgress> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: locationName.length,
+              key:Key(selectedIndex.toString()),
               itemBuilder: (BuildContext context, int index){
-                return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                       child:
-                       ClipRRect(
+                return 
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child:
+                      ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: 
                         ExpansionTile(
+                        key:Key(selectedIndex.toString()),
+                        initiallyExpanded: index == selectedIndex,
                         childrenPadding:const EdgeInsets.only(left: 10,right: 10),
                         tilePadding: const EdgeInsets.only(bottom: 20,left: 10,right: 10),
                         collapsedBackgroundColor: AppColors.navyblue,
@@ -114,8 +122,13 @@ class _OnProgressState extends State<OnGoingProgress> {
                         locationCount[index]!=0?Text("${locationCount[index]} Activities ( ${locationDraft[index]} drafts )  ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
                         ]),
                         onExpansionChanged:
-                         (bool t)async{
-                          if(t==true){
+                         (bool t) async{
+                          if (t==true) {
+                            setState(() {selectedIndex = index;});
+                             subLocationName.clear();
+                             subLocationID.clear();
+                             subLocationCount.clear();
+                             subLocationDraft.clear();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
@@ -152,9 +165,12 @@ class _OnProgressState extends State<OnGoingProgress> {
                                         print(e);
                                       }
                                     }
-                                 }},
+                                 } else {
+                                setState(() => selectedIndex = -1);
+                              }},
                         children: [
                         ListView.builder(
+                            key:Key(selectedIndex1.toString()),
                             shrinkWrap: true,
                             itemCount: subLocationName.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -169,6 +185,8 @@ class _OnProgressState extends State<OnGoingProgress> {
                         borderRadius: BorderRadius.circular(10.0),
                         child:
                         ExpansionTile(
+                        key:Key(selectedIndex1.toString()),
+                        initiallyExpanded: index==selectedIndex1,
                         childrenPadding:const EdgeInsets.only(left: 10,right: 10,bottom: 10),
                         tilePadding: const EdgeInsets.only(left: 10,),
                         collapsedBackgroundColor: AppColors.lightBlue,
@@ -179,6 +197,11 @@ class _OnProgressState extends State<OnGoingProgress> {
                         onExpansionChanged:
                               (bool t)  async{
                              if(t==true){
+                             setState(() {selectedIndex1 = index;});
+                             subSubLocationName.clear();
+                             subSubLocationCount.clear();
+                             subSubLocationDraft.clear();
+                             subSubLocationID.clear();
                              subLocationIDController.text=subLocationID[index].toString();
                              subLocationNameController.text=subLocationName[index].toString();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -220,6 +243,10 @@ class _OnProgressState extends State<OnGoingProgress> {
                                         print(e);
                                       }
                                     }
+                                 }else{
+                                  setState(() {
+                                     selectedIndex1=-1;
+                                  });
                                  }},
                         title:  Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,17 +256,18 @@ class _OnProgressState extends State<OnGoingProgress> {
                         (subLocationDraft[index]!=null)?Text("${subLocationDraft[index]} Activities ( ${subLocationCount[index]} drafts )    ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
                         ]),
                         children: [
-                            ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: subSubLocationName.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return
+                        ListView.builder(
+                        key: Key(selectedIndex2.toString()),
+                        shrinkWrap: true,
+                        itemCount: subSubLocationName.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return
                           Card(
                           color: AppColors.extraLightBlue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                       child:
+                        child:
                         ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child:
@@ -247,6 +275,7 @@ class _OnProgressState extends State<OnGoingProgress> {
                           height: 60,
                           child: 
                         ExpansionTile(
+                        initiallyExpanded: index == selectedIndex2,
                         tilePadding: const EdgeInsets.only(left: 10,),
                         collapsedBackgroundColor: AppColors.extraLightBlue,
                         collapsedIconColor: Colors.transparent,

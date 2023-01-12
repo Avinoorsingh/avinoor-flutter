@@ -90,7 +90,7 @@ class CustomRouter {
         builder: (context, state) => CompletedParticularProgress(
           key: state.pageKey,
           from: state.queryParams["from"],
-          snagModel: state.extra,
+          completedModel: state.extra,
         ),
       ),
       GoRoute(

@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import '../controller/signInController.dart';
 import '../network/onGoingSiteProgress/ongoing_site_network.dart';
 import '../network/progress_network.dart';
-import '../services/container2.dart';
 import '../theme/text_styles.dart';
 
 class CompletedInsideOngoing extends StatefulWidget {
@@ -50,7 +49,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
   List snagData=[];
   List dateDifference=[];
   TextEditingController locationIDController=TextEditingController();
- List<OnGoingCompletedData> list1=[];
+  List<OnGoingCompletedData> list1=[];
   TextEditingController locationController=TextEditingController();
   TextEditingController subLocationController=TextEditingController();
   TextEditingController subSubLocationController=TextEditingController();
@@ -60,7 +59,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
   final scrollController=ScrollController();
   final getDataController=GetOnGoingCompletedDetail();
   List editModel=[];
-   int _page = 1;
+  int _page = 1;
  
  @override
  void initState(){
@@ -80,12 +79,12 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
      EasyLoading.dismiss();
      }
      else if(signInController.getOnGoingCompletedData!.data==null){
-      EasyLoading.dismiss();
+     EasyLoading.dismiss();
      }
     });
   }
 
-   @override
+  @override
   void dispose() {
     scrollController.dispose();
     // Dispose of the PageController
@@ -110,7 +109,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
     return 
     GetBuilder<GetOnGoingSiteProgress>(builder: (_){
       final signInController=Get.find<SignInController>();
-     if(signInController.getOnGoingCompletedData?.data!=null && locationName.isEmpty){
+      if(signInController.getOnGoingCompletedData?.data!=null && locationName.isEmpty){
           for(int i=0;i<list1.length;i++){
             list1=signInController.getOnGoingCompletedData!.data!;
             locationName.add(list1[i].locationName!);
@@ -164,8 +163,8 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                       child:
-                       ClipRRect(
+                      child:
+                      ClipRRect(
                       borderRadius: BorderRadius.circular(5.0),
                       child: 
                         ExpansionTile(
@@ -213,41 +212,41 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                             Text("${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleBodyText2.copyWith(color: AppColors.white),),
                             Text(contractorName[index]!=null?"Contractor Available":"Contractor Not Available",style: textStyleBodyText2.copyWith(color: AppColors.white),)
                           ],
-                        ),
-                        ]),
-                        ),
+                          ),
+                          ]),
+                          ),
                             const SizedBox(height: 10,),
                             Container(
                               width: double.infinity,
                               margin: const EdgeInsets.only(top: 0,bottom: 0),
                               padding:const EdgeInsets.symmetric(vertical: 0),
                               color: Colors.grey,
-                              child: Center(child: Text("CheckList NA",style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
+                              child: Center(child: Text("CheckList NA", style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
                             ]),
                             children: [
                               InkWell(
                                 onTap: (){ 
-                                  context.pushNamed('GETCOMPLETEDPROGRESSENTRY',extra: editModel[index]);
+                                  context.pushNamed('GETCOMPLETEDPROGRESSENTRY', extra: editModel[index]);
                                 },
                                 child:
                             Column(children: [
                               Container(
-                                padding:const EdgeInsets.only(left: 20,right: 20),
+                                padding:const EdgeInsets.only(left: 20, right: 20),
                                 color:AppColors.lightGrey,
                                 child: 
                             Column(
                               children: [
                                 const Text(""),
                                 Row(
-                                  children: [Text("Quantity- 20 MT / 80 MT",style: textStyleBodyText1.copyWith(fontSize: 14),)],
+                                  children: [Text("Quantity- 20 MT / 80 MT", style: textStyleBodyText1.copyWith(fontSize: 14),)],
                                 ),
-                            ])
-                              ),
+                              ])
+                            ),
                             Container(
-                                    padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
-                                    color:AppColors.lightGrey,
-                                    child: 
-                            Column(
+                              padding:const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                              color:AppColors.lightGrey,
+                                child: 
+                                Column(
                                   children: [
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -264,13 +263,13 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
                                       ],),
-                                        Column(
+                                      Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
                                       ],),
-                                          Column(
+                                      Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
@@ -317,7 +316,8 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                                         ]),
                                         ]),
                                       ],),
-                                      Column(children: [
+                                    Column(
+                                      children: [
                                         Container(
                                           height: 20,
                                           width: 20,
@@ -366,9 +366,9 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
             ]
           )
         )
-]
-)
-)
+      ]
+    )
+  )
 );
 }
 )

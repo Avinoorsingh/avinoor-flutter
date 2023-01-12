@@ -24,7 +24,9 @@ class _SubLocationState extends State<SubLocationProgress> {
    List<String> subSubLocationID=[];
    TextEditingController clientIDController=TextEditingController();
    TextEditingController projectIDController=TextEditingController();
-   List<bool> _isExpanded= [];
+   int? selectedIndex=-1;
+   int? selectedIndex1=-1;
+   int? selectedIndex2=-1;
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +42,16 @@ class _SubLocationState extends State<SubLocationProgress> {
         }
       }
     return Scaffold(
-      body: ListView.builder(
+      body:subLocation.isNotEmpty? ListView.builder(
+        key: Key(selectedIndex.toString()),
         itemCount: subLocation.length,
         itemBuilder: (context, i) {
-          for(int i=0;i<subLocation.length;i++){
-            _isExpanded.add(false);
-          }
           return ExpansionTile(
+            key:Key(selectedIndex.toString()),
+            initiallyExpanded: i == selectedIndex,
             onExpansionChanged: (bool b)async{
               if(b==true){
+                  setState(() {selectedIndex = i;});
                   subSubLocation.clear();
                   subSubLocationID.clear();
                 {
@@ -88,16 +91,19 @@ class _SubLocationState extends State<SubLocationProgress> {
                   }
                 }
                     }
-              }
+              }else {
+                setState(() => selectedIndex = -1);
+                }
            },
             title: Text(subLocation[i], style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal,),),
             children: [
                   ListView.builder(
+                  key:Key(selectedIndex1.toString()),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: subSubLocation.length,
                   itemBuilder: (context, j) {
-                    return
+                   return
                    ListTile(
                     onTap: () {
                       Navigator.pop(context,"${subLocation[i]}/${subSubLocation[j]}?${subSubLocationID[j]}&${clientIDController.text}*${projectIDController.text}#${widget.locID}:${subLocationID[i]}@");
@@ -109,7 +115,7 @@ class _SubLocationState extends State<SubLocationProgress> {
             ],
           );
         },
-      ),
+      ):Container(),
     );
   }
 );

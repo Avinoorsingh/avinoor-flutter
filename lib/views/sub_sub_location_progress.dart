@@ -21,12 +21,15 @@ class SubSubLocationProgress extends StatefulWidget {
   _activityHeadState createState() => _activityHeadState();
 }
 
+// ignore: camel_case_types
 class _activityHeadState extends State<SubSubLocationProgress> {
    List<String> subactivityHead=[];
    List<String> subactivityHeadID=[];
    TextEditingController clientIDController=TextEditingController();
    TextEditingController projectIDController=TextEditingController();
-   final List<bool> _isExpanded= [];
+   int? selectedIndex=-1;
+   int? selectedIndex1=-1;
+   int? selectedIndex2=-1;
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +45,16 @@ class _activityHeadState extends State<SubSubLocationProgress> {
         }
       }
     return Scaffold(
-      body: ListView.builder(
+      body:activityHead.isNotEmpty?ListView.builder(
+        key: Key(selectedIndex.toString()),
         itemCount: activityHead.length,
         itemBuilder: (context, i) {
-          for(int i=0;i<activityHead.length;i++){
-            _isExpanded.add(false);
-          }
           return ExpansionTile(
+            key:Key(selectedIndex.toString()),
+            initiallyExpanded: i == selectedIndex,
             onExpansionChanged: (bool b)async{
               if(b==true){
+                  setState(() {selectedIndex = i;});
                   subactivityHead.clear();
                   subactivityHeadID.clear();
                 {
@@ -92,11 +96,14 @@ class _activityHeadState extends State<SubSubLocationProgress> {
                   }
                 }
                     }
-              }
+              }else {
+                setState(() => selectedIndex = -1);
+                }
            },
             title: Text(activityHead[i], style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal,),),
             children: [
                   ListView.builder(
+                  key:Key(selectedIndex1.toString()),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: subactivityHead.length,
@@ -113,7 +120,7 @@ class _activityHeadState extends State<SubSubLocationProgress> {
             ],
           );
         },
-      ),
+      ):Container(),
     );
   }
 );

@@ -39,7 +39,7 @@ class OnGoingCompletedData {
   int? progressId;
   int? contractorId;
   int? cumulativeQuantity;
-  double? achivedQuantity;
+  num? achivedQuantity;
   int? totalQuantity;
   String? progressDate;
   int? progressPercentage;
