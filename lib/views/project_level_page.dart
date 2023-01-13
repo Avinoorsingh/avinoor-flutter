@@ -181,7 +181,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           ],
           ),
           ),
-          toolbarHeight: 180,
+          toolbarHeight: 170,
           backgroundColor: Colors.transparent,
           leading: 
           const Padding(padding:EdgeInsets.only(bottom: 80) ,child:
@@ -223,7 +223,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.all(5),
                           width: 80,
-                          // height: 50,
                           decoration: BoxDecoration(
                             color: current == index
                                 ? AppColors.white
@@ -264,22 +263,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                 }),
             )
           ),
-           Visibility(child:  Center(child: Text(tabName[current],style: textStyleHeadline3,)),),
-          /// MAIN BODY
+          Visibility(child: Center(child: Text(tabName[current],style: textStyleHeadline3,)),),
           Expanded(
-            // width: double.infinity,
-            // child: 
-            // Expanded(child: 
-            // Column(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
               child: pages[current],
-              //   const SizedBox(
-              //     height: 10,
-              //   ),
-              // ],
-        //    ),
-          //  ),
           ),
         ],
       ),

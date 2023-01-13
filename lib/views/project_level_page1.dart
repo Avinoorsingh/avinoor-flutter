@@ -93,14 +93,14 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
             return Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0), //<-- SEE HERE
+                borderRadius: BorderRadius.circular(16.0),
               ),
             child: Container(
             height: 290,
             width: 350,
             decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50)),
-            margin: const EdgeInsets.all(5),  //padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             child: Stack(
                   children: [
                   Column(
@@ -130,7 +130,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           elevation: 10,
                           child: 
                         ElevatedButton(
-                          onPressed: ()async{
+                          onPressed: ()
+                          async{
                          if(i==1){
                           await getCompletedSiteProgressDataController.getCompletedListData(context: context);
                           await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);

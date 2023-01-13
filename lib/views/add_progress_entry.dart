@@ -11,7 +11,6 @@ import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/network/client_project.dart';
 import 'package:colab/views/sub_location_progress.dart';
 import 'package:colab/views/sub_sub_location_progress.dart';
-import 'package:dio/dio.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -32,6 +31,7 @@ import '../constants/colors.dart';
 import '../controller/signInController.dart';
 import '../models/progress_activityHead_data.dart';
 import '../models/progress_sublocation_data.dart';
+import '../network/progress_network.dart';
 
 // ignore: must_be_immutable
 class AddProgressEntry extends StatefulWidget {
@@ -44,6 +44,9 @@ class AddProgressEntry extends StatefulWidget {
 
 class _AddProgressState extends State<AddProgressEntry> {
   final signInController=Get.find<SignInController>();
+  final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgressDataController=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -142,6 +145,7 @@ class _AddProgressState extends State<AddProgressEntry> {
   TextEditingController contractorController=TextEditingController();
   TextEditingController uOfName=TextEditingController();
   TextEditingController totalQuantity=TextEditingController();
+  bool progressCreatedFlag=false;
   TextEditingController achivedController=TextEditingController();
   TextEditingController comulativeController=TextEditingController();
 
@@ -250,7 +254,8 @@ class _AddProgressState extends State<AddProgressEntry> {
         subItems.add([]);
         contractorID.add(99999);
         contractorLabourLinkingId={28282828:[]};
-        for(var data in contractorList1!){
+        if(contractorList1!=null){
+        for(var data in contractorList1){
           contractorList.add(data.contractorName!);
           contractorID.add(data.id!);
           subItems.add([]);
@@ -264,6 +269,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                   }
           }
           }
+        }
         }
         }
       }
@@ -630,6 +636,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                         }
                         if (hasLinkActivityIdOne(result4.data)) {
                             EasyLoading.showToast("Progress Already created",toastPosition: EasyLoadingToastPosition.bottom);
+                            progressCreatedFlag=true;
                           }
                         else{}
                     }
@@ -765,8 +772,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               ])
             ],
           )
-            ),
-            
+            ),  
           ],) 
             ),
           },
@@ -995,14 +1001,23 @@ class _AddProgressState extends State<AddProgressEntry> {
                     icon:const Icon(Icons.delete),
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                     onPressed: () {
+                       if(_selectedDropdownValues2[outerIndex][index]!="Please select") {
                       setState((){
                       _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
                       contractorLabourDetails[outerIndex].removeAt(index);
                       // print("||||||||||||||||||||||||||}}}}}}}}}}||||||||||||||||||");
                       // print(contractorLabourDetails);
-                      _deleteMore2(outerIndex,index);
-                      });
+                      _deleteMore2(outerIndex,index); 
+                      print("here");
+                        print(_items2[outerIndex]['$outerIndex']);
+                       });
+                       } else {
+                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          print(_items2[outerIndex]['$outerIndex']);
+                          print("i am here");
+                          print(index);
                       }
+                    }
                     ),
                     ])
                     ]);
@@ -1301,178 +1316,189 @@ class _AddProgressState extends State<AddProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:() async {
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
-                var projectID=sharedPreferences.getString('projectIdd');
-                var clientID=sharedPreferences.getString('client_id');
-                FormData formData=FormData(); 
-                var dio = Dio();
-                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
-                List progressDetails = [];
-                for (var subList in contractorLabourDetails) {
-                  for (var map in subList) {
-                    // ignore: non_constant_identifier_names
-                    var contractor_id = map.values.first[0];
-                    var contractorLabourDetails1 = {
-                      "contractor_labour_linking_id": map.keys.first.toString(),
-                      "time": map.values.first[1].toString()
-                    };
-                    bool contractorExist = false;
-                    for (var progress in progressDetails) {
-                      if (progress['contractor_id'] == contractor_id) {
-                        contractorExist = true;
-                        progress['contractorLabourDetails'].add(contractorLabourDetails1);
-                        break;
-                      }
-                    }
-                    if (!contractorExist) {
-                      progressDetails.add({
-                        "contractor_id": contractor_id.toString(),
-                        "contractorLabourDetails": [contractorLabourDetails1]
-                      });
-                    }
-                  }
-                }
-                List<Map<String, dynamic>> newList = [];
-                for (Map<String, dynamic> map in progressDetails) {
-                  bool contractorExists = false;
-                  for (Map<String, dynamic> newMap in newList) {
-                    if (newMap["contractor_id"] == map["contractor_id"]) {
-                      newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
-                      contractorExists = true;
-                      break;
-                    }
-                  }
-                  if (!contractorExists) {
-                    newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
-                  }
-                }
-                try {
-                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
-                } catch (e) {
-                  formData.fields.add(const MapEntry('progress_image', ''));
-                }
-                formData.fields.add(MapEntry('progress_data', jsonEncode(
-                    {
-                      "client_id": int.parse(clientID!),
-                      "project_id": int.parse(projectID!),
-                      "link_activity_id":linkingActivityId.text.isNotEmpty?int.parse(linkingActivityId.text):"",
-                      "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
-                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
-                      "remarks": remarkController.text,
-                      "contractor_id": "7",
-                      "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
-                      "debet_contactor":int.parse(debitToController.text),
-                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeController.text,
-                      "type":priorityController.text=="Misc."?1:0,
-                      "save_type": "save",
-                      "created_by":int.parse(clientID),
-                      "PWRLabourDetails": [
-                          {
-                              "labour_count": 1,
-                              "pwr_type": 0
-                          }
-                      ],
-                      "contractorLabourDetails": [],
-                      "progressDetails": newList,
-                    }
-                   )
-                   )
-                   );
-                  try {
-                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
-                  var res= await dio.post(
-                  Config.saveLabourSupplyProgressApi,
-                  data: formData,
-                  options: Options(
-                    followRedirects: false,
-                    validateStatus: (status) {
-                      return status! < 500;
-                    },
-                    headers: {
-                      "authorization": "Bearer ${token!}",
-                      "Content-type": "application/json",
-                    },
-                  ),
-                    );
-                    if(res.statusCode==200){
-                    EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                    else{
-                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                }catch(e){
-                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                }
-                }
-                if(priorityController.text=="PRW"){
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
-                var projectID=sharedPreferences.getString('projectIdd');
-                var clientID=sharedPreferences.getString('client_id');
-                  List pWRLabourDetailsList = [];
-                    for(int i=0; i<_selectedDropdownValuesID.length; i++){
-                      pWRLabourDetailsList.add({
-                        "labour_count": enteredValues[i],
-                        "pwr_type": _selectedDropdownValuesID[i]
-                      });
-                    }
-                try {
-                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
-                } catch (e) {
-                  formData.fields.add(const MapEntry('progress_image', ''));
-                }
-                formData.fields.add(MapEntry('progress_data', jsonEncode(
-                    {
-                      "client_id": int.parse(clientID!),
-                      "project_id": int.parse(projectID!),
-                      "link_activity_id":int.parse(linkingActivityId.text),
-                      "achived_quantity": achivedController.text,
-                      "total_quantity":int.parse(totalQuantity.text),
-                      "remarks": remarkController.text,
-                      "contractor_id": int.parse(pwrContractorId.text),
-                      "progress_percentage": _sliderValue.toInt().toString(),
-                      "debet_contactor":"0",
-                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeController.text,
-                      "type": 2,
-                      "save_type": "save",
-                      "created_by":int.parse(clientId.text),
-                      "PWRLabourDetails": pWRLabourDetailsList,
-                      "contractorLabourDetails": [],
-                      "progressDetails": [],
-                    }
-                   )
-                   )
-                   );
-                  try {
-                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
-                  var res= await dio.post(
-                  Config.saveLabourSupplyProgressApi,
-                  data: formData,
-                  options: Options(
-                    followRedirects: false,
-                    validateStatus: (status) {
-                      return status! < 500;
-                    },
-                    headers: {
-                      "authorization": "Bearer ${token!}",
-                      "Content-type": "application/json",
-                    },
-                  ),
-                    );
-                    if(res.statusCode==200){
-                    EasyLoading.showToast("PWR Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                    else{
-                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                }catch(e){
-                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                }
-                }
-              },
+                if(progressCreatedFlag!=true){
+                // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                // var token=sharedPreferences.getString('token');
+                // var projectID=sharedPreferences.getString('projectIdd');
+                // var clientID=sharedPreferences.getString('client_id');
+                // FormData formData=FormData(); 
+                // var dio = Dio();
+                // if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
+                // List progressDetails = [];
+                // for (var subList in contractorLabourDetails) {
+                //   for (var map in subList) {
+                //     // ignore: non_constant_identifier_names
+                //     var contractor_id = map.values.first[0];
+                //     var contractorLabourDetails1 = {
+                //       "contractor_labour_linking_id": map.keys.first.toString(),
+                //       "time": map.values.first[1].toString()
+                //     };
+                //     bool contractorExist = false;
+                //     for (var progress in progressDetails) {
+                //       if (progress['contractor_id'] == contractor_id) {
+                //         contractorExist = true;
+                //         progress['contractorLabourDetails'].add(contractorLabourDetails1);
+                //         break;
+                //       }
+                //     }
+                //     if (!contractorExist) {
+                //       progressDetails.add({
+                //         "contractor_id": contractor_id.toString(),
+                //         "contractorLabourDetails": [contractorLabourDetails1]
+                //       });
+                //     }
+                //   }
+                // }
+                // List<Map<String, dynamic>> newList = [];
+                // for (Map<String, dynamic> map in progressDetails) {
+                //   bool contractorExists = false;
+                //   for (Map<String, dynamic> newMap in newList) {
+                //     if (newMap["contractor_id"] == map["contractor_id"]) {
+                //       newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
+                //       contractorExists = true;
+                //       break;
+                //     }
+                //   }
+                //   if (!contractorExists) {
+                //     newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
+                //   }
+                // }
+                // try {
+                // formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                // } catch (e) {
+                //   formData.fields.add(const MapEntry('progress_image', ''));
+                // }
+                // formData.fields.add(MapEntry('progress_data', jsonEncode(
+                //     {
+                //       "client_id": int.parse(clientID!),
+                //       "project_id": int.parse(projectID!),
+                //       "link_activity_id":linkingActivityId.text.isNotEmpty?int.parse(linkingActivityId.text):"",
+                //       "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
+                //       "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                //       "remarks": remarkController.text,
+                //       "contractor_id": "7",
+                //       "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
+                //       "debet_contactor":int.parse(debitToController.text),
+                //       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                //       "cumulative_quantity": comulativeController.text,
+                //       "type":priorityController.text=="Misc."?1:0,
+                //       "save_type": "save",
+                //       "created_by":int.parse(clientID),
+                //       "PWRLabourDetails": [
+                //           {
+                //               "labour_count": 1,
+                //               "pwr_type": 0
+                //           }
+                //       ],
+                //       "contractorLabourDetails": [],
+                //       "progressDetails": newList,
+                //     }
+                //    )
+                //    )
+                //    );
+                //   try {
+                //   var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
+                //   var res= await dio.post(
+                //   Config.saveLabourSupplyProgressApi,
+                //   data: formData,
+                //   options: Options(
+                //     followRedirects: false,
+                //     validateStatus: (status) {
+                //       return status! < 500;
+                //     },
+                //     headers: {
+                //       "authorization": "Bearer ${token!}",
+                //       "Content-type": "application/json",
+                //     },
+                //   ),
+                //     );
+                //     if(res.statusCode==200){
+                //     EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                //     }
+                //     else{
+                //        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                //     }
+                // }catch(e){
+                //   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                // }
+                // if(priorityController.text=="PRW"){
+                // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                // var token=sharedPreferences.getString('token');
+                // var projectID=sharedPreferences.getString('projectIdd');
+                // var clientID=sharedPreferences.getString('client_id');
+                //   List pWRLabourDetailsList = [];
+                //     for(int i=0; i<_selectedDropdownValuesID.length; i++){
+                //       pWRLabourDetailsList.add({
+                //         "labour_count": enteredValues[i],
+                //         "pwr_type": _selectedDropdownValuesID[i]
+                //       });
+                //     }
+                // try {
+                // formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                // } catch (e) {
+                //   formData.fields.add(const MapEntry('progress_image', ''));
+                // }
+                // formData.fields.add(MapEntry('progress_data', jsonEncode(
+                //     {
+                //       "client_id": int.parse(clientID!),
+                //       "project_id": int.parse(projectID!),
+                //       "link_activity_id":int.parse(linkingActivityId.text),
+                //       "achived_quantity": achivedController.text,
+                //       "total_quantity":int.parse(totalQuantity.text),
+                //       "remarks": remarkController.text,
+                //       "contractor_id": int.parse(pwrContractorId.text),
+                //       "progress_percentage": _sliderValue.toInt().toString(),
+                //       "debet_contactor":"0",
+                //       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                //       "cumulative_quantity": comulativeController.text,
+                //       "type": 2,
+                //       "save_type": "save",
+                //       "created_by":int.parse(clientId.text),
+                //       "PWRLabourDetails": pWRLabourDetailsList,
+                //       "contractorLabourDetails": [],
+                //       "progressDetails": [],
+                //     }
+                //    )
+                //    )
+                //    );
+                //   try {
+                //   var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
+                //   var res= await dio.post(
+                //   Config.saveLabourSupplyProgressApi,
+                //   data: formData,
+                //   options: Options(
+                //     followRedirects: false,
+                //     validateStatus: (status) {
+                //       return status! < 500;
+                //     },
+                //     headers: {
+                //       "authorization": "Bearer ${token!}",
+                //       "Content-type": "application/json",
+                //     },
+                //   ),
+                //     );
+                //     if(res.statusCode==200){
+                //     EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                //     }
+                //     else{
+                //        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                //     }
+                // }catch(e){
+                //   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                // }
+                // }
+                await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+                await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
+                 Get.put(GetCompletedSiteProgress());
+                 Get.put(GetOnGoingSiteProgress());
+                 Get.put(GetInEqualitySiteProgress());
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              }else{
+                EasyLoading.showToast("Progress Already Created",toastPosition: EasyLoadingToastPosition.bottom);
+              }},
               child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )
              ]

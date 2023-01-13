@@ -4,6 +4,7 @@ import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
+import '../controller/signInController.dart';
+import '../models/labour_attendance.dart';
+import '../models/progress_contractor.dart';
+import '../models/progress_location_data.dart';
+import '../models/progress_trade_data.dart';
+import '../network/client_project.dart';
 
 // ignore: must_be_immutable
 class UpComingEntry extends StatefulWidget {
@@ -25,6 +32,60 @@ class UpComingEntry extends StatefulWidget {
 }
 
 class _SnagState extends State<UpComingEntry> {
+  final signInController=Get.find<SignInController>();
+  Map<String, List<String>> groupedList = {};
+  List groupedMapToList=[];
+  final pwrContractorId=TextEditingController();
+  final pwrContractorName=TextEditingController();
+  List<dynamic> finalList=[];
+  final List labourList=["Item 1"];
+  final List<String> _items = ['Item 1'];
+  final List<String> _dropdownValues = [];
+  final List<int> _dropdownValuesID = [];
+  final List<String> _selectedDropdownValues = ['Please Select'];
+  final List<int> _selectedDropdownValuesID = [0];
+  final List<String> enteredValues=[""];
+  final List _items2 = [];
+  final List mainDropdownValue = [];
+  final List subItems=[];
+  final List<String> _dropdownValues2 = [];
+  final List<List<String>> _selectedDropdownValues2 = [];
+  final List<TextEditingController> _controllers = [TextEditingController(text: "1",)];
+  final List<List<TextEditingController>> _controllers2 = [];
+  List<List> contractorLabourDetails=[];
+  bool keyExists = false;
+  final contractorLabourLinkingIDText=TextEditingController();
+  List<String> locationList=[];
+  List<String> debitTo = [];
+  Map<String, dynamic> itemsDebit={};
+  String dropdownvalueDebitTo = 'Select Debit to'; 
+  final debitToController=TextEditingController(); 
+  List<int> locationID=[];
+  List<int> contractorID=[];
+  Map<int, List<int>> contractorLabourLinkingId={};
+  List<int> debitToID=[];
+
+    void _addMore() {
+    setState(() {
+    _items.add('Item ${_items.length + 1}');
+    _selectedDropdownValues.add(_dropdownValues[0]);
+    _selectedDropdownValuesID.add(_dropdownValuesID[0]);
+    enteredValues.add("");
+    _controllers.add(TextEditingController(text: "1"));
+    });
+    }
+    void _addMore2(outerIndex,innerIndex) {
+    setState(() {
+    // _selectedDropdownValues2[outerIndex].add(groupedMapToList[innerIndex][0]);
+    // _controllers2.add(TextEditingController(text: "1"));
+    });
+    }
+     void _deleteMore2(outerIndex,innerIndex) {
+    setState(() {
+    _selectedDropdownValues2[outerIndex].removeAt(innerIndex);
+    _controllers2[outerIndex].removeAt(innerIndex);
+    });
+    }
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -37,7 +98,6 @@ class _SnagState extends State<UpComingEntry> {
   final deSnagRemarkController=TextEditingController();
   final closingRemarkController=TextEditingController();
   final markController=TextEditingController();
-  final debitToController=TextEditingController();
   final debitAmountController=TextEditingController();
   final snagAssignedByController=TextEditingController();
   final snagAssignedToController=TextEditingController();
@@ -54,9 +114,7 @@ class _SnagState extends State<UpComingEntry> {
   final location2 = ["Select Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue2 = 'Select Sub Location';  
   final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
-  String dropdownvalue3 = 'Select Sub Sub Location';  
-  final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
-  String dropdownvalueDebitTo = 'Select Debit to';  
+  String dropdownvalue3 = 'Select Sub Sub Location';
   final assignedTo=["Select Name","Name 1"];
   String dropdownvalueAssignedTo="Select Name";
   final ValueNotifier<String?> dropDownNotifier = ValueNotifier(null);
@@ -130,7 +188,7 @@ class _SnagState extends State<UpComingEntry> {
      List viewpoints2=[];
      var array2=[];
      var _sliderValue=0.0;
-     List<String> contractorList=["Select Contractor Name"];
+     List<String> contractorList=[];
     @override
   void initState() {
     super.initState(); 
@@ -159,9 +217,6 @@ class _SnagState extends State<UpComingEntry> {
     }
   }
 
-    // print("I am here, here is the viewpoint");
-    // print(groupedViewpoints);
-    // dateInput.text =getFormatedDate(DateTime.now().toString());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
     final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -176,7 +231,76 @@ class _SnagState extends State<UpComingEntry> {
   @override
   Widget build(BuildContext context) {
     EasyLoading.dismiss();
-    return Scaffold(
+    return
+    GetBuilder<GetUserProfileNetwork>(builder: (_){
+      final signInController=Get.find<SignInController>();
+      if(signInController.getProgressLocationList?.data!=null){
+      if(signInController.getProgressLocationList!.data!.isNotEmpty && locationList.isEmpty){
+        List<ProgressLocationListData>? locationList1=signInController.getProgressLocationList?.data;
+        locationList.add("Select Location");
+        locationID.add(0);
+        for(var data in locationList1!){
+          locationList.add(data.locationName!);
+          locationID.add(data.locationId!);
+        }
+      }
+      if(signInController.getProgressContractorList!.data!.isNotEmpty && contractorList.isEmpty){
+        if(signInController.getProgressContractorList!.data!.isNotEmpty && debitTo.isEmpty){
+        List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
+        if(debitTo.isEmpty){
+        debitTo.add("Select Debit to");
+        debitToID.add(99999);
+        itemsDebit={};
+        for(var data in debitToList1!){
+          itemsDebit[data.pid.toString()] = data.contractorName;
+          debitTo.add(data.contractorName!);
+          debitToID.add(data.pid!);
+        }
+        debitTo.toSet().toList();
+        debitToID.toSet().toList();
+        }
+      }
+        List<MainData>? contractorList1=signInController.getLabourAttendance?.mainData;
+        if(contractorList.isEmpty){
+        contractorList.add("Select Contractor Name");
+        subItems.add([]);
+        contractorID.add(99999);
+        contractorLabourLinkingId={28282828:[]};
+        if(contractorList1!=null){
+        for(var data in contractorList1){
+          contractorList.add(data.contractorName!);
+          contractorID.add(data.id!);
+          subItems.add([]);
+          if(data.labourDetails!.isNotEmpty){
+          for(var data2 in data.labourDetails!){
+             if (contractorLabourLinkingId.containsKey(data2.contractorId)) {
+                    contractorLabourLinkingId[data2.contractorId]!.add(data2.contractorLabourLinkingId!);
+                      } 
+              else {
+                    contractorLabourLinkingId[data2.contractorId!] = [data2.contractorLabourLinkingId!];
+                  }
+          }
+          }
+        }
+        }
+        }
+        }
+       if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
+        List<ProgressTradeData>? locationList1=signInController.getProgressTradeList?.data;
+        _dropdownValues.add("Please Select");
+        _dropdownValues.add("Skilled");
+        _dropdownValues.add("UnSkilled");
+        _dropdownValuesID.add(43929329191);
+        _dropdownValuesID.add(0);
+        _dropdownValuesID.add(1);
+        for(var data in locationList1!){
+          _dropdownValues.add(data.trade!);
+          _dropdownValuesID.add(data.id!);
+        }
+      }
+      }
+    return
+     Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
@@ -395,23 +519,33 @@ class _SnagState extends State<UpComingEntry> {
             ),
           },
           const SizedBox(height: 10,),
+          ListView.builder(
+          physics:const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: labourList.length,
+          itemBuilder: (context, outerIndex) {
+            finalList.add(outerIndex);
+            finalList.insert(outerIndex,groupedList[contractorController.text]);
+            // finalList.add(outerIndex);
+          return 
+          Column(children: [
           CustomContainer2(
             child:
           Column(children: [
-            Row(
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
               Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
             if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
-             Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+          Container(
+           margin: const EdgeInsets.only(top: 20,),
            padding: const EdgeInsets.only(bottom: 10,),
-            child: 
+           child: 
            DropdownButtonFormField(
-              value: contractorList[0],
+             value:contractorList.isNotEmpty?contractorList[0]:"",
              icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
+             padding: EdgeInsets.only(left:20),
               child:Icon(Icons.arrow_drop_down_circle_outlined)
              ), 
             iconEnabledColor: Colors.grey,
@@ -422,72 +556,216 @@ class _SnagState extends State<UpComingEntry> {
           dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+            ),
+            focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+            ),
               isExpanded: true,
               items: contractorList.map((String items){
                 return
                 DropdownMenuItem(
                   value: items,
-                  child: Text(items),
+                  child: Text(items,style: TextStyle(color: !mainDropdownValue.contains(items)?Colors.black:Colors.grey),),
                 );
               }).toList(),
-              onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
+              onChanged:(String? newValue) async {
+                !mainDropdownValue.contains(newValue)?
                 setState(() {
+                  _items2.add({'$outerIndex':['Item ${_items2.length + 1}']});
+                  contractorLabourDetails.add([]);
+                  _dropdownValues2.clear();
+                  groupedList.clear();
+                  mainDropdownValue.add(newValue);
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
-                   });
+                     if(signInController.getLabourAttendance!.data!.isNotEmpty && _dropdownValues2.isEmpty){
+                      List<MainData>? list1=signInController.getLabourAttendance?.mainData;
+                      _dropdownValues2.add("Please Select");
+                      for(var data in list1!){
+                        for(var data2 in data.labourDetails!){
+                          if (groupedList.containsKey(data2.contractorName)) {
+                                groupedList[data2.contractorName]!.add(data2.name!);
+                                } 
+                          else {
+                                groupedList[data2.contractorName!] = [data2.name!];
+                                }
+                          if(data2.contractorId==contractorID[contractorList.indexOf(newValue)]){
+                        _dropdownValues2.add(data2.name!);
+                          }
+                        }
+                      }
+                      groupedMapToList=groupedList.values.toList();
+                      for (var sublist in groupedMapToList) {
+                              sublist.insert(0, "Please select");
+                       }
+                      for (var sublist in groupedMapToList) {
+                              _selectedDropdownValues2.add(["Please select"]);
+                              _controllers2.add([TextEditingController()]);
+                       }
+                      finalList.insert(outerIndex,groupedList[contractorController.text]!);
+                    }
+                    subItems.insert(outerIndex,groupedList[contractorController.text]);
+                   }):null;
+                   for (var i = 0; i < subItems.length; i++) {
+                        for (var j = 0; j < subItems[i].length; j++) {
+                          if (subItems[i][j] != 'Please select'){
+                            _selectedDropdownValues2[i].add('Please select');
+                            _controllers2[i].add(TextEditingController());
+                          }
+                        }
+                   }
               },
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],)
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+          if(subItems[outerIndex].isNotEmpty)
+          ListView.builder(
+              physics:const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: _items2[outerIndex]['$outerIndex'].length,
+              itemBuilder: (context, index){
+              return 
+                Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  SizedBox(
+                    height: 65,
+                    width: 250,
+                    child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    isExpanded: true,
+                    underline: Container(),
+                    value: _selectedDropdownValues2[outerIndex][index],
+                    items:subItems[outerIndex]
+                    .map<DropdownMenuItem<String>>((value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style:!_selectedDropdownValues2[outerIndex].contains(value)?textStyleBodyText1:textStyleBodyText1.copyWith(color: Colors.grey),)),
+                    ))
+                    .toList(),
+                    onChanged: (newValue) {
+                      // print("-------------------------------------------");
+                      // print("contractorID");
+                      // print(contractorID[outerIndex+1]);
+                      // print("-------------------------------------------");
+                      // print("Selected value");
+                      // print(newValue);
+                      // print("-----------------------------------");
+                      // print("contractor labour linking id");
+                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                    setState(() {
+                        var index1;
+                    !_selectedDropdownValues2[outerIndex].contains(newValue)? _selectedDropdownValues2[outerIndex][index]=(newValue.toString()):null;
+
+                    if(_selectedDropdownValues2[outerIndex].contains(newValue)){
+                    for (var i = 0; i < contractorLabourDetails[outerIndex].length; i++) {
+                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1])) {
+                        keyExists = true;
+                        index1 = i;
+                        break;
+                      }
+                    }
+                    if(keyExists){
+                     contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                    }
+                    if(!keyExists){
+                      try {
+                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                      }catch(e){
+                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
+                      }
+                    }
+                    }
+                    });
+                    },
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 55,
+                      child:
+                      CustomTextFieldForNumber(
+                          onSubmitted:(value){
+                          print("-------------------------------------------");
+                          print("contractorID");
+                          print(contractorID[outerIndex+1]);
+                          print("-------------------------------------------");
+                          print("entered value");
+                          print(value);
+                          print("+++++++++++++++++++++++++++++++++++++");
+                          print(contractorLabourLinkingId[contractorID[outerIndex+1]]![index]);
+                          print("============================================");
+                          print(index);
+                          print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                          print(contractorLabourDetails);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][0]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
+                          // print("-----------------------------------");
+                          // print(contractorLabourDetails);
+                          },
+                          controller: _controllers2[outerIndex][index],
+                        ),
+                      )
+                    ,],),
+                    Row(children: [
+                    if(index==_items2[outerIndex]['$outerIndex'].length-1)
+                    IconButton(
+                    icon:const Icon(Icons.add_circle),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    onPressed: () {
+                    setState(() {
+                         if(_items2[outerIndex].containsKey('$outerIndex')){
+                            _items2[outerIndex]['$outerIndex']!.add('Item ${_items2[outerIndex].length + 1}');
+                          }else{
+                            _items2[outerIndex] = ['Item ${_items2[outerIndex].length + 1}'];
+                          }
+                       _addMore2(outerIndex,index);
+                      }
+                    );
+                    }),
+                    if(_selectedDropdownValues2[outerIndex].isNotEmpty)
+                    IconButton(
+                    icon:const Icon(Icons.delete),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    onPressed: () {
+                      setState((){
+                      _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
+                      contractorLabourDetails[outerIndex].removeAt(index);
+                      // print("||||||||||||||||||||||||||}}}}}}}}}}||||||||||||||||||");
+                      // print(contractorLabourDetails);
+                      _deleteMore2(outerIndex,index);
+                      });
+                      }
+                    ),
+                    ])
+                    ]);
+                    },
+                    ),
           },
           if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
-                 Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
-           padding: const EdgeInsets.only(bottom: 10,),
+          CustomContainer(
             child: 
-           DropdownButtonFormField(
-              value: contractorList[0],
-             icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 17
-            ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
-              isExpanded: true,
-              items: contractorList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String? newValue) async {
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
-                setState(() {
-                  contractorController.text=newValue!;
-                  dropdownvalue = newValue;
-                   });
-              },
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected",style: textStyleBodyText1,),),
+             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            ])
           ),
             const SizedBox(height: 10,),
             Row(
@@ -496,87 +774,100 @@ class _SnagState extends State<UpComingEntry> {
               Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
             ],),
             const SizedBox(height: 20,),
+            SizedBox(height:100,
+            width: MediaQuery.of(context).size.width,
+            child:
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: _items.length,
+                itemBuilder: (context, index) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    SizedBox(
+                      height: 65,
+                      width: 250,
+                      child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    isExpanded: true,
+                    underline: Container(),
+                    value: _selectedDropdownValues[index],
+                    items: _dropdownValues
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: (newValue) {
+                    setState(() {
+                    _selectedDropdownValues[index] = newValue.toString();
+                    _selectedDropdownValuesID[index]=_dropdownValuesID[_dropdownValues.indexOf(_selectedDropdownValues[index])];
+                    });
+                    },
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 55,
+                      child:
+                      CustomTextFieldForNumber(
+                          controller: _controllers[index],
+                          onSubmitted: (value){
+                            enteredValues[index]=value.toString();
+                          },
+                        )
+                      )
+                    ,]);
+                    },
+                    ),
+                    ),
+                    Row(children: [
+                    ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    child: const Text("Add More"),
+                    onPressed: () {_addMore();}
+                    ),
+                    ])
+          },
+             if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Skilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    ),
-                  )
-                ),
-              ],
-            ),
-                 Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Unskilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    ),
-                  )
-                ),
-              ],
-            )
+              if(labourList.length+2<=contractorList.length)...{
+            IconButton(onPressed: (){
+              setState(() {
+                _items2.add({'${outerIndex+1}':['Item ${_items2.length+1}']});
+                contractorLabourDetails.add([]);
+                labourList.add("1");
+              });
+            }, icon:const Icon(Icons.add_circle)),
+              },
+            IconButton(onPressed: (){
+              setState(() {
+                if(outerIndex==1){
+                labourList.removeAt(outerIndex);
+                }
+              });
+            }, icon:const Icon(Icons.delete)),
+           ])
           }
-          ],) 
-            ),
+          ],
+          )
+          ),
+          ],
+          );
+          }),
             CustomContainer2(
             child: 
             Column(children: [
@@ -590,8 +881,7 @@ class _SnagState extends State<UpComingEntry> {
           ])
             ),
             if(priorityController.text=="Labour Supply" || priorityController.text=="Misc.")...{
-          CustomContainer2(
-            child:
+           CustomContainer2(child:
           Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -600,12 +890,12 @@ class _SnagState extends State<UpComingEntry> {
               ],),),
                const SizedBox(height: 10,),
              Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+           margin: const EdgeInsets.only(top: 20),
            padding: const EdgeInsets.only(bottom: 20,),
             child: 
            DropdownButtonFormField(
-              value: debitTo[0],
-             icon: const Padding( 
+             value: debitToController.text.isNotEmpty?debitToController.text:null,
+             icon: const Padding(
               padding: EdgeInsets.only(left:20),
               child:Icon(Icons.arrow_drop_down_circle_outlined)
              ), 
@@ -620,27 +910,25 @@ class _SnagState extends State<UpComingEntry> {
         ),
         focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+              ),
+            ),
               isExpanded: true,
-              items: debitTo.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
+              items:itemsDebit.keys.map<DropdownMenuItem<String>>((String key) {
+              return DropdownMenuItem<String>(
+                value: key,
+                child: Text(itemsDebit[key]),
+              );
+            }).toList(),
               onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 setState(() {
-                  contractorController.text=newValue!;
+                  debitToController.text=newValue!;
                   dropdownvalueDebitTo = newValue;
-                   });
+                });
               },
             ),
           ),
-          ]))},
+          ])
+            ),},
              if(_selectedImage != null)
             Container(
               margin:const EdgeInsets.only(top: 20),
@@ -769,5 +1057,6 @@ class _SnagState extends State<UpComingEntry> {
 )
 )
 );
+  });
 }
 }
