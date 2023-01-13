@@ -195,9 +195,9 @@ class _AddProgressState extends State<AddProgressEntry> {
       _selectedImage =File(image!.path);
     });
   }
-    late List<bool> isSelected;
     final creationController = TextEditingController();
-     List viewpoints2=[];
+    late List<bool> isSelected;
+    List viewpoints2=[];
      var array2=[];
      var _sliderValue=0.0;
      List<String> contractorList1=["Select Contractor Name"];
