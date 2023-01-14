@@ -43,6 +43,7 @@ class OnGoingOnGoingData {
   num? totalQuantity;
   String? progressDate;
   num? progressPercentage;
+  // ignore: prefer_typing_uninitialized_variables
   var debetContactor;
   num? progType;
   String? remarks;

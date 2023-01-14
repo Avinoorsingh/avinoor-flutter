@@ -13,10 +13,15 @@ import '../theme/text_styles.dart';
 class UpComingInsideOnGoing extends StatefulWidget {
   const UpComingInsideOnGoing({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
   final cID;
+  // ignore: prefer_typing_uninitialized_variables
   final pID;
+  // ignore: prefer_typing_uninitialized_variables
   final locID;
+  // ignore: prefer_typing_uninitialized_variables
   final subLocID;
+  // ignore: prefer_typing_uninitialized_variables
   final subSubLocID;
 
   @override
@@ -24,7 +29,9 @@ class UpComingInsideOnGoing extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
+// ignore: prefer_typing_uninitialized_variables
 var update;
 
 class _OnProgressState extends State<UpComingInsideOnGoing> {
@@ -161,7 +168,10 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                           children: [
                             InkWell(
                               onTap: (){
-                                context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index] );
+                                context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index]);
+                                if (kDebugMode) {
+                                  print(upComingModel[index]);
+                                }
                               },
                               child: 
                               Card(

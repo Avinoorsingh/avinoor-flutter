@@ -28,7 +28,9 @@ class ClosedQualityCheckList extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
+// ignore: prefer_typing_uninitialized_variables
 var update;
 
 class _OpenedCheckListState extends State<ClosedQualityCheckList> {
@@ -238,7 +240,7 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
     context: context,
     builder: (context1) {
       return 
-      Container(
+      SizedBox(
         height: 200,
         width: 200,
         child: 

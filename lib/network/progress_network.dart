@@ -90,7 +90,9 @@ class GetInEqualitySiteProgress extends GetxController{
             },
           );
           var cData4=jsonDecode(res.body);
-            print(res.body);
+            if (kDebugMode) {
+              print(res.body);
+            }
           InEqualityProgress result5=InEqualityProgress.fromJson(cData4);
           signInController.getInEqualityProgressData=result5;
           update(); 

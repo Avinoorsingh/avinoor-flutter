@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/helper/dependency_injector.dart';
+// ignore: non_constant_identifier_names
 GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 
 class DeSnags extends StatefulWidget {

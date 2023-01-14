@@ -7,8 +7,11 @@ import '../theme/text_styles.dart';
 class BottomTabBar5 extends StatefulWidget {
   const BottomTabBar5({Key? key, this.locationName, this.subLocationName, this.subSubLocationName}) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
   final locationName;
+  // ignore: prefer_typing_uninitialized_variables
   final subLocationName;
+  // ignore: prefer_typing_uninitialized_variables
   final subSubLocationName;
   @override
   State<BottomTabBar5> createState() => _BottomTabBarState5();

@@ -43,6 +43,7 @@ class OnGoingCompletedData {
   int? totalQuantity;
   String? progressDate;
   int? progressPercentage;
+  // ignore: prefer_typing_uninitialized_variables
   var debetContactor;
   int? progType;
   String? remarks;

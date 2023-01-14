@@ -21,7 +21,6 @@ import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
@@ -34,6 +33,7 @@ import '../services/container2.dart';
 class AddAreaOfConcern extends StatefulWidget {
   AddAreaOfConcern({Key? key,from}) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
   var from;
 
   @override
@@ -481,7 +481,6 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                       print(formData.fields);
                     }
                   try {
-                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
                   var res= await dio.post(
                   Config.addAreaOfConcernApi,
                   data: formData,

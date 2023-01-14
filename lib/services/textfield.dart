@@ -201,6 +201,7 @@ class CustomTextFieldForNumber extends StatelessWidget {
   final TextEditingController? controller;
   // ignore: prefer_typing_uninitialized_variables
   final onChanged;
+  // ignore: prefer_typing_uninitialized_variables
   final onSubmitted;
 
   const CustomTextFieldForNumber({Key? key, 

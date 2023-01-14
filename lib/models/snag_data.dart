@@ -693,6 +693,7 @@ class ProjcontractorInfo {
   String? workOrderNumber;
   String? scopeOfWork;
   String? contactNo;
+  // ignore: prefer_typing_uninitialized_variables
   var attFile;
   int? grandTotal;
   String? createdby2;

@@ -59,6 +59,8 @@ class _ProgressState extends State<EditProgressEntry> {
   TextEditingController dateInput=TextEditingController();
   TextEditingController achivedController=TextEditingController();
   TextEditingController comulativeController=TextEditingController();
+  TextEditingController contractorIDIndex = TextEditingController();
+  TextEditingController progressID = TextEditingController();
   final uomName=TextEditingController();
   final type=TextEditingController();
   List<bool> isCardEnabled2 = [];
@@ -169,6 +171,7 @@ class _ProgressState extends State<EditProgressEntry> {
     comulativeQuantity.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     _sliderValue=double.parse(widget.editModel?.progressPercentage.toString()??"0.0");
     remarkController.text=widget.editModel?.remarks??"";
+    progressID.text=widget.editModel?.progressId.toString()??"";
     type.text=widget.editModel?.type.toString()??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
@@ -284,7 +287,9 @@ class _ProgressState extends State<EditProgressEntry> {
                               "Authorization": "Bearer $token",
                             },
                             );
-                      print(getContractorForPwRApiUrl);
+                      if (kDebugMode) {
+                        print(getContractorForPwRApiUrl);
+                      }
                             if(res.statusCode==200){
                               try{
                             pwrContractorName.text=(jsonDecode(res.body)['data'][0]['contractor_name']);
@@ -300,7 +305,8 @@ class _ProgressState extends State<EditProgressEntry> {
                             print(e);
                             print("Error is here!");
                           }}
-                 },child: Text("Update",style: textStyleButton,),)
+                 },
+                 child: Text("Update",style: textStyleButton,),),
                 )
             ]),
           CustomContainer(
@@ -315,7 +321,7 @@ class _ProgressState extends State<EditProgressEntry> {
                       data: ThemeData.light().copyWith(
                           primaryColor: AppColors.primary,
                           buttonTheme: const ButtonThemeData(
-                            textTheme: ButtonTextTheme.primary
+                          textTheme: ButtonTextTheme.primary,
                           ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
                       ),
                      child: child!,
@@ -468,7 +474,7 @@ class _ProgressState extends State<EditProgressEntry> {
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
-              Text("${quantityController.text} ${uomName.text}",style: textStyleBodyText1)
+              Text("${quantityController.text} ${uomName.text}",style: textStyleBodyText1),
             ],),
             const SizedBox(height: 30,),
             Container(
@@ -490,7 +496,7 @@ class _ProgressState extends State<EditProgressEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -507,7 +513,7 @@ class _ProgressState extends State<EditProgressEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -527,6 +533,7 @@ class _ProgressState extends State<EditProgressEntry> {
             ),
           const SizedBox(height: 20,),
             if(update==true)...{
+              // ///////////////////////////////////////
           ListView.builder(
           physics:const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -570,7 +577,7 @@ class _ProgressState extends State<EditProgressEntry> {
               ),
             ),
               isExpanded: true,
-              items: contractorList.map((String items){
+              items:contractorList.map((String items){
                 return
                 DropdownMenuItem(
                   value: items,
@@ -580,6 +587,7 @@ class _ProgressState extends State<EditProgressEntry> {
               onChanged:(String? newValue) async {
                 !mainDropdownValue.contains(newValue)?
                 setState(() {
+                  if(newValue!="Select Contractor Name"){
                   _items2.add({'$outerIndex':['Item ${_items2.length + 1}']});
                   contractorLabourDetails.add([]);
                   _dropdownValues2.clear();
@@ -603,25 +611,29 @@ class _ProgressState extends State<EditProgressEntry> {
                           }
                         }
                       }
+                      contractorIDIndex.text=contractorList.indexOf(newValue).toString();
                       groupedMapToList=groupedList.values.toList();
                       for (var sublist in groupedMapToList) {
-                              sublist.insert(0, "Please select");
+                              sublist.insert(0, "Please Select");
                        }
+                      // ignore: unused_local_variable
                       for (var sublist in groupedMapToList) {
-                              _selectedDropdownValues2.add(["Please select"]);
+                              _selectedDropdownValues2.add(["Please Select"]);
                               _controllers2.add([TextEditingController()]);
                        }
                       finalList.insert(outerIndex,groupedList[contractorController.text]!);
                     }
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
-                   }):null;
+                   }else{}}):null;
+                   if(newValue!="Select Contractor Name"){
                    for (var i = 0; i < subItems.length; i++) {
                         for (var j = 0; j < subItems[i].length; j++) {
-                          if (subItems[i][j] != 'Please select'){
-                            _selectedDropdownValues2[i].add('Please select');
+                          if (subItems[i][j] != 'Please Select'){
+                            _selectedDropdownValues2[i].add('Please Select');
                             _controllers2[i].add(TextEditingController());
                           }
                         }
+                      }
                    }
               },
             ),
@@ -633,6 +645,11 @@ class _ProgressState extends State<EditProgressEntry> {
               shrinkWrap: true,
               itemCount: _items2[outerIndex]['$outerIndex'].length,
               itemBuilder: (context, index){
+                // print(contractorIDIndex.text);
+                // print(outerIndex);
+                // print(contractorLabourLinkingId);
+                // print(contractorLabourLinkingId[contractorID[outerIndex+1]]!);
+                // print(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]!);
               return 
                 Column(children: [
                 Row(
@@ -663,6 +680,7 @@ class _ProgressState extends State<EditProgressEntry> {
                     ))
                     .toList(),
                     onChanged: (newValue) {
+                       if(newValue!="Please Select"){
                       // print("-------------------------------------------");
                       // print("contractorID");
                       // print(contractorID[outerIndex+1]);
@@ -671,14 +689,16 @@ class _ProgressState extends State<EditProgressEntry> {
                       // print(newValue);
                       // print("-----------------------------------");
                       // print("contractor labour linking id");
-                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                      // print(contractorLabourLinkingIDText.text);
                     setState(() {
-                        var index1;
+                    // ignore: unused_local_variable
+                    int index1;
                     !_selectedDropdownValues2[outerIndex].contains(newValue)? _selectedDropdownValues2[outerIndex][index]=(newValue.toString()):null;
 
                     if(_selectedDropdownValues2[outerIndex].contains(newValue)){
                     for (var i = 0; i < contractorLabourDetails[outerIndex].length; i++) {
-                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1])) {
+                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1])) {
                         keyExists = true;
                         index1 = i;
                         break;
@@ -689,13 +709,13 @@ class _ProgressState extends State<EditProgressEntry> {
                     }
                     if(!keyExists){
                       try {
-                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
                       }catch(e){
-                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
+                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
                       }
                     }
                     }
-                    });
+                    });}
                     },
                     )
                       )
@@ -706,6 +726,7 @@ class _ProgressState extends State<EditProgressEntry> {
                       child:
                       CustomTextFieldForNumber(
                           onSubmitted:(value){
+                          if (kDebugMode) {
                           print("-------------------------------------------");
                           print("contractorID");
                           print(contractorID[outerIndex+1]);
@@ -722,6 +743,7 @@ class _ProgressState extends State<EditProgressEntry> {
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          }
                           contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
                           // print("-----------------------------------");
                           // print(contractorLabourDetails);
@@ -751,16 +773,31 @@ class _ProgressState extends State<EditProgressEntry> {
                     icon:const Icon(Icons.delete),
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                     onPressed: () {
+                       if(_selectedDropdownValues2[outerIndex][index]!="Please Select") {
+                         if(index!=0){
                       setState((){
                       _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
                       contractorLabourDetails[outerIndex].removeAt(index);
-                      // print("||||||||||||||||||||||||||}}}}}}}}}}||||||||||||||||||");
-                      // print(contractorLabourDetails);
-                      _deleteMore2(outerIndex,index);
-                      });
+                      _deleteMore2(outerIndex,index); 
+                        if (kDebugMode) {}
+                       });}else{
+                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
+                       }
+                       } else {
+                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          if (kDebugMode) {
+                            print(_items2[outerIndex]['$outerIndex']);
+                          }
+                          if (kDebugMode) {
+                            print("i am here");
+                          }
+                          if (kDebugMode) {
+                            print(index);
+                          }
                       }
+                    }
                     ),
-                    ])
+                    ]),
                     ]);
                     },
                     ),
@@ -818,6 +855,9 @@ class _ProgressState extends State<EditProgressEntry> {
                     .toList(),
                     onChanged: (newValue) {
                     setState(() {
+                      if (kDebugMode) {
+                        print(newValue);
+                      }
                     _selectedDropdownValues[index] = newValue.toString();
                     _selectedDropdownValuesID[index]=_dropdownValuesID[_dropdownValues.indexOf(_selectedDropdownValues[index])];
                     });
@@ -979,9 +1019,7 @@ class _ProgressState extends State<EditProgressEntry> {
                                 ],
                               ),
                              onPressed: () {
-                               // Call the _pickImage function with the gallery source
                                _pickImage(ImageSource.gallery);
-                               // Close the modal pop-up
                                Navigator.pop(context);
                              },
                            ),
@@ -994,9 +1032,7 @@ class _ProgressState extends State<EditProgressEntry> {
                               ],
                             ),
                              onPressed: () {
-                               // Call the _pickImage function with the camera source
                                _pickImage(ImageSource.camera);
-                               // Close the modal pop-up
                                Navigator.pop(context);
                              },
                            ),
@@ -1112,17 +1148,18 @@ class _ProgressState extends State<EditProgressEntry> {
                 }
                 formData.fields.add(MapEntry('progress_data', jsonEncode(
                     {
+                      "id":int.parse(progressID.text),
                       "client_id": int.parse(clientID!),
                       "project_id": int.parse(projectID!),
                       "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
-                      "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
+                      "achived_quantity": achivedQuantity.text.isNotEmpty? achivedQuantity.text:"",
                       "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
                       "remarks": remarkController.text,
                       "contractor_id": "7",
                       "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
                       "debet_contactor":int.parse(debitToController.text),
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeController.text,
+                      "cumulative_quantity": comulativeQuantity.text,
                       "type":priorityController.text=="Misc."?1:0,
                       "save_type": "save",
                       "created_by":int.parse(clientID),
@@ -1138,11 +1175,7 @@ class _ProgressState extends State<EditProgressEntry> {
                    )
                    )
                    );
-                   print(":::::::::::::::::::::::::::::::::::::::");
-                   print(formData.fields);
-                   print(":::::::::::::::::::::::::::::::::::::::");
                   try {
-                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
                   var res= await dio.post(
                   Config.saveLabourSupplyProgressApi,
                   data: formData,
@@ -1159,6 +1192,8 @@ class _ProgressState extends State<EditProgressEntry> {
                     );
                     if(res.statusCode==200){
                     EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
                     }
                     else{
                        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1186,17 +1221,18 @@ class _ProgressState extends State<EditProgressEntry> {
                 }
                 formData.fields.add(MapEntry('progress_data', jsonEncode(
                     {
+                      "id":int.parse(progressID.text),
                       "client_id": int.parse(clientID!),
                       "project_id": int.parse(projectID!),
                       "link_activity_id":int.parse(activityID.text),
-                      "achived_quantity": achivedController.text,
+                      "achived_quantity": achivedQuantity.text,
                       "total_quantity":int.parse(totalQuantity.text),
                       "remarks": remarkController.text,
                       "contractor_id": int.parse(pwrContractorId.text),
                       "progress_percentage": _sliderValue.toInt().toString(),
                       "debet_contactor":"0",
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeController.text,
+                      "cumulative_quantity": comulativeQuantity.text,
                       "type": 2,
                       "save_type": "save",
                       "created_by":int.parse(clientId.text),
@@ -1208,7 +1244,6 @@ class _ProgressState extends State<EditProgressEntry> {
                    )
                    );
                   try {
-                  var date=DateFormat('yyyy-MM-dd').format(DateTime.now());
                   var res= await dio.post(
                   Config.saveLabourSupplyProgressApi,
                   data: formData,
@@ -1224,7 +1259,9 @@ class _ProgressState extends State<EditProgressEntry> {
                   ),
                     );
                     if(res.statusCode==200){
-                    EasyLoading.showToast("PWR Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
                     }
                     else{
                        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);

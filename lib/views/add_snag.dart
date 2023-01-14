@@ -34,6 +34,7 @@ import '../network/client_project.dart';
 class AddSnag extends StatefulWidget {
   AddSnag({Key? key,from}) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
   var from;
 
   @override
@@ -1062,6 +1063,7 @@ setState(() => this.image = imageTemp);
                   EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else{
+                // ignore: non_constant_identifier_names
                 List VID=[];
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');

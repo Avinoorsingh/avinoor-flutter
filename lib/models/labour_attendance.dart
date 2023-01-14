@@ -42,6 +42,7 @@ class Data {
   int? contractorLabourLinkingId;
   String? inTime;
   String? labourDate;
+  // ignore: prefer_typing_uninitialized_variables
   var outTime;
   int? workingHours;
   String? ot;

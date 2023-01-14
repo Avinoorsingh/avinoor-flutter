@@ -379,7 +379,7 @@ class _SnagState extends State<NewProgressEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -396,7 +396,7 @@ class _SnagState extends State<NewProgressEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -457,8 +457,6 @@ class _SnagState extends State<NewProgressEntry> {
                 );
               }).toList(),
               onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 setState(() {
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
@@ -619,8 +617,6 @@ class _SnagState extends State<NewProgressEntry> {
                 );
               }).toList(),
               onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 setState(() {
                   contractorController.text=newValue!;
                   dropdownvalueDebitTo = newValue;

@@ -20,7 +20,9 @@ class OnGoingProgress extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
+// ignore: prefer_typing_uninitialized_variables
 var update;
 
 class _OnProgressState extends State<OnGoingProgress> {
@@ -271,7 +273,7 @@ class _OnProgressState extends State<OnGoingProgress> {
                         ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child:
-                        Container(
+                        SizedBox(
                           height: 60,
                           child: 
                         ExpansionTile(

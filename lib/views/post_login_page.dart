@@ -13,6 +13,7 @@ import '../network/client_project.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key, this.from}) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
   final from;
 
   @override

@@ -16,7 +16,9 @@ class NewSnag extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
+// ignore: prefer_typing_uninitialized_variables
 var update;
 
 class _NewSnagState extends State<NewSnag> {

@@ -18,13 +18,21 @@ GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
 class OnGoingOnGoingScreen extends StatefulWidget {
   const OnGoingOnGoingScreen({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID, this.locationName, this.subLocationName, this.subSubLocationName}) : super(key: key);
   
+  // ignore: prefer_typing_uninitialized_variables
   final cID;
+  // ignore: prefer_typing_uninitialized_variables
   final pID;
+  // ignore: prefer_typing_uninitialized_variables
   final locID;
+  // ignore: prefer_typing_uninitialized_variables
   final subLocID;
+  // ignore: prefer_typing_uninitialized_variables
   final subSubLocID;
+  // ignore: prefer_typing_uninitialized_variables
   final locationName;
+  // ignore: prefer_typing_uninitialized_variables
   final subLocationName;
+  // ignore: prefer_typing_uninitialized_variables
   final subSubLocationName;
   @override
   State<OnGoingOnGoingScreen> createState() => _ActivityPageState();

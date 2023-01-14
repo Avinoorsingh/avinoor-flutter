@@ -1,24 +1,29 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'package:colab/config.dart';
+import 'package:colab/models/labour_attendance.dart';
+import 'package:colab/models/progress_contractor.dart';
+import 'package:colab/models/progress_location_data.dart';
+import 'package:colab/models/progress_trade_data.dart';
+import 'package:colab/network/client_project.dart';
+import 'package:dio/dio.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../controller/signInController.dart';
-import '../models/labour_attendance.dart';
-import '../models/progress_contractor.dart';
-import '../models/progress_location_data.dart';
-import '../models/progress_trade_data.dart';
-import '../network/client_project.dart';
 
 // ignore: must_be_immutable
 class UpComingEntry extends StatefulWidget {
@@ -31,8 +36,45 @@ class UpComingEntry extends StatefulWidget {
   State<UpComingEntry> createState() => _SnagState();
 }
 
-class _SnagState extends State<UpComingEntry> {
+class _SnagState extends State<UpComingEntry>{
   final signInController=Get.find<SignInController>();
+  final locationController = TextEditingController();
+  final subLocationController = TextEditingController();
+  final subSubLocationController = TextEditingController();
+  final activityController = TextEditingController();
+  final linkingActivityId=TextEditingController();
+  final activityHeadController = TextEditingController();
+  final otherLocationController = TextEditingController();
+  final remarkController=TextEditingController();
+  final projectId=TextEditingController();
+  final clientId = TextEditingController();
+  TextEditingController contractorIDIndex = TextEditingController();
+  final assignedToController=TextEditingController();
+  final statusController = TextEditingController();
+  final quantityController=TextEditingController();
+  final priorityController=TextEditingController();
+  final clientID=TextEditingController();
+  final projectID=TextEditingController();
+  final activityID=TextEditingController();
+  TextEditingController totalQuantity=TextEditingController();
+  TextEditingController dateInput=TextEditingController();
+  TextEditingController achivedController=TextEditingController();
+  TextEditingController comulativeController=TextEditingController();
+  final uomName=TextEditingController();
+  final type=TextEditingController();
+  List<bool> isCardEnabled2 = [];
+  List<String> toggleList=[
+    "Labour Supply",
+    "PRW",
+   ];
+  TextEditingController achivedQuantity=TextEditingController();
+  TextEditingController comulativeQuantity=TextEditingController(); 
+  var _sliderValue=0.0;
+  bool? update=false;
+  List<String> contractorList=[];
+  TextEditingController contractorController=TextEditingController();
+  String dropdownvalue = 'Select Contractor Name';  
+  File?  _selectedImage;
   Map<String, List<String>> groupedList = {};
   List groupedMapToList=[];
   final pwrContractorId=TextEditingController();
@@ -89,28 +131,14 @@ class _SnagState extends State<UpComingEntry> {
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
-  final locationController = TextEditingController();
-  final subLocationController = TextEditingController();
-  final subSubLocationController = TextEditingController();
-  final activityController = TextEditingController();
-  final activityHeadController = TextEditingController();
-  final remarkController = TextEditingController();
   final deSnagRemarkController=TextEditingController();
   final closingRemarkController=TextEditingController();
   final markController=TextEditingController();
   final debitAmountController=TextEditingController();
   final snagAssignedByController=TextEditingController();
   final snagAssignedToController=TextEditingController();
-  final priorityController=TextEditingController();
-  TextEditingController dateInput = TextEditingController();
-   final assignedToController=TextEditingController();
-  final statusController = TextEditingController();
-  final quantityController=TextEditingController();
-  final uomName=TextEditingController();
-  final type=TextEditingController();
   TextEditingController contractorInput = TextEditingController(text: "No Contractor");
   final location = ["Select Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
-  String dropdownvalue = 'Select Contractor Name';  
   final location2 = ["Select Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue2 = 'Select Sub Location';  
   final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
@@ -122,7 +150,6 @@ class _SnagState extends State<UpComingEntry> {
    List<String> imageData=[];
  
    List<bool> isCardEnabled = [];
-   List<bool> isCardEnabled2 = [];
    List<String> deSnagImages=[];
 
    List<String> priority=[
@@ -133,9 +160,6 @@ class _SnagState extends State<UpComingEntry> {
   List viewpoints=[];
   List deSnagImage=[];
   List viewpointID=[];
-  TextEditingController contractorController=TextEditingController();
-  TextEditingController achivedQuantity=TextEditingController();
-  TextEditingController comulativeQuantity=TextEditingController(); 
 
   File? image;
   CroppedFile? croppedFile;
@@ -175,7 +199,6 @@ class _SnagState extends State<UpComingEntry> {
         }
       }
   }
-  File?  _selectedImage;
 
   Future<void> _pickImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
@@ -185,10 +208,9 @@ class _SnagState extends State<UpComingEntry> {
   }
     late List<bool> isSelected;
     final creationController = TextEditingController();
-     List viewpoints2=[];
-     var array2=[];
-     var _sliderValue=0.0;
-     List<String> contractorList=[];
+    List viewpoints2=[];
+    var array2=[];
+   
     @override
   void initState() {
     super.initState(); 
@@ -198,6 +220,7 @@ class _SnagState extends State<UpComingEntry> {
     subSubLocationController.text=widget.editModel?.subSubLocationName??"";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
+    activityID.text=widget.editModel?.linkingActivityId.toString()??"";
     quantityController.text="";
     uomName.text="UNIT";
     achivedQuantity.text="0.0";
@@ -205,6 +228,7 @@ class _SnagState extends State<UpComingEntry> {
     _sliderValue=0.0;
     remarkController.text="";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
+
 
      for (var map in viewpoints) {
     // Check if the viewpoints is already in the map
@@ -482,7 +506,7 @@ class _SnagState extends State<UpComingEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -499,7 +523,7 @@ class _SnagState extends State<UpComingEntry> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -519,7 +543,8 @@ class _SnagState extends State<UpComingEntry> {
             ),
           },
           const SizedBox(height: 10,),
-          ListView.builder(
+          //////////////////////////////////////////////////////////////
+           ListView.builder(
           physics:const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: labourList.length,
@@ -562,7 +587,7 @@ class _SnagState extends State<UpComingEntry> {
               ),
             ),
               isExpanded: true,
-              items: contractorList.map((String items){
+              items:contractorList.map((String items){
                 return
                 DropdownMenuItem(
                   value: items,
@@ -572,6 +597,7 @@ class _SnagState extends State<UpComingEntry> {
               onChanged:(String? newValue) async {
                 !mainDropdownValue.contains(newValue)?
                 setState(() {
+                  if(newValue!="Select Contractor Name"){
                   _items2.add({'$outerIndex':['Item ${_items2.length + 1}']});
                   contractorLabourDetails.add([]);
                   _dropdownValues2.clear();
@@ -595,25 +621,29 @@ class _SnagState extends State<UpComingEntry> {
                           }
                         }
                       }
+                      contractorIDIndex.text=contractorList.indexOf(newValue).toString();
                       groupedMapToList=groupedList.values.toList();
                       for (var sublist in groupedMapToList) {
-                              sublist.insert(0, "Please select");
+                              sublist.insert(0, "Please Select");
                        }
+                      // ignore: unused_local_variable
                       for (var sublist in groupedMapToList) {
-                              _selectedDropdownValues2.add(["Please select"]);
+                              _selectedDropdownValues2.add(["Please Select"]);
                               _controllers2.add([TextEditingController()]);
                        }
                       finalList.insert(outerIndex,groupedList[contractorController.text]!);
                     }
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
-                   }):null;
+                   }else{}}):null;
+                   if(newValue!="Select Contractor Name"){
                    for (var i = 0; i < subItems.length; i++) {
                         for (var j = 0; j < subItems[i].length; j++) {
-                          if (subItems[i][j] != 'Please select'){
-                            _selectedDropdownValues2[i].add('Please select');
+                          if (subItems[i][j] != 'Please Select'){
+                            _selectedDropdownValues2[i].add('Please Select');
                             _controllers2[i].add(TextEditingController());
                           }
                         }
+                      }
                    }
               },
             ),
@@ -625,6 +655,11 @@ class _SnagState extends State<UpComingEntry> {
               shrinkWrap: true,
               itemCount: _items2[outerIndex]['$outerIndex'].length,
               itemBuilder: (context, index){
+                // print(contractorIDIndex.text);
+                // print(outerIndex);
+                // print(contractorLabourLinkingId);
+                // print(contractorLabourLinkingId[contractorID[outerIndex+1]]!);
+                // print(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]!);
               return 
                 Column(children: [
                 Row(
@@ -655,6 +690,7 @@ class _SnagState extends State<UpComingEntry> {
                     ))
                     .toList(),
                     onChanged: (newValue) {
+                       if(newValue!="Please Select"){
                       // print("-------------------------------------------");
                       // print("contractorID");
                       // print(contractorID[outerIndex+1]);
@@ -663,14 +699,16 @@ class _SnagState extends State<UpComingEntry> {
                       // print(newValue);
                       // print("-----------------------------------");
                       // print("contractor labour linking id");
-                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                      // print(contractorLabourLinkingIDText.text);
                     setState(() {
-                        var index1;
+                    // ignore: unused_local_variable
+                    int index1;
                     !_selectedDropdownValues2[outerIndex].contains(newValue)? _selectedDropdownValues2[outerIndex][index]=(newValue.toString()):null;
 
                     if(_selectedDropdownValues2[outerIndex].contains(newValue)){
                     for (var i = 0; i < contractorLabourDetails[outerIndex].length; i++) {
-                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1])) {
+                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1])) {
                         keyExists = true;
                         index1 = i;
                         break;
@@ -681,13 +719,13 @@ class _SnagState extends State<UpComingEntry> {
                     }
                     if(!keyExists){
                       try {
-                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
                       }catch(e){
-                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
+                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
                       }
                     }
                     }
-                    });
+                    });}
                     },
                     )
                       )
@@ -698,6 +736,7 @@ class _SnagState extends State<UpComingEntry> {
                       child:
                       CustomTextFieldForNumber(
                           onSubmitted:(value){
+                          if (kDebugMode) {
                           print("-------------------------------------------");
                           print("contractorID");
                           print(contractorID[outerIndex+1]);
@@ -714,6 +753,7 @@ class _SnagState extends State<UpComingEntry> {
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
                           print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          }
                           contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
                           // print("-----------------------------------");
                           // print(contractorLabourDetails);
@@ -743,16 +783,31 @@ class _SnagState extends State<UpComingEntry> {
                     icon:const Icon(Icons.delete),
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                     onPressed: () {
+                       if(_selectedDropdownValues2[outerIndex][index]!="Please Select") {
+                         if(index!=0){
                       setState((){
                       _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
                       contractorLabourDetails[outerIndex].removeAt(index);
-                      // print("||||||||||||||||||||||||||}}}}}}}}}}||||||||||||||||||");
-                      // print(contractorLabourDetails);
-                      _deleteMore2(outerIndex,index);
-                      });
+                      _deleteMore2(outerIndex,index); 
+                        if (kDebugMode) {}
+                       });}else{
+                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
+                       }
+                       } else {
+                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          if (kDebugMode) {
+                            print(_items2[outerIndex]['$outerIndex']);
+                          }
+                          if (kDebugMode) {
+                            print("i am here");
+                          }
+                          if (kDebugMode) {
+                            print(index);
+                          }
                       }
+                    }
                     ),
-                    ])
+                    ]),
                     ]);
                     },
                     ),
@@ -810,6 +865,9 @@ class _SnagState extends State<UpComingEntry> {
                     .toList(),
                     onChanged: (newValue) {
                     setState(() {
+                      if (kDebugMode) {
+                        print(newValue);
+                      }
                     _selectedDropdownValues[index] = newValue.toString();
                     _selectedDropdownValuesID[index]=_dropdownValuesID[_dropdownValues.indexOf(_selectedDropdownValues[index])];
                     });
@@ -1047,7 +1105,181 @@ class _SnagState extends State<UpComingEntry> {
                 backgroundColor:  AppColors.green,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:() async{
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                FormData formData=FormData(); 
+                var dio = Dio();
+                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
+                List progressDetails = [];
+                for (var subList in contractorLabourDetails) {
+                  for (var map in subList) {
+                    // ignore: non_constant_identifier_names
+                    var contractor_id = map.values.first[0];
+                    var contractorLabourDetails1 = {
+                      "contractor_labour_linking_id": map.keys.first.toString(),
+                      "time": map.values.first[1].toString()
+                    };
+                    bool contractorExist = false;
+                    for (var progress in progressDetails) {
+                      if (progress['contractor_id'] == contractor_id) {
+                        contractorExist = true;
+                        progress['contractorLabourDetails'].add(contractorLabourDetails1);
+                        break;
+                      }
+                    }
+                    if (!contractorExist) {
+                      progressDetails.add({
+                        "contractor_id": contractor_id.toString(),
+                        "contractorLabourDetails": [contractorLabourDetails1]
+                      });
+                    }
+                  }
+                }
+                List<Map<String, dynamic>> newList = [];
+                for (Map<String, dynamic> map in progressDetails){
+                  bool contractorExists = false;
+                  for (Map<String, dynamic> newMap in newList) {
+                    if (newMap["contractor_id"] == map["contractor_id"]) {
+                      newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
+                      contractorExists = true;
+                      break;
+                    }
+                  }
+                  if (!contractorExists) {
+                    newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
+                  }
+                }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
+                      "achived_quantity": achivedQuantity.text.isNotEmpty? achivedQuantity.text:"",
+                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                      "remarks": remarkController.text,
+                      "contractor_id": "7",
+                      "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
+                      "debet_contactor":int.parse(debitToController.text),
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeQuantity.text,
+                      "type":priorityController.text=="Misc."?1:0,
+                      "save_type": "save",
+                      "created_by":int.parse(clientID),
+                      "PWRLabourDetails": [
+                          {
+                              "labour_count": 1,
+                              "pwr_type": 0
+                          }
+                      ],
+                      "contractorLabourDetails": [],
+                      "progressDetails": newList,
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+                if(priorityController.text=="PRW"){
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                  List pWRLabourDetailsList = [];
+                    for(int i=0; i<_selectedDropdownValuesID.length; i++){
+                      pWRLabourDetailsList.add({
+                        "labour_count": enteredValues[i],
+                        "pwr_type": _selectedDropdownValuesID[i]
+                      });
+                    }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":int.parse(activityID.text),
+                      "achived_quantity": achivedQuantity.text,
+                      "total_quantity":int.parse(totalQuantity.text),
+                      "remarks": remarkController.text,
+                      "contractor_id": int.parse(pwrContractorId.text),
+                      "progress_percentage": _sliderValue.toInt().toString(),
+                      "debet_contactor":"0",
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeQuantity.text,
+                      "type": 2,
+                      "save_type": "save",
+                      "created_by":int.parse(clientId.text),
+                      "PWRLabourDetails": pWRLabourDetailsList,
+                      "contractorLabourDetails": [],
+                      "progressDetails": [],
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+              },
               child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )
              ]

@@ -26,7 +26,6 @@ import '../models/login_response_model.dart';
 import '../models/login_user.dart';
 import '../models/ongoing_ongoing_progress_data.dart';
 import '../models/progress_activityHead_data.dart';
-import '../models/progress_activity_data.dart';
 import '../models/progress_location_data.dart';
 import '../models/progress_subSublocation_data.dart';
 import '../models/progress_trade_data.dart';
@@ -80,12 +79,6 @@ class SignInController extends GetxController {
   OnGoingOnGoingProgress? getOnGoingOnGoingData;
   OnGoingUpcomingProgress? getOnGoingUpComingData;
   AreaOfConcern? getAreaOfConcData;
-
-  
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   onUserLogIn({
     required email,

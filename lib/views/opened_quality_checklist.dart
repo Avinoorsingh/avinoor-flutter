@@ -28,7 +28,9 @@ class OpenedCheckList extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
+// ignore: prefer_typing_uninitialized_variables
 var update;
 
 class _OpenedCheckListState extends State<OpenedCheckList> {
@@ -57,7 +59,6 @@ class _OpenedCheckListState extends State<OpenedCheckList> {
   @override
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('MMM-dd-yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
     return 
     GetBuilder<GetOpenedCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
@@ -245,7 +246,7 @@ class _OpenedCheckListState extends State<OpenedCheckList> {
     context: context,
     builder: (context1) {
       return 
-      Container(
+      SizedBox(
         height: 200,
         width: 200,
         child: 

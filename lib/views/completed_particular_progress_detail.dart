@@ -1,15 +1,9 @@
-import 'dart:convert';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:colab/theme/text_styles.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../config.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
@@ -176,7 +170,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -193,7 +187,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(

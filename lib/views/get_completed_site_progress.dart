@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
@@ -268,7 +267,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -285,7 +284,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                Container(
+                SizedBox(
                   width: 120,
                   child: 
                   Padding(
@@ -338,8 +337,6 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
                 );
               }).toList(),
               onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 setState(() {
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
@@ -394,8 +391,6 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
                 );
               }).toList(),
               onChanged: (String? newValue) async {
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 setState(() {
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;

@@ -1,8 +1,8 @@
 import 'package:colab/constants/colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import '../services/container2.dart';
 import '../theme/text_styles.dart';
 
@@ -10,6 +10,7 @@ import '../theme/text_styles.dart';
 class CompletedParticularProgress extends StatefulWidget {
   CompletedParticularProgress({Key? key, this.from, this.completedModel }) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
   final from;
   dynamic completedModel;
   @override
@@ -17,7 +18,6 @@ class CompletedParticularProgress extends StatefulWidget {
 }
 
 bool show=false;
-late var tapped;
 
 class CompletedParticularProgressState extends State<CompletedParticularProgress> {
   List<String?> locationName=[];
@@ -52,13 +52,13 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
  @override
  void initState(){
   super.initState();
-  print(widget.completedModel);
+  if (kDebugMode) {
+    print(widget.completedModel);
+  }
  }
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
     EasyLoading.dismiss();
     return 
     Scaffold(

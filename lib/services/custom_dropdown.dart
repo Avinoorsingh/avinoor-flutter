@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
 
+// ignore: must_be_immutable
 class CustomDropdown extends StatelessWidget {
   String hint;
   List<DropdownMenuItem<String>> items;
+  // ignore: prefer_typing_uninitialized_variables
   var onChanged;
   CustomDropdown({Key? key, required this.hint,required this.items,this.onChanged}) : super(key: key);
 

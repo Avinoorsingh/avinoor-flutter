@@ -10,7 +10,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../constants/colors.dart';
@@ -211,7 +210,9 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
                     }
                 }catch(e){
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                  print(e);
+                  if (kDebugMode) {
+                    print(e);
+                  }
                 }
               }, 
                child: Text("Resolved",style: textStyleBodyText1.copyWith(color: AppColors.black),))

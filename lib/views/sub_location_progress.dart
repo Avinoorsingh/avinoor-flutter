@@ -13,6 +13,7 @@ import '../network/client_project.dart';
 class SubLocationProgress extends StatefulWidget {
    final Function(String,String)? onChanged;
    const SubLocationProgress({Key? key,this.onChanged, this.locID}) : super(key: key);
+   // ignore: prefer_typing_uninitialized_variables
    final locID;
   @override
   // ignore: library_private_types_in_public_api

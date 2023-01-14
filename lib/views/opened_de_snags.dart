@@ -16,6 +16,7 @@ class OpenedDeSnags extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
 
 class _NewSnagState extends State<OpenedDeSnags> {

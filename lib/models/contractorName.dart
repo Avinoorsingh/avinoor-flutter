@@ -1,3 +1,4 @@
+// ignore: file_names
 class ContractorName {
   bool? success;
   List<Data>? data;

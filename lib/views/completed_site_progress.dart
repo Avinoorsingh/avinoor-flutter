@@ -20,7 +20,6 @@ class CompletedSiteProgress extends StatefulWidget {
 }
 
 bool show=false;
-late var tapped;
 
 class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
   List<String?> locationName=[];

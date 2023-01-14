@@ -1,15 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:colab/config.dart';
-import 'package:colab/constants/colors.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/progress_network.dart';
-import '../theme/text_styles.dart';
 
 class InQualityInsideOnGoing extends StatefulWidget {
   const InQualityInsideOnGoing({Key? key,}) : super(key: key);
@@ -19,8 +12,6 @@ class InQualityInsideOnGoing extends StatefulWidget {
 }
 
 bool show=false;
-late var tapped;
-var update;
 
 class _OnProgressState extends State<InQualityInsideOnGoing> {
   List<String?> locationName=[];
@@ -66,7 +57,7 @@ class _OnProgressState extends State<InQualityInsideOnGoing> {
     Container(margin: const EdgeInsets.only(top: 90),
     child:
     ListView(
-      children: [],
+      children: const [],
       )
       )
       );

@@ -56,6 +56,7 @@ class AreaOfConcernData {
   int? linkingActivityId;
   String? otherLocation;
   String? description;
+  // ignore: prefer_typing_uninitialized_variables
   var file;
   String? status;
   String? remark;

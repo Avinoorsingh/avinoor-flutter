@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,6 +17,7 @@ class NewDeSnag extends StatefulWidget {
 }
 
 bool show=false;
+// ignore: prefer_typing_uninitialized_variables
 late var tapped;
 
 class _NewSnagState extends State<NewDeSnag> {
