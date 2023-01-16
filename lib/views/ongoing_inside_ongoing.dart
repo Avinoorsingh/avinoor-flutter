@@ -362,7 +362,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
                                     Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
                                   ],),
                                 ],),
-                              ]
+                              ],
                             )
                           ),
                 ]

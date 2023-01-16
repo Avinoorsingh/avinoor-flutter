@@ -1,5 +1,6 @@
 import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/client_project.dart';
+import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/onGoingSiteProgress/ongoing_site_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
@@ -11,6 +12,9 @@ class DependencyInjector {
   static final getClientController=Get.put(GetClientProject());
   static final getUserProfileNetwork=Get.put(GetUserProfileNetwork());
   static final getSnagData=Get.put(GetNewSnag());
+  static final getLabourDataContractorList=Get.put(GetLabourDataContractor());
+  static final getLabourDataofSelectContractor=Get.put(GetSelectedContractorData());
+  static final getLabourDataToday=Get.put(GetLabourDataToday());
   static final getDeSnagData=Get.put(GetNewDeSnag());
   static final getNewQualityCheckData=Get.put(GetNewCheckList());
   static final getCompletedSiteProgress=Get.put(GetCompletedSiteProgress());
@@ -47,6 +51,9 @@ class DependencyInjector {
     Get.put(GetOnGoingDetail());
     Get.put(GetOnUpComingData());
     Get.put(GetOnGoingCompletedDetail());
+    Get.put(GetLabourDataContractor());
+    Get.put(GetLabourDataToday());
+    Get.put(GetSelectedContractorData());
   }
 
    static void deleteControllers() {

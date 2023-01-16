@@ -12,14 +12,14 @@ class AreasOfConcern extends StatefulWidget {
   const AreasOfConcern({Key? key,}) : super(key: key);
 
   @override
-  State<AreasOfConcern> createState() => _NewSnagState();
+  State<AreasOfConcern> createState() => _AreaOfConcernState();
 }
 
 bool show=false;
 // ignore: prefer_typing_uninitialized_variables
 late var tapped;
 
-class _NewSnagState extends State<AreasOfConcern> {
+class _AreaOfConcernState extends State<AreasOfConcern> {
   final getAreaOfConcern = Get.find<GetAreaOfConcern>();
   List<String?> locationName=[];
   List<String?> activity=[];

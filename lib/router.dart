@@ -1,5 +1,6 @@
 import 'package:colab/views/activity_progress.dart';
 import 'package:colab/views/add_area_of_concern.dart';
+import 'package:colab/views/add_labour_data.dart';
 import 'package:colab/views/add_progress_entry.dart';
 import 'package:colab/views/add_snag.dart';
 import 'package:colab/views/area_of_concern_detail.dart';
@@ -10,6 +11,7 @@ import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
 import 'package:colab/views/edit_progress_entry.dart';
 import 'package:colab/views/get_completed_site_progress.dart';
+import 'package:colab/views/labour_data.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
@@ -162,6 +164,20 @@ class CustomRouter {
           key: state.pageKey,
           from: state.queryParams["from"],
           editModel: state.extra,
+        ),
+      ),
+       GoRoute(
+        name:'LABOURDATA',
+        path: labourData,
+        builder: (context, state) => LabourData(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name:'ADDLABOURDATA',
+        path: addLabourData,
+        builder: (context, state) => AddLabourData(
+          key: state.pageKey,
         ),
       ),
       GoRoute(

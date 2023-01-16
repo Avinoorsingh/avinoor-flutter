@@ -1066,7 +1066,7 @@ class _SnagState extends State<UpComingEntry>{
                      },
                    );
               },
-              child: Text("Add Image",style: textStyleBodyText1.copyWith(color: AppColors.black),),
+              child: Text("Add Image", style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
             Container(
@@ -1268,19 +1268,19 @@ class _SnagState extends State<UpComingEntry>{
                   ),
                     );
                     if(res.statusCode==200){
-                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                     }
                     else{
-                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                       EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
                     }
                 }catch(e){
-                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                  EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 }
               },
-              child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
+              child: Text("Save", style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )
              ]
              )

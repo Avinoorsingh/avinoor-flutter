@@ -1,4 +1,5 @@
 import 'package:colab/constants/colors.dart';
+import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/project_level_page1.dart';
 import 'package:colab/views/project_level_page2.dart';
@@ -30,6 +31,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
+  final getLabourDataTodayController=Get.find<GetLabourDataToday>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
@@ -55,6 +59,8 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     clientDataGet=widget.clientData;
     // EasyLoading.dismiss();
     getClientProfileController.getUserProfile(context: context);
+    getLabourDataContractorListController.getContractorListData(context: context);
+    getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
     getNewSnagDataController.getSnagData(context: context);
     getNewDeSnagDataController.getSnagData(context: context);

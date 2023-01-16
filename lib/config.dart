@@ -42,4 +42,8 @@ class Config{
   static const String getLabourAttendanceApi="http://nodejs.hackerkernel.com/colab/api/labour_attendance/";
   static const String saveLabourSupplyProgressApi="http://nodejs.hackerkernel.com/colab/api/progress_add2";
   static const String getProgressPwrClientApi="http://nodejs.hackerkernel.com/colab/api/pwrClientList/";
+  static const String getLabourDataContractorListApi="http://nodejs.hackerkernel.com/colab/api/contractor_labour/";
+  static const String getLabourNameOfContractorApi="http://nodejs.hackerkernel.com/colab/api/contractor_labour_linking/";
+  static const String getLabourDataOfTodayApi="http://nodejs.hackerkernel.com/colab/api/labour_attendance/";
+  static const String saveLabourDataApi="http://nodejs.hackerkernel.com/colab/api/labour_attendance";
 }

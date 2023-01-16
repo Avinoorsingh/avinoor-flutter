@@ -22,6 +22,9 @@ import '../api_service.dart';
 import '../constants/constants.dart';
 import '../models/InEqualityProgess.dart';
 import '../models/completedProgress.dart';
+import '../models/labour_data_contractor_list.dart';
+import '../models/labour_name_contractor_list.dart';
+import '../models/labour_today_data_list.dart';
 import '../models/login_response_model.dart';
 import '../models/login_user.dart';
 import '../models/ongoing_ongoing_progress_data.dart';
@@ -79,6 +82,9 @@ class SignInController extends GetxController {
   OnGoingOnGoingProgress? getOnGoingOnGoingData;
   OnGoingUpcomingProgress? getOnGoingUpComingData;
   AreaOfConcern? getAreaOfConcData;
+  LabourDataContractorList? getLabourDataContractorListData;
+  LabourNameContractorList? getLabourDataOfSelectedContractor;
+  LabourTodayDataList? getLabourByDate;
 
   onUserLogIn({
     required email,

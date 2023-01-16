@@ -1,5 +1,6 @@
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
+import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
@@ -63,6 +64,9 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   @override
   Widget build(BuildContext context) {
   final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
+  final getLabourDataTodayController=Get.find<GetLabourDataToday>();
   final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
   final getNewQualityDataController=Get.find<GetNewCheckList>();
   final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
@@ -132,6 +136,13 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         ElevatedButton(
                           onPressed: ()
                           async{
+                        if(i==0){
+                            await getLabourDataContractorListController.getContractorListData(context: context);
+                            await getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
+                            await getLabourDataTodayController.getContractorListData(context: context, date:DateFormat('yyyy-MM-dd').format(DateTime.now()));
+                            // ignore: use_build_context_synchronously
+                            context.pushNamed('LABOURDATA');
+                         }
                          if(i==1){
                           await getCompletedSiteProgressDataController.getCompletedListData(context: context);
                           await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);

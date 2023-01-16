@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
+import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,12 @@ class _SplashScreenState extends State<SplashScreen> {
   final getProfile = GetUserProfileNetwork();
   final getSnagData=GetNewSnag();
   final getProjectSnagData=Get.find<GetNewSnag>();
+  final getLabourDataContractorList=GetLabourDataContractor();
+  final getLabourDataContractorListData=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorList=GetSelectedContractorData();
+  final getLabourDataOfSelectedContractorListData=Get.find<GetSelectedContractorData>();
+  final getLabourDataToday=GetLabourDataToday();
+  final getLabourDataTodayListData=Get.find<GetLabourDataToday>();
   final getCompletedSiteProgress =GetCompletedSiteProgress();
   final getCompletedSiteProgressData=Get.find<GetCompletedSiteProgress>();
   final getInQualitySiteProgress =GetInEqualitySiteProgress();

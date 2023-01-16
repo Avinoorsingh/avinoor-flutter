@@ -229,13 +229,13 @@ class _ProgressState extends State<EditProgressEntry> {
               else {
                     contractorLabourLinkingId[data2.contractorId!] = [data2.contractorLabourLinkingId!];
                   }
+                }
+              }
+            }
           }
-          }
         }
-        }
-        }
-        }
-       if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
+      }
+      if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
         List<ProgressTradeData>? locationList1=signInController.getProgressTradeList?.data;
         _dropdownValues.add("Please Select");
         _dropdownValues.add("Skilled");
@@ -248,7 +248,7 @@ class _ProgressState extends State<EditProgressEntry> {
           _dropdownValuesID.add(data.id!);
         }
       }
-      }
+    }
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
@@ -266,8 +266,8 @@ class _ProgressState extends State<EditProgressEntry> {
                 Container(
                   margin:const EdgeInsets.only(right: 20,top: 10),
                   child:
-                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:update==false? Colors.brown:Colors.green)
-                 ,onPressed: ()async{
+                ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:update==false? Colors.brown:Colors.green),
+                onPressed: ()async{
                   setState(() {
                     if(update==false){
                     update=true;
@@ -275,9 +275,9 @@ class _ProgressState extends State<EditProgressEntry> {
                     else{
                       update=false;
                     }
-                  });
-              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-              var token=sharedPreferences.getString('token');
+                });
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
                  try {
                     var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${clientID.text}/${projectID.text}/${activityID.text}');
                     var res=await http.get(
@@ -304,8 +304,9 @@ class _ProgressState extends State<EditProgressEntry> {
                           {
                             print(e);
                             print("Error is here!");
-                          }}
-                 },
+                          }
+                        }
+                      },
                  child: Text("Update",style: textStyleButton,),),
                 )
             ]),
@@ -323,10 +324,10 @@ class _ProgressState extends State<EditProgressEntry> {
                           buttonTheme: const ButtonThemeData(
                           textTheme: ButtonTextTheme.primary,
                           ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
-                      ),
+                        ),
                      child: child!,
                     );
-                     }, 
+                    }, 
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1950),
                     lastDate: DateTime(2100));
@@ -349,12 +350,16 @@ class _ProgressState extends State<EditProgressEntry> {
         ),
         //done
         Column(
-              children: [
-              Center(child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-               ),),
+          children: [
+              Center(
+                child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+              ),
            SizedBox(
-            height: 65,child: 
+            height: 65,
+            child: 
           ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -533,7 +538,6 @@ class _ProgressState extends State<EditProgressEntry> {
             ),
           const SizedBox(height: 20,),
             if(update==true)...{
-              // ///////////////////////////////////////
           ListView.builder(
           physics:const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -727,22 +731,22 @@ class _ProgressState extends State<EditProgressEntry> {
                       CustomTextFieldForNumber(
                           onSubmitted:(value){
                           if (kDebugMode) {
-                          print("-------------------------------------------");
-                          print("contractorID");
-                          print(contractorID[outerIndex+1]);
-                          print("-------------------------------------------");
-                          print("entered value");
-                          print(value);
-                          print("+++++++++++++++++++++++++++++++++++++");
-                          print(contractorLabourLinkingId[contractorID[outerIndex+1]]![index]);
-                          print("============================================");
-                          print(index);
-                          print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
-                          print(contractorLabourDetails);
-                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][0]);
-                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
-                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
-                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          // print("-------------------------------------------");
+                          // print("contractorID");
+                          // print(contractorID[outerIndex+1]);
+                          // print("-------------------------------------------");
+                          // print("entered value");
+                          // print(value);
+                          // print("+++++++++++++++++++++++++++++++++++++");
+                          // print(contractorLabourLinkingId[contractorID[outerIndex+1]]![index]);
+                          // print("============================================");
+                          // print(index);
+                          // print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                          // print(contractorLabourDetails);
+                          // print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][0]);
+                          // print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
+                          // print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          // print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
                           }
                           contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
                           // print("-----------------------------------");
@@ -931,7 +935,7 @@ class _ProgressState extends State<EditProgressEntry> {
           ])
             ),
             const SizedBox(height: 10,),
-            CustomContainer2(child:
+          CustomContainer2(child:
           Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
