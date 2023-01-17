@@ -173,7 +173,7 @@ class _AddLabourDataState extends State<AddLabourData> {
                         Column(
                           children: [
                         Row(children: [
-                          Text("${name[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),)
+                          Text("${name[index]}", style: textStyleHeadline4.copyWith(fontSize: 14),)
                         ]),
                         const SizedBox(height: 8,),
                         Row(
@@ -343,7 +343,7 @@ class _AddLabourDataState extends State<AddLabourData> {
                               "ot":int.parse(otRate[i]!),
                           });
                         }
-                     var res=await http.post(
+                    var res=await http.post(
                     Uri.parse(Config.saveLabourDataApi),
                      headers: {
                               "Accept": "application/json",
@@ -365,7 +365,7 @@ class _AddLabourDataState extends State<AddLabourData> {
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);           
                     } catch (e) {
-                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                      EasyLoading.showToast("server error occured", toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
                      if (kDebugMode) {
                        print(e);

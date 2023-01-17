@@ -26,6 +26,7 @@ class _LabourState extends State<LabourData> {
   List<String?> inTime=[];
   List<String?> otRate=[];
   List<String?> hours=[];
+  
   List<String?> outTime=[];
   List dateOfLabourData=[];
   List dateDifference=[];
