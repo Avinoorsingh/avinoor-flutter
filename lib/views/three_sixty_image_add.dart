@@ -147,7 +147,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey[200],
                     boxShadow:  [
-                      BoxShadow(color:Colors.grey[300]!, spreadRadius: 1
+                      BoxShadow(color:Colors.grey[300]!, spreadRadius: 1),
                     ],
                   ),
                     child:
