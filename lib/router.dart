@@ -26,6 +26,8 @@ import 'package:colab/views/snag.dart';
 import 'package:colab/views/snag_detail.dart';
 import 'package:colab/views/sub_location.dart';
 import 'package:colab/views/super_admin_page.dart';
+import 'package:colab/views/three_sixty_image.dart';
+import 'package:colab/views/three_sixty_image_add.dart';
 import 'package:colab/views/upcoming_progress_entry.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
@@ -173,10 +175,24 @@ class CustomRouter {
           key: state.pageKey,
         ),
       ),
-       GoRoute(
+      GoRoute(
         name:'ADDLABOURDATA',
         path: addLabourData,
         builder: (context, state) => AddLabourData(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name:'360IMAGE',
+        path: addThreeSixtyImage,
+        builder: (context, state) => ThreeSixtyImage(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name:'ADD360IMAGE',
+        path: addingThreeSixtyImage,
+        builder: (context, state) => AddThreeSixtyImage(
           key: state.pageKey,
         ),
       ),

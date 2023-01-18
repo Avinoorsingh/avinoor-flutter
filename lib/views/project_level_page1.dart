@@ -157,6 +157,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           // ignore: use_build_context_synchronously
                              context.pushNamed('QUALITYCHECKLIST');
                          }
+                          if(i==4){
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed('360IMAGE');
+                         }
                          if(i==5){
                           await getAreaOfConcernDataController.getAreaOfConcernData(context: context);
                           // ignore: use_build_context_synchronously
