@@ -28,6 +28,7 @@ import 'package:colab/views/sub_location.dart';
 import 'package:colab/views/super_admin_page.dart';
 import 'package:colab/views/three_sixty_image.dart';
 import 'package:colab/views/three_sixty_image_add.dart';
+import 'package:colab/views/three_sixty_image_view.dart';
 import 'package:colab/views/upcoming_progress_entry.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
@@ -194,6 +195,20 @@ class CustomRouter {
         path: addingThreeSixtyImage,
         builder: (context, state) => AddThreeSixtyImage(
           key: state.pageKey,
+          locId:state.queryParams["locId"],
+          subLocId:state.queryParams["subLocId"] ,
+          subSubLocId:state.queryParams["subSubLocId"],
+          locName:state.queryParams["locName"] ,
+          subLocName: state.queryParams["subLocName"],
+          subSubLocName: state.queryParams["subSubLocName"],
+        ),
+      ),
+       GoRoute(
+        name:'VIEW360IMAGE',
+        path: viewThreeSixtyImage,
+        builder: (context, state) => ThreeSixtyImageView(
+          key: state.pageKey,
+          viewpointID: state.queryParams["viewpointID"],
         ),
       ),
       GoRoute(

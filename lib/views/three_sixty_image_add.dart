@@ -1,26 +1,35 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'package:colab/views/activity_head.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:colab/constants/colors.dart';
-import 'package:colab/network/area_of_concern_network.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
+import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config.dart';
+import '../constants/colors.dart';
 import '../controller/signInController.dart';
-import '../models/activity_head.dart';
 import '../models/location_list.dart';
-import '../models/sub_location_list.dart';
-import '../theme/text_styles.dart';
-import 'sub_location.dart';
+import '../network/area_of_concern_network.dart';
 
 class AddThreeSixtyImage extends StatefulWidget {
-  const AddThreeSixtyImage({Key? key,}) : super(key: key);
+  const AddThreeSixtyImage({Key? key,this.locName, this.subLocName, this.subSubLocName, this.locId, this.subLocId, this.subSubLocId}) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
+  final locName;
+  // ignore: prefer_typing_uninitialized_variables
+  final subLocName;
+  // ignore: prefer_typing_uninitialized_variables
+  final subSubLocName;
+  // ignore: prefer_typing_uninitialized_variables
+  final locId;
+  // ignore: prefer_typing_uninitialized_variables
+  final subLocId;
+  // ignore: prefer_typing_uninitialized_variables
+  final subSubLocId;
 
   @override
   State<AddThreeSixtyImage> createState() => _ThreeSixtyImageState();
@@ -58,18 +67,60 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
   final debitAmountController=TextEditingController();
   final snapAssignedToController=TextEditingController();
   final priorityController=TextEditingController();
+  final masterImageController=TextEditingController();
   late String subV="";
   late String subSubV="";
   String dropdownvalue = 'Select Location';  
   String dropdownvalue2 = 'Select Sub Location';  
   final signInController=Get.find<SignInController>();
-  final List<String> _imagePaths = ["add","add"];
+  final List<String> _imagePaths = [];
+  final List<String> viewpointsName=[];
+  final List<int> viewpointsNameID=[];
+  final List<String> fileName=[];
+  final List<int> fileNameID=[];
  
  @override
  void initState(){
   super.initState();
   getAreaOfConcern.getAreaOfConcernData(context: context);
+  _getViewPoint();
  }
+
+ Future<void> _getViewPoint() async {
+  viewpointsName.clear();
+  viewpointsNameID.clear();
+  fileName.clear();
+  fileNameID.clear();
+  _imagePaths.clear();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var token=sharedPreferences.getString('token');
+    var res=await http.post(
+        Uri.parse("http://nodejs.hackerkernel.com/colab/api/getViewPointMaster"),
+        headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+              },
+        body: {
+              "loc_id": widget.locId,
+              "sub_loc_id": widget.subLocId,
+              "sub_sub_location_id": widget.subSubLocId,
+              }
+          );
+      if(jsonDecode(res.body)['data'].isNotEmpty){
+      masterImageController.text=jsonDecode(res.body)['data'][0]['master_file'];
+      for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
+        viewpointsName.add(jsonDecode(res.body)['data'][i]['viewpoint']);
+        viewpointsNameID.add(jsonDecode(res.body)['data'][i]['viewpoint_name_id']);
+        fileName.add(jsonDecode(res.body)['data'][i]['file_name']??"add");
+        fileNameID.add(jsonDecode(res.body)['data'][i]['file_name_id']??0);
+        _imagePaths.add("add");
+      }
+      }
+      else{
+         masterImageController.text="Not available";
+      }
+      setState(() {});
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -88,16 +139,16 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
         backgroundColor:AppColors.primary,
       title: Text("Add 360 Images",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
-    body: 
+    body: masterImageController.text.isNotEmpty?
     Container(margin: const EdgeInsets.only(top: 0),
     child:
-    Column(
+    ListView(
       children: [
         Container(
           height: 60,
           width: MediaQuery.of(context).size.width,color: Colors.black38,
           padding: const EdgeInsets.only(top: 20),
-          child:Text('Tower 1/Gr Floor/ U1',style: textStyleBodyText1.copyWith(fontSize: 18), textAlign: TextAlign.center,),),
+          child:Text('${widget.locName}/${widget.subLocName}',style: textStyleBodyText1.copyWith(fontSize: 18), textAlign: TextAlign.center,),),
           Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
             Column(
@@ -109,15 +160,16 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                       SizedBox(
                         height: 150,
                         width: 250,
-                        child: FittedBox(child:
-                      Image.network('https://via.placeholder.com/250x150',height: 150,width: 250,),
+                        child: FittedBox(
+                          child:
+                          masterImageController.text!="Not available"?Image.network('https://nodejs.hackerkernel.com/colab${masterImageController.text}',height: 150,width: 250,):Image.asset('assets/images/no_image_icon.png',height: 150,width: 250,),
                       )
                     )
                     ],
                   ),
                 ),
               const SizedBox(height: 40,),
-              Padding(padding: const EdgeInsets.only(left: 5,right: 5,),
+              Padding(padding: const EdgeInsets.only(left: 0,right: 0,),
               child:
                 Container(
                   padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
@@ -129,7 +181,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                 ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:2,
+                itemCount:viewpointsName.length,
                 itemBuilder: (context, index) {
                   return 
                   Column(children: [
@@ -138,7 +190,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                       child: 
                       Row(children: [
                         Text("VIEWPOINT:", style: textStyleBodyText1.copyWith(fontSize: 18),),
-                        Text(" View $index", style: textStyleBodyText1.copyWith(fontSize: 18),)
+                        Text(viewpointsName[index], style: textStyleBodyText1.copyWith(fontSize: 18),)
                         ],),
                     ),
                   Container(
@@ -157,9 +209,10 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Column(children: [
-                      _imagePaths[index]!="add"?Image.file(File(_imagePaths[index]),height: 70,width: 70):Image.asset('assets/images/no_image_icon.png',height: 70,width: 70,),
-                      const SizedBox(height: 20,),
-                      Text("18/01/2023",style: textStyleBodyText1,)
+                      fileName[index]!="add"?Image.network('https://nodejs.hackerkernel.com/colab${fileName[index]}',height: 70,width: 70,)
+                      :Image.asset('assets/images/no_image_icon.png',height: 70,width: 70,),
+                      const SizedBox(height: 10,),
+                      Text(DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),style: textStyleBodyText1,),
                       ]),
                       Column(children: [
                       SizedBox(width: 100,
@@ -167,7 +220,10 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                         ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                         child:const Text('VIEW'),
-                        onPressed: () async {
+                        onPressed: () {
+                          context.pushNamed('VIEW360IMAGE',queryParams: {
+                            "viewpointID": viewpointsNameID[index].toString()
+                            });
                         },
                       ),
                       ),
@@ -198,9 +254,30 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                                 ],
                               ),
                              onPressed: () async{
-                               var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                              var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              var token=sharedPreferences.getString('token');
+                              FormData formData=FormData(); 
+                              var dio = Dio();
+                              formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
+                              formData.files.add(
+                              MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
+                              var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
+                              data:formData,
+                              options: Options(
+                                  followRedirects: false,
+                                  validateStatus: (status) {
+                                    return status! < 500;
+                                  },
+                                  headers: {
+                                    "authorization": "Bearer ${token!}",
+                                    "Content-type": "application/json",
+                                  },
+                                ),
+                              );
+                               await  _getViewPoint();
                                setState(() {
-                                  _imagePaths[index]=(image!.path);
+                                  _imagePaths[index]=image.path;
                                   }
                                 );
                                // ignore: use_build_context_synchronously
@@ -215,10 +292,31 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                                 Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
                               ],
                             ),
-                             onPressed: () async{
-                               var image = await ImagePicker().pickImage(source: ImageSource.camera);
+                             onPressed: ()  async{
+                              var image = await ImagePicker().pickImage(source: ImageSource.camera);
+                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              var token=sharedPreferences.getString('token');
+                              FormData formData=FormData(); 
+                              var dio = Dio();
+                              formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
+                              formData.files.add(
+                              MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
+                              var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
+                              data:formData,
+                              options: Options(
+                                  followRedirects: false,
+                                  validateStatus: (status) {
+                                    return status! < 500;
+                                  },
+                                  headers: {
+                                    "authorization": "Bearer ${token!}",
+                                    "Content-type": "application/json",
+                                  },
+                                ),
+                              );
+                               await  _getViewPoint();
                                setState(() {
-                                  _imagePaths[index]=(image!.path);
+                                  _imagePaths[index]=image.path;
                                   }
                                 );
                                // ignore: use_build_context_synchronously
@@ -262,43 +360,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
 ),
 ],
 )
-)
+):const Center(child: CircularProgressIndicator(color: AppColors.primary,))
 );
 }
-}
-
-
-Route _createRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const SubLocation(),
-   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  const begin = Offset(0.0, 1.0);
-  const end = Offset.zero;
-  final tween = Tween(begin: begin, end: end);
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-},
-  );
-}
-
-
-Route _createRoute2() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const ActivityHeadPage(),
-   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  const begin = Offset(0.0, 1.0);
-  const end = Offset.zero;
-  final tween = Tween(begin: begin, end: end);
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-},
-  );
 }

@@ -24,6 +24,7 @@ const String labourData = '/LabourData';
 const String addLabourData="/AddLabourData";
 const String addThreeSixtyImage="/AddThreeSixtyImage";
 const String addingThreeSixtyImage="/AddingThreeSixtyImage";
+const String viewThreeSixtyImage="/ViewThreeSixtyImage";
 const String getCompletedProgressEntry = '/GetCompletedProgressEntry';
 const String completedParticularProgress = '/ParticularProgress';
 const String areaOfConcernDetail = '/areaOfConcernDetail';

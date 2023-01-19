@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:colab/views/activity_head.dart';
+import 'package:colab/views/sub_location_progress.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
@@ -11,11 +11,10 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../controller/signInController.dart';
-import '../models/activity_head.dart';
-import '../models/location_list.dart';
-import '../models/sub_location_list.dart';
+import '../models/progress_activityHead_data.dart';
+import '../models/progress_location_data.dart';
+import '../models/progress_sublocation_data.dart';
 import '../theme/text_styles.dart';
-import 'sub_location.dart';
 
 class ThreeSixtyImage extends StatefulWidget {
   const ThreeSixtyImage({Key? key,}) : super(key: key);
@@ -39,11 +38,11 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
   List areaData=[];
   List dateDifference=[];
   List<String> locationList=[];
+  final locationId=TextEditingController();
   final categoryController=TextEditingController();
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
-  final locationId=TextEditingController();
   final subSubLocationId = TextEditingController();
   final subLocationId = TextEditingController();
   final projectId=TextEditingController();
@@ -61,6 +60,7 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
   String dropdownvalue = 'Select Location';  
   String dropdownvalue2 = 'Select Sub Location';  
   final signInController=Get.find<SignInController>();
+  List<int> locationID=[];
  
  @override
  void initState(){
@@ -70,13 +70,17 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
 
   @override
   Widget build(BuildContext context) {
-     if(signInController.getLocationList!.data!.isNotEmpty && locationList.isEmpty){
-        List<LocationData>? locationList1=signInController.getLocationList?.data;
+     if(signInController.getProgressLocationList?.data!=null){
+      if(signInController.getProgressLocationList!.data!.isNotEmpty && locationList.isEmpty){
+        List<ProgressLocationListData>? locationList1=signInController.getProgressLocationList?.data;
         locationList.add("Select Location");
+        locationID.add(0);
         for(var data in locationList1!){
           locationList.add(data.locationName!);
+          locationID.add(data.locationId!);
         }
       }
+     }
     EasyLoading.dismiss();
     return 
     Scaffold(
@@ -93,8 +97,8 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
             Column(children: [
-               Container(
-           margin: const EdgeInsets.only(left:20,right:20,),
+           Container(
+           margin: const EdgeInsets.only(left:10,right:10,),
            padding: const EdgeInsets.only(bottom: 20,),
             child: 
            DropdownButtonFormField(
@@ -107,10 +111,10 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14
-            ), 
-                dropdownColor: AppColors.white,
-                decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1),
+              ), 
+              dropdownColor: AppColors.white,
+              decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -118,21 +122,23 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
               ),
               isExpanded: true,
               items: locationList.map((String items){
-                return
-                DropdownMenuItem(
+                return DropdownMenuItem(
                   value: items,
                   child: Text(items),
                 );
-              }).toList(),
-              onChanged: (String? newValue) async{
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                }).toList(),
+                onChanged: (String? newValue) async {
+                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
-                setState(() {
+                  var projectID=sharedPreferences.getString('projectIdd');
+                  var clientID=sharedPreferences.getString('client_id');
+                  setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
                    });
                   try {
-                    var getSubLocationListUrl=Uri.parse(Config.getSubLocationListApi);
+                    locationId.text=locationID[locationList.indexOf(newValue!)].toString();
+                    var getSubLocationListUrl=Uri.parse(Config.getProgressSubLocationListApi);
                     var res=await http.post(
                     getSubLocationListUrl,
                      headers: {
@@ -140,29 +146,29 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
                               "Authorization": "Bearer $token",
                             },
                       body: {
-                              "client_id":signInController.getProjectData?.clientid.toString(),
-                              "project_id":1.toString(),
-                              "location_id":locationList.indexOf(newValue!).toString(),
+                              "client_id":clientID,
+                              "project_id":projectID,
+                              "location_id":locationId.text,
                             }
-                            );
+                        );
                   Map<String,dynamic> cData3=jsonDecode(res.body);
-                  SubLocationList result3=SubLocationList.fromJson(cData3['data']);
-                  signInController.getSubLocationList=result3; 
-                          } catch (e) {
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
+                  ProgressSubLocationData result3=ProgressSubLocationData.fromJson(cData3);
+                  signInController.getProgressSubLocationData=result3; 
+                  } catch (e) {
+                    if (kDebugMode) {
+                    print(e);
+                  }
+                }
               },
             ),
           ),
-           Container(
-           margin: const EdgeInsets.only(left:20,right:20),
+          Container(
+           margin: const EdgeInsets.only(left:10,right:10),
             child: 
             InkWell(
-                onTap: () async {
-                  if(locationController.text.isNotEmpty){
-             String value= await Navigator.of(context).push(_createRoute());
+             onTap: () async {
+             if(locationController.text.isNotEmpty){
+             String value= await Navigator.of(context).push(_createRoute(locationId.text));
              setState(() {
                   if(value.isNotEmpty){
                   subSubLocationId.text=value.substring(value.indexOf('?')+1,value.indexOf('&'));
@@ -174,10 +180,10 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
                   subLocationController.text=value.substring(0,value.indexOf('?'));
                   }
                 });
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
                 try {
-                    var getActivityHeadApiUrl=Uri.parse(Config.getActivityHeadApi);
+                    var getActivityHeadApiUrl=Uri.parse(Config.getProgressActivityHeadListApi);
                     var res=await http.post(
                      getActivityHeadApiUrl,
                      headers: {
@@ -191,19 +197,21 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
                               "sub_loc_id":subLocationId.text,
                               "sub_sub_loc_id":subSubLocationId.text,
                             }
-                          );
-                  Map<String,dynamic> cData4=jsonDecode(res.body);
-                  ActivityHead result4=ActivityHead.fromJson(cData4['data']);
-                  signInController.getActivityHeadList=result4;
+                            );
+                            Map<String,dynamic> cData4=jsonDecode(res.body);
+                            if(cData4['success']==true){
+                            ProgressActivityHeadData result4=ProgressActivityHeadData.fromJson(cData4);
+                            signInController.getProgressActivityHeadApi=result4;
+                            }
                           } catch (e) {
                             if (kDebugMode) {
                               print(e);
                             }
                           }
-                  }
-                  else if(locationController.text.isEmpty){
-                    EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
-                  }
+                      }
+                      else if(locationController.text.isEmpty){
+                        EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+                      }
             },
               child: 
               DropdownButtonFormField(
@@ -242,12 +250,27 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
           ),
           const SizedBox(height: 30,),
           Container(
-          margin: const EdgeInsets.only(left:20,right:20),
+          margin: const EdgeInsets.only(left:10,right:10),
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: ElevatedButton(
             onPressed: (){
-              context.pushNamed('ADD360IMAGE');
+              if(locationId.text.isEmpty){
+                EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+              }
+              else if(subLocationId.text.isEmpty){
+                EasyLoading.showToast("Please select Sub Location",toastPosition: EasyLoadingToastPosition.bottom);
+              }
+              else{
+              context.pushNamed('ADD360IMAGE', queryParams: {
+              "locId": locationId.text,
+              "subLocId":subLocationId.text,
+              "subSubLocId":subSubLocationId.text,
+              "locName":locationController.text,
+              "subLocName":subLocationController.text,
+              "subSubLocName":subSubLocationController.text
+              },);
+              }
             },
           style: ElevatedButton.styleFrom(backgroundColor: Colors.black38,
           shadowColor: Colors.black,
@@ -262,28 +285,9 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
 }
 }
 
-
-Route _createRoute() {
+Route _createRoute(var locationID) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const SubLocation(),
-   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  const begin = Offset(0.0, 1.0);
-  const end = Offset.zero;
-  final tween = Tween(begin: begin, end: end);
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-},
-  );
-}
-
-
-Route _createRoute2() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const ActivityHeadPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => SubLocationProgress(locID: locationID,),
    transitionsBuilder: (context, animation, secondaryAnimation, child) {
   const begin = Offset(0.0, 1.0);
   const end = Offset.zero;
