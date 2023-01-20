@@ -95,32 +95,32 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var token=sharedPreferences.getString('token');
     var res=await http.post(
-        Uri.parse("http://nodejs.hackerkernel.com/colab/api/getViewPointMaster"),
-        headers: {
-              "Accept": "application/json",
-              "Authorization": "Bearer $token",
-              },
-        body: {
-              "loc_id": widget.locId,
-              "sub_loc_id": widget.subLocId,
-              "sub_sub_location_id": widget.subSubLocId,
+            Uri.parse("http://nodejs.hackerkernel.com/colab/api/getViewPointMaster"),
+            headers: {
+                  "Accept": "application/json",
+                  "Authorization": "Bearer $token",
+                  },
+            body: {
+                  "loc_id": widget.locId,
+                  "sub_loc_id": widget.subLocId,
+                  "sub_sub_location_id": widget.subSubLocId,
+                  }
+                );
+            if(jsonDecode(res.body)['data'].isNotEmpty){
+            masterImageController.text=jsonDecode(res.body)['data'][0]['master_file'];
+                for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
+                  viewpointsName.add(jsonDecode(res.body)['data'][i]['viewpoint']);
+                  viewpointsNameID.add(jsonDecode(res.body)['data'][i]['viewpoint_name_id']);
+                  fileName.add(jsonDecode(res.body)['data'][i]['file_name']??"add");
+                  fileNameID.add(jsonDecode(res.body)['data'][i]['file_name_id']??0);
+                  _imagePaths.add("add");
+                }
               }
-          );
-      if(jsonDecode(res.body)['data'].isNotEmpty){
-      masterImageController.text=jsonDecode(res.body)['data'][0]['master_file'];
-      for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
-        viewpointsName.add(jsonDecode(res.body)['data'][i]['viewpoint']);
-        viewpointsNameID.add(jsonDecode(res.body)['data'][i]['viewpoint_name_id']);
-        fileName.add(jsonDecode(res.body)['data'][i]['file_name']??"add");
-        fileNameID.add(jsonDecode(res.body)['data'][i]['file_name_id']??0);
-        _imagePaths.add("add");
-      }
-      }
-      else{
-         masterImageController.text="Not available";
-      }
-      setState(() {});
-    }
+              else{
+                masterImageController.text="Not available";
+              }
+            setState(() {});
+           }
 
   @override
   Widget build(BuildContext context) {
@@ -137,19 +137,21 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
     appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Add 360 Images",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
-      ),
-    body: masterImageController.text.isNotEmpty?
+        title: Text("Add 360 Images", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+    ),
+    body: masterImageController.text.isNotEmpty ?
     Container(margin: const EdgeInsets.only(top: 0),
     child:
     ListView(
       children: [
         Container(
           height: 60,
-          width: MediaQuery.of(context).size.width,color: Colors.black38,
+          width: MediaQuery.of(context).size.width, 
+          color: Colors.black38,
           padding: const EdgeInsets.only(top: 20),
-          child:Text('${widget.locName}/${widget.subLocName}',style: textStyleBodyText1.copyWith(fontSize: 18), textAlign: TextAlign.center,),),
-          Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
+          child:Text('${widget.locName}/${widget.subLocName}', style: textStyleBodyText1.copyWith(fontSize: 18), textAlign: TextAlign.center,),),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10,),
             child:
             Column(
               children: [
@@ -162,27 +164,29 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                         width: 250,
                         child: FittedBox(
                           child:
-                          masterImageController.text!="Not available"?Image.network('https://nodejs.hackerkernel.com/colab${masterImageController.text}',height: 150,width: 250,):Image.asset('assets/images/no_image_icon.png',height: 150,width: 250,),
-                      )
-                    )
-                    ],
-                  ),
-                ),
+                          masterImageController.text!="Not available"? Image.network('https://nodejs.hackerkernel.com/colab${masterImageController.text}',height: 150,width: 250,):Image.asset('assets/images/no_image_icon.png',height: 150,width: 250,),
+                          )
+                        )
+                      ],
+                     ),
+                   ),
               const SizedBox(height: 40,),
-              Padding(padding: const EdgeInsets.only(left: 0,right: 0,),
+              Padding(
+              padding: const EdgeInsets.only(left: 0,right: 0,),
               child:
+              viewpointsName.isNotEmpty ?
                 Container(
-                  padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                  border: Border.all(width: 1,color: AppColors.lightGrey),
+                  border: Border.all(width: 1, color: AppColors.lightGrey),
                   borderRadius: BorderRadius.circular(10),
                 ),    
                 child:
                 ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:viewpointsName.length,
-                itemBuilder: (context, index) {
+                itemCount: viewpointsName.length,
+                itemBuilder: (context, index){
                   return 
                   Column(children: [
                     SizedBox(
@@ -194,7 +198,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                         ],),
                     ),
                   Container(
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                     decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey[200],
@@ -208,25 +212,46 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                     Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Column(children: [
-                      fileName[index]!="add"?Image.network('https://nodejs.hackerkernel.com/colab${fileName[index]}',height: 70,width: 70,)
-                      :Image.asset('assets/images/no_image_icon.png',height: 70,width: 70,),
+                      Column(
+                      children: [
+                      fileName[index]!="add" ? Image.network('https://nodejs.hackerkernel.com/colab${fileName[index]}', height: 70, width: 70,)
+                      : Image.asset('assets/images/no_image_icon.png', height: 70, width: 70,),
                       const SizedBox(height: 10,),
                       Text(DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),style: textStyleBodyText1,),
                       ]),
-                      Column(children: [
-                      SizedBox(width: 100,
+                      Column(
+                      children: [
+                      SizedBox(
+                        width: 100,
                         child:
                         ElevatedButton(
                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                         child:const Text('VIEW'),
-                        onPressed: () {
-                          context.pushNamed('VIEW360IMAGE',queryParams: {
-                            "viewpointID": viewpointsNameID[index].toString()
-                            });
-                        },
-                      ),
-                      ),
+                        onPressed: () async {
+                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                        var token = sharedPreferences.getString('token');
+                        var res = await http.get(
+                              Uri.parse("http://nodejs.hackerkernel.com/colab/api/getViewPointImagesForSlider/${viewpointsNameID[index].toString()}"),
+                              headers: {
+                              "Content-Type": "application/json",
+                              "Accept": "application/json",
+                              "Authorization": "Bearer $token",
+                              }
+                            );
+                            if(jsonDecode(res.body)['data'].isNotEmpty){
+                                // ignore: use_build_context_synchronously
+                              context.pushNamed('VIEW360IMAGE',
+                              queryParams: {
+                              "viewpointID": viewpointsNameID[index].toString(),
+                              "masterImage": masterImageController.text,
+                              });
+                            }
+                            else {
+                              EasyLoading.showToast('No images available here', toastPosition: EasyLoadingToastPosition.bottom);
+                            }
+                          },
+                        ),
+                       ),
                        SizedBox(
                         width: 100,
                         child:
@@ -235,132 +260,132 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                         child:const Text('UPDATE'),
                         onPressed: () async {
                           showDialog(
-                   context: context,
-                   builder: (BuildContext context) {
-                     return SimpleDialog(
-                      alignment: Alignment.center,
-                       children: <Widget>[
-                        Text("      Choose",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                         SimpleDialogOption(
-                            child: 
-                            Column(
-                                children: <Widget>[     
-                                  const SizedBox(width: 10),
-                                  const Icon(Icons.image,size: 70,color: Colors.grey,),
-                                  Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
-                                ],
+                          context: context,
+                          builder: (BuildContext context){
+                            return SimpleDialog(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Text("      Choose", style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                SimpleDialogOption(
+                                  child: 
+                                  Column(
+                                        children: <Widget>[     
+                                          const SizedBox(width: 10),
+                                          const Icon(Icons.image,size: 70, color: Colors.grey,),
+                                          Text("Gallery", style: textStyleBodyText1.copyWith(color: Colors.grey),),
+                                        ],
+                                      ),
+                                    onPressed: () async {
+                                      var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                      var token=sharedPreferences.getString('token');
+                                      FormData formData=FormData();
+                                      var dio = Dio();
+                                      formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
+                                      formData.files.add(
+                                      MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
+                                      await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
+                                      data:formData,
+                                      options: Options(
+                                          followRedirects: false,
+                                          validateStatus: (status){
+                                            return status! < 500;
+                                          },
+                                          headers: {
+                                            "authorization": "Bearer ${token!}",
+                                            "Content-type": "application/json",
+                                          },
+                                        ),
+                                      );
+                                      await  _getViewPoint();
+                                      setState(() {
+                                          _imagePaths[index]=image.path;
+                                          }
+                                        );
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  SimpleDialogOption(
+                                    child: Column(
+                                      children: <Widget>[
+                                        const SizedBox(width: 10),
+                                        const Icon(Icons.camera_alt, size: 70,color: Colors.grey,),
+                                        Text("Camera", style:textStyleBodyText1.copyWith(color: Colors.grey),),
+                                      ],
+                                    ),
+                                    onPressed: () async {
+                                      var image = await ImagePicker().pickImage(source: ImageSource.camera);
+                                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                      var token=sharedPreferences.getString('token');
+                                      FormData formData=FormData(); 
+                                      var dio = Dio();
+                                      formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
+                                      formData.files.add(
+                                      MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
+                                      await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
+                                      data:formData,
+                                      options: Options(
+                                          followRedirects: false,
+                                          validateStatus: (status){
+                                            return status! < 500;
+                                          },
+                                          headers:{
+                                            "authorization": "Bearer ${token!}",
+                                            "Content-type": "application/json",
+                                          },
+                                        ),
+                                      );
+                                      await  _getViewPoint();
+                                      setState(() {
+                                          _imagePaths[index]=image.path;
+                                          }
+                                        );
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ]),
+                              SimpleDialogOption(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    const SizedBox(width: 10),
+                                    Text("Cancel", style:textStyleBodyText1.copyWith(color: AppColors.primary),),
+                                  ],
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                               ),
-                             onPressed: () async{
-                              var image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              var token=sharedPreferences.getString('token');
-                              FormData formData=FormData(); 
-                              var dio = Dio();
-                              formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
-                              formData.files.add(
-                              MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
-                              var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
-                              data:formData,
-                              options: Options(
-                                  followRedirects: false,
-                                  validateStatus: (status) {
-                                    return status! < 500;
-                                  },
-                                  headers: {
-                                    "authorization": "Bearer ${token!}",
-                                    "Content-type": "application/json",
-                                  },
-                                ),
-                              );
-                               await  _getViewPoint();
-                               setState(() {
-                                  _imagePaths[index]=image.path;
-                                  }
-                                );
-                               // ignore: use_build_context_synchronously
-                               Navigator.pop(context);
-                             },
-                           ),
-                          SimpleDialogOption(
-                            child: Column(
-                              children: <Widget>[
-                                const SizedBox(width: 10),
-                                 const Icon(Icons.camera_alt,size: 70,color: Colors.grey,),
-                                Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
-                              ],
-                            ),
-                             onPressed: ()  async{
-                              var image = await ImagePicker().pickImage(source: ImageSource.camera);
-                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              var token=sharedPreferences.getString('token');
-                              FormData formData=FormData(); 
-                              var dio = Dio();
-                              formData.fields.add(MapEntry('id', viewpointsNameID[index].toString()));
-                              formData.files.add(
-                              MapEntry("file", await MultipartFile.fromFile((image!.path), filename: 'de_snag_image')));
-                              var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/uploadViewpointFiles",
-                              data:formData,
-                              options: Options(
-                                  followRedirects: false,
-                                  validateStatus: (status) {
-                                    return status! < 500;
-                                  },
-                                  headers: {
-                                    "authorization": "Bearer ${token!}",
-                                    "Content-type": "application/json",
-                                  },
-                                ),
-                              );
-                               await  _getViewPoint();
-                               setState(() {
-                                  _imagePaths[index]=image.path;
-                                  }
-                                );
-                               // ignore: use_build_context_synchronously
-                               Navigator.pop(context);
-                             },
-                           ),
-                        ]),
-                           SimpleDialogOption(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                const SizedBox(width: 10),
-                                Text("Cancel",style:textStyleBodyText1.copyWith(color: AppColors.primary),),
-                              ],
-                            ),
-                             onPressed: () {
-                               Navigator.pop(context);
-                             },
-                           ),
-                         ],
-                       );
+                            ],
+                          );
+                        },
+                      );
                      },
-                   );
-                  },
-                ),
+                    ),
+                   )
+                 ])
+                ],
               )
-            ])
-          ],
+            ]
+          )
         )
-      ]
+       ]
+      );
+     },
     )
-  )
-]
-);
-},
-)
-)
-)
+  ):Container()
+ )
 ],
-)
+),
 ),
 ],
-)
-):const Center(child: CircularProgressIndicator(color: AppColors.primary,))
+),
+):const Center(child: CircularProgressIndicator(color: AppColors.primary,),),
 );
 }
 }

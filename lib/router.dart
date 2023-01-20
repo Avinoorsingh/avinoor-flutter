@@ -209,6 +209,7 @@ class CustomRouter {
         builder: (context, state) => ThreeSixtyImageView(
           key: state.pageKey,
           viewpointID: state.queryParams["viewpointID"],
+          masterImage: state.queryParams["masterImage"],
         ),
       ),
       GoRoute(
