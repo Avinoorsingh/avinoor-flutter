@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
+import 'package:http/http.dart' as http;
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
 
@@ -25,8 +29,8 @@ class ProjectLevelPage1 extends StatefulWidget {
 
 class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
    final getClientProjectsController = Get.find<GetClientProject>();
-    final getClientProfileController = Get.find<GetUserProfileNetwork>();
-  final List<ChartData> chartData = [   
+   final getClientProfileController = Get.find<GetUserProfileNetwork>();
+   final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
             ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
         ];
@@ -50,16 +54,44 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   ];
    List<String> iconText = [];
  late List<ExpenseData> _chartData;
+ late String _selectedDate;
 
   @override
   void initState() {
-    _chartData = getChartData();
+    _selectedDate=DateFormat('yyyy-MM-dd').format(DateTime.now());
+    _chartData = getChartData(_selectedDate);
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getSelectedProjects(context: context);
     super.initState();
   }
 
   List<String> myToolsData=[];
+
+   _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: ThemeData.light().copyWith(
+                primaryColor: AppColors.primary,
+                buttonTheme: const ButtonThemeData(
+                textTheme: ButtonTextTheme.primary
+              ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
+            ),
+            child: child!,
+          );
+        }, 
+        initialDate:DateTime.parse(_selectedDate,),
+        firstDate: DateTime(1990),
+        lastDate: DateTime(2132));
+    if (picked != null && picked != DateTime.parse(_selectedDate)) {
+      setState(() {
+         _chartData = getChartData(_selectedDate);
+        _selectedDate = DateFormat('yyyy-MM-dd').format(picked);
+        print(_selectedDate);
+      });
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -424,78 +456,123 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              Container(
+                                width: 100,
+                                height: 30,
+                                margin:const EdgeInsets.only(right: 20,top: 10),
+                                decoration: BoxDecoration(
+                                 border: Border.all(
+                                  color: Colors.grey,
+                                  width: 0.5,
+                                ),
+                              borderRadius:const BorderRadius.all(Radius.circular(5))
+                              ),child:
+                              ElevatedButton(
+                                onPressed: _selectDate,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  foregroundColor: Colors.grey,
+                                  backgroundColor: Colors.white),
+                                child: Text(_selectedDate.toString(),style: textStyleBodyText2,),
+                                ),
+                              )
+                          ],),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [],)
+                              children: const [],
+                              )
                           ],
                         ),
-                        Stack(children:[
+                        Stack(
+                          children:[
                         SfCartesianChart(
-                          legend: Legend(isVisible: true,position: LegendPosition.bottom),
-                          zoomPanBehavior: ZoomPanBehavior(  
-                            enablePanning: true,
-                            zoomMode: ZoomMode.xy,
-                            enablePinching: true,
-                          enableMouseWheelZooming: true,
-                          enableSelectionZooming: true
-                        ),  
-                        primaryXAxis: DateTimeAxis(
+                          legend: Legend(
+                            isVisible: true, 
+                            position: LegendPosition.bottom
+                            ),
+                            zoomPanBehavior: ZoomPanBehavior(  
+                              enablePanning: true,
+                              zoomMode: ZoomMode.xy,
+                              enablePinching: true,
+                              enableMouseWheelZooming: true,
+                              enableSelectionZooming: true
+                           ), 
+                          primaryXAxis: DateTimeAxis(
+                          interval: 1,
+                          intervalType: DateTimeIntervalType.days,
                           enableAutoIntervalOnZooming: true,
-                          isVisible: true,opposedPosition: true,
-                        dateFormat: DateFormat.y()),
-                        primaryYAxis: NumericAxis(
-                          decimalPlaces: 2,enableAutoIntervalOnZooming: true),
+                          minimum: DateTime.parse(_selectedDate).subtract(const Duration(days: 7)),
+                          maximum: DateTime.parse(_selectedDate),
+                          isVisible: true,
+                          opposedPosition: true,
+                          dateFormat: DateFormat('dd'),
+                          ),
+                          primaryYAxis: NumericAxis(
+                          decimalPlaces: 2, 
+                          enableAutoIntervalOnZooming: true
+                          ),
+                          axes: [
+                          NumericAxis(
+                          name: 'secondary',
+                          decimalPlaces: 2, 
+                          opposedPosition: true,
+                          enableAutoIntervalOnZooming: true
+                          ),
+                          ],
                         series: <ChartSeries>[
-                    StackedColumn100Series<ExpenseData, DateTime>(
-                        color: AppColors.primary,
-                        dataSource: _chartData,
-                        xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
-                        yValueMapper: (ExpenseData exp, _) => exp.mother,
-                        name: 'PRW',
-                        // dataLabelMapper: (ExpenseData exp, _) => exp.father.toString(),
-                        // markerSettings: const MarkerSettings(
-                        //   isVisible: true,
-                        // ),
-                         dataLabelSettings: const DataLabelSettings(        
-                        isVisible: true, alignment: ChartAlignment.near),
-                        ),
-                    StackedColumn100Series<ExpenseData, DateTime>(
-                        color: Colors.green,
+                        StackedColumnSeries<ExpenseData, DateTime>(
+                        color:AppColors.primaryButtonColor,
                         dataSource: _chartData,
                         xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
                         yValueMapper: (ExpenseData exp, _) => exp.son,
                         name: 'IN HOUSE',
-                        // dataLabelMapper: (ExpenseData exp, _) => exp.father.toString(),
-                        // markerSettings: const MarkerSettings(
-                        //   isVisible: true,
-                        // ),
-                        dataLabelSettings: const DataLabelSettings(        
+                        dataLabelSettings: const DataLabelSettings(
+                        showZeroValue: false, 
+                        textStyle: TextStyle(color: Colors.red),         
                         isVisible: true, alignment: ChartAlignment.near)),
-                    StackedColumn100Series<ExpenseData, DateTime>(
-                      color: const Color.fromARGB(255, 45, 90, 158),
-                        dataSource: _chartData,
-                        xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
-                        yValueMapper: (ExpenseData exp, _) => exp.daughter,
-                        name: 'MISC',
-                        // dataLabelMapper: (ExpenseData exp, _) => exp.father.toString(),
-                        // markerSettings: const MarkerSettings(
-                        //   isVisible: true,
-                        // ),
-                        dataLabelSettings: const DataLabelSettings(        
-                        isVisible: true, alignment: ChartAlignment.near)),
-                          LineSeries<ExpenseData, DateTime>(
-                            color: Colors.red,
+                          StackedColumnSeries<ExpenseData, DateTime>(
+                        color: Colors.green,
                         dataSource: _chartData,
                         xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
                         yValueMapper: (ExpenseData exp, _) => exp.father,
                         name: 'BCWP',
-                        //  dataLabelMapper: (ExpenseData exp, _) => exp.father.toString(),
-                        markerSettings: const MarkerSettings(
-                          color: Colors.red,
-                          isVisible: true,
+                        dataLabelSettings: const DataLabelSettings( 
+                        showZeroValue: false, 
+                        textStyle: TextStyle(color: Colors.red),         
+                        isVisible: true,
+                        alignment: ChartAlignment.near
+                            )
+                          ),
+                        StackedColumnSeries<ExpenseData, DateTime>(
+                        color:AppColors.primary,
+                        dataSource: _chartData,
+                        xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
+                        yValueMapper: (ExpenseData exp, _) => exp.mother,
+                        name: 'PRW',
+                        dataLabelSettings: const DataLabelSettings(  
+                        showZeroValue: false, 
+                        textStyle: TextStyle(color: Colors.red),      
+                        isVisible: true,
+                        alignment: ChartAlignment.near
                         ),
-                        dataLabelSettings: const DataLabelSettings(        
-                        isVisible: true,textStyle: TextStyle(color:Colors.red,))),
+                        ),
+                        LineSeries<ExpenseData, DateTime>(
+                        yAxisName: 'secondary',
+                        color: Colors.red,
+                        dataSource: _chartData,
+                        xValueMapper: (ExpenseData exp, _) => exp.expenseCategory,
+                        yValueMapper: (ExpenseData exp, _) => exp.daughter,
+                        name: 'MISC',
+                        dataLabelSettings: const DataLabelSettings(    
+                        textStyle: TextStyle(color: Colors.red),          
+                        isVisible: true, alignment: ChartAlignment.near
+                        ),
+                        markerSettings: const MarkerSettings(color: Colors.red,
+                        shape: DataMarkerType.circle,isVisible: true)
+                        ),
                         ]
                       )
                     ]
@@ -519,13 +596,55 @@ class ChartData {
             final String z;
             final Color color;
     }
-    List<ExpenseData> getChartData() {
-    final List<ExpenseData> chartData = [
-      ExpenseData(DateTime(0, 0), 0,0,0,0),
-      ExpenseData(DateTime(0, 0), 0,0,0,0),
-      ExpenseData(DateTime(0, 0), 0,0,0,0),
-      ExpenseData(DateTime(0, 0), 0,0,0,0),
-      ExpenseData(DateTime(0, 0), 0,0,0,0),
+ List<ExpenseData> chartData2=[];
+     getChartData1(String selectedDate)async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     var projectID=sharedPreferences.getString('projectIdd');
+     var clientID=sharedPreferences.getString('client_id');
+      try {
+      var getDataUrl=Uri.parse('http://nodejs.hackerkernel.com/colab/api/prw_inhouse_misc_chart_data');
+        var res=await http.post(
+            getDataUrl,
+            headers:{
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            },
+            body: {
+              "client_id":clientID,
+              "project_id":projectID,
+              "prw_misc_chart_date":selectedDate,
+              }
+          );
+         if (kDebugMode) {
+         }
+         if(chartData2.isEmpty){
+         for(int i=0;i<jsonDecode(res.body)['obj']['dates'].length; i++){
+          DateTime expenseCategory =(DateFormat('dd MMM yyyy').parse(jsonDecode(res.body)['obj']['dates'][i]));
+          num father = num.parse(jsonDecode(res.body)['obj']['inHouse'][i].toString() == ""? "0":jsonDecode(res.body)['obj']['inHouse'][i].toString());
+          num mother = num.parse(jsonDecode(res.body)['obj']['misc'][i].toString() == "" ? "0" :jsonDecode(res.body)['obj']['misc'][i].toString());
+          num son = num.parse(jsonDecode(res.body)['obj']['prw'][i].toString() == "" ? "0" :jsonDecode(res.body)['obj']['prw'][i].toString());
+          num daughter = num.parse(jsonDecode(res.body)['obj']['rate'][i].toString() == "" ? "0" :jsonDecode(res.body)['obj']['rate'][i].toString());
+          chartData2.add(ExpenseData(expenseCategory, father, mother, son, daughter));
+         }
+         }
+        } catch(e){
+          if (kDebugMode) {
+            print(e);
+          }
+        }
+        return chartData2;
+  }
+    List<ExpenseData> getChartData(String selectedDate){
+      print("chart data is called");
+      getChartData1(selectedDate);
+      final List<ExpenseData> chartData = chartData2;
+    [
+      ExpenseData(DateTime.now(), 14,22,43,18),
+      ExpenseData(DateTime.now().add(const Duration(days: 1)), 11,12,13,1991),
+      // ExpenseData(DateTime.now(), 12,15,15,11),
+      // ExpenseData(DateTime.now(), 12,165,13,11),
+      // ExpenseData(DateTime.now(), 12,12,112,11),
     ];
     return chartData;
   }
@@ -533,8 +652,8 @@ class ChartData {
 class ExpenseData {
   ExpenseData(
       this.expenseCategory, this.father, this.mother, this.son, this.daughter);
-  final num father;
   final DateTime expenseCategory;
+  final num father;
   final num mother;
   final num son;
   final num daughter;
