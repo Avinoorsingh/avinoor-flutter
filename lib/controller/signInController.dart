@@ -53,6 +53,7 @@ class SignInController extends GetxController {
   late final getClosedSnagData=GetClosedSnag();
   LoginResponseModel? getClientProfile;
   ClientProfileData? getProjectData;
+  List? getChartData;
   CategoryList? getCategoryList; 
   LocationList? getLocationList;
   ProgressLocationData? getProgressLocationList;

@@ -37,7 +37,7 @@ class GetClientProject extends GetxController {
           var tokenValue=sharedPreferences.getString('token');
           var clientId=sharedPreferences.getString('client_id');
           var id=sharedPreferences.getString('id'); 
-      update();
+      // update();
       var res=await http.get(
             getUserDataUrl,
             headers: {
@@ -49,7 +49,7 @@ class GetClientProject extends GetxController {
             }
             );
 
-           Map<String, dynamic> resSuccess=jsonDecode(jsonEncode(res.body));
+           var resSuccess=jsonDecode(jsonEncode(res.body));
            if(resSuccess['data'].length>1){
              for(var data in  resSuccess['data']){
             clientProjects.add(ClientProfileData.fromJson(data));
@@ -85,7 +85,7 @@ class GetClientProject extends GetxController {
           var tokenValue=sharedPreferences.getString('token');
           var clientId=sharedPreferences.getString('client_id');
           var id=sharedPreferences.getString('id'); 
-      update();
+      // update();
       var res=await http.get(
             getUserDataUrl,
             headers: {
@@ -157,12 +157,12 @@ class GetUserProfileNetwork extends GetxController{
    Map<String, String> requestHeaders={
       'Content-Type':'application/json',
       "Accept": "application/json",
-      "Authorization": "Bearer""$token}",
+      "Authorization": "Bearer $token",
     };
     try {
       //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
     var url=Uri.parse(Config.loginApi);
-    update();
+    // update();
     var response=await client.post(
     url, 
     headers: requestHeaders,
@@ -176,8 +176,9 @@ class GetUserProfileNetwork extends GetxController{
     await getClientProjectsController.getSelectedProjects(context: context,selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var projectID=sharedPreferences.getString('projectIdd');
+    try {
     if(signInController.getProjectData?.clientid!=null || projectID!=null){
-       var getCategoryListUrl=Uri.parse("${Config.getCategoryListApi}${signInController.getProjectData!.clientid}/${signInController.getProjectData!.projectid??"1"}");
+       var getCategoryListUrl=Uri.parse("${Config.getCategoryListApi}${signInController.getProjectData!.clientid}/${projectID??"1"}");
        var res=await http.get(
             getCategoryListUrl,
             headers: {
@@ -187,8 +188,16 @@ class GetUserProfileNetwork extends GetxController{
             }
           );
           Map<String,dynamic> cData2=jsonDecode(res.body);
+          if(cData2['data']!=null){
           CategoryList result2=CategoryList.fromJson(cData2['data']);
           signInController.getCategoryList=result2;
+          }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in getting category list");
+        print(e); 
+      }
     }
     try {
      var getLocationListUrl=Uri.parse(Config.locationListApi);
@@ -206,6 +215,8 @@ class GetUserProfileNetwork extends GetxController{
           Map<String,dynamic> cData3=jsonDecode(res.body);
           LocationList result3=LocationList.fromJson(cData3['data']);
           signInController.getLocationList=result3;    
+          // print(cData3);
+          update();
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting location list");

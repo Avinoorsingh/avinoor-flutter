@@ -8,6 +8,7 @@ class ClientEmployee {
 
   ClientEmployee.fromJson(var json) {
     data =  [];
+    if(json!=null){
     for(var data1 in json){
       try {
       data?.add(EmployeeData.fromJson(data1)); 
@@ -18,6 +19,7 @@ class ClientEmployee {
         }
       }   
       }
+    }
   }
 
   Map<String, dynamic> toJson() {

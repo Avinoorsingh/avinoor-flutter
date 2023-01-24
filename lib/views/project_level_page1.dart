@@ -6,6 +6,7 @@ import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
+import 'package:colab/views/closed_quality_checklist.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -30,6 +31,15 @@ class ProjectLevelPage1 extends StatefulWidget {
 class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
    final getClientProjectsController = Get.find<GetClientProject>();
    final getClientProfileController = Get.find<GetUserProfileNetwork>();
+  final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
+  final getLabourDataTodayController=Get.find<GetLabourDataToday>();
+  final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+  final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+  final getClosedSnagDataController=Get.find<GetClosedSnag>();
+  final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
    final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
             ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
@@ -53,15 +63,25 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     "DRAWING MASTER",
   ];
    List<String> iconText = [];
- late List<ExpenseData> _chartData;
+ late List<ExpenseData> _chartData=[];
  late String _selectedDate;
 
   @override
   void initState() {
     _selectedDate=DateFormat('yyyy-MM-dd').format(DateTime.now());
-    _chartData = getChartData(_selectedDate);
+    // _chartData = getChartData(_selectedDate);
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getSelectedProjects(context: context);
+     getClientProfileController.getUserProfile(context: context);
+    getLabourDataContractorListController.getContractorListData(context: context);
+    getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
+    getClientProjectsController.getUpcomingProjects(context: context);
+    getNewSnagDataController.getSnagData(context: context);
+    getNewDeSnagDataController.getSnagData(context: context);
+    getOpenedSnagDataController.getOpenedSnagData(context: context);
+    getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+    getClosedSnagDataController.getClosedSnagData(context: context);
+    getClosedDeSnagDataController.getClosedSnagData(context: context);
     super.initState();
   }
 
@@ -84,17 +104,24 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
         initialDate:DateTime.parse(_selectedDate,),
         firstDate: DateTime(1990),
         lastDate: DateTime(2132));
-    if (picked != null && picked != DateTime.parse(_selectedDate)) {
+    if (picked != null) {
       setState(() {
-         _chartData = getChartData(_selectedDate);
+        // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        // print(_selectedDate);
+        // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         _selectedDate = DateFormat('yyyy-MM-dd').format(picked);
-        print(_selectedDate);
+        // print(_selectedDate);
       });
+       _chartData = await getChartData(_selectedDate);
+       setState(() {});
     }
   }
   
   @override
   Widget build(BuildContext context) {
+     if(mounted){
+    setState(() {});
+    }
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
   final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
@@ -198,6 +225,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           // ignore: use_build_context_synchronously
                           context.pushNamed('AREASOFCONCERN');
                          }
+                          if(i==6){
+                          // ignore: use_build_context_synchronously
+                          context.pushNamed('DRAWING');
+                         }
                         },
                         style: ElevatedButton.styleFrom(
                         minimumSize:const Size(10,45),
@@ -225,7 +256,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   child: CircleAvatar(
                                     backgroundColor:AppColors.primary,
                                     radius: 12.0,
-                                    child: Text("0",style: TextStyle(color: Colors.black),),
+                                    child: Text("0", style: TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -239,10 +270,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         Row(
                           children:[ 
                             GestureDetector(
-                              onTap: (){
-                                getNewSnagDataController.getSnagData(context: context);
-                                getOpenedSnagDataController.getOpenedSnagData(context: context);
-                                getClosedSnagDataController.getClosedSnagData(context: context);
+                              onTap: ()async{
+                                await getNewSnagDataController.getSnagData(context: context);
+                                await getOpenedSnagDataController.getOpenedSnagData(context: context);
+                                await getClosedSnagDataController.getClosedSnagData(context: context);
+                                // ignore: use_build_context_synchronously
                                 context.pushNamed('SNAGS');
                               },
                               child: 
@@ -258,7 +290,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           color: AppColors.white,
                           elevation: 10,
                           child: 
-                        MaterialButton(onPressed: (){
+                        MaterialButton(onPressed: () async {
+                          await getNewSnagDataController.getSnagData(context: context);
+                          await getOpenedSnagDataController.getOpenedSnagData(context: context);
+                          await getClosedSnagDataController.getClosedSnagData(context: context);
+                          // ignore: use_build_context_synchronously
                           context.pushNamed('SNAGS');
                         },
                         height: 45,
@@ -457,7 +493,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                width: 100,
+                                width: MediaQuery.of(context).size.width/4.5,
                                 height: 30,
                                 margin:const EdgeInsets.only(right: 20,top: 10),
                                 decoration: BoxDecoration(
@@ -473,7 +509,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   elevation: 0,
                                   foregroundColor: Colors.grey,
                                   backgroundColor: Colors.white),
-                                child: Text(_selectedDate.toString(),style: textStyleBodyText2,),
+                                child: 
+                                FittedBox(child: 
+                                Text(_selectedDate.toString(),style: textStyleBodyText2,),
+                                )
                                 ),
                               )
                           ],),
@@ -598,10 +637,15 @@ class ChartData {
     }
  List<ExpenseData> chartData2=[];
      getChartData1(String selectedDate)async {
+    chartData2.clear();
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
      var token=sharedPreferences.getString('token');
      var projectID=sharedPreferences.getString('projectIdd');
      var clientID=sharedPreferences.getString('client_id');
+    //  print(clientID);
+    //  print(projectID);
+    //  print(token);
+    //  print(selectedDate);
       try {
       var getDataUrl=Uri.parse('http://nodejs.hackerkernel.com/colab/api/prw_inhouse_misc_chart_data');
         var res=await http.post(
@@ -611,12 +655,13 @@ class ChartData {
               "Authorization": "Bearer $token",
             },
             body: {
-              "client_id":clientID,
-              "project_id":projectID,
-              "prw_misc_chart_date":selectedDate,
+              "client_id":clientID.toString(),
+              "project_id":projectID.toString(),
+              "prw_misc_chart_date":selectedDate.toString(),
               }
           );
          if (kDebugMode) {
+          print(res.body);
          }
          if(chartData2.isEmpty){
          for(int i=0;i<jsonDecode(res.body)['obj']['dates'].length; i++){
@@ -635,17 +680,12 @@ class ChartData {
         }
         return chartData2;
   }
-    List<ExpenseData> getChartData(String selectedDate){
-      print("chart data is called");
-      getChartData1(selectedDate);
+    Future<List<ExpenseData>> getChartData(String selectedDate) async {
+      await getChartData1(selectedDate);
+      final signInController=Get.find<SignInController>();
       final List<ExpenseData> chartData = chartData2;
-    [
-      ExpenseData(DateTime.now(), 14,22,43,18),
-      ExpenseData(DateTime.now().add(const Duration(days: 1)), 11,12,13,1991),
-      // ExpenseData(DateTime.now(), 12,15,15,11),
-      // ExpenseData(DateTime.now(), 12,165,13,11),
-      // ExpenseData(DateTime.now(), 12,12,112,11),
-    ];
+      signInController.getChartData=chartData;
+      signInController.getChartData=chartData;
     return chartData;
   }
 

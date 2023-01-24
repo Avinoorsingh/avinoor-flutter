@@ -97,7 +97,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                             setState(() {selectedIndex = index;});
                              subLocationName.clear();
                              subLocationID.clear();
-                             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
                               var clientID=sharedPreferences.getString('client_id');

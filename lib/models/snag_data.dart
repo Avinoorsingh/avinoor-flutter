@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class SnagData {
-  String? status;
+  var status;
   List<FetchSnagData>? data;
 
   SnagData({this.status, this.data});
@@ -41,23 +41,23 @@ class FetchSnagData {
   int? activityHeadId;
   int? activityId;
   int? contractorId;
-  String? remark;
-  String? deSnagRemark;
-  String? closeSnagRemark;
-  String? debitNote;
+  var remark;
+  var deSnagRemark;
+  var closeSnagRemark;
+  var debitNote;
   int? debitAmount;
-  String? dueDate;
+  var dueDate;
   int? assignedTo;
   int? debetContractorId;
-  String? markupFile;
-  String? snagPriority;
-  String? snagStatus;
+  var markupFile;
+  var snagPriority;
+  var snagStatus;
   int? rejectCount;
   int? createdby2;
-  String? rm;
-  String? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+  var rm;
+  int? updatedBy;
+  var createdAt;
+  var updatedAt;
   Location? location;
   SubLocation? subLocation;
   SubSubLocation? subSubLocation;
@@ -114,6 +114,7 @@ class FetchSnagData {
       this.createdBy1});
 
   FetchSnagData.fromJson(Map<String, dynamic> json) {
+    try {
     id = json['id'];
     clientId = json['client_id'];
     projectId = json['project_id'];
@@ -173,6 +174,12 @@ class FetchSnagData {
       json['snagViewpoint'].forEach((v) {
         snagViewpoint!.add(SnagViewpoint.fromJson(v));
       });
+    }
+    } catch (e) {
+     if (kDebugMode) {
+       print("}}}}}}}}}}}}}}}}}}}}{{");
+       print(e); 
+     }
     }
     // if (json['snagViewpoint'] != null) {
     //   snagViewpoint = <Null>[];
@@ -262,11 +269,11 @@ class Location {
   int? locationId;
   int? projectId;
   int? clientId;
-  String? locationName;
-  String? createdAt;
- String? updatedAt;
- String? createdby2;
- String? updatedBy;
+  var locationName;
+  var createdAt;
+ var updatedAt;
+ int? createdby2;
+ int? updatedBy;
 
   Location(
       {this.locationId,
@@ -309,11 +316,11 @@ class SubLocation {
   int? projectId;
   int? clientId;
   int? orderNo;
-  String? subLocationName;
+  var subLocationName;
   int? createdby2;
- String? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+  int? updatedBy;
+  var createdAt;
+  var updatedAt;
 
   SubLocation(
       {this.subLocId,
@@ -362,11 +369,11 @@ class SubSubLocation {
   int? projectId;
   int? locationId;
   int? subLocId;
-  String? subSubLocationName;
+  var subSubLocationName;
   int? createdby2;
- String? updatedBy;
-  String? createdAt;
- String? updatedAt;
+  int? updatedBy;
+  var createdAt;
+ var updatedAt;
 
   SubSubLocation(
       {this.subLocationId,
@@ -414,14 +421,14 @@ class ProjectActivityHead {
   int? clientId;
   int? projectId;
   int? activityTypeId;
-  String? activityHead;
+  var activityHead;
   int? activityHeadOrder;
- String? import;
- String? description;
+ var import;
+ var description;
   int? createdby2;
   int? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+  var createdAt;
+  var updatedAt;
 
   ProjectActivityHead(
       {this.activityId,
@@ -474,20 +481,20 @@ class ProjectActivity {
   int? linkingActivityId;
   int? activityId;
   int? budgetId;
-  String? activity;
+  var activity;
   int? activityOrder;
   int? uomId;
- String? description;
-  String? corel;
+ var description;
+  var corel;
   int? locationId;
   int? subLocId;
   int? subSubLocId;
   int? status;
- String? import;
- String? createdby2;
- String? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+ var import;
+ var createdby2;
+ var updatedBy;
+  var createdAt;
+  var updatedAt;
 
   ProjectActivity(
       {this.linkingActivityId,
@@ -554,33 +561,33 @@ class ProjectActivity {
 class ContractorInfo {
   int? id;
   int? clientId;
-  String? vendorCode;
-  String? vendorType;
-  String? nameOfCompany;
-  String? yearOfRegestration;
-  String? regesteredAddress;
-  String? email;
-  String? website;
-  String? ownerName;
-  String? owner;
-  String? contactPerson;
+  var vendorCode;
+  var vendorType;
+  var nameOfCompany;
+  var yearOfRegestration;
+  var regesteredAddress;
+  var email;
+  var website;
+  var ownerName;
+  var owner;
+  var contactPerson;
   int? contactNo;
-  String? panNo;
-  String? gstNo;
+  var panNo;
+  var gstNo;
   int? country;
-  String? state;
-  String? pf;
-  String? bankName;
-  String? branch;
-  String? accountNo;
-  String? accountType;
-  String? ifscCode;
-  String? micrCode;
-  String? workAttribute;
-  String? createdby2;
-  String? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+  var state;
+  var pf;
+  var bankName;
+  var branch;
+  var accountNo;
+  var accountType;
+  var ifscCode;
+  var micrCode;
+  var workAttribute;
+  var createdby2;
+  var updatedBy;
+  var createdAt;
+  var updatedAt;
 
   ContractorInfo(
       {this.id,
@@ -687,19 +694,19 @@ class ProjcontractorInfo {
   int? clientId;
   int? projectId;
   int? clientContractorId;
-  String? contractorName;
-  String? startDate;
-  String? endDate;
-  String? workOrderNumber;
-  String? scopeOfWork;
-  String? contactNo;
+  var contractorName;
+  var startDate;
+  var endDate;
+  var workOrderNumber;
+  var scopeOfWork;
+  var contactNo;
   // ignore: prefer_typing_uninitialized_variables
   var attFile;
   int? grandTotal;
-  String? createdby2;
-  String? updatedBy;
-  String? createdAt;
-  String? updatedAt;
+  var createdby2;
+  var updatedBy;
+  var createdAt;
+  var updatedAt;
 
   ProjcontractorInfo(
       {this.id,
@@ -764,12 +771,12 @@ class Category {
   int? id;
   int? clientId;
   int? projectId;
-  String? name;
-  String? description;
-  String? createdAt;
- String? updatedAt;
+  var name;
+  var description;
+  var createdAt;
+ var updatedAt;
   int? createdby2;
- String? updatedBy;
+ var updatedBy;
 
   Category(
       {this.id,
@@ -812,26 +819,26 @@ class Category {
 class Employee {
   int? id;
   int? clientId;
-  String? userId;
-  String? password;
-  String? name;
-  String? rm;
-  String? mobileNo;
-  String? emailId;
+  var userId;
+  var password;
+  var name;
+  var rm;
+  var mobileNo;
+  var emailId;
   int? roleId;
   int? status;
   int? userType;
-  String? lastName;
+  var lastName;
   int? designation;
-  String? altMobileNo;
-  String? emergencyName;
-  String? emergencyMobileNo;
-  String? dob;
-  String? doj;
-  String? userImage;
-  String? fcmToken;
-  String? createdAt;
-  String? updatedAt;
+  var altMobileNo;
+  var emergencyName;
+  var emergencyMobileNo;
+  var dob;
+  var doj;
+  var userImage;
+  var fcmToken;
+  var createdAt;
+  var updatedAt;
 
   Employee(
       {this.id,
@@ -913,26 +920,26 @@ class Employee {
 class CreatedBy {
   int? id;
   int? clientId;
-  String? userId;
-  String? password;
-  String? name;
-  String? rm;
-  String? mobileNo;
-  String? emailId;
+  var userId;
+  var password;
+  var name;
+  var rm;
+  var mobileNo;
+  var emailId;
   int? roleId;
   int? status;
   int? userType;
- String? lastName;
+ var lastName;
   int? designation;
- String? altMobileNo;
- String? emergencyName;
- String? emergencyMobileNo;
- String? dob;
- String? doj;
- String? userImage;
-  String? fcmToken;
-  String? createdAt;
-  String? updatedAt;
+ var altMobileNo;
+ var emergencyName;
+ var emergencyMobileNo;
+ var dob;
+ var doj;
+ var userImage;
+  var fcmToken;
+  var createdAt;
+  var updatedAt;
 
   CreatedBy(
       {this.id,
@@ -1015,11 +1022,11 @@ class SnagViewpoint {
   int? id;
   int? snagsMasterId;
   int? viewpointId;
-  String? viewpointFileName;
-  String? desnagsFileName;
-  String? deSnagDate;
-  String? createdAt;
-  String? updatedAt;
+  var viewpointFileName;
+  var desnagsFileName;
+  var deSnagDate;
+  var createdAt;
+  var updatedAt;
 
   SnagViewpoint(
       {this.id,

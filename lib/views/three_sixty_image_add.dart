@@ -172,7 +172,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                    ),
               const SizedBox(height: 40,),
               Padding(
-              padding: const EdgeInsets.only(left: 0,right: 0,),
+              padding: const EdgeInsets.only(left: 0, right: 0,),
               child:
               viewpointsName.isNotEmpty ?
                 Container(

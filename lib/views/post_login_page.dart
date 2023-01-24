@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // ignore: use_build_context_synchronously
     context.goNamed('PROJECTLEVELPAGE');
    }
-   else if(sharedPreferences.getBool('isProjectSignedIn')!=true&&sharedPreferences.getBool('isAdminSignedIn')!=true&&sharedPreferences.getBool('isClientSignedIn')!=true){
+   else if(sharedPreferences.getBool('isProjectSignedIn')!=true && sharedPreferences.getBool('isAdminSignedIn')!=true&&sharedPreferences.getBool('isClientSignedIn')!=true){
     // ignore: use_build_context_synchronously
     context.goNamed('LOGINPAGE');
    }

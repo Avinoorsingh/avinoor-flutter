@@ -243,13 +243,14 @@ class _SnagState extends State<UpComingEntry>{
 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
+
     final f = DateFormat('yyyy-MM-dd hh:mm a');
-   getFormatedDate(date) {
-      var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
-      var inputDate = inputFormat.parse(date);
-      var outputFormat = DateFormat('yyyy-MM-dd');
-    return outputFormat.format(inputDate);
-    }
+    getFormatedDate(date) {
+        var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+        var inputDate = inputFormat.parse(date);
+        var outputFormat = DateFormat('yyyy-MM-dd');
+      return outputFormat.format(inputDate);
+      }
  
   bool iconPressed=false;
   @override
@@ -615,7 +616,7 @@ class _SnagState extends State<UpComingEntry>{
                                 } 
                           else {
                                 groupedList[data2.contractorName!] = [data2.name!];
-                                }
+                              }
                           if(data2.contractorId==contractorID[contractorList.indexOf(newValue)]){
                         _dropdownValues2.add(data2.name!);
                           }
@@ -636,8 +637,8 @@ class _SnagState extends State<UpComingEntry>{
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
                    }else{}}):null;
                    if(newValue!="Select Contractor Name"){
-                   for (var i = 0; i < subItems.length; i++) {
-                        for (var j = 0; j < subItems[i].length; j++) {
+                   for (var i = 0; i < subItems.length; i++){
+                        for (var j = 0; j < subItems[i].length; j++){
                           if (subItems[i][j] != 'Please Select'){
                             _selectedDropdownValues2[i].add('Please Select');
                             _controllers2[i].add(TextEditingController());
@@ -648,7 +649,8 @@ class _SnagState extends State<UpComingEntry>{
               },
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+          Row(mainAxisAlignment: MainAxisAlignment.center, 
+          children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
           if(subItems[outerIndex].isNotEmpty)
           ListView.builder(
               physics:const NeverScrollableScrollPhysics(),
@@ -661,7 +663,8 @@ class _SnagState extends State<UpComingEntry>{
                 // print(contractorLabourLinkingId[contractorID[outerIndex+1]]!);
                 // print(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]!);
               return 
-                Column(children: [
+                Column(
+                  children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -725,7 +728,8 @@ class _SnagState extends State<UpComingEntry>{
                       }
                     }
                     }
-                    });}
+                    });
+                    }
                     },
                     )
                       )
@@ -781,9 +785,9 @@ class _SnagState extends State<UpComingEntry>{
                     if(_selectedDropdownValues2[outerIndex].isNotEmpty)
                     IconButton(
                     icon:const Icon(Icons.delete),
-                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    style: ElevatedButton.styleFrom(backgroundColor:AppColors.primary),
                     onPressed: () {
-                       if(_selectedDropdownValues2[outerIndex][index]!="Please Select") {
+                       if(_selectedDropdownValues2[outerIndex][index]!="Please Select"){
                          if(index!=0){
                       setState((){
                       _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
@@ -791,19 +795,15 @@ class _SnagState extends State<UpComingEntry>{
                       _deleteMore2(outerIndex,index); 
                         if (kDebugMode) {}
                        });}else{
-                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
-                       }
+                          EasyLoading.showToast("First contractor cannot be deleted", toastPosition: EasyLoadingToastPosition.bottom);
+                        }
                        } else {
-                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.showToast("Please select before deleting", toastPosition: EasyLoadingToastPosition.bottom);
                           if (kDebugMode) {
                             print(_items2[outerIndex]['$outerIndex']);
-                          }
-                          if (kDebugMode) {
                             print("i am here");
-                          }
-                          if (kDebugMode) {
                             print(index);
-                          }
+                        }
                       }
                     }
                     ),

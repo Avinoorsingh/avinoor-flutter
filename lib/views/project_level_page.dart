@@ -1,5 +1,7 @@
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
+import 'package:colab/routes.dart';
+import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/project_level_page1.dart';
 import 'package:colab/views/project_level_page2.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
 import '../theme/text_styles.dart';
@@ -54,7 +57,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     clientDataGet=widget.clientData;
     // EasyLoading.dismiss();
@@ -68,6 +71,28 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
     getClosedDeSnagDataController.getClosedSnagData(context: context);
+     saveProjectId();
+  }
+
+  saveProjectId() async {
+    print("|||||||||||||||||||||||||||||||||||||||||");
+    print(widget.clientData.projectid);
+    print("I am here !!");
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(widget.clientData.projectid!=null){
+        sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
+        getClientProfileController.getUserProfile(context: context);
+        getLabourDataContractorListController.getContractorListData(context: context);
+        getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
+        getClientProjectsController.getUpcomingProjects(context: context);
+        getNewSnagDataController.getSnagData(context: context);
+        getNewDeSnagDataController.getSnagData(context: context);
+        getOpenedSnagDataController.getOpenedSnagData(context: context);
+        getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+        getClosedSnagDataController.getClosedSnagData(context: context);
+        getClosedDeSnagDataController.getClosedSnagData(context: context);
+        DependencyInjector.initializeControllers();
+    }
   }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -102,7 +127,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
      return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
-    return signInController.getClientProfile?.clientid!=null? Scaffold(
+      return signInController.getClientProfile?.clientid!=null? Scaffold(
         appBar: AppBar(
            flexibleSpace: 
            Container(
@@ -117,7 +142,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           elevation: 0,
           title:
           Container(
-            padding: const EdgeInsets.only(bottom: 80,top: 30),
+            padding: const EdgeInsets.only(bottom: 80,top: 40),
             child:
           Column(children: [
           Row(
@@ -137,29 +162,33 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                       overflow: TextOverflow.ellipsis,
                       style: textStyleHeadline4.copyWith(fontSize: 16),
                     ),
-                    Flexible(
+                    SizedBox(
                         child: Text(
                       'Last Login: ${signInController.getClientProfile?.updatedat!=null ? f.format(DateTime.parse(signInController.getClientProfile!.updatedat.toString())):f.format(DateTime.now())}',
                       overflow: TextOverflow.ellipsis,
                       style: textStyleBodyText2.copyWith(
                           color: Colors.black, fontSize: 14),
                     )),
-                     Flexible(
-                        child: Text(
+                     Container(
+                        child:
+                        Flexible(child: Text(
                       ' ${signInController.getClientProfile?.name}',
                       overflow: TextOverflow.ellipsis,
                       style: textStyleBodyText2.copyWith(
                           color: Colors.black, fontSize: 14),
-                    )),
-                    Flexible(child: Container(height: 10),),
+                    )),),
+                    //  Container(height: 10),
                       if(widget.from=="client")
                        Flexible(
-                        child: MaterialButton(
-                          elevation: 0,
-                          minWidth: 8,
-                          color: Colors.greenAccent,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(elevation: 0,
+                          splashFactory: NoSplash.splashFactory,
+                          backgroundColor: Colors.greenAccent),
                           child: const Text("CHANGE PROJECT",style: TextStyle(color: Colors.black,fontSize: 8)),
-                          onPressed: (){
+                          onPressed: ()async {
+                          // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                          // sharedPreferences.setString("projectIdd","");
+                          // ignore: use_build_context_synchronously
                           context.pushNamed('CLIENTLEVELPAGE');
                         },)
                        )
@@ -170,6 +199,10 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
              Material(
              borderRadius: BorderRadius.circular(100),
              clipBehavior: Clip.antiAliasWithSaveLayer,
+             color: Colors.white,
+             elevation: 5,
+             shadowColor: Colors.black,
+             borderOnForeground: true,
              child: InkWell(
               onTap: () {
                 context.pushNamed('MYPROFILEPAGE');

@@ -158,9 +158,9 @@ setState(() => this.image = imageTemp);
   Widget build(BuildContext context) {
     return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
-      if (kDebugMode) {
-        print(signInController.getEmployeeList?.data!.first);
-      }
+      // if (kDebugMode) {
+      //   print(signInController.getEmployeeList?.data!.first);
+      // }
       if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
         for(int i=0;i<signInController.getEmployeeList!.data!.length;i++){
@@ -168,12 +168,14 @@ setState(() => this.image = imageTemp);
           assignedToListIndex.add(signInController.getEmployeeList!.data![i].id!);
         }
       }
+      if(signInController.getCategoryList!=null){
       if(signInController.getCategoryList!.data!.isNotEmpty && categoryNew.isEmpty && categoryNew.isEmpty){
         List<Data>? categoryList=signInController.getCategoryList?.data;
         for(var data in categoryList!){
           categoryNew.add(data.name!);
           categoryID.add(data.id!);
         }
+      }
       }
        if(signInController.getLocationList!.data!.isNotEmpty && locationList.isEmpty){
         List<LocationData>? locationList1=signInController.getLocationList?.data;
@@ -227,7 +229,7 @@ setState(() => this.image = imageTemp);
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(15),
-          itemCount: 3,
+          itemCount: categoryNew.length,
           itemBuilder: (BuildContext context, int index){
             isCardEnabled.add(false);
             return GestureDetector(

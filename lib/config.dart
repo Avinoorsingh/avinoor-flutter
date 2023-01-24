@@ -24,6 +24,7 @@ class Config{
   static const String addAreaOfConcernApi="http://nodejs.hackerkernel.com/colab/api/add_issues";
   static const String getLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_locations_progress/";
   static const String getSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_sub_locations_progress/";
+  static const String getDrawingModuleApi="http://nodejs.hackerkernel.com/colab/api/get_drawing_mobile_tree/";
   static const String getSubSubLocationProgressApi="http://nodejs.hackerkernel.com/colab/api/get_subSub_locations_progress/";
   static const String getTabUpcomingActivitiesApi="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add";
   static const String getOnGoingOnGoingProgressApi="http://nodejs.hackerkernel.com/colab/api/get_ongoing_progress_add";

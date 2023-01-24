@@ -429,19 +429,19 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                   EasyLoading.showToast("Please select location & specify other location",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else if(locationController.text.isEmpty){
-                    EasyLoading.showToast("Please select location",toastPosition: EasyLoadingToastPosition.bottom);
+                    EasyLoading.showToast("Please select location", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                  else if(subLocationId.text.isEmpty){
                   EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                   else if(subSubLocationController.text.isEmpty){
-                  EasyLoading.showToast("Please Select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
+                  EasyLoading.showToast("Please Select Activity Head", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else if(otherLocationController.text.isEmpty){
-                  EasyLoading.showToast("Please specify other location",toastPosition: EasyLoadingToastPosition.bottom);
+                  EasyLoading.showToast("Please specify other location", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                  else if(descriptionController.text.isEmpty){
-                   EasyLoading.showToast("Please add Description",toastPosition: EasyLoadingToastPosition.bottom);
+                   EasyLoading.showToast("Please add Description", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else{
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -478,7 +478,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                    )
                    );
                     if (kDebugMode) {
-                      print(formData.fields);
+                      // print(formData.fields);
                     }
                   try {
                   var res= await dio.post(

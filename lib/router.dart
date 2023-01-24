@@ -9,6 +9,8 @@ import 'package:colab/views/client_level.dart';
 import 'package:colab/views/completed_particular_progress.dart';
 import 'package:colab/views/completed_particular_progress_detail.dart';
 import 'package:colab/views/de_snags.dart';
+import 'package:colab/views/drawing_master.dart';
+import 'package:colab/views/drawing_master_pdf.dart';
 import 'package:colab/views/edit_progress_entry.dart';
 import 'package:colab/views/get_completed_site_progress.dart';
 import 'package:colab/views/labour_data.dart';
@@ -189,6 +191,21 @@ class CustomRouter {
         builder: (context, state) => ThreeSixtyImage(
           key: state.pageKey,
         ),
+      ),
+      GoRoute(
+        name:'DRAWING',
+        path: drawingMaster,
+        builder: (context, state) => DrawingMaster(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name:'PDFSCREEN',
+        path: addingThreeSixtyImage,
+        builder: (context, state) => PDFScreen(
+          key: state.pageKey,
+          path:state.queryParams["path"],
+        )
       ),
        GoRoute(
         name:'ADD360IMAGE',

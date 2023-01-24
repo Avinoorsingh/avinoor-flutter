@@ -2,6 +2,7 @@ import 'package:colab/constants/colors.dart';
 import 'package:colab/controller/signInController.dart';
 import 'package:colab/models/client_response.dart';
 import 'package:colab/models/login_response_model.dart';
+import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -9,7 +10,11 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:intl/intl.dart';
+import '../network/area_of_concern_network.dart';
 import '../network/client_project.dart';
+import '../network/labourData/labour_data_network.dart';
+import '../network/progress_network.dart';
+import '../network/quality_network.dart';
 
 class ClientLevelPage extends StatefulWidget {
   const ClientLevelPage({Key? key}) : super(key: key);
@@ -19,10 +24,53 @@ class ClientLevelPage extends StatefulWidget {
 }
 
 class _ClientLevelPageState extends State<ClientLevelPage> {
-
+  final signInController=Get.find<SignInController>();
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
-  final signInController=Get.find<SignInController>();
+  final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
+  final getLabourDataTodayController=Get.find<GetLabourDataToday>();
+  final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+  final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+  final getClosedSnagDataController=Get.find<GetClosedSnag>();
+  final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
+  final getClientProjectsController1 = Get.find<GetClientProject>();
+  final getClientProfileController1 = Get.find<GetUserProfileNetwork>();
+  final getSnagData=GetNewSnag();
+  final getProjectSnagData=Get.find<GetNewSnag>();
+  final getLabourDataContractorList=GetLabourDataContractor();
+  final getLabourDataContractorListData=Get.find<GetLabourDataContractor>();
+  final getLabourDataOfSelectedContractorList=GetSelectedContractorData();
+  final getLabourDataOfSelectedContractorListData=Get.find<GetSelectedContractorData>();
+  final getLabourDataToday=GetLabourDataToday();
+  final getLabourDataTodayListData=Get.find<GetLabourDataToday>();
+  final getCompletedSiteProgress =GetCompletedSiteProgress();
+  final getCompletedSiteProgressData=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgress =GetInEqualitySiteProgress();
+  final getInQualitySiteProgressData=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgress =GetOnGoingSiteProgress();
+  final getOnGoingSiteProgressData=Get.find<GetOnGoingSiteProgress>();
+  final getNewQualityData=GetNewCheckList();
+  final getProjectNewQualityData=Get.find<GetNewCheckList>();
+  final getAreaOfConcernData=GetAreaOfConcern();
+  final getProjectAreaOfConcernData=Get.find<GetAreaOfConcern>();
+  final getOpenedQualityData=GetOpenedCheckList();
+  final getProjectOpenedQualityData=Get.find<GetOpenedCheckList>();
+  final getClosedQualityData=GetClosedCheckList();
+  final getProjectClosedQualityData=Get.find<GetClosedCheckList>();
+  final getDeSnagData=GetNewDeSnag();
+  final getProjectDeSnagData=Get.find<GetNewDeSnag>();
+  final getOpenedSnag=GetOpenedSnag();
+  final getOpenedSnagData=Get.find<GetOpenedSnag>();
+  final getOpenedDeSnag=GetOpenedDeSnag();
+  final getOpenedDeSnagData=Get.find<GetOpenedDeSnag>();
+  final getClosedSnag=GetClosedSnag();
+  final getClosedSnagData=Get.find<GetClosedSnag>();
+  final getClosedDeSnag=GetClosedDeSnag();
+  final getClosedDeSnagData=Get.find<GetClosedDeSnag>();
+  final signInController1=Get.find<SignInController>();
   TextEditingController dateInput = TextEditingController();
   List<ClientProfileData> clientData = [];
   LoginResponseModel? getProfile;
@@ -111,7 +159,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
           ),
         ),
         body: 
-    GetBuilder<GetClientProject>(
+      GetBuilder<GetClientProject>(
       builder: (_) {
         if(getClientProjectsController.getClientProjects.isNotEmpty){
       clientData=getClientProjectsController.getClientProjects.toSet().toList();
@@ -164,12 +212,14 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                 //pickedDate output format => 2021-03-10 00:00:00.000
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                   //formatted date output using intl package =>  2021-03-16
+                  if(formattedDate.isNotEmpty){
                   setState(() {
                     dateInput.text ="Date:   $formattedDate";
-                     getClientProjectsController.getSelectedProjects(context: context,selectedDate: formattedDate);
+                     });
+                    getClientProjectsController.getSelectedProjects(context: context,selectedDate: formattedDate);
                     clientData=getClientProjectsController.getClientProjects.toSet().toList();
                      //set output date to TextField value.
-                  });
+                  }
                 } else {}
               },
              // "Date:  ${getFormatedDate(DateTime.now().toString())}",
@@ -228,7 +278,10 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                             clipBehavior: Clip.antiAliasWithSaveLayer,
                                             child: InkWell(
                                               onTap: () {
-                                                context.pushNamed('PROJECTLEVELPAGE',  queryParams: {"from": "client"},extra: clientData[index]);  
+                                                DependencyInjector.initializeControllers();
+                                                // ignore: use_build_context_synchronously
+                                                context.pushNamed('PROJECTLEVELPAGE', queryParams: {"from": "client"},
+                                                extra: clientData[index]);  
                                               },
                                               child:  Image.network("https://nodejs.hackerkernel.com/colab${clientData[index].projectlogoname}",
                                                 errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {

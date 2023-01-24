@@ -428,9 +428,11 @@ class _SnagState extends State<QualityCheckDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     Container(
+                      width: 200,
                       margin: const EdgeInsets.only(left: 20,right: 10),
-                      child:
-                    Text(combinedList[outerIndex][innerIndex].sectionQuestion,style: textStyleBodyText1,),
+                    child:Text(combinedList[outerIndex][innerIndex].sectionQuestion,style: textStyleBodyText1,
+                    maxLines: 4,
+                      )
                     ),
                     Switch(
                       value: (checkedStatus[outerIndex][innerIndex]['buttonValue']==1||checkedStatus[outerIndex][innerIndex]['buttonValue']==true)?true:false,
