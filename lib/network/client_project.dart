@@ -20,24 +20,23 @@ import '../config.dart';
 import '../controller/signInController.dart';
 
 class GetClientProject extends GetxController {
+  final signInController = Get.find<SignInController>();
   List<ClientProfileData> getClientProjects= [];
   bool isLoading = true;
   var clientProjects = <ClientProfileData>[];
   ClientProfileData? getSingleProjectData;
 
-  Future getUpcomingProjects(
+  getUpcomingProjects(
       {
       required BuildContext context,
      }) async {
     try {
-      //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
       isLoading = true;
       var getUserDataUrl=Uri.parse(Config.getUserDataApi);
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           var tokenValue=sharedPreferences.getString('token');
           var clientId=sharedPreferences.getString('client_id');
           var id=sharedPreferences.getString('id'); 
-      // update();
       var res=await http.get(
             getUserDataUrl,
             headers: {
@@ -49,7 +48,8 @@ class GetClientProject extends GetxController {
             }
             );
 
-           var resSuccess=jsonDecode(jsonEncode(res.body));
+           var resSuccess=jsonDecode(res.body);
+          //  print(resSuccess);
            if(resSuccess['data'].length>1){
              for(var data in  resSuccess['data']){
             clientProjects.add(ClientProfileData.fromJson(data));

@@ -47,6 +47,7 @@ class SignInController extends GetxController {
   RxString jwtToken = ''.obs;
   RxString userIdProvider = ''.obs;
   late final getUserProfile = GetUserProfileNetwork();
+  late final getUserProjects = GetClientProject();
   late final getNewSnagData=GetNewSnag();
   late final getNewDeSnagData=GetNewDeSnag();
   late final getOpenedSnagData=GetOpenedSnag();

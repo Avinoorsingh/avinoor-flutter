@@ -1,15 +1,21 @@
+import 'dart:convert';
+
 import 'package:colab/constants/colors.dart';
 import 'package:colab/controller/signInController.dart';
 import 'package:colab/models/client_response.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:colab/theme/text_styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../config.dart';
 import '../network/area_of_concern_network.dart';
 import '../network/client_project.dart';
 import '../network/labourData/labour_data_network.dart';
@@ -74,15 +80,54 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
   TextEditingController dateInput = TextEditingController();
   List<ClientProfileData> clientData = [];
   LoginResponseModel? getProfile;
+  List<ClientProfileData> clientProjects=[];
    @override
   void initState() {
     super.initState(); 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
-    clientData.clear();
     // ignore: prefer_interpolation_to_compose_strings
     dateInput.text ="Date:   "+getFormatedDate(DateTime.now().toString()); 
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
+    upcomingProjects();
+  }
+
+  Future<void> upcomingProjects()async {
+    try {
+      var getUserDataUrl=Uri.parse(Config.getUserDataApi);
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      var tokenValue=sharedPreferences.getString('token');
+      var clientId=sharedPreferences.getString('client_id');
+      var id=sharedPreferences.getString('id'); 
+      var res=await http.get(
+            getUserDataUrl,
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+              'client_id':clientId.toString(),
+              'id':id.toString(),
+            }
+            );
+
+           var resSuccess=jsonDecode(res.body);
+          //  print(resSuccess);
+           if(resSuccess['data'].length>1){
+             for(var data in  resSuccess['data']){
+            clientProjects.add(ClientProfileData.fromJson(data));
+           }
+      if(clientData.isEmpty){
+      clientData = clientProjects.toSet().toList();
+      }
+      setState(() {});
+        }
+    } catch (e) {
+      // EasyLoading.dismiss();
+      if (kDebugMode) {
+        print('getClientData nhi chali at client level !!');
+        print(e);
+      }
+    }
   }
 
   var name="";
@@ -97,14 +142,16 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
 
   @override
   Widget build(BuildContext context) {
+     getClientProjectsController.getUpcomingProjects(context: context);
       return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
+        getClientProjectsController.getUpcomingProjects(context: context);
         final signInController=Get.find<SignInController>();
         EasyLoading.dismiss();
         return
       Scaffold(
         appBar: AppBar(
-          title: Row(
+          title:signInController.getClientProfile?.name!=null? Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(
@@ -150,7 +197,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                     ),
                   ),
             ],
-          ),
+          ):const Text(""),
           toolbarHeight: 80,
           backgroundColor: AppColors.primary,
           leading: const Icon(
@@ -158,16 +205,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
             size: 28,
           ),
         ),
-        body: 
-      GetBuilder<GetClientProject>(
-      builder: (_) {
-        if(getClientProjectsController.getClientProjects.isNotEmpty){
-      clientData=getClientProjectsController.getClientProjects.toSet().toList();
-      EasyLoading.dismiss();
-        }
-      return 
-        // SingleChildScrollView(
-        //   child: 
+        body: clientData.isNotEmpty? 
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -449,11 +487,8 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
        ),
       //  SizedBox(height: 200,)
          ]
-        // )
+        ):Container()
          );
-         }
-         )
-         );
-           });
+         });
   }
 }

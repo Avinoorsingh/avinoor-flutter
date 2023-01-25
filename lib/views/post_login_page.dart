@@ -69,6 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
     context.goNamed('CLIENTLEVELPAGE');
    }
     if(sharedPreferences.getBool('isProjectSignedIn')==true){
+      await getClientProjectsController.getUpcomingProjects(context: context);
     // ignore: use_build_context_synchronously
     context.goNamed('PROJECTLEVELPAGE');
    }

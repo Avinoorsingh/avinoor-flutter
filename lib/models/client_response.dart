@@ -118,24 +118,42 @@ class ClientProfileData {
         progressMissCount = json['progressMissCount'];
         progressDepartCount = json['progressDepartCount'];
         areaOfConern = json['AreaOfConern'];
-        if (json['DonutArr'] != null) {
-         donutArr = <DonutArr>[];
-         json['DonutArr'].forEach((v) {
-         donutArr!.add(DonutArr.fromJson(v));
-        });
-      }
-        if (json['nonProductiveCount'] != null) {
-         nonProductiveCount = <NonProductiveCount>[];
-         json['nonProductiveCount'].forEach((v) {
-         nonProductiveCount!.add(NonProductiveCount.fromJson(v));
-        });
-      }
-        if (json['productiveCount'] != null) {
-         productiveCount = <ProductiveCount>[];
-         json['productiveCount'].forEach((v) {
-         productiveCount!.add(ProductiveCount.fromJson(v));
-        });
-      }
+        donutArr =  <DonutArr>[];
+        if(json['DonutArr']!=null){
+        for(var data1 in json['DonutArr']){
+          donutArr?.add(DonutArr.fromJson(data1));    
+          }
+        }
+      //   if (json['DonutArr'] != null) {
+      //    donutArr = <DonutArr>[];
+      //    json['DonutArr'].forEach((v) {
+      //    donutArr!.add(DonutArr.fromJson(v));
+      //   });
+      // }
+       if(json['nonProductiveCount']!=null){
+          nonProductiveCount=<NonProductiveCount>[];
+        for(var data1 in json['nonProductiveCount']){
+          nonProductiveCount?.add(NonProductiveCount.fromJson(data1));    
+          }
+        }
+      //   if (json['nonProductiveCount'] != null) {
+      //    nonProductiveCount = <NonProductiveCount>[];
+      //    json['nonProductiveCount'].forEach((v) {
+      //    nonProductiveCount!.add(NonProductiveCount.fromJson(v));
+      //   });
+      // }
+      //   if (json['productiveCount'] != null) {
+      //    productiveCount = <ProductiveCount>[];
+      //    json['productiveCount'].forEach((v) {
+      //    productiveCount!.add(ProductiveCount.fromJson(v));
+      //   });
+      // }
+       if(json['productiveCount']!=null){
+          productiveCount=<ProductiveCount>[];
+        for(var data1 in json['productiveCount']){
+          productiveCount?.add(ProductiveCount.fromJson(data1));    
+          }
+        }
         snagTotalCount = json['snagTotalCount'];
         areaOfConernTotal = json['AreaOfConernTotal'];
         totalPwrLabourCount = json['TotalPwrLabourCount'];

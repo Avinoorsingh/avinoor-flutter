@@ -110,7 +110,7 @@ class _DrawingMasterState extends State<DrawingMaster> {
       ),
     body: 
     Container(margin: const EdgeInsets.only(top: 10),
-    child:
+    child:treeData.isNotEmpty?
     ListView.builder(
       itemCount: treeData.length,
       itemBuilder: (context, index) {
@@ -124,7 +124,7 @@ class _DrawingMasterState extends State<DrawingMaster> {
             children: [ 
             const Icon(Icons.folder, color:AppColors.black,),
             const Text("    "),
-            Text(item['drawing_category'], style:const TextStyle(color: Colors.black),),
+            Text(item['drawing_category'], style: const TextStyle(color: Colors.black),),
             ]),
           children: <Widget>[
             for (var type in item['type'])
@@ -132,7 +132,7 @@ class _DrawingMasterState extends State<DrawingMaster> {
           ],
         );
       },
-    )) 
+    ):const Center(child: CircularProgressIndicator(color: AppColors.primary,),)) 
     );
 }
 }
@@ -158,7 +158,7 @@ class _DrawingMasterState extends State<DrawingMaster> {
     ));
   }
 
-  Widget _buildTreeViewActivity(BuildContext context,Map<String, dynamic> item){
+  Widget _buildTreeViewActivity(BuildContext context, Map<String, dynamic> item){
     return 
      Container(
       margin:const EdgeInsets.only(left: 10),
@@ -170,7 +170,8 @@ class _DrawingMasterState extends State<DrawingMaster> {
       title:
       Row(children: [
         const Icon(Icons.folder, color:AppColors.black,),
-        const Text("   "), Text(item['activity_head'], style:const TextStyle(color: Colors.black),),
+        const Text("   "), 
+        Text(item['activity_head'], style:const TextStyle(color: Colors.black),),
       ]),
       children: <Widget>[
         for (var location in item['location'])
@@ -205,24 +206,18 @@ class _DrawingMasterState extends State<DrawingMaster> {
      Container(
       margin:const EdgeInsets.only(left: 10),
       child:
-    ExpansionTile(
-      textColor: AppColors.black,
-      collapsedTextColor: AppColors.black,
-      leading:const Icon(Icons.folder, color:AppColors.black,),
-      key: PageStorageKey(item['location_name']),
-      title:
-      Row(children: [
-        const Icon(Icons.folder, color:AppColors.black,),
-        const Text("   "),
-        Text(item['location_name'], 
-        style:const TextStyle(color: Colors.black),),
-      ]),
+      Column(
+    // ExpansionTile(
+    //   textColor: AppColors.black,
+    //   collapsedTextColor: AppColors.black,
+    //   leading:const Icon(Icons.folder, color:AppColors.black,),
+    //   key: PageStorageKey(item['location_name']),
+    //   title:Text(""),
       children: <Widget>[
         for (var file in item['drawing_master_file'])
           ListTile(
-            title: Text(file['drawing_name']),
-            subtitle: 
-            GestureDetector(
+            title: 
+              GestureDetector(
               onTap: (){
               Navigator.push(
               context,
@@ -231,9 +226,30 @@ class _DrawingMasterState extends State<DrawingMaster> {
               ),
             );
               },
-              child: 
-            Text(file['drawing_master_file']),
-            )
+              child:
+              Row(children: [ 
+                Container(
+                  height: 25,
+                  width: MediaQuery.of(context).size.width/7.4,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color.fromARGB(255, 10, 124, 218), Color.fromARGB(255, 231, 235, 239)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child:Center(child: Text("VIEW", style: textStyleButton.copyWith(color: AppColors.white,fontSize: 12),),),),
+                  Text("   ${file['drawing_name']}")]))
+            // subtitle: 
+            // Text(file['drawing_master_file']),
           ),
       ],
     ));

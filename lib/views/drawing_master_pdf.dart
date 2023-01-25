@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -27,10 +26,11 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     }
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
+      backgroundColor: Colors.grey,
+      body: Column(
         children: <Widget>[
-         SfPdfViewer.network(
+        const SizedBox(height: 20,),
+        SfPdfViewer.network(
         '${widget.path}',
         key: _pdfViewerKey,
         onDocumentLoaded: (PdfDocumentLoadedDetails details) {
