@@ -99,7 +99,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"D Series (D01- D06)":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             CustomContainer(child: 
@@ -107,7 +107,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -115,7 +115,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer2(
@@ -230,7 +230,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(assignedToController.text.isEmpty?"":assignedToController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           ])

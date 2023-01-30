@@ -16,6 +16,7 @@ const String clientLevel = '/ClientLevel';
 const String logout = '/LogOut';
 const String subLocation = '/SubLocation';
 const String snagDetail = '/SnagDetail';
+const String snagDetail2 = '/SnagDetail2';
 const String newProgressEntry = '/NewProgressEntry';
 const String addProgressEntry = '/AddProgressEntry';
 const String upcomingProgressEntry = '/UpcomingProgressEntry';

@@ -105,7 +105,7 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
               value: locationList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -220,7 +220,7 @@ class _ThreeSixtyImageState extends State<ThreeSixtyImage> {
                 },
                 icon: const Padding( 
                   padding: EdgeInsets.only(left:20),
-                  child:Icon(Icons.arrow_drop_down_circle_outlined)
+                  child:Icon(Icons.arrow_drop_down_outlined,size: 30)
                 ), 
                 iconEnabledColor: Colors.grey,
                 style: const TextStyle(

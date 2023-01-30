@@ -62,6 +62,7 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
     return 
     GetBuilder<GetClosedCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getClosedCheckListData!=null){
      if(signInController.getClosedCheckListData!.new1!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getClosedCheckListData!.new1!.length;i++){
        activity.add(signInController.getClosedCheckListData!.new1![i].activity);
@@ -75,10 +76,11 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
        workCompletionDate.add(signInController.getClosedCheckListData!.new1![i].closeDate??"");
        qualityData.add(signInController.getClosedCheckListData!.new1![i]);
       signInController.getClosedCheckListData!.new1![i].dueDate!=null?
-       dateDifference.add((outputFormat.parse(signInController.getClosedCheckListData!.new1![i].dueDate!)).difference(DateTime.parse(signInController.getClosedCheckListData!.new1![i].createdAt!)).inDays):
+       dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getClosedCheckListData!.new1![i].createdAt!)).inDays):
        dateDifference.add(0);
       }
      }
+      }
     EasyLoading.dismiss();
     return 
     Scaffold(

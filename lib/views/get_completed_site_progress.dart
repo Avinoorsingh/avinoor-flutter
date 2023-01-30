@@ -185,7 +185,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location Unavailable":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             CustomContainer(child: 
@@ -193,7 +193,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"SubLocation Unavailable":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -201,7 +201,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Activity / Activity Head Unavailable":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer2(
@@ -313,7 +313,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               value: contractorList[0],
               icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -367,7 +367,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               value: contractorList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -512,7 +512,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(assignedToController.text.isEmpty?"":assignedToController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           ])

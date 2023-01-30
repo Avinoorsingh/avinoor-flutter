@@ -330,10 +330,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                       ),
                     ),
                     GestureDetector(
-                        onTap: (){
-                        getNewDeSnagDataController.getSnagData(context: context);
-                        getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-                        getClosedDeSnagDataController.getClosedSnagData(context: context);
+                        onTap: () async{
+                        await getNewDeSnagDataController.getSnagData(context: context);
+                        await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                        await getClosedDeSnagDataController.getClosedSnagData(context: context);
+                        // ignore: use_build_context_synchronously
                         context.pushNamed('DESNAGS');
                         },
                         child: 
@@ -350,7 +351,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           elevation: 10,
                           child: 
                           MaterialButton(onPressed: ()
-                          {
+                         async {
+                        await getNewDeSnagDataController.getSnagData(context: context);
+                        await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                        await getClosedDeSnagDataController.getClosedSnagData(context: context);
+                            // ignore: use_build_context_synchronously
                             context.pushNamed('DESNAGS');
                         },
                         height: 45,

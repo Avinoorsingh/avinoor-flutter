@@ -20,22 +20,22 @@ class QuantityForProgress {
 }
 
 class QuantityForProgressData {
-  int? activityId;
-  int? uomId;
-  int? locationId;
-  int? subLocId;
-  int? subSubLocId;
-  int? budgetId;
-  int? issueStatus;
-  int? revisionCode;
-  int? linkingActivityId;
+  num? activityId;
+  num? uomId;
+  num? locationId;
+  num? subLocId;
+  num? subSubLocId;
+  num? budgetId;
+  num? issueStatus;
+  num? revisionCode;
+  num? linkingActivityId;
   String? locationName;
   String? subLocationName;
   String? subSubLocationName;
   String? activityHead;
   String? activity;
-  int? quantityId;
-  int? quantity;
+  num? quantityId;
+  num? quantity;
   String? uomName;
 
   QuantityForProgressData(

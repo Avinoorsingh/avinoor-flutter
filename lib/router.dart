@@ -26,6 +26,7 @@ import 'package:colab/views/quality_check_detail.dart';
 import 'package:colab/views/quality_checklist.dart';
 import 'package:colab/views/snag.dart';
 import 'package:colab/views/snag_detail.dart';
+import 'package:colab/views/snag_detail2.dart';
 import 'package:colab/views/sub_location.dart';
 import 'package:colab/views/super_admin_page.dart';
 import 'package:colab/views/three_sixty_image.dart';
@@ -138,6 +139,15 @@ class CustomRouter {
         ),
       ),
       GoRoute(
+        name: 'SNAGDETAIL2',
+        path: snagDetail2,
+        builder: (context, state) => SnagDetail2(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          snagModel: state.extra,
+        ),
+      ),
+      GoRoute(
         name:'NEWPROGRESSENTRY',
         path: newProgressEntry,
         builder: (context, state) => NewProgressEntry(
@@ -201,7 +211,7 @@ class CustomRouter {
       ),
        GoRoute(
         name:'PDFSCREEN',
-        path: addingThreeSixtyImage,
+        path: pdfScreen,
         builder: (context, state) => PDFScreen(
           key: state.pageKey,
           path:state.queryParams["path"],

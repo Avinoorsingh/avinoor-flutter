@@ -47,6 +47,52 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
+class CustomTextFieldGrey extends StatelessWidget {
+  final String? label;
+  final String? hintText;
+  final bool? enabled;
+  final TextEditingController? controller;
+
+  const CustomTextFieldGrey({Key? key, 
+     this.label,
+     this.hintText,
+     this.enabled,
+     this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      enabled: enabled,
+      controller: controller,
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+      filled: true,
+      fillColor: Colors.grey[200],
+      hintStyle: const TextStyle(color: Colors.grey,),
+      enabledBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!), 
+              ),
+      focusedBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!),
+              ),
+      errorBorder: InputBorder.none,
+      disabledBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!), 
+      ),
+      ),
+       maxLines: null,
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,color: Colors.grey),
+    );
+  }
+}
+
 class CustomTextField3 extends StatelessWidget {
   final String? label;
   final String? hintText;
@@ -71,7 +117,7 @@ class CustomTextField3 extends StatelessWidget {
       hintText: hintText,
       filled: true,
       fillColor: Colors.grey[200],
-      hintStyle: const TextStyle(color: Colors.black,),
+      hintStyle: const TextStyle(color: Colors.grey,fontSize: 14),
       enabledBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
@@ -90,7 +136,8 @@ class CustomTextField3 extends StatelessWidget {
       ),
       ),
        maxLines: null,
-       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,height: 0.5),
+       style: textStyleHeadline2.copyWith(
+        fontWeight: FontWeight.w400,fontSize: 16,height: 0.5),
     );
   }
 }
@@ -116,10 +163,10 @@ class CustomTextFieldArea extends StatelessWidget {
       controller: controller,
       textAlign: TextAlign.start,
       decoration: InputDecoration(
+      hintStyle: const TextStyle(color: Colors.grey,fontSize: 14),
       hintText: hintText,
       filled: true,
       fillColor: Colors.grey[200],
-      hintStyle: const TextStyle(color: Colors.black,),
       enabledBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(

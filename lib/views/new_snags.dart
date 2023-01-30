@@ -54,7 +54,7 @@ class _NewSnagState extends State<NewSnag> {
        dueDates.add(signInController.getSnagDataList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataList!.data![i]);
-       dateDifference.add(DateTime.parse(signInController.getSnagDataList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
+       dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
       }
      }
     EasyLoading.dismiss();
@@ -132,10 +132,15 @@ class _NewSnagState extends State<NewSnag> {
                               child: InkWell(
                                 onTap: () {},
                                 child:  Center(
-                                  child: CircleAvatar(
-                                    backgroundColor: dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
-                                    radius: 15.0,
-                                    child: Text(dateDifference[index].toString(),style: const TextStyle(color: Colors.black),),
+                                  child:  Container(
+                                    width: 30.0,
+                                    height: 40.0,
+                                    decoration: BoxDecoration(
+                                      color:dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Center(child:
+                                    Text(dateDifference[index].toString(),style: textStyleBodyText1,)),
                                   ),
                                 ),
                               ),

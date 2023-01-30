@@ -109,7 +109,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
             if(jsonDecode(res.body)['data'].isNotEmpty){
             masterImageController.text=jsonDecode(res.body)['data'][0]['master_file'];
                 for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
-                  viewpointsName.add(jsonDecode(res.body)['data'][i]['viewpoint']);
+                  viewpointsName.add(jsonDecode(res.body)['data'][i]['viewpoint']??"Name $i");
                   viewpointsNameID.add(jsonDecode(res.body)['data'][i]['viewpoint_name_id']);
                   fileName.add(jsonDecode(res.body)['data'][i]['file_name']??"add");
                   fileNameID.add(jsonDecode(res.body)['data'][i]['file_name_id']??0);
@@ -174,7 +174,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
               Padding(
               padding: const EdgeInsets.only(left: 0, right: 0,),
               child:
-              viewpointsName.isNotEmpty ?
+              viewpointsNameID.isNotEmpty ?
                 Container(
                   padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
                   decoration: BoxDecoration(
@@ -185,7 +185,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
                 ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewpointsName.length,
+                itemCount: viewpointsNameID.length,
                 itemBuilder: (context, index){
                   return 
                   Column(children: [
@@ -378,7 +378,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
       );
      },
     )
-  ):Container()
+  ):Container(child: Center(child: Text("Viewpoints Not available",style: textStyleBodyText1,)),)
  )
 ],
 ),

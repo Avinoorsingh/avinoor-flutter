@@ -59,6 +59,7 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
     return 
     GetBuilder<GetNewCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getCheckListData!=null){
      if(signInController.getCheckListData!.new1!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getCheckListData!.new1!.length;i++){
        activity.add(signInController.getCheckListData!.new1![i].activity);
@@ -78,6 +79,7 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
        dateDifference.add(0):"";
       }
      }
+      }
     EasyLoading.dismiss();
     return 
     Scaffold(

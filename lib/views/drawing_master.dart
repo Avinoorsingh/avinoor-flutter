@@ -132,7 +132,7 @@ class _DrawingMasterState extends State<DrawingMaster> {
           ],
         );
       },
-    ):const Center(child: CircularProgressIndicator(color: AppColors.primary,),)) 
+    ):Center(child: Text("Data is not available",style: textStyleBodyText1,),)) 
     );
 }
 }

@@ -84,6 +84,7 @@ class _MyProfilePageState extends State<AddSnag> {
    List<String> categoryNew=[];
    List<int> categoryID=[];
    List<String> locationList=[];
+   List<int> locationListID=[];
    List<String> assignedToList=[];
    List<int> assignedToListIndex=[];
    List<String> priority=[
@@ -93,6 +94,7 @@ class _MyProfilePageState extends State<AddSnag> {
    ];
    List<String> viewpoints=[];
    List viewpoints2=[];
+   List viewpointsName=[];
    List<String> viewpointsToSent=[];
    List<String> viewpointsID=[];
    List<String> viewpointImagesUrl=[];
@@ -163,6 +165,7 @@ setState(() => this.image = imageTemp);
       // }
       if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
+        assignedToListIndex.add(8989898);
         for(int i=0;i<signInController.getEmployeeList!.data!.length;i++){
           assignedToList.add(signInController.getEmployeeList!.data![i].userId.toString());
           assignedToListIndex.add(signInController.getEmployeeList!.data![i].id!);
@@ -180,8 +183,12 @@ setState(() => this.image = imageTemp);
        if(signInController.getLocationList!.data!.isNotEmpty && locationList.isEmpty){
         List<LocationData>? locationList1=signInController.getLocationList?.data;
         locationList.add("Select Location");
+        locationListID.add(999098);
         for(var data in locationList1!){
           locationList.add(data.locationName!);
+        }
+         for(var data in locationList1){
+          locationListID.add(data.locationId!);
         }
       }
      EasyLoading.dismiss();
@@ -277,7 +284,7 @@ setState(() => this.image = imageTemp);
               value: locationList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -303,9 +310,17 @@ setState(() => this.image = imageTemp);
               onChanged: (String? newValue) async{
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
+                  var projectid= sharedPreferences.getString("projectIdd");
                 setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
+                   subLocationController.text="";  
+                  subV="";
+                  linking_activity_id.text="";
+                  subSubV="";
+                  subSubLocationController.text="";
+                  subSubLocationId.text="";
+                  subLocationId.text="";
                    });
                   try {
                     var getSubLocationListUrl=Uri.parse(Config.getSubLocationListApi);
@@ -317,8 +332,8 @@ setState(() => this.image = imageTemp);
                             },
                       body: {
                               "client_id":signInController.getProjectData?.clientid.toString(),
-                              "project_id":1.toString(),
-                              "location_id":locationList.indexOf(newValue!).toString(),
+                              "project_id":projectid,
+                              "location_id":locationListID[locationList.indexOf(newValue!)].toString(),
                             }
                             );
                   Map<String,dynamic> cData3=jsonDecode(res.body);
@@ -348,6 +363,9 @@ setState(() => this.image = imageTemp);
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
                   subLocationController.text=value.substring(0,value.indexOf('?'));
+                  // linking_activity_id.text="";
+                  // subSubV="";
+                  // subSubLocationController.text="";
                   }
                 });
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -368,9 +386,9 @@ setState(() => this.image = imageTemp);
                               "sub_sub_loc_id":subSubLocationId.text,
                             }
                           );
-                  Map<String,dynamic> cData4=jsonDecode(res.body);
-                  ActivityHead result4=ActivityHead.fromJson(cData4['data']);
-                  signInController.getActivityHeadList=result4;
+                      Map<String,dynamic> cData4=jsonDecode(res.body);
+                      ActivityHead result4=ActivityHead.fromJson(cData4['data']);
+                      signInController.getActivityHeadList=result4;
                           } catch (e) {
                             if (kDebugMode) {
                               print(e);
@@ -388,7 +406,7 @@ setState(() => this.image = imageTemp);
                 },
                 icon: const Padding( 
                   padding: EdgeInsets.only(left:20),
-                  child:Icon(Icons.arrow_drop_down_circle_outlined)
+                  child:Icon(Icons.arrow_drop_down_outlined,size: 30)
                 ), 
                 iconEnabledColor: Colors.grey,
                 style: const TextStyle(
@@ -452,8 +470,10 @@ setState(() => this.image = imageTemp);
                        setState(() {});
                     }
                   }
+                  if(cData5['data'].isNotEmpty){
                   if(cData5['data'][0]['contractor_name']==null){
                     contractorInput.text="";
+                  }
                   }
                     try {
                     var getViewPointsUrl=Uri.parse(Config.getViewpoints);
@@ -488,6 +508,7 @@ setState(() => this.image = imageTemp);
                       }
                     }
                   }
+                  setState(() {});
                           } catch (e) {
                             if (kDebugMode) {
                               print(e);
@@ -505,7 +526,7 @@ setState(() => this.image = imageTemp);
            DropdownButtonFormField(
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -558,7 +579,6 @@ setState(() => this.image = imageTemp);
           Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left: 20,right: 20,top: 20),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
             decoration: BoxDecoration(
               border: Border.all(width: 0.2, color: Colors.blueGrey),
               borderRadius: BorderRadius.circular(5),
@@ -568,7 +588,8 @@ setState(() => this.image = imageTemp);
               children: [
             Center(child: Text("Mark Location",style: textStyleBodyText1,),),
             if(viewpointImagesUrl.isNotEmpty)
-               Center(child:  Card(
+            Center(child:  
+            Card(
             child:
             GestureDetector(
             onTap: () async {
@@ -579,17 +600,17 @@ setState(() => this.image = imageTemp);
                 useSafeArea: true,
                 context: context,
                 builder: (_) => imageDialog('Marker File','https://nodejs.hackerkernel.com/colab${viewpointImagesUrl.first}' , context, imageKey));
-               assetImageController.text=sharedPreferences.getString('imgPath').toString();
-               setState(() {});
+                assetImageController.text=sharedPreferences.getString('imgPath').toString();
+                setState(() {});
               },
             child:
                 Container(
                   height: 200,
-                  width: 200,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: 
-                      assetImageController.text.isEmpty?
+                      assetImageController.text.isEmpty ||assetImageController.text=='null' ?
                       NetworkImage('https://nodejs.hackerkernel.com/colab${viewpointImagesUrl.first}'):
                       FileImage(File(assetImageController.text)) as ImageProvider,
                       fit: BoxFit.fill,
@@ -602,49 +623,17 @@ setState(() => this.image = imageTemp);
               ),
               ])
           ),
-            Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(20.0),
-           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
-              borderRadius: BorderRadius.circular(5),
-            ),
+      if(viewpoints2.isNotEmpty)...{
+         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Container(
+           padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
             child: 
-            Column(children: [
-              Center(child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                Text("Remark",style: textStyleBodyText1,),
-                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),)
-              ],),),
-               const SizedBox(height: 10,),
-            TextField(
-              controller: remarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: Colors.grey[300],
-                filled: true,
-                hintText: "Type here",
-                hintStyle: const TextStyle(color: Colors.black,),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,),
-               maxLines: null,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
-          ])
-            ),
+          Text("Select Viewpoints",style: textStyleBodyText1.copyWith(color: Colors.grey,fontSize: 14),)
+          )
+         ],),
+      },
       ListView.builder(
               // padding: const EdgeInsets.only(bottom: 10,right: 120),
               physics:const NeverScrollableScrollPhysics(),
@@ -658,7 +647,7 @@ setState(() => this.image = imageTemp);
            margin: const EdgeInsets.all(20.0),
            padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
             child: 
-          Text("VIEWPOINT: $index1",style: textStyleBodyText1,)
+          Text("VIEWPOINT: View ${index1+1}",style: textStyleBodyText1,)
           )
          ],),
          Container(
@@ -679,7 +668,7 @@ setState(() => this.image = imageTemp);
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             viewpoints2[index1]['image'].isEmpty?
-            Image.asset('assets/images/ic_photo_black_48dp.png',height: 80,width: 80,):
+            const Icon(Icons.image,size: 85,color: Colors.black54,):
             ListView.builder(
               padding: const EdgeInsets.only(bottom: 10,right: 120),
               physics:const NeverScrollableScrollPhysics(),
@@ -700,7 +689,7 @@ setState(() => this.image = imageTemp);
                            Container(
                             margin: const EdgeInsets.only(top:10),
                             height: 150,
-                            width: 80,
+                            width: 65,
                             decoration: BoxDecoration(
                               color: Colors.grey[300],
                               image:DecorationImage(
@@ -750,7 +739,7 @@ setState(() => this.image = imageTemp);
                     child: Text(
                       'Upload Image',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 14,
                         color: Color(0xffffffff),
                         letterSpacing: -0.3858822937011719,
                       ),
@@ -764,6 +753,49 @@ setState(() => this.image = imageTemp);
       ),
          ),
           ]);}),
+         Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(20.0),
+           padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Colors.black),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text("Remark",style: textStyleBodyText1,),
+                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),)
+              ],),),
+               const SizedBox(height: 10,),
+            TextField(
+              controller: remarkController,
+              textAlign: TextAlign.center,
+               decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Colors.grey[300],
+                filled: true,
+                hintText: "Type here",
+                hintStyle: const TextStyle(color: Colors.black,),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(
+                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(
+                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                ),
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,),
+               maxLines: null,
+              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+            ),
+          ])
+            ),
       const SizedBox(height: 10,),
              Container(
             width: double.infinity,
@@ -785,7 +817,7 @@ setState(() => this.image = imageTemp);
                  value: dropdownvalueDebitTo,
                 icon: const Padding( 
                  padding: EdgeInsets.only(left:20),
-                 child:Icon(Icons.arrow_drop_down_circle_outlined)
+                 child:Icon(Icons.arrow_drop_down_outlined,size: 30)
                 ), 
                iconEnabledColor: Colors.grey,
                style: const TextStyle(
@@ -934,7 +966,7 @@ setState(() => this.image = imageTemp);
                  value: dropdownvalueAssignedTo,
                 icon: const Padding( 
                  padding: EdgeInsets.only(left:20),
-                 child:Icon(Icons.arrow_drop_down_circle_outlined)
+                 child:Icon(Icons.arrow_drop_down_outlined,size: 30)
                 ), 
                iconEnabledColor: Colors.grey,
                style: const TextStyle(
@@ -958,17 +990,17 @@ setState(() => this.image = imageTemp);
                  }).toList(),
                  onChanged: (String? newValue){
                    setState(() {
-                    snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)-1].toString();
-                     dropdownvalueAssignedTo = newValue;
+                    snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)].toString();
+                     dropdownvalueAssignedTo = newValue.toString();
                    });
                  },
                ),
           ])
             ),
-                Container(
+            Container(
             width: double.infinity,
             margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+            padding: const EdgeInsets.only(left: 0,right: 0,top: 10,bottom: 10),
             decoration: BoxDecoration(
               border: Border.all(width: 1, color: Colors.black),
               borderRadius: BorderRadius.circular(5),
@@ -983,7 +1015,8 @@ setState(() => this.image = imageTemp);
               ],),),
                const SizedBox(height: 10,),
            SizedBox(
-            height: 75,child: 
+            height: 75,
+            child: 
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -1001,7 +1034,7 @@ setState(() => this.image = imageTemp);
                 },
                 child: SizedBox(
                   height: 10,
-                  width: 100,
+                  width: MediaQuery.of(context).size.width/3.7,
                   child: Container(
                    decoration: BoxDecoration(
                      color: isCardEnabled2[index]? AppColors.primary:AppColors.white,
@@ -1010,7 +1043,7 @@ setState(() => this.image = imageTemp);
                     child: Center(
                       child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: isCardEnabled2[index]?Colors.black: AppColors.primary,
+                            color: isCardEnabled2[index]?Colors.white: AppColors.primary,
                           fontSize: 16
                         ),
                       ),
@@ -1038,7 +1071,7 @@ setState(() => this.image = imageTemp);
                 minimumSize: const Size(150,40),
                 backgroundColor: AppColors.white
               ),
-              child: const Text("Cancel",style: TextStyle(color: Colors.black),)),
+              child: const Text("Cancel",style: TextStyle(color: Colors.black,fontSize: 14, fontWeight: FontWeight.normal),)),
               ElevatedButton(onPressed: () async{
                 if(categoryIDController.text.isEmpty){
                   EasyLoading.showToast("Please select Category",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1061,8 +1094,11 @@ setState(() => this.image = imageTemp);
                 else if(snapAssignedToController.text.isEmpty){
                   EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
                 }
-                else if(viewpoints2[0]['image'].isEmpty){
+                else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
                   EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(priorityController.text.isEmpty){
+                  EasyLoading.showToast("Please assign priority",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else{
                 // ignore: non_constant_identifier_names
@@ -1150,9 +1186,9 @@ setState(() => this.image = imageTemp);
               }, 
                style: ElevatedButton.styleFrom(
                 minimumSize: const Size(150,40),
-                backgroundColor: const Color.fromARGB(255, 91, 235, 96)
+                backgroundColor:const Color.fromARGB(255, 84, 216, 88)
               ),
-              child: const Text("Save",style: TextStyle(color: Colors.black),))
+              child: const Text("Save",style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
             ],
           )
              )

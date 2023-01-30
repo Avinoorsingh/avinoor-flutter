@@ -20,17 +20,17 @@ import '../constants/colors.dart';
 import '../network/client_project.dart';
 
 // ignore: must_be_immutable
-class SnagDetail extends StatefulWidget {
-  SnagDetail({Key? key, this.from, this.snagModel }) : super(key: key);
+class SnagDetail2 extends StatefulWidget {
+  SnagDetail2({Key? key, this.from, this.snagModel }) : super(key: key);
 
  // ignore: prefer_typing_uninitialized_variables
  final from;
  dynamic snagModel;
   @override
-  State<SnagDetail> createState() => _SnagState();
+  State<SnagDetail2> createState() => _SnagState2();
 }
 
-class _SnagState extends State<SnagDetail> {
+class _SnagState2 extends State<SnagDetail2> {
   final getSnag = Get.find<GetNewSnag>();
   final getDeSnag=Get.find<GetNewDeSnag>();
   final getOpenedSnag = Get.find<GetOpenedSnag>();
@@ -84,6 +84,7 @@ class _SnagState extends State<SnagDetail> {
   CroppedFile? croppedFile;
   var groupedViewpoints = {};
   var groupedDeSnagImages = {};
+  var groupedOnlyDeSnag={};
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -182,9 +183,14 @@ class _SnagState extends State<SnagDetail> {
     newGroupedDeImages[key]=newValue;
   });
   }
+
+  groupedDeSnagImages.forEach((key, value) {
+  groupedOnlyDeSnag[key] = List.filled(value.length, 'null');
+});
+  
   print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
   print(groupedDeSnagImages);
-  print(newGroupedDeSnagImages);
+  print(groupedOnlyDeSnag);
    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
   // print(deSnagImage);
   // print(newGroupedDeSnagImages);
@@ -217,7 +223,7 @@ class _SnagState extends State<SnagDetail> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("De-Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -392,52 +398,68 @@ class _SnagState extends State<SnagDetail> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Container(
+                       SizedBox(
                         width: MediaQuery.of(context).size.width/2.5,
                         child:
-                         ListView.builder(
-                        physics:const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                          itemCount: groupedDeSnagImages[outerKey]?.length,
-                          itemBuilder: (context, innerIndex) {
-                            return
-                      // ignore: unnecessary_null_comparison
-                      newGroupedDeImages[outerKey]![innerIndex]!=null?
+                    ListView.builder(
+                      physics:const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                       itemCount: groupedDeSnagImages[outerKey]?.length,
+                       itemBuilder: (context, innerIndex) {
+                       return
+                       widget.from=='desnagnew'?
                        GestureDetector(
                       onTap: () async {},
                       child: 
                       Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                if(newGroupedDeSnagImages[outerKey]![innerIndex].isNotEmpty)
+                if(groupedDeSnagImages[outerKey]![innerIndex]!=null && groupedOnlyDeSnag[outerKey]![innerIndex]=='null')...{
                   SizedBox(
                    height: 100,
                    child:
                   InkWell(
                       onTap: () {
-                        // print(viewpoints);
                         return;
                       },
                           child:
-                          FittedBox(
-                           child:
                            Container(
                             margin: const EdgeInsets.only(top:10,bottom: 10,),
                             height: 100,
                             width: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              image:DecorationImage(
-                                image:FileImage(File(newGroupedDeSnagImages[outerKey]![innerIndex][0].path?? "")),
-                              fit: BoxFit.cover,
-                              ),
-                            )
+                           child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
                           )
-                        )
                       )
                     ),
+                },
+                if(groupedOnlyDeSnag[outerKey]![innerIndex]!='null')...{
+                   SizedBox(
+                   height: 100,
+                   child:
+                  InkWell(
+                      onTap: () {
+                        return;
+                      },
+                          child:
+                           Container(
+                            margin: const EdgeInsets.only(top:10,bottom: 10,),
+                            height: 100,
+                            width: 50,
+                            decoration:groupedOnlyDeSnag[outerKey]![innerIndex]!='null'? BoxDecoration(
+                              color: Colors.grey[300],
+                              image:groupedOnlyDeSnag[outerKey]![innerIndex]!='null'?DecorationImage(
+                                image:FileImage(File(groupedOnlyDeSnag[outerKey]![innerIndex].split(":")[1].trim().replaceAll("'", "")?? "")),
+                              fit: BoxFit.cover,
+                              ):null,
+                            ):null,
+                          )
+                        // )
+                      )
+                    ),
+                },
                 Container(
-                margin: EdgeInsets.only(top:15,bottom: 15,left:newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?35:5,right: 10),
+                height: 35,
+                margin: const EdgeInsets.only(top:15,bottom: 15,left:5,right: 10),
                 width: MediaQuery.of(context).size.width/4.5,
                 decoration: widget.from=='desnagnew'? BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
@@ -448,7 +470,7 @@ class _SnagState extends State<SnagDetail> {
                     stops: [0.0, 1.0],
                   ),
                 ):null,
-                child: widget.from=='desnagnew' || groupedDeSnagImages[outerKey][innerIndex].isEmpty?
+                child: widget.from=='desnagnew'?
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     splashFactory: NoSplash.splashFactory,
@@ -460,15 +482,14 @@ class _SnagState extends State<SnagDetail> {
                   onPressed: () async {
                       final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                       final File imagefile = File(image!.path);
-                      newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?
-                      newGroupedDeSnagImages[outerKey]![innerIndex].add(imagefile): newGroupedDeSnagImages[outerKey]![innerIndex][0]=imagefile;
+                      groupedOnlyDeSnag[outerKey][innerIndex]=imagefile.toString();
                         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                         var token=sharedPreferences.getString('token');
                         FormData formData=FormData(); 
                         var dio = Dio();
                         formData.fields.add(MapEntry('viewpoint_id', viewpoints[outerIndex]['id'].toString()));
                         formData.files.add(
-                        MapEntry("de_snag_image", await MultipartFile.fromFile(newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].substring(1,newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].length), filename: 'de_snag_image')));
+                        MapEntry("de_snag_image", await MultipartFile.fromFile(groupedOnlyDeSnag[outerKey][innerIndex].split(":")[1].trim().replaceAll("'", ""), filename: 'de_snag_image')));
                         var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
                         data:formData,
                         options: Options(
@@ -491,36 +512,21 @@ class _SnagState extends State<SnagDetail> {
                     child: Text(
                       'Upload Image',
                       style: TextStyle(
-                        fontSize: 8,
+                        fontSize: 10,
                         color: Color(0xffffffff),
-                        letterSpacing: -0.3858822937011719,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ): SizedBox(
-                          height: 100,
-                          width: 50,
-                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
-                            ),
+                      height: 100,
+                      width: 50,
+                      child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
+                    ),
               ),
                   ]
                 ),
               ):Container();
-                //  GestureDetector(
-                //       onTap: () async {
-                //         await showDialog(
-                //           useSafeArea: true,
-                //           context: context,
-                //           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}' , context));
-                //         },
-                //         child:
-                //         SizedBox(
-                //           height: 100,
-                //           width: 50,
-                //           child: Image.network("https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}"),
-                //             ),
-                //         );
                   }))],
                     ),
                   ]

@@ -40,12 +40,14 @@ class _activityHeadState extends State<SubSubLocationProgress> {
       final signInController=Get.find<SignInController>();
       List<String> activityHead=[];
       var activityID=[];
+      if(signInController.getProgressActivityHeadApi!=null){
        if(signInController.getProgressActivityHeadApi!.data!.isNotEmpty && activityHead.isEmpty){
         List<ProgressActivityHeadDataList>? activityHeadList=signInController.getProgressActivityHeadApi!.data;
         for(var data in activityHeadList!){
           activityHead.add(data.activityHead!);
           activityID.add(data.activityId.toString());
         }
+      }
       }
     return Scaffold(
       body:activityHead.isNotEmpty?ListView.builder(

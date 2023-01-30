@@ -62,6 +62,7 @@ class _OpenedCheckListState extends State<OpenedCheckList> {
     return 
     GetBuilder<GetOpenedCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getOpenedCheckListData!=null){
      if(signInController.getOpenedCheckListData!.new1!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getOpenedCheckListData!.new1!.length;i++){
        activity.add(signInController.getOpenedCheckListData!.new1![i].activity);
@@ -82,6 +83,7 @@ class _OpenedCheckListState extends State<OpenedCheckList> {
        dateDifference.add(0);
       }
      }
+      }
     EasyLoading.dismiss();
     return 
     Scaffold(

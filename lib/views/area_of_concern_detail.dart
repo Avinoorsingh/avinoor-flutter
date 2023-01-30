@@ -78,7 +78,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location":locationController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.white,)
             ])
           ),
             CustomContainer(child: 
@@ -86,7 +86,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"Sub Location / Sub Sub Locations":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.white,)
             ])
           ),
           CustomContainer(child: 
@@ -94,7 +94,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Activity Head / Activity":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1,),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.white,)
             ])
           ),
           const SizedBox(height: 20,),
@@ -119,7 +119,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
                 Text("*",style: textStyleBodyText1.copyWith(color: AppColors.tertiary),),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextField3(enabled: false,controller: descriptionController,)
+               CustomTextField(enabled: false,controller: descriptionController,)
           ])
             ),
             CustomContainer2(child:
@@ -134,7 +134,7 @@ class _AreaOfConcernState extends State<AreaOfConcernDetail> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(assignedToController.text.isEmpty?"--":assignedToController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.white,)
             ])
           ),
           ])

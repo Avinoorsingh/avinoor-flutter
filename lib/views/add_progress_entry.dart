@@ -234,6 +234,7 @@ class _AddProgressState extends State<AddProgressEntry> {
           locationID.add(data.locationId!);
         }
       }
+      if(signInController.getProgressContractorList!.data!=null){
       if(signInController.getProgressContractorList!.data!.isNotEmpty && contractorList.isEmpty){
         if(signInController.getProgressContractorList!.data!.isNotEmpty && debitTo.isEmpty){
         List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
@@ -274,6 +275,7 @@ class _AddProgressState extends State<AddProgressEntry> {
         }
         }
         }
+      }
       }
        if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
         List<ProgressTradeData>? locationList1=signInController.getProgressTradeList?.data;
@@ -403,7 +405,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               value: locationList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -468,6 +470,7 @@ class _AddProgressState extends State<AddProgressEntry> {
              if(locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute(locationId.text));
              setState(() {
+              print(value);
                   if(value.isNotEmpty){
                   subSubLocationId.text=value.substring(value.indexOf('?')+1,value.indexOf('&'));
                   clientId.text=value.substring(value.indexOf('&')+1,value.indexOf('*'));
@@ -496,6 +499,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                               "sub_sub_loc_id":subSubLocationId.text,
                             }
                             );
+                             print(res.body);
                             Map<String,dynamic> cData4=jsonDecode(res.body);
                             if(cData4['success']==true){
                             ProgressActivityHeadData result4=ProgressActivityHeadData.fromJson(cData4);
@@ -518,7 +522,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                 },
                 icon: const Padding( 
                   padding: EdgeInsets.only(left:20),
-                  child:Icon(Icons.arrow_drop_down_circle_outlined)
+                  child:Icon(Icons.arrow_drop_down_outlined,size: 30)
                 ), 
                 iconEnabledColor: Colors.grey,
                 style: const TextStyle(
@@ -555,10 +559,12 @@ class _AddProgressState extends State<AddProgressEntry> {
               if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute2(locationId.text, subLocationId.text,subSubLocationId.text,));
              setState(() {
+              if(value.isNotEmpty){
               linkingActivityId.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
               activityID.text=value.substring(value.indexOf(':')+1,value.indexOf('|'));
               subSubV=value.substring(0,value.indexOf('}'));
               subSubLocationController.text=value.substring(0,value.indexOf('}'));
+              }
               });
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               var token=sharedPreferences.getString('token');
@@ -582,7 +588,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                           } catch (e) {
                             if (kDebugMode){
                               print(e);
-                              print("Error is here!");
+                              print("Error is here g!");
                             }
                           }
                 try {
@@ -659,7 +665,7 @@ class _AddProgressState extends State<AddProgressEntry> {
            DropdownButtonFormField(
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -807,7 +813,7 @@ class _AddProgressState extends State<AddProgressEntry> {
              value:contractorList.isNotEmpty?contractorList[0]:"",
              icon: const Padding( 
              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -1055,7 +1061,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected",style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             const SizedBox(height: 10,),
@@ -1192,7 +1198,7 @@ class _AddProgressState extends State<AddProgressEntry> {
              value:debitToController.text.isNotEmpty?debitToController.text:null,
              icon: const Padding(
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(

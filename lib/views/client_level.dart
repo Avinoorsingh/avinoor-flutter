@@ -85,14 +85,15 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
   void initState() {
     super.initState(); 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    upcomingProjects();
     // ignore: prefer_interpolation_to_compose_strings
     dateInput.text ="Date:   "+getFormatedDate(DateTime.now().toString()); 
     getClientProfileController.getUserProfile(context: context);
-    getClientProjectsController.getUpcomingProjects(context: context);
-    upcomingProjects();
+    // getClientProjectsController.getUpcomingProjects(context: context);
   }
 
   Future<void> upcomingProjects()async {
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
       var getUserDataUrl=Uri.parse(Config.getUserDataApi);
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -142,10 +143,9 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
 
   @override
   Widget build(BuildContext context) {
-     getClientProjectsController.getUpcomingProjects(context: context);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
       return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
-        getClientProjectsController.getUpcomingProjects(context: context);
         final signInController=Get.find<SignInController>();
         EasyLoading.dismiss();
         return
@@ -278,7 +278,16 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                 //  scrollDirection: Axis.vertical,
                 itemCount: clientData.length,
                 itemBuilder: (context, index) {
-                  return Container(
+                  return 
+                  InkWell(
+                    onTap: (){
+                        DependencyInjector.initializeControllers();
+                        // ignore: use_build_context_synchronously
+                        context.pushNamed('PROJECTLEVELPAGE', queryParams: {"from": "client"},
+                        extra: clientData[index]);  
+                    },
+                    child: 
+                  Container(
                     decoration: const BoxDecoration(                
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                           ),
@@ -316,10 +325,10 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                                             clipBehavior: Clip.antiAliasWithSaveLayer,
                                             child: InkWell(
                                               onTap: () {
-                                                DependencyInjector.initializeControllers();
-                                                // ignore: use_build_context_synchronously
-                                                context.pushNamed('PROJECTLEVELPAGE', queryParams: {"from": "client"},
-                                                extra: clientData[index]);  
+                                                // DependencyInjector.initializeControllers();
+                                                // // ignore: use_build_context_synchronously
+                                                // context.pushNamed('PROJECTLEVELPAGE', queryParams: {"from": "client"},
+                                                // extra: clientData[index]);  
                                               },
                                               child:  Image.network("https://nodejs.hackerkernel.com/colab${clientData[index].projectlogoname}",
                                                 errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
@@ -479,7 +488,7 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                       ),
                     ),
                   ),
-                );
+                ));
               }),
               // const SizedBox(height: 200,),
               ])

@@ -63,6 +63,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
   String dropdownvalue3 = 'Select Activity Head';  
  
   List<String> locationList=[];
+  List<int> locationListID=[];
   List<String> assignedToList=[];
   List<int> assignedToListIndex=[];
   final imageKey = GlobalKey<ImagePainterState>();
@@ -100,8 +101,12 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
        if(signInController.getLocationList!.data!.isNotEmpty && locationList.isEmpty){
         List<LocationData>? locationList1=signInController.getLocationList?.data;
         locationList.add("Select Location");
+        locationListID.add(9999);
         for(var data in locationList1!){
           locationList.add(data.locationName!);
+        }
+        for(var data in locationList1){
+          locationListID.add(data.locationId!);
         }
       }
      EasyLoading.dismiss();
@@ -126,7 +131,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
               value: locationList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -152,9 +157,18 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
               onChanged: (String? newValue) async{
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
+                  projectId.text= sharedPreferences.getString("projectIdd").toString();
                   setState(() {
-                  locationController.text=newValue!;
+                  locationController.text=newValue!.toString();
                   dropdownvalue = newValue;
+                  subLocationController.text="";  
+                  subV="";
+                  activityId.text="";
+                  linking_activity_id.text="";
+                  subSubV="";
+                  subSubLocationController.text="";
+                  subSubLocationId.text="";
+                  subLocationId.text="";
                    });
                   try {
                     var getSubLocationListUrl=Uri.parse(Config.getSubLocationListApi);
@@ -166,8 +180,8 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                             },
                       body: {
                               "client_id":signInController.getProjectData?.clientid.toString(),
-                              "project_id":1.toString(),
-                              "location_id":locationList.indexOf(newValue!).toString(),
+                              "project_id":projectId.text,
+                              "location_id":locationListID[locationList.indexOf(newValue!)].toString(),
                             }
                             );
                   Map<String,dynamic> cData3=jsonDecode(res.body);
@@ -197,6 +211,10 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
                   subLocationController.text=value.substring(0,value.indexOf('?'));
+                  activityId.text="";
+                  linking_activity_id.text="";
+                  subSubV="";
+                  subSubLocationController.text="";
                   }
                 });
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -237,7 +255,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
             },
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -291,7 +309,7 @@ class _AddAreaOfConcernState extends State<AddAreaOfConcern> {
            DropdownButtonFormField(
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(

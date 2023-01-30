@@ -436,7 +436,7 @@ class _SnagState extends State<UpComingEntry>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location Unavailable":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             CustomContainer(child: 
@@ -444,7 +444,7 @@ class _SnagState extends State<UpComingEntry>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"SubLocation Unavailable":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -452,7 +452,7 @@ class _SnagState extends State<UpComingEntry>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Activity / Activity Head Unavailable":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
            CustomContainer2(
@@ -572,7 +572,7 @@ class _SnagState extends State<UpComingEntry>{
              value:contractorList.isNotEmpty?contractorList[0]:"",
              icon: const Padding( 
              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -819,7 +819,7 @@ class _SnagState extends State<UpComingEntry>{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected",style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             const SizedBox(height: 10,),
@@ -955,7 +955,7 @@ class _SnagState extends State<UpComingEntry>{
              value: debitToController.text.isNotEmpty?debitToController.text:null,
              icon: const Padding(
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(

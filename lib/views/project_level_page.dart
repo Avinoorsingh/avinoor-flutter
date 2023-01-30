@@ -75,9 +75,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   }
 
   saveProjectId() async {
-    print("|||||||||||||||||||||||||||||||||||||||||");
-    print(widget.clientData.projectid);
-    print("I am here !!");
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(widget.clientData.projectid!=null){
         sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
@@ -200,7 +197,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
              borderRadius: BorderRadius.circular(100),
              clipBehavior: Clip.antiAliasWithSaveLayer,
              color: Colors.white,
-             elevation: 5,
+             elevation: 0,
              shadowColor: Colors.black,
              borderOnForeground: true,
              child: InkWell(

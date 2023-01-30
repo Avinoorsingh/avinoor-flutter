@@ -300,7 +300,7 @@ class _SnagState extends State<NewProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(categoryController.text.isEmpty?"Category":categoryController.text,style: textStyleBodyText1,),),
-              const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -308,7 +308,7 @@ class _SnagState extends State<NewProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location":locationController.text,style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -316,7 +316,7 @@ class _SnagState extends State<NewProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"Sub Location":subLocationController.text,style: textStyleBodyText1,),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child:
@@ -324,7 +324,7 @@ class _SnagState extends State<NewProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text,style: textStyleBodyText1,),),
-            const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
            CustomContainer2(
@@ -433,7 +433,7 @@ class _SnagState extends State<NewProgressEntry> {
               value: contractorList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
@@ -472,7 +472,7 @@ class _SnagState extends State<NewProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text("Irshad Khan-COMP 3",style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_circle_outlined,color: Colors.grey,)
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             const SizedBox(height: 10,),
@@ -593,7 +593,7 @@ class _SnagState extends State<NewProgressEntry> {
               value: debitTo[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_circle_outlined)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
