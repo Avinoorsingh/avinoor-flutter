@@ -210,17 +210,19 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
                                 Text("${workCompletionDate[index]!=null? (workCompletionDate[index]!.length>30?"${workCompletionDate[index]!.substring(0,29)}...":workCompletionDate[index] ?? ""):""}",style: textStyleBodyText2.copyWith(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis)
                                 ])
                                 ]),
-                             ],)
+                             ],
                             )
-                            ),
-                            ]
                           )
-                        );
-                    }
-                  )
+                        ),
+                       ]
+                      )
+                    );
+                  }
+                )
+              ),
+            ],
+          )
         ),
-      ],
-    )),
     floatingActionButton: FloatingActionButton(
         onPressed: () async {
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -235,8 +237,8 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
               "Authorization": "Bearer $token",
             },
           );
-          var cData4=jsonDecode(res.body);
-          ManualCheckList result5=ManualCheckList.fromJson(cData4['data']);
+    var cData4=jsonDecode(res.body);
+    ManualCheckList result5=ManualCheckList.fromJson(cData4['data']);
     showDialog(
     useSafeArea: true,
     context: context,
@@ -246,7 +248,6 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
         height: 200,
         width: 200,
         child: 
-        // FittedBox(child:
       AlertDialog(
         insetPadding: const EdgeInsets.only(left: 10,right: 10),
         actionsPadding: const EdgeInsets.only(left: 10,right: 10),
@@ -323,7 +324,6 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
         ),
         ])
       )
-        // )
       );
     },
   );
@@ -336,7 +336,6 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
   }
 }
 
-// First, define a function to show the modal
 void _showModal(BuildContext context1) async {
   List<String> locationList=[];
   late List<String> subLocationList=[];
@@ -381,7 +380,7 @@ void _showModal(BuildContext context1) async {
     context: context1,
     builder: (context1) {
       return StatefulBuilder(builder: (context1, setState) {
-        return
+      return
       AlertDialog(
         insetPadding: const EdgeInsets.only(left: 10,right: 10,top: 100,bottom: 100),
         actionsPadding: EdgeInsets.zero,
@@ -415,7 +414,6 @@ void _showModal(BuildContext context1) async {
             Radius.circular(10.0))),
             content:Column(
               children: [ 
-          // ignore: sized_box_for_whitespace
               const Divider(color: Colors.grey,thickness: 1,),
               CustomDropdown(hint: "Select Location",
               items:locationList.map((String items){
@@ -425,7 +423,7 @@ void _showModal(BuildContext context1) async {
                   child: Text(items,style: textStyleBodyText2,),
                 );
               }).toList(),
-              onChanged:(String? newValue) async{
+              onChanged:(String? newValue) async {
                   try {
                     locationID.text=locationIdList[locationList.indexOf(newValue!)].toString();
                     var getSubLocationListUrl=Uri.parse(Config.getCheckListSubLocationApi);
@@ -501,13 +499,14 @@ void _showModal(BuildContext context1) async {
                     }
                   },
                 ),
-                CustomDropdown(hint: "Select Sub Sub Location", items: 
+                CustomDropdown(hint: "Select Sub Sub Location", 
+                items: 
                 subSubLocationList.map((String items){
                       return DropdownMenuItem(
                         value: items,
                         child: Text(items,style: textStyleBodyText2,),
                         );}).toList(),
-                        onChanged: (String? newValue) async{
+                        onChanged: (String? newValue) async {
                           subSubLocationID.text=subSubLocationIdList[subSubLocationList.indexOf(newValue!)].toString();
                           var map = <String, dynamic>{};
                           map['client_id'] = clientID;
@@ -581,12 +580,12 @@ void _showModal(BuildContext context1) async {
                         activityIdList.add(data.linkingActivityId!.toString());
                       }
                   });
-                          } catch (e) {
-                            if (kDebugMode) {
-                              print("Error");
-                              print(e);
-                            }
-                          }
+                    } catch (e) {
+                      if (kDebugMode) {
+                        print("Error");
+                        print(e);
+                      }
+                  }
               },
               ),
               CustomDropdown(hint: "Select Activity", 
@@ -597,7 +596,7 @@ void _showModal(BuildContext context1) async {
                   child: Text(items,style: textStyleBodyText2,),
                 );
               }).toList(),
-              onChanged: (String? newValue) async{
+              onChanged: (String? newValue) async {
                   onlyActivityID.text=activityIdList[activityList.indexOf(newValue!)].toString();
               }
               ),

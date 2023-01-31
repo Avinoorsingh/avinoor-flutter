@@ -182,18 +182,19 @@ class _NewSnagState extends State<ClosedDeSnags> {
                              ],),
                              const  SizedBox(height: 10,),
                             ]),
-                            ),
-                            ),
-                            ]
-                          )
-                        );
-                    }
-                  )
-        ),
-      ],
-    )),
-   );
-      }
+                          ),
+                        ),
+                      ]
+                    )
+                  );
+                }
+               )
+              ),
+             ],
+            )
+          ),
+         );
+        }
       );
   }
 }
