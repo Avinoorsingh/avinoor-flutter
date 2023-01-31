@@ -160,32 +160,28 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                       style: textStyleHeadline4.copyWith(fontSize: 16),
                     ),
                     SizedBox(
-                        child: Text(
+                      child: Text(
                       'Last Login: ${signInController.getClientProfile?.updatedat!=null ? f.format(DateTime.parse(signInController.getClientProfile!.updatedat.toString())):f.format(DateTime.now())}',
                       overflow: TextOverflow.ellipsis,
                       style: textStyleBodyText2.copyWith(
                           color: Colors.black, fontSize: 14),
                     )),
-                     Container(
-                        child:
-                        Flexible(child: Text(
-                      ' ${signInController.getClientProfile?.name}',
-                      overflow: TextOverflow.ellipsis,
-                      style: textStyleBodyText2.copyWith(
-                          color: Colors.black, fontSize: 14),
-                    )),),
-                    //  Container(height: 10),
+                    Flexible(
+                     child: 
+                     Text(
+                     ' ${signInController.getClientProfile?.name}',
+                     overflow: TextOverflow.ellipsis,
+                     style: textStyleBodyText2.copyWith(
+                         color: Colors.black, fontSize: 14),
+                    )),
                       if(widget.from=="client")
                        Flexible(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(elevation: 0,
                           splashFactory: NoSplash.splashFactory,
                           backgroundColor: Colors.greenAccent),
-                          child: const Text("CHANGE PROJECT",style: TextStyle(color: Colors.black,fontSize: 8)),
-                          onPressed: ()async {
-                          // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                          // sharedPreferences.setString("projectIdd","");
-                          // ignore: use_build_context_synchronously
+                          child: const Text("CHANGE PROJECT", style: TextStyle(color: Colors.black,fontSize: 8)),
+                          onPressed: () async {
                           context.pushNamed('CLIENTLEVELPAGE');
                         },)
                        )
@@ -204,8 +200,8 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               onTap: () {
                 context.pushNamed('MYPROFILEPAGE');
                 },
-                child:  Image.network("https://nodejs.hackerkernel.com/colab${signInController.getClientProfile?.userimage}",
-                           errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
+                child: Image.network("https://nodejs.hackerkernel.com/colab${signInController.getClientProfile?.userimage}",
+                          errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
                               EasyLoading.dismiss();
                               return const Image(image: AssetImage('assets/images/user_fill.png'), height: 50,
                           width: 50,

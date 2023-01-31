@@ -75,38 +75,38 @@ class _NewSnagState extends State<ClosedSnags> {
               itemBuilder: (BuildContext context, int index) {
                 return 
                 FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: 
-                          Column(
-                            children:[
-                              Center(child: 
+                  fit: BoxFit.fitWidth,
+                  child: 
+                    Column(
+                    children:[
+                      Center(
+                       child: 
                         Stack(
                           clipBehavior: Clip.none,
                           children: [ 
                             InkWell(
                             splashColor: Colors.transparent,
-                              onTap: () {
+                            onTap: () {
                                 setState(() {
                                   show=!show;
                                   tapped=index;
                                 });
                               },
-                              child:
+                            child:
                             Card(
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:
                               Container(
                                 padding: const EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 0),
-                                  decoration: BoxDecoration(
+                                decoration: BoxDecoration(
                                     border: Border.all(width: 1),
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(10)
                                   ),
-                                // height: 0,
                                 width: 335,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,12 +147,11 @@ class _NewSnagState extends State<ClosedSnags> {
                             ),
                           ],
                         ),
-                              ),
-                              if(show==true && index==tapped)
+                      ),
+                      if(show==true && index==tapped)
                         Container(
                             padding: const EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 10),
                             margin: const EdgeInsets.only(bottom: 20),
-                            // height: 50,
                             width: 330,
                             decoration: BoxDecoration(
                                     color:  Colors.grey[300],
@@ -160,39 +159,42 @@ class _NewSnagState extends State<ClosedSnags> {
                                   ),
                             child:
                             InkWell(
-                              onTap: (){
-                                context.pushNamed('SNAGDETAIL',
-                                // queryParams: {"from": "openedDeSnag"},
-                                 extra: snagData[index]);
+                             onTap: (){
+                               context.pushNamed('SNAGDETAIL',
+                               extra: snagData[index]);
                               },
                               child: 
-                            Column(children: [
+                          Column(children: [
                               const  SizedBox(height: 10,),
-                             Row(children: [
-                              Text("Snag Remark: ",style: textStyleHeadline4,),
-                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
-                             ],),
-                              Row(children: [
+                            Row(children: [
+                              Text("Snag Remark: ", style: textStyleHeadline4,),
+                              Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""), style: textStyleBodyText2, overflow: TextOverflow.ellipsis,),
+                             ],
+                            ),
+                            Row(children: [
                               Text("De-Snag Remark: ",style: textStyleHeadline4,),
-                              Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}...":deSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
-                              ]),
-                             Row(children: [
+                              Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}..." : deSnagRemark[index] ?? ""):""), style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                             ]
+                            ),
+                            Row(children: [
                               Text("Closing Remark: ",style: textStyleHeadline4,),
-                               Text((closingDeSnagRemark[index]!=null?(closingDeSnagRemark[index]!.length>30?"${closingDeSnagRemark[index]!.substring(0,29)}...":closingDeSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
-                             ],)
-                            ]),
-                            ),
-                            ),
-                            ]
-                          )
-                        );
-                    }
-                  )
+                              Text((closingDeSnagRemark[index]!=null?(closingDeSnagRemark[index]!.length>30?"${closingDeSnagRemark[index]!.substring(0,29)}...":closingDeSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
+                             ],
+                            )
+                           ]),
+                          ),
+                        ),
+                      ]
+                    )
+                  );
+                }
+              )
+             ),
+           ],
+         )
         ),
-      ],
-    )),
-   );
-      }
       );
-  }
+    }
+  );
+}
 }

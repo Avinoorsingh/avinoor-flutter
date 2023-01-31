@@ -376,10 +376,16 @@ class _SnagState extends State<SnagDetail> {
                           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}' , context));
                         },
                       child: 
-                      SizedBox(
+                      Container(
+                        margin:const EdgeInsets.only(top: 10,bottom: 10),
                         height: 100,
-                        width: 50,
-                        child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}"),
+                        width: 30,
+                        child:
+                        FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
+                        height: 10,
+                        width: 30,),),
                         )
                       );
                           }
@@ -392,7 +398,7 @@ class _SnagState extends State<SnagDetail> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Container(
+                       SizedBox(
                         width: MediaQuery.of(context).size.width/2.5,
                         child:
                          ListView.builder(
@@ -410,21 +416,25 @@ class _SnagState extends State<SnagDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 if(newGroupedDeSnagImages[outerKey]![innerIndex].isNotEmpty)
-                  SizedBox(
-                   height: 100,
+                  Container(
+                  margin:const EdgeInsets.only(top: 10,bottom: 10),
+                  height: 100,
+                  width: 30,
+                  child:
+                   FittedBox(
+                   fit: BoxFit.fill,
                    child:
                   InkWell(
                       onTap: () {
-                        // print(viewpoints);
                         return;
                       },
-                          child:
-                          FittedBox(
+                      child:
+                        FittedBox(
                            child:
                            Container(
                             margin: const EdgeInsets.only(top:10,bottom: 10,),
-                            height: 100,
-                            width: 50,
+                            height: 10,
+                            width: 30,
                             decoration: BoxDecoration(
                               color: Colors.grey[300],
                               image:DecorationImage(
@@ -436,6 +446,7 @@ class _SnagState extends State<SnagDetail> {
                         )
                       )
                     ),
+                  ),
                 Container(
                 margin: EdgeInsets.only(top:15,bottom: 15,left:newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?35:5,right: 10),
                 width: MediaQuery.of(context).size.width/4.5,
@@ -498,36 +509,29 @@ class _SnagState extends State<SnagDetail> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ): SizedBox(
-                          height: 100,
-                          width: 50,
-                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
+                ): Container(
+                        margin:const EdgeInsets.only(top: 10,bottom: 10),
+                        height: 100,
+                        width: 30,
+                        child:
+                        FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
+                          height: 10,
+                          width: 30,
+                          ),
                             ),
+                 )
               ),
                   ]
                 ),
               ):Container();
-                //  GestureDetector(
-                //       onTap: () async {
-                //         await showDialog(
-                //           useSafeArea: true,
-                //           context: context,
-                //           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}' , context));
-                //         },
-                //         child:
-                //         SizedBox(
-                //           height: 100,
-                //           width: 50,
-                //           child: Image.network("https://nodejs.hackerkernel.com/colab${deSnagImages[outerIndex]}"),
-                //             ),
-                //         );
                   }))],
                     ),
                   ]
                 )
               ]
             )
-                  // ),
                 ),
               ],
             );
@@ -634,7 +638,7 @@ class _SnagState extends State<SnagDetail> {
                   child: Container(
                    decoration: BoxDecoration(
                      color: priority[index].toString().substring(0,2).toUpperCase()==priorityController.text? AppColors.primary:AppColors.white,
-                     border: Border.all(width: 1.2,color: AppColors.primary,),
+                     border: Border.all(width: 1.2, color: AppColors.primary,),
                     ),
                     child: Center(
                       child: Text(priority[index],textAlign: TextAlign.center,

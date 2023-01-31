@@ -134,9 +134,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
   final getClosedQualityDataController=Get.find<GetClosedCheckList>();
-  final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
-  final getClosedSnagDataController=Get.find<GetClosedSnag>();
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
   return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
@@ -274,7 +272,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 await getNewSnagDataController.getSnagData(context: context);
                                 await getOpenedSnagDataController.getOpenedSnagData(context: context);
                                 await getClosedSnagDataController.getClosedSnagData(context: context);
-                                // ignore: use_build_context_synchronously
+                               // ignore: use_build_context_synchronously
                                 context.pushNamed('SNAGS');
                               },
                               child: 
@@ -320,7 +318,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     child: CircleAvatar(
                         backgroundColor:AppColors.primary,
                         radius: 12.0,
-                        child: Text( signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
+                        child: Text(signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),

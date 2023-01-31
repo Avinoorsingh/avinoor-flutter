@@ -83,6 +83,7 @@ class _SnagState2 extends State<SnagDetail2> {
   File? image;
   CroppedFile? croppedFile;
   var groupedViewpoints = {};
+  var groupedViewpointsID = {};
   var groupedDeSnagImages = {};
   var groupedOnlyDeSnag={};
   Future pickImage() async {
@@ -147,7 +148,7 @@ class _SnagState2 extends State<SnagDetail2> {
     priorityController.text=widget.snagModel?.snagPriority;
     if(widget.snagModel?.snagViewpoint?.length!=0 && widget.snagModel?.snagViewpoint!=null){
       for(int i=0;i<widget.snagModel?.snagViewpoint?.length;i++){
-        viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,'deSnagImage':[]});
+        viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,'deSnagImage':[],'viewID':widget.snagModel.snagViewpoint[i].id});
         deSnagImage.add({'deSnagImage':widget.snagModel.snagViewpoint[i].desnagsFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,});
         if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
         viewpointID.add(widget.snagModel.snagViewpoint[i].id);
@@ -156,7 +157,7 @@ class _SnagState2 extends State<SnagDetail2> {
       }
     }
 
-     for (var map in viewpoints) {
+    for (var map in viewpoints) {
     // Check if the viewpoints is already in the map
     if (groupedViewpoints.containsKey(map['id'])) {
       // If it is, add the name to the list of names for that viewpoint
@@ -164,6 +165,16 @@ class _SnagState2 extends State<SnagDetail2> {
     } else {
       // If it isn't, create a new list of names for that viewpoint and add the name
       groupedViewpoints[map['id']] = [map['fileName']];
+    }
+  }
+   for (var map in viewpoints) {
+    // Check if the viewpoints is already in the map
+    if (groupedViewpointsID.containsKey(map['id'])) {
+      // If it is, add the name to the list of names for that viewpoint
+      groupedViewpointsID[map['id']]?.add(map['viewID']);
+    } else {
+      // If it isn't, create a new list of names for that viewpoint and add the name
+      groupedViewpointsID[map['id']] = [map['viewID']];
     }
   }
    for (var map in deSnagImage) {
@@ -189,8 +200,8 @@ class _SnagState2 extends State<SnagDetail2> {
 });
   
   print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  print(groupedDeSnagImages);
-  print(groupedOnlyDeSnag);
+  print(viewpointID);
+  print(groupedViewpointsID);
    print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
   // print(deSnagImage);
   // print(newGroupedDeSnagImages);
@@ -353,9 +364,9 @@ class _SnagState2 extends State<SnagDetail2> {
                           Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                        Center(child: Text("Snag Image",style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
+                        Center(child: Text("Snag Image", style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
                         const SizedBox(width: 10,),
-                        Center(child: Text("De-Snag Image",style: textStyleBodyText1.copyWith(fontSize: 16, color:Colors.grey),),),
+                        Center(child: Text("De-Snag Image", style: textStyleBodyText1.copyWith(fontSize: 16, color:Colors.grey),),),
                   ],),
                   const SizedBox(height: 10,),
                 Row(
@@ -382,12 +393,17 @@ class _SnagState2 extends State<SnagDetail2> {
                           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}' , context));
                         },
                       child: 
-                      SizedBox(
+                      Container(
+                        margin:const EdgeInsets.only(top: 10,bottom: 10),
                         height: 100,
-                        width: 50,
-                        child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}"),
-                        )
-                      );
+                        width: 30,
+                        child:
+                        FittedBox(
+                          fit: BoxFit.fill,
+                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
+                        height: 10,
+                        width: 30,),),
+                      ));
                           }
                          )
                       )
@@ -422,18 +438,21 @@ class _SnagState2 extends State<SnagDetail2> {
                       onTap: () {
                         return;
                       },
-                          child:
-                           Container(
-                            margin: const EdgeInsets.only(top:10,bottom: 10,),
-                            height: 100,
-                            width: 50,
-                           child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
-                          )
+                        child:
+                        Container(
+                        margin:const EdgeInsets.only(top: 10,bottom: 10),
+                        height: 100,
+                        width: 50,
+                        child:
+                          Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
+                          height: 10,
+                          width: 30,
+                      ),),
                       )
                     ),
                 },
                 if(groupedOnlyDeSnag[outerKey]![innerIndex]!='null')...{
-                   SizedBox(
+                  SizedBox(
                    height: 100,
                    child:
                   InkWell(
@@ -449,11 +468,10 @@ class _SnagState2 extends State<SnagDetail2> {
                               color: Colors.grey[300],
                               image:groupedOnlyDeSnag[outerKey]![innerIndex]!='null'?DecorationImage(
                                 image:FileImage(File(groupedOnlyDeSnag[outerKey]![innerIndex].split(":")[1].trim().replaceAll("'", "")?? "")),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               ):null,
                             ):null,
                           )
-                        // )
                       )
                     ),
                 },
@@ -484,10 +502,10 @@ class _SnagState2 extends State<SnagDetail2> {
                       final File imagefile = File(image!.path);
                       groupedOnlyDeSnag[outerKey][innerIndex]=imagefile.toString();
                         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                        var token=sharedPreferences.getString('token');
+                        var token=sharedPreferences.getString('token'); 
                         FormData formData=FormData(); 
                         var dio = Dio();
-                        formData.fields.add(MapEntry('viewpoint_id', viewpoints[outerIndex]['id'].toString()));
+                        formData.fields.add(MapEntry('viewpoint_id', groupedViewpointsID[outerKey][innerIndex].toString()));
                         formData.files.add(
                         MapEntry("de_snag_image", await MultipartFile.fromFile(groupedOnlyDeSnag[outerKey][innerIndex].split(":")[1].trim().replaceAll("'", ""), filename: 'de_snag_image')));
                         var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
@@ -503,7 +521,7 @@ class _SnagState2 extends State<SnagDetail2> {
                             },
                           ),
                         );
-                           setState(() { });
+                        setState(() { });
                         if (kDebugMode) {
                           print(res);
                         }
@@ -520,7 +538,7 @@ class _SnagState2 extends State<SnagDetail2> {
                   ),
                 ): SizedBox(
                       height: 100,
-                      width: 50,
+                      width: 10,
                       child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
                     ),
               ),
@@ -562,7 +580,7 @@ class _SnagState2 extends State<SnagDetail2> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("DE-SNAG REMARK",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                Text("DE-SNAG REMARK", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
                CustomTextFieldGrey(enabled: false,controller: deSnagRemarkController,)
@@ -583,8 +601,8 @@ class _SnagState2 extends State<SnagDetail2> {
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-              Center(child: Text("Select debit to",textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,),
+              Center(child: Text("Select debit to", textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14),),),
+              const Icon(Icons.arrow_drop_down_outlined, size: 30,color: Colors.grey,),
               ]))
           ])
             ),
@@ -605,10 +623,10 @@ class _SnagState2 extends State<SnagDetail2> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("DEBIT AMOUNT",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                Text("DEBIT AMOUNT", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
-              CustomTextFieldGrey(enabled: false,controller: debitAmountController,)
+              CustomTextFieldGrey(enabled: false, controller: debitAmountController,)
           ])
             ),
             if(widget.from=='openedSnag')...{
@@ -622,8 +640,8 @@ class _SnagState2 extends State<SnagDetail2> {
                 Text("Snag Priority",style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
-           SizedBox(
-            height: 75,child: 
+          SizedBox(
+          height: 75,child: 
           ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -671,19 +689,20 @@ class _SnagState2 extends State<SnagDetail2> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                Center(child: Text(snagAssignedByController.text,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-                const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+                Center(child: Text(snagAssignedByController.text, style: textStyleBodyText1.copyWith(fontSize: 14),),),
+                const Icon(Icons.arrow_drop_down_outlined, size: 30,color: Colors.grey,)
                 ])
               ),
           ])
             ),
               const SizedBox(height: 10,),
-            CustomContainer2(child: 
+            CustomContainer2(
+              child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("SNAG ASSIGNED TO",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                Text("SNAG ASSIGNED TO", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
               CustomContainer(child:
@@ -704,7 +723,7 @@ class _SnagState2 extends State<SnagDetail2> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("Snag Priority",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                Text("Snag Priority", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
            SizedBox(
@@ -720,7 +739,6 @@ class _SnagState2 extends State<SnagDetail2> {
             isCardEnabled2.add(false);
             return GestureDetector(
                 onTap: (){
-                  // print(priority[index].toString().substring(0,2).toUpperCase());
                 },
                 child: SizedBox(
                   height: 10,
@@ -753,7 +771,7 @@ class _SnagState2 extends State<SnagDetail2> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("DE-SNAG REMARK",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                Text("DE-SNAG REMARK", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
             const SizedBox(height: 10,),
             CustomTextFieldGrey(enabled: true,controller: deSnagRemarkController,)
@@ -776,8 +794,7 @@ class _SnagState2 extends State<SnagDetail2> {
               ),
               child: const Text("Cancel",style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.normal,),)),
                 ElevatedButton(onPressed: ()
-                   async{
-                // List VID=[];
+                async {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
@@ -808,8 +825,8 @@ class _SnagState2 extends State<SnagDetail2> {
                       "created_by": createdById,
                       "de_snag_remark":deSnagRemarkController.text,
                       "snag_status": widget.from=="desnagnew"?"O":"N",
-                            }
-                        );
+                      }
+                    );
                     EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom); 
                     await getDeSnag.getSnagData(context: context);
                     Get.put(GetNewDeSnag()); 

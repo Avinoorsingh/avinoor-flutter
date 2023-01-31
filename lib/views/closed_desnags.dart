@@ -95,7 +95,7 @@ class _NewSnagState extends State<ClosedDeSnags> {
                             Card(
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:
@@ -106,13 +106,13 @@ class _NewSnagState extends State<ClosedDeSnags> {
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(10)
                                   ),
-                                // height: 0,
+                    
                                 width: 335,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
-                                    Text("${locationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
+                                    Text("${subLocationName[index]} / ${subSubLocationName[index]}", style: textStyleHeadline4.copyWith(fontSize: 14),),
+                                    Text("${locationName[index]}", style: textStyleHeadline4.copyWith(fontSize: 14),),
                                     const SizedBox(height: 20,),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +129,6 @@ class _NewSnagState extends State<ClosedDeSnags> {
                               top: 10,
                               bottom: 20,
                               left: 320,
-                              //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
                                 child: Center(
@@ -140,7 +139,8 @@ class _NewSnagState extends State<ClosedDeSnags> {
                                       color:dateDifference[index]<0?Colors.red:dateDifference[index]==0?Colors.green:AppColors.primary,
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    child: Center(child:
+                                    child: Center(
+                                      child:
                                     Text(dateDifference[index].toString(),style: textStyleBodyText1,)),
                                   ),
                                 ),
@@ -148,12 +148,11 @@ class _NewSnagState extends State<ClosedDeSnags> {
                             ),
                           ],
                         ),
-                              ),
-                              if(show==true && index==tapped)
+                      ),
+                      if(show==true && index==tapped)
                         Container(
                             padding: const EdgeInsets.only(left: 10,right: 10,top: 0),
                             margin: const EdgeInsets.only(bottom: 20),
-                            height: 70,
                             width: 330,
                             decoration: BoxDecoration(
                                     color:  Colors.grey[300],
@@ -174,13 +173,14 @@ class _NewSnagState extends State<ClosedDeSnags> {
                               Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                              ],),
                               Row(children: [
-                              Text("De-Snag Remark: ",style: textStyleHeadline4,),
+                              Text("De-Snag Remark: ", style: textStyleHeadline4,),
                               Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}...":deSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
                               ]),
                              Row(children: [
-                              Text("Closing Remark: ",style: textStyleHeadline4,),
+                              Text("Closing Remark: ", style: textStyleHeadline4,),
                                Text((closingDeSnagRemark[index]!=null?(closingDeSnagRemark[index]!.length>30?"${closingDeSnagRemark[index]!.substring(0,29)}...":closingDeSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,)
-                             ],)
+                             ],),
+                             const  SizedBox(height: 10,),
                             ]),
                             ),
                             ),
