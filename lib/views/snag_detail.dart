@@ -509,18 +509,27 @@ class _SnagState extends State<SnagDetail> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ): Container(
+                ):
+                 GestureDetector(
+                      onTap: () async {
+                        await showDialog(
+                          useSafeArea: true,
+                          context: context,
+                          builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
+                        },
+                      child:  Container(
                         margin:const EdgeInsets.only(top: 10,bottom: 10),
-                        height: 100,
+                        height: 10,
                         width: 30,
                         child:
                         FittedBox(
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
-                          height: 10,
-                          width: 30,
+                          height: 25,
+                          width: 20,
                           ),
                             ),
+                      )
                  )
               ),
                   ]

@@ -435,9 +435,12 @@ class _SnagState2 extends State<SnagDetail2> {
                    height: 100,
                    child:
                   InkWell(
-                      onTap: () {
-                        return;
-                      },
+                      onTap:() async {
+                        await showDialog(
+                          useSafeArea: true,
+                          context: context,
+                          builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
+                        },
                         child:
                         Container(
                         margin:const EdgeInsets.only(top: 10,bottom: 10),
