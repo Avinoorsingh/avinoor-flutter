@@ -160,7 +160,6 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
       Center(child: 
       Container(
       width: double.infinity,
-      // height: double.infinity,
       margin: const EdgeInsets.only(left:5,right: 5),
       child: Column(
         children: [
