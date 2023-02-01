@@ -20,6 +20,7 @@ import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/ongoing_ongoing.dart';
 import 'package:colab/views/post_login_page.dart';
+import 'package:colab/views/project_level_offline.dart';
 import 'package:colab/views/project_level_page.dart';
 import 'package:colab/views/login_page.dart';
 import 'package:colab/views/quality_check_detail.dart';
@@ -60,6 +61,13 @@ class CustomRouter {
         name: 'SNAGS',
         path: snags,
         builder: (context, state) => Snags(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name: 'PROJECTOFFLINE',
+        path: projectOffline,
+        builder: (context, state) => ProjectLevelOffline(
           key: state.pageKey,
         ),
       ),

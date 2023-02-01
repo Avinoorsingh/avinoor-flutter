@@ -1,15 +1,17 @@
+import 'dart:async';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
-import 'package:colab/routes.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/project_level_page1.dart';
 import 'package:colab/views/project_level_page2.dart';
 import 'package:colab/views/project_level_page3.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
@@ -56,8 +58,31 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     this.pages=pages;
   }
 
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+
+
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
   @override
   void initState(){
+    getConnectivity();
     super.initState();
     clientDataGet=widget.clientData;
     // EasyLoading.dismiss();
@@ -310,4 +335,42 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     ):const LoadingDataScreen();
   });
 }
+showDialogBox() => showDialog(
+                  barrierDismissible: false,
+                   context: context,
+                   builder: (BuildContext context1) {
+                     return SimpleDialog(
+                      alignment: Alignment.center,
+                      contentPadding: const EdgeInsets.only(left: 10,right: 10,top: 10),
+                       children: <Widget>[
+                        Text("No Internet Connection", style: textStyleHeadline3.copyWith(fontWeight: FontWeight.bold),),
+                        Text("You need to have Mobile Data or wifi to access this. Press Offline to go Offline feature.",style: textStyleBodyText1.copyWith(color: Colors.black),),
+                           SimpleDialogOption(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                               GestureDetector(onTap : () async {
+                                Navigator.pop(context, 'Cancel');
+                                setState(() => isAlertSet = false);
+                                isDeviceConnected =
+                                    await InternetConnectionChecker().hasConnection;
+                                if (!isDeviceConnected && isAlertSet == false) {
+                                  showDialogBox();
+                                  setState(() => isAlertSet = true);
+                                }
+                              }, 
+                              child: Text("RETRY",style:textStyleBodyText1.copyWith(color: AppColors.primary),),),
+                                const SizedBox(width: 20),
+                                GestureDetector( 
+                                  onTap: (){
+                                  Navigator.pop(context1);
+                                  context.pushNamed('PROJECTOFFLINE');
+                                }, child: Text("OFFLINE",style:textStyleBodyText1.copyWith(color: AppColors.primary),),)
+                              ],
+                            ),
+                           ),
+                         ],
+                       );
+                     },
+                   );
 }

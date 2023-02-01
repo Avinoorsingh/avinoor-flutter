@@ -4,10 +4,12 @@ import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
@@ -22,6 +24,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  
   final signInController = Get.find<SignInController>();
   final getProfile = GetUserProfileNetwork();
   final getSnagData=GetNewSnag();

@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   final router = CustomRouter();
 
+  
+
   @override
   Widget build(BuildContext context) {
      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

@@ -854,7 +854,6 @@ class PwrContractorInfoByPc {
       this.contactNo,
       this.attFile,
       this.grandTotal,
-      
       this.createdBy,
       this.updatedBy,
       this.createdAt,
