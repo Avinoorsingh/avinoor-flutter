@@ -131,8 +131,8 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
               onTap: () {},
                 child: Image.network("https://nodejs.hackerkernel.com/colab",
                           errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
-                              EasyLoading.dismiss();
-                              return const Image(image: AssetImage('assets/images/user_fill.png'), height: 50,
+                          EasyLoading.dismiss();
+                          return const Image(image: AssetImage('assets/images/user_fill.png'), height: 50,
                           width: 50,
                           fit: BoxFit.cover);
                           },
