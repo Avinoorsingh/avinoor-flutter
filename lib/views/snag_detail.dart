@@ -782,9 +782,8 @@ class _SnagState extends State<SnagDetail> {
                 backgroundColor: AppColors.white
               ),
               child: const Text("Cancel",style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.normal,),)),
-                ElevatedButton(onPressed: ()
-                   async{
-                // List VID=[];
+                ElevatedButton(
+                  onPressed: () async {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
@@ -986,49 +985,49 @@ class _SnagState extends State<SnagDetail> {
                       "de_snag_remark":deSnagRemarkController.text,
                       "snag_status": "CWD",
                             }
-                          );
-                    if (kDebugMode) {
-                      print(res.statusCode);
-                    }
-                    EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom); 
-                    await getOpenedSnag.getOpenedSnagData(context: context);
-                    Get.put(GetOpenedSnag()); 
-                         // ignore: use_build_context_synchronously
-                    Navigator.of(context1, rootNavigator: true).pop();
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context);           
-                    } catch (e) {
-                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
-                      EasyLoading.dismiss();
-                     if (kDebugMode) {
-                       print(e);
-                     } 
-                    }
-                    }
-                    else{
-                       EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                  },
-                  child: const Center(
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffffffff),
-                        letterSpacing: -0.3858822937011719,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              ],
-            )
-        ],
-      )
-      );
-    },
-  );
+                              );
+                        if (kDebugMode) {
+                          print(res.statusCode);
+                        }
+                        EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom); 
+                        await getOpenedSnag.getOpenedSnagData(context: context);
+                        Get.put(GetOpenedSnag()); 
+                            // ignore: use_build_context_synchronously
+                        Navigator.of(context1, rootNavigator: true).pop();
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);           
+                        } catch (e) {
+                          EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.dismiss();
+                        if (kDebugMode) {
+                          print(e);
+                        } 
+                        }
+                        }
+                        else{
+                          EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                        }
+                      },
+                      child: const Center(
+                        child: Text(
+                          'OK',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xffffffff),
+                            letterSpacing: -0.3858822937011719,
+                          ),
+                          textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ],
+                      )
+                  ],
+                )
+                );
+              },
+            );
               }, 
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width/2,60),
@@ -1042,176 +1041,176 @@ class _SnagState extends State<SnagDetail> {
                   var token=sharedPreferences.getString('token');
                   var createdById=sharedPreferences.getString('id');
                    showDialog(
-    context: context,
-    builder: (BuildContext context1) {
-      return 
-      Container(
-        decoration:const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-         width: MediaQuery.of(context1).size.width/1,
-        child:
-      AlertDialog(
-        elevation: 2,
-        title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
-        content:
-        SizedBox(width: MediaQuery.of(context1).size.width/1,child:
-            TextField(
-              enabled: true,
-              controller: closingRemarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                hintText: "Type remark here",
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.grey,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: 1,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
-        ),
-        actions: <Widget>[
-                  Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              context: context,
+              builder: (BuildContext context1) {
+                return 
                 Container(
-                  width: MediaQuery.of(context1).size.width/3,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
-                  ),
-                  onPressed: ()async{
-                   closingRemarkController.text="";
-                   Navigator.pop(context1);
-                  },
-                  child: const Center(
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        letterSpacing: -0.3858822937011719,
-                      ),
-                      textAlign: TextAlign.center,
+                  decoration:const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context1).size.width/3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(
-                    begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
-                    colors: [Color.fromARGB(174, 218, 108, 108),Color.fromARGB(251, 236, 85, 85)],
-                    stops: [0.0, 1.0],
+                  width: MediaQuery.of(context1).size.width/1,
+                  child:
+                AlertDialog(
+                  elevation: 2,
+                  title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
+                  content:
+                  SizedBox(width: MediaQuery.of(context1).size.width/1,child:
+                      TextField(
+                        enabled: true,
+                        controller: closingRemarkController,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          filled: true,
+                          hintText: "Type remark here",
+                          fillColor: Colors.grey[200],
+                          hintStyle:const TextStyle(color: Colors.grey,),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1, color:Colors.grey[500]!), //<-- SEE HERE
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1, color:Colors.grey[500]!), //<-- SEE HERE
+                          ),
+                          errorBorder: InputBorder.none,
+                          disabledBorder:OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(
+                                width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                          ),),
+                        maxLines: 1,
+                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+                      ),
                   ),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
-                  ),
-                  onPressed: ()async{
-                    if(closingRemarkController.text.isNotEmpty){
-                      try {
-                     var res=await http.post(
-                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
+                  actions: <Widget>[
+                            Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context1).size.width/3,
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 0.5),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              splashFactory: NoSplash.splashFactory,
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                              backgroundColor: Colors.transparent,
+                                disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                shadowColor: Colors.transparent,
+                            ),
+                            onPressed: ()async{
+                            closingRemarkController.text="";
+                            Navigator.pop(context1);
                             },
-                      body: {
-                      'id':widget.snagModel.id.toString(),
-                      "client_id":widget.snagModel.clientId.toString(),
-                      "project_id":widget.snagModel.projectId.toString(),
-                      "category_id": widget.snagModel.categoryId.toString(),
-                      "location_id": widget.snagModel.locationId.toString(),
-                      "sub_loc_id":widget.snagModel.subLocId.toString(),
-                      "sub_sub_loc_id": widget.snagModel.subSubLocId.toString(),
-                      "activity_head_id": widget.snagModel.activityHeadId.toString(),
-                      "activity_id":widget.snagModel.activityId.toString(),
-                      "contractor_id": widget.snagModel.contractorId.toString(), 
-                      "remark": widget.snagModel.remark.toString(),
-                      "debit_note":widget.snagModel.debitNote.toString(),
-                      "debit_amount":widget.snagModel.debitAmount.toString(),
-                      "due_date": widget.snagModel.dueDate.toString(),
-                      "assigned_to": widget.snagModel.assignedTo.toString(),
-                      "created_by": createdById,
-                      "close_snag_remark":closingRemarkController.text,
-                      "de_snag_remark":deSnagRemarkController.text,
-                      "snag_status": "C",
-                            }
-                          );
-                    if (kDebugMode) {
-                      print(res.statusCode);
-                    }
-                    EasyLoading.showToast("Closed without debit",toastPosition: EasyLoadingToastPosition.bottom); 
-                    await getOpenedSnag.getOpenedSnagData(context: context);
-                    Get.put(GetOpenedSnag()); 
-                         // ignore: use_build_context_synchronously
-                    Navigator.of(context1, rootNavigator: true).pop();
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context);           
-                    } catch (e) {
-                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
-                      EasyLoading.dismiss();
-                     if (kDebugMode) {
-                       print(e);
-                     } 
-                    }
-                    }
-                    else{
-                       EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                  },
-                  child: const Center(
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffffffff),
-                        letterSpacing: -0.3858822937011719,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              ],
-            )
-        ],
-      )
-      );
-    },
-  );
+                            child: const Center(
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  letterSpacing: -0.3858822937011719,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context1).size.width/3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            gradient: const LinearGradient(
+                              begin: Alignment(-0.95, 0.0),
+                              end: Alignment(1.0, 0.0),
+                              colors: [Color.fromARGB(174, 218, 108, 108),Color.fromARGB(251, 236, 85, 85)],
+                              stops: [0.0, 1.0],
+                            ),
+                          ),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              splashFactory: NoSplash.splashFactory,
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                              backgroundColor: Colors.transparent,
+                                disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                shadowColor: Colors.transparent,
+                            ),
+                            onPressed: ()async{
+                              if(closingRemarkController.text.isNotEmpty){
+                                try {
+                              var res=await http.post(
+                              Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
+                              headers: {
+                                        "Accept": "application/json",
+                                        "Authorization": "Bearer $token",
+                                      },
+                                body: {
+                                'id':widget.snagModel.id.toString(),
+                                "client_id":widget.snagModel.clientId.toString(),
+                                "project_id":widget.snagModel.projectId.toString(),
+                                "category_id": widget.snagModel.categoryId.toString(),
+                                "location_id": widget.snagModel.locationId.toString(),
+                                "sub_loc_id":widget.snagModel.subLocId.toString(),
+                                "sub_sub_loc_id": widget.snagModel.subSubLocId.toString(),
+                                "activity_head_id": widget.snagModel.activityHeadId.toString(),
+                                "activity_id":widget.snagModel.activityId.toString(),
+                                "contractor_id": widget.snagModel.contractorId.toString(), 
+                                "remark": widget.snagModel.remark.toString(),
+                                "debit_note":widget.snagModel.debitNote.toString(),
+                                "debit_amount":widget.snagModel.debitAmount.toString(),
+                                "due_date": widget.snagModel.dueDate.toString(),
+                                "assigned_to": widget.snagModel.assignedTo.toString(),
+                                "created_by": createdById,
+                                "close_snag_remark":closingRemarkController.text,
+                                "de_snag_remark":deSnagRemarkController.text,
+                                "snag_status": "C",
+                                      }
+                                    );
+                              if (kDebugMode) {
+                                print(res.statusCode);
+                              }
+                              EasyLoading.showToast("Closed without debit",toastPosition: EasyLoadingToastPosition.bottom); 
+                              await getOpenedSnag.getOpenedSnagData(context: context);
+                              Get.put(GetOpenedSnag()); 
+                                  // ignore: use_build_context_synchronously
+                              Navigator.of(context1, rootNavigator: true).pop();
+                              // ignore: use_build_context_synchronously
+                              Navigator.pop(context);           
+                              } catch (e) {
+                                EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                                EasyLoading.dismiss();
+                              if (kDebugMode) {
+                                print(e);
+                              } 
+                              }
+                              }
+                              else{
+                                EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                              }
+                            },
+                            child: const Center(
+                              child: Text(
+                                'OK',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xffffffff),
+                                  letterSpacing: -0.3858822937011719,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ],
+                      )
+                  ],
+                )
+                );
+              },
+            );
               }, 
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width/2,60),
@@ -1226,192 +1225,192 @@ class _SnagState extends State<SnagDetail> {
                   var token=sharedPreferences.getString('token');
                   var createdById=sharedPreferences.getString('id');
                    showDialog(
-    context: context,
-    builder: (BuildContext context1) {
-      return 
-      Container(
-        decoration:const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-         width: MediaQuery.of(context1).size.width/1,
-        child:
-      AlertDialog(
-        elevation: 2,
-        title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
-        content:
-        SizedBox(width: MediaQuery.of(context1).size.width/1,child:
-            TextField(
-              enabled: true,
-              controller: rejectedRemarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                hintText: "Type remark here",
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.grey,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: 1,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
-        ),
-        actions: <Widget>[
-                  Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: MediaQuery.of(context1).size.width/3,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
-                  ),
-                  onPressed: ()async{
-                   rejectedRemarkController.text="";
-                   Navigator.pop(context1);
-                  },
-                  child: const Center(
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        letterSpacing: -0.3858822937011719,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context1).size.width/3,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(
-                    begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
-                    colors: [Color.fromARGB(174, 218, 108, 108),Color.fromARGB(251, 236, 85, 85)],
-                    stops: [0.0, 1.0],
-                  ),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
-                  ),
-                  onPressed: ()async{
-                    if(rejectedRemarkController.text.isNotEmpty){
-                      try {
-                     var res=await http.post(
-                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                      body: {
-                      'id':widget.snagModel.id.toString(),
-                      "client_id":widget.snagModel.clientId.toString(),
-                      "project_id":widget.snagModel.projectId.toString(),
-                      "category_id": widget.snagModel.categoryId.toString(),
-                      "location_id": widget.snagModel.locationId.toString(),
-                      "sub_loc_id":widget.snagModel.subLocId.toString(),
-                      "sub_sub_loc_id": widget.snagModel.subSubLocId.toString(),
-                      "activity_head_id": widget.snagModel.activityHeadId.toString(),
-                      "activity_id":widget.snagModel.activityId.toString(),
-                      "contractor_id": widget.snagModel.contractorId.toString(), 
-                      "remark": rejectedRemarkController.text.toString(),
-                      "debit_note":widget.snagModel.debitNote.toString(),
-                      "debit_amount":widget.snagModel.debitAmount.toString(),
-                      "due_date": widget.snagModel.dueDate.toString(),
-                      "assigned_to": widget.snagModel.assignedTo.toString(),
-                      "created_by": createdById,
-                      "de_snag_remark":deSnagRemarkController.text,
-                      "snag_status": "N",
-                            }
-                            );
-                    if (kDebugMode) {
-                      print(res.statusCode);
-                    }
-                    EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);   
-                    // ignore: use_build_context_synchronously
-                    await getOpenedSnag.getOpenedSnagData(context: context);
-                    Get.put(GetOpenedSnag()); 
-                         // ignore: use_build_context_synchronously
-                    Navigator.of(context1, rootNavigator: true).pop();
-                      // ignore: use_build_context_synchronously
-                    Navigator.pop(context);       
-                    } catch (e) {
-                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
-                      EasyLoading.dismiss();
-                     if (kDebugMode) {
-                       print(e);
-                     } 
-                    }
-                    }
-                    else{
-                       EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                  },
-                  child: const Center(
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xffffffff),
-                        letterSpacing: -0.3858822937011719,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                      ),
-                    ),
-                  ),
-                    ],
-                  )
-              ],
-            )
-            );
-          },);},
-                style: ElevatedButton.styleFrom(
-                minimumSize: Size(MediaQuery.of(context).size.width+20,60),
-                backgroundColor:const Color.fromARGB(255, 245, 79, 134)
-              ), 
-                child: const Text("Reject",style: TextStyle(color: Colors.black),),
-                )
-              ]
-            )
-            )
-          )
-        }
-      ]
-    )
-   )
-  );
-}
-}
+                      context: context,
+                      builder: (BuildContext context1) {
+                        return 
+                        Container(
+                          decoration:const BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          width: MediaQuery.of(context1).size.width/1,
+                          child:
+                        AlertDialog(
+                          elevation: 2,
+                          title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
+                          content:
+                          SizedBox(width: MediaQuery.of(context1).size.width/1,child:
+                              TextField(
+                                enabled: true,
+                                controller: rejectedRemarkController,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  hintText: "Type remark here",
+                                  fillColor: Colors.grey[200],
+                                  hintStyle:const TextStyle(color: Colors.grey,),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color:Colors.grey[500]!), //<-- SEE HERE
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color:Colors.grey[500]!), //<-- SEE HERE
+                                  ),
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder:OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide: BorderSide(
+                                        width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                                  ),),
+                                maxLines: 1,
+                                style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+                              ),
+                          ),
+                          actions: <Widget>[
+                                    Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context1).size.width/3,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 0.5),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      splashFactory: NoSplash.splashFactory,
+                                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                      backgroundColor: Colors.transparent,
+                                        disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                        shadowColor: Colors.transparent,
+                                    ),
+                                    onPressed: ()async{
+                                    rejectedRemarkController.text="";
+                                    Navigator.pop(context1);
+                                    },
+                                    child: const Center(
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          letterSpacing: -0.3858822937011719,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context1).size.width/3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    gradient: const LinearGradient(
+                                      begin: Alignment(-0.95, 0.0),
+                                      end: Alignment(1.0, 0.0),
+                                      colors: [Color.fromARGB(174, 218, 108, 108),Color.fromARGB(251, 236, 85, 85)],
+                                      stops: [0.0, 1.0],
+                                    ),
+                                  ),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      splashFactory: NoSplash.splashFactory,
+                                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                      backgroundColor: Colors.transparent,
+                                        disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                        shadowColor: Colors.transparent,
+                                    ),
+                                    onPressed: ()async{
+                                      if(rejectedRemarkController.text.isNotEmpty){
+                                        try {
+                                      var res=await http.post(
+                                      Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
+                                      headers: {
+                                                "Accept": "application/json",
+                                                "Authorization": "Bearer $token",
+                                              },
+                                        body: {
+                                        'id':widget.snagModel.id.toString(),
+                                        "client_id":widget.snagModel.clientId.toString(),
+                                        "project_id":widget.snagModel.projectId.toString(),
+                                        "category_id": widget.snagModel.categoryId.toString(),
+                                        "location_id": widget.snagModel.locationId.toString(),
+                                        "sub_loc_id":widget.snagModel.subLocId.toString(),
+                                        "sub_sub_loc_id": widget.snagModel.subSubLocId.toString(),
+                                        "activity_head_id": widget.snagModel.activityHeadId.toString(),
+                                        "activity_id":widget.snagModel.activityId.toString(),
+                                        "contractor_id": widget.snagModel.contractorId.toString(), 
+                                        "remark": rejectedRemarkController.text.toString(),
+                                        "debit_note":widget.snagModel.debitNote.toString(),
+                                        "debit_amount":widget.snagModel.debitAmount.toString(),
+                                        "due_date": widget.snagModel.dueDate.toString(),
+                                        "assigned_to": widget.snagModel.assignedTo.toString(),
+                                        "created_by": createdById,
+                                        "de_snag_remark":deSnagRemarkController.text,
+                                        "snag_status": "N",
+                                              }
+                                              );
+                                      if (kDebugMode) {
+                                        print(res.statusCode);
+                                      }
+                                      EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);   
+                                      // ignore: use_build_context_synchronously
+                                      await getOpenedSnag.getOpenedSnagData(context: context);
+                                      Get.put(GetOpenedSnag()); 
+                                          // ignore: use_build_context_synchronously
+                                      Navigator.of(context1, rootNavigator: true).pop();
+                                        // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);       
+                                      } catch (e) {
+                                        EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                                        EasyLoading.dismiss();
+                                      if (kDebugMode) {
+                                        print(e);
+                                      } 
+                                      }
+                                      }
+                                      else{
+                                        EasyLoading.showToast("Closing remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                    },
+                                    child: const Center(
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xffffffff),
+                                          letterSpacing: -0.3858822937011719,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                        ),
+                                      ),
+                                    ),
+                                      ],
+                                    )
+                                ],
+                              )
+                              );
+                            },);},
+                                  style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(MediaQuery.of(context).size.width+20,60),
+                                  backgroundColor:const Color.fromARGB(255, 245, 79, 134)
+                                ), 
+                                  child: const Text("Reject",style: TextStyle(color: Colors.black),),
+                                  )
+                                ]
+                              )
+                              )
+                            )
+                          }
+                        ]
+                      )
+                    )
+                    );
+                  }
+                  }
 
 Widget imageDialog(text, path, context) {
 return Dialog(

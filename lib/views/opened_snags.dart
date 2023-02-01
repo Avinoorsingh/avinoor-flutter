@@ -27,6 +27,7 @@ class _NewSnagState extends State<OpenedSnags> {
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<String?> remark=[];
+  List<String?> deSnagRemark=[];
   List snagData=[];
   List dateDifference=[];
  
@@ -48,6 +49,7 @@ class _NewSnagState extends State<OpenedSnags> {
        subSubLocationName.add(signInController.getSnagDataOpenedList!.data![i].subSubLocation!.subSubLocationName);
        locationName.add(signInController.getSnagDataOpenedList!.data![i].location!.locationName);
        remark.add(signInController.getSnagDataOpenedList!.data![i].remark);
+       deSnagRemark.add(signInController.getSnagDataOpenedList!.data![i].deSnagRemark);
        dueDates.add(signInController.getSnagDataOpenedList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataOpenedList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataOpenedList!.data![i]);
@@ -164,10 +166,17 @@ class _NewSnagState extends State<OpenedSnags> {
                                 );
                               },
                               child: 
+                                 Column(children: [
+                              const  SizedBox(height: 10,),
                              Row(children: [
                                Text("Snag Remark: ",style: textStyleHeadline4,),
                                Text((remark[index]!=null? (remark[index]!.length>30?"${remark[index]!.substring(0,29)}...":remark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
-                             ],)
+                             ],),
+                               Row(children: [
+                              Text("De-Snag Remark: ",style: textStyleHeadline4,),
+                              Text((deSnagRemark[index]!=null? (deSnagRemark[index]!.length>30?"${deSnagRemark[index]!.substring(0,29)}...":deSnagRemark[index] ?? ""):""),style: textStyleBodyText2,overflow: TextOverflow.ellipsis,),
+                              ]),
+                                 ])
                             ),
                             ),
                             ]

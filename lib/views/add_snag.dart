@@ -6,6 +6,7 @@ import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
 import 'package:colab/models/location_list.dart';
@@ -889,7 +890,7 @@ setState(() => this.image = imageTemp);
                     );
                      }, 
                     initialDate: DateTime.now(),
-                    firstDate: DateTime(1950),
+                    firstDate: DateTime.now(),
                     lastDate: DateTime(2100));
                 if (pickedDate != null) {
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -915,13 +916,17 @@ setState(() => this.image = imageTemp);
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("DEBIT AMOUNT",style: textStyleBodyText1,),
-                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),)
+                Text("DEBIT AMOUNT ",style: textStyleBodyText1,),
+                Text("\u20B9 *",style: textStyleBodyText1.copyWith(color: Colors.red),)
               ],),),
                const SizedBox(height: 10,),
             TextField(
               keyboardType:TextInputType.number,
               controller: debitAmountController,
+              inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(7),
+                    ],
               textAlign: TextAlign.center,
                decoration: InputDecoration(
                 border: InputBorder.none,

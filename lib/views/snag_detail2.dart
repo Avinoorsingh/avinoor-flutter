@@ -530,7 +530,7 @@ class _SnagState2 extends State<SnagDetail2> {
                         }
                   },
                   child: const Center(
-                    child: Text(
+                    child: Text (
                       'Upload Image',
                       style: TextStyle(
                         fontSize: 10,
@@ -795,16 +795,32 @@ class _SnagState2 extends State<SnagDetail2> {
                 minimumSize: const Size(150,40),
                 backgroundColor: AppColors.white
               ),
-              child: const Text("Cancel",style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.normal,),)),
-                ElevatedButton(onPressed: ()
-                async {
+              child: const Text("Cancel", style: TextStyle(color: Colors.black, fontSize: 14,fontWeight: FontWeight.normal,),
+              )
+              ),
+              ElevatedButton(
+                  onPressed: () async {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
-                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="Not any Remark"){
+                bool flag=true;
+                for(int i=0;i<groupedOnlyDeSnag.length;i++){
+                  var outerKey = groupedViewpoints.keys.toList()[i];
+                  for(int j=0;j<groupedOnlyDeSnag[outerKey].length;j++){
+                    flag=false;
+                    if(groupedOnlyDeSnag[outerKey][j]=='null'){
+                      EasyLoading.showToast('De-Snag Image is required',toastPosition: EasyLoadingToastPosition.bottom);
+                      flag=false;
+                    }
+                    else{
+                      flag=true;
+                    }
+                  }
+                }
+                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="Not any Remark" && flag==true){
                   try {
                     await http.post(
-                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
+                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change1"),
                      headers: {
                               "Accept": "application/json",
                               "Authorization": "Bearer $token",
@@ -844,7 +860,11 @@ class _SnagState2 extends State<SnagDetail2> {
                     }
                 }
                 else{
+                  if(flag==false){
+                     EasyLoading.showToast("De-Snag Image is required",toastPosition: EasyLoadingToastPosition.bottom);
+                  }else{
                   EasyLoading.showToast("De-Snag remark cannot be empty",toastPosition: EasyLoadingToastPosition.bottom);
+                  }
                 }
                 },
                 style: ElevatedButton.styleFrom(
@@ -969,7 +989,7 @@ class _SnagState2 extends State<SnagDetail2> {
                       disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
                       shadowColor: Colors.transparent,
                   ),
-                  onPressed: ()async{
+                  onPressed: () async{
                     if(closingRemarkController.text.isNotEmpty){
                       try {
                      var res=await http.post(
