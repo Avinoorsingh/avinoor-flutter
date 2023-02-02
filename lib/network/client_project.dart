@@ -172,7 +172,6 @@ class GetUserProfileNetwork extends GetxController{
     signInController.getClientProfile = result;
     ClientProfileData result1=ClientProfileData.fromJson(cData['data']);
     signInController.getProjectData=result1;
-    print(signInController.getProjectData!.snagCount);
     await getClientProjectsController.getSelectedProjects(context: context,selectedDate: DateFormat('yyyy-MM-dd').format(DateTime.now()));
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var projectID=sharedPreferences.getString('projectIdd');

@@ -59,6 +59,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.44
   connectivity_plus: ^3.0.2
   internet_connection_checker: ^1.0.0+1
+  sqflite: ^2.2.4+1
 
 dev_dependencies:
   flutter_test:

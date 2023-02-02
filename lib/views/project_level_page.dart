@@ -2,18 +2,22 @@ import 'dart:async';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
+import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/project_level_page1.dart';
 import 'package:colab/views/project_level_page2.dart';
 import 'package:colab/views/project_level_page3.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../config.dart';
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
 import '../theme/text_styles.dart';
@@ -61,18 +65,67 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
+  late DatabaseProvider databaseProvider;
 
 
   getConnectivity() =>
       subscription = Connectivity().onConnectivityChanged.listen(
         (ConnectivityResult result) async {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          if (!isDeviceConnected && isAlertSet == false) {
+          if (!isDeviceConnected && isAlertSet == false){
             showDialogBox();
             setState(() => isAlertSet = true);
           }
+          if (isDeviceConnected){
+            saveData();
+          }
         },
       );
+
+  saveData () async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var tokenValue=sharedPreferences.getString('token');
+     var clientId=sharedPreferences.getString('client_id');
+     var projectID=sharedPreferences.getString('projectIdd');
+     if(projectID!=null){
+     try{
+     var getProgressOfflineDataURL=Uri.parse('${Config.getProgressOfflineData}$clientId/$projectID');
+     var res=await http.get(
+            getProgressOfflineDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200){
+          await databaseProvider.insertMyJsonModel(res.body);
+          }
+      } catch (e) {
+          if (kDebugMode) {
+            print("error in progress offline data");
+            print(e);
+          }
+        }
+        try{
+     var getSnagOfflineDataURL=Uri.parse('${Config.getSnagOfflineData}$clientId/$projectID');
+     var res=await http.get(
+            getSnagOfflineDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200){
+          await databaseProvider.insertSnagModel(res.body);
+          }
+      } catch (e) {
+          if (kDebugMode) {
+            print("error in snag offline data");
+            print(e);
+          }
+        }
+     }
+  }
 
   @override
   void dispose() {
@@ -82,10 +135,11 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
 
   @override
   void initState(){
-    getConnectivity();
     super.initState();
+    getConnectivity();
+    databaseProvider = DatabaseProvider();
+    databaseProvider.init();
     clientDataGet=widget.clientData;
-    // EasyLoading.dismiss();
     getClientProfileController.getUserProfile(context: context);
     getLabourDataContractorListController.getContractorListData(context: context);
     getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
@@ -96,7 +150,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
     getClosedDeSnagDataController.getClosedSnagData(context: context);
-     saveProjectId();
+    saveProjectId();
   }
 
   saveProjectId() async {
@@ -136,8 +190,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
      "MY TASK",
      "MY TOOLS",
   ];
-
-  /// List of body icon
 
   int current = 0;
   @override
@@ -350,7 +402,7 @@ showDialogBox() => showDialog(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                GestureDetector(onTap : () async {
-                                Navigator.pop(context, 'Cancel');
+                                Navigator.pop(context1, 'Cancel');
                                 setState(() => isAlertSet = false);
                                 isDeviceConnected =
                                     await InternetConnectionChecker().hasConnection;

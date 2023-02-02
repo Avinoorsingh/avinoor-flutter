@@ -1,8 +1,12 @@
 import 'package:colab/constants/colors.dart';
+import 'package:colab/models/snag_offline.dart';
+import 'package:colab/services/local_database/local_database_service.dart';
+import 'package:colab/views/project_level_page_offline1.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../models/progress_offline.dart';
 import '../theme/text_styles.dart';
 
 class ProjectLevelOffline extends StatefulWidget {
@@ -17,10 +21,37 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   // ignore: prefer_typing_uninitialized_variables
   var clientDataGet;
   List pages=[];
+  List<ProgressOffline> progressData=[];
+  List<SnagDataOffline> snagData=[];
+  late DatabaseProvider databaseProvider;
+  
+  _ProjectLevelPageState(){
+     List pages = [
+    const ProjectLevelPageOffline1(),
+  ];
+    this.pages=pages;
+  }
 
   @override
   void initState(){
+    databaseProvider = DatabaseProvider();
+    databaseProvider.init();
     super.initState();
+    fetchProgressData();
+    fetchSnagData();
+  }
+
+  Future<List<ProgressOffline>> fetchProgressData() async {
+    progressData= await databaseProvider.getMyJsonModels();
+    return progressData;
+  }
+
+  Future<List<SnagDataOffline>> fetchSnagData() async {
+    snagData= await databaseProvider.getSnagModel();
+    print("Fetched");
+    print(snagData[0].data![0].category);
+    print("Fetched");
+    return snagData;
   }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -38,9 +69,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   ];
 
   List<String> tabName=[
-     "MY TOOLS",
-     "MY TASK",
-     "MY TOOLS",
+     "OFFLINE FEATURES",
   ];
 
   int current = 0;
@@ -105,17 +134,6 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
                      style: textStyleBodyText2.copyWith(
                          color: Colors.black, fontSize: 14),
                     )),
-                      // if(widget.from=="client")
-                      //  Flexible(
-                      //   child: ElevatedButton(
-                      //     style: ElevatedButton.styleFrom(elevation: 0,
-                      //     splashFactory: NoSplash.splashFactory,
-                      //     backgroundColor: Colors.greenAccent),
-                      //     child: const Text("CHANGE PROJECT", style: TextStyle(color: Colors.black,fontSize: 8)),
-                      //     onPressed: () async {
-                      //     context.pushNamed('CLIENTLEVELPAGE');
-                      //   },)
-                      //  )
                   ],
                 ),
               ),
@@ -163,74 +181,10 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
       margin: const EdgeInsets.only(left:5,right: 5),
       child: Column(
         children: [
-          /// CUSTOM TABBAR
-          SizedBox(
-            width: double.infinity,
-            height: 90,
-            child:
-            Center(child: 
-             ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
-                itemCount: items.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (ctx, index) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            current = index;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.all(5),
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: current == index
-                                ? AppColors.white
-                                : Colors.white54,
-                            borderRadius: current == index
-                                ? BorderRadius.circular(15)
-                                : BorderRadius.circular(10),
-                            border: current == index
-                                ? Border.all(
-                                    color: Colors.white, width: 2)
-                                : null,
-                          ),
-                          child: 
-                          Card(
-                            color: current == index
-                                ?AppColors.primary
-                                : Colors.white,
-                            elevation: 5,
-                            child: 
-                          Center(
-                            child: 
-                            Image.asset(items[index].toString())
-                          ),
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                          visible: current == index,
-                          child: Container(
-                            width: 5,
-                            height: 5,
-                            decoration: const BoxDecoration(
-                                color:AppColors.primary,
-                                shape: BoxShape.circle),
-                          )),
-                    ],
-                  );
-                }),
-            )
+          Visibility(child: Center(child: Text("OFFLINE FEATURES",style: textStyleHeadline3,)),),
+          Expanded(
+              child: pages[current],
           ),
-          Visibility(child: Center(child: Text(tabName[current],style: textStyleHeadline3,)),),
-          // Expanded(
-          //     child: pages[current],
-          // ),
         ],
       ),
       ),

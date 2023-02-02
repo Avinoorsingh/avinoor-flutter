@@ -22,7 +22,7 @@ class ProgressOffline {
 }
 
 class ProgressOfflineData {
-  int? locationId;
+  num? locationId;
   String? locationName;
   List<SubLocationInfo>? subLocationInfo;
 
@@ -52,7 +52,7 @@ class ProgressOfflineData {
 }
 
 class SubLocationInfo {
-  int? subLocId;
+  num? subLocId;
   String? subLocationName;
   List<SubSubLocationInfo>? subSubLocationInfo;
 
@@ -84,7 +84,7 @@ class SubLocationInfo {
 
 class SubSubLocationInfo {
   String? subSubLocationName;
-  int? subLocationId;
+  num? subLocationId;
   List<SubSubLocationActivity>? subSubLocationActivity;
 
   SubSubLocationInfo(
@@ -116,10 +116,10 @@ class SubSubLocationInfo {
 }
 
 class SubSubLocationActivity {
-  int? linkingActivityId;
+  num? linkingActivityId;
   String? activity;
-  double? quantity;
-  int? productivity;
+  num? quantity;
+  num? productivity;
   List<ContractorName>? contractorName;
   ProjectActivityOne? projectActivityOne;
   ProgressAdd? progressAdd;
@@ -173,15 +173,15 @@ class SubSubLocationActivity {
 }
 
 class ContractorName {
-  int? id;
-  int? clientId;
-  int? linkingActivityId;
-  int? projectId;
-  int? lineItemId;
-  int? locationId;
-  int? subLocId;
-  int? subSubLocId;
-  int? quantityId;
+  num? id;
+  num? clientId;
+  num? linkingActivityId;
+  num? projectId;
+  num? lineItemId;
+  num? locationId;
+  num? subLocId;
+  num? subSubLocId;
+  num? quantityId;
   String? createdAt;
   String? updatedAt;
   String? contractorName;
@@ -250,20 +250,20 @@ class ProjectActivityOne {
 }
 
 class ProgressAdd {
-  int? id;
-  int? clientId;
-  int? projectId;
-  int? type;
-  int? linkActivityId;
-  int? contractorId;
-  int? debetContactor;
+  num? id;
+  num? clientId;
+  num? projectId;
+  num? type;
+  num? linkActivityId;
+  num? contractorId;
+  num? debetContactor;
   String? remarks;
-  int? createdBy;
-  int? updatedBy;
+  num? createdBy;
+  num? updatedBy;
   String? createdAt;
   String? updatedAt;
-  int? progressPercentage;
-  double? commulativeQuantity;
+  num? progressPercentage;
+  num? commulativeQuantity;
   EmployeeInfo? employeeInfo;
   List<ProgressDailyInfo>? progressDailyInfo;
 
@@ -339,19 +339,19 @@ class ProgressAdd {
 }
 
 class EmployeeInfo {
-  int? id;
-  int? clientId;
+  num? id;
+  num? clientId;
   String? userId;
   String? password;
   String? name;
   String? rm;
   String? mobileNo;
   String? emailId;
-  int? roleId;
-  int? status;
-  int? userType;
+  num? roleId;
+  num? status;
+  num? userType;
   String? lastName;
-  int? designation;
+  num? designation;
   String? altMobileNo;
   String? emergencyName;
   String? emergencyMobileNo;
@@ -440,18 +440,18 @@ class EmployeeInfo {
 }
 
 class ProgressDailyInfo {
-  int? dailyId;
-  int? progressId;
-  int? contractorId;
-  double? cumulativeQuantity;
-  double? achivedQuantity;
-  double? totalQuantity;
+  num? dailyId;
+  num? progressId;
+  num? contractorId;
+  num? cumulativeQuantity;
+  num? achivedQuantity;
+  num? totalQuantity;
   String? progressDate;
-  int? progressPercentage;
-  int? debetContactor;
-  int? progType;
+  num? progressPercentage;
+  num? debetContactor;
+  num? progType;
   String? remarks;
-  int? draftStatus;
+  num? draftStatus;
   String? createdAt;
   String? updatedAt;
   DebitContractor? debitContractor;
@@ -565,9 +565,9 @@ class DebitContractor {
 }
 
 class ProgressImagebyDaily {
-  int? id;
-  int? progressId;
-  int? progressDailyId;
+  num? id;
+  num? progressId;
+  num? progressDailyId;
   String? fileName;
   String? createdAt;
   String? updatedAt;
@@ -602,15 +602,15 @@ class ProgressImagebyDaily {
 }
 
 class ProgressLabourLinkings {
-  int? progessLinkId;
-  int? progressDailyId;
-  int? progressId;
-  int? contractorId;
+  num? progessLinkId;
+  num? progressDailyId;
+  num? progressId;
+  num? contractorId;
   String? progressDate;
-  int? contractorLabourLinkingId;
+  num? contractorLabourLinkingId;
   String? time;
-  int? createdBy;
-  int? updatedBy;
+  num? createdBy;
+  num? updatedBy;
   String? createdAt;
   String? updatedAt;
   ProgressLabourInfoByCll? progressLabourInfoByCll;
@@ -677,16 +677,16 @@ class ProgressLabourLinkings {
 }
 
 class ProgressLabourInfoByCll {
-  int? id;
-  int? clientId;
-  int? projectId;
-  int? clientContractorId;
+  num? id;
+  num? clientId;
+  num? projectId;
+  num? clientContractorId;
   String? type;
-  int? tradeId;
-  int? workingHrs;
+  num? tradeId;
+  num? workingHrs;
   String? name;
-  int? rate;
-  int? otRate;
+  num? rate;
+  num? otRate;
   String? aadhar;
   String? createdAt;
   String? updatedAt;
@@ -743,7 +743,7 @@ class ProgressLabourInfoByCll {
 
 class ProgressContractorInfoByPc {
   String? contractorName;
-  int? id;
+  num? id;
 
   ProgressContractorInfoByPc({this.contractorName, this.id});
 
@@ -761,14 +761,14 @@ class ProgressContractorInfoByPc {
 }
 
 class ProgressContByPwr {
-  int? id;
-  int? progressId;
-  int? progressDailyId;
-  int? contractorId;
-  int? pwrType;
+  num? id;
+  num? progressId;
+  num? progressDailyId;
+  num? contractorId;
+  num? pwrType;
   // ignore: prefer_typing_uninitialized_variables
   var labourType;
-  int? labourCount;
+  num? labourCount;
   String? progressDate;
   String? createdAt;
   String? updatedAt;
@@ -823,10 +823,10 @@ class ProgressContByPwr {
 }
 
 class PwrContractorInfoByPc {
-  int? id;
-  int? clientId;
-  int? projectId;
-  int? clientContractorId;
+  num? id;
+  num? clientId;
+  num? projectId;
+  num? clientContractorId;
   String? contractorName;
   String? startDate;
   String? endDate;
@@ -835,9 +835,9 @@ class PwrContractorInfoByPc {
   String? contactNo;
   // ignore: prefer_typing_uninitialized_variables
   var attFile;
-  int? grandTotal;
-  int? createdBy;
-  int? updatedBy;
+  num? grandTotal;
+  num? createdBy;
+  num? updatedBy;
   String? createdAt;
   String? updatedAt;
 
