@@ -361,11 +361,11 @@ setState(() => this.image = imageTemp);
                   locationId.text =value.substring(value.indexOf("#")+1,value.indexOf(":"));
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
-                  subLocationController.text=value.substring(0,value.indexOf('?'));
+                  subLocationController.text=value.substring(0, value.indexOf('?'));
                   }
                 });
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
+                 var token=sharedPreferences.getString('token');
                 try {
                     var getActivityHeadApiUrl=Uri.parse(Config.getActivityHeadApi);
                     var res=await http.post(
@@ -390,11 +390,11 @@ setState(() => this.image = imageTemp);
                               print(e);
                             }
                           }
-                  }
-                  else if(locationController.text.isEmpty){
-                    EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
-                  }
-            },
+                      }
+                      else if(locationController.text.isEmpty){
+                        EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+                      }
+                },
               child: 
               DropdownButtonFormField(
                 onTap: () {
@@ -413,7 +413,7 @@ setState(() => this.image = imageTemp);
                 decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
                 borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-              focusedBorder: OutlineInputBorder( //<-- SEE HERE
+              focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1),
                ),
                 ),
