@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
 import 'package:colab/theme/text_styles.dart';
-import 'package:colab/views/closed_quality_checklist.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -21,15 +19,15 @@ import '../network/client_project.dart';
 
 // ignore: must_be_immutable
 class ProjectLevelPage1 extends StatefulWidget {
-  ProjectLevelPage1({Key? key,required this.clientData}) : super(key: key);
+  ProjectLevelPage1({Key? key,required this.clientData, required this.index}) : super(key: key);
   dynamic clientData;
+  dynamic index;
 
   @override
   State<ProjectLevelPage1> createState() => _ProjectLevelPage1State();
 }
 
 class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
-   final getClientProjectsController = Get.find<GetClientProject>();
    final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
@@ -40,6 +38,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
+  final getClientProjectsController = Get.find<GetClientProject>();
    final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
             ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
@@ -71,17 +70,16 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     _selectedDate=DateFormat('yyyy-MM-dd').format(DateTime.now());
     // _chartData = getChartData(_selectedDate);
     getClientProfileController.getUserProfile(context: context);
-    getClientProjectsController.getSelectedProjects(context: context);
      getClientProfileController.getUserProfile(context: context);
     getLabourDataContractorListController.getContractorListData(context: context);
     getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
-    getClientProjectsController.getUpcomingProjects(context: context);
     getNewSnagDataController.getSnagData(context: context);
     getNewDeSnagDataController.getSnagData(context: context);
     getOpenedSnagDataController.getOpenedSnagData(context: context);
     getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
     getClosedDeSnagDataController.getClosedSnagData(context: context);
+    getClientProjectsController.getSelectedProjects(context:context);
     super.initState();
   }
 
@@ -106,11 +104,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
         lastDate: DateTime(2132));
     if (picked != null) {
       setState(() {
-        // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        // print(_selectedDate);
-        // print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         _selectedDate = DateFormat('yyyy-MM-dd').format(picked);
-        // print(_selectedDate);
       });
        _chartData = await getChartData(_selectedDate);
        setState(() {});
@@ -139,6 +133,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
       final signInController=Get.find<SignInController>();
+      getClientProjectsController.getSelectedProjects(context:context);
      EasyLoading.dismiss();
     return
     signInController.getProjectData?.clientid!=null?
@@ -244,6 +239,24 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         )
                         ),
                         ),
+                        if(i==5)...{
+                          Positioned(
+                              top: 40,
+                              left: 10,
+                              right: 10,
+                              child: InkWell(
+                                onTap: () {},
+                                child:  Center(
+                                  child: CircleAvatar(
+                                    backgroundColor:AppColors.primary,
+                                    radius: 12.0,
+                                    child: Text(signInController.getProjectData!.areaOfConernTotal!=null?signInController.getProjectData!.areaOfConernTotal.toString():"0", style:const TextStyle(color: Colors.black),),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        },
+                        if(i!=5)...{
                          Positioned(
                               top: 40,
                               left: 10,
@@ -259,6 +272,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 ),
                               ),
                             ),
+                        }
                         ])
                         ),
                         ),
@@ -318,7 +332,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     child: CircleAvatar(
                         backgroundColor:AppColors.primary,
                         radius: 12.0,
-                        child: Text(signInController.getProjectData!.snagCount.toString()!='null'?signInController.getProjectData!.snagCount.toString():"0",style: const TextStyle(color: Colors.black),),
+                        child: Text((signInController.getProjectData!.snagTotalCount!=null?signInController.getProjectData!.snagTotalCount!-1:"0").toString(),style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),

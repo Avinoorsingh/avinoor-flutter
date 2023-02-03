@@ -23,9 +23,6 @@ class APIService{
     body: jsonEncode(model.toJson()));
     if(response.statusCode==200){
       Map<String, dynamic> responseSuccess=jsonDecode(response.body);
-      if (kDebugMode) {
-        // print(responseSuccess);
-      }
       if(responseSuccess['success']==true){
           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           var tokenValue=responseSuccess['token'];
@@ -52,14 +49,10 @@ class APIService{
               'id':responseSuccess['data']['id'].toString(),
             }
             );
-
            Map<String, dynamic> resSuccess=jsonDecode(res.body);
            if(resSuccess['data'].length>1){
              for(var data in  resSuccess['data']){
             clientData.add(ClientProfileData.fromJson(data));
-           }
-           if (kDebugMode) {
-            //  print(clientData);
            }
             return "clientLevel";
            }

@@ -65,6 +65,13 @@ class _ActivityPageState extends State<OnGoingOnGoingScreen> {
                 key: Key(Random().nextInt(1000).toString()),
                 physics:const NeverScrollableScrollPhysics(),
                 children: [
+                CompletedInsideOngoing(
+                  cID: widget.cID,
+                  pID: widget.pID,
+                  locID: widget.locID,
+                  subLocID: widget.subLocID,
+                  subSubLocID: widget.subSubLocID,
+                 ),
                 OnGoingInsideOnGoing(
                   cID: widget.cID,
                   pID: widget.pID,
@@ -72,21 +79,14 @@ class _ActivityPageState extends State<OnGoingOnGoingScreen> {
                   subLocID: widget.subLocID,
                   subSubLocID: widget.subSubLocID,
                 ),
-                 UpComingInsideOnGoing(
+                 const InQualityInsideOnGoing(),
+                UpComingInsideOnGoing(
                   cID: widget.cID,
                   pID: widget.pID,
                   locID: widget.locID,
                   subLocID: widget.subLocID,
                   subSubLocID: widget.subSubLocID,
                 ),
-                 CompletedInsideOngoing(
-                  cID: widget.cID,
-                  pID: widget.pID,
-                  locID: widget.locID,
-                  subLocID: widget.subLocID,
-                  subSubLocID: widget.subSubLocID,
-                 ),
-                const InQualityInsideOnGoing(),
                 ],
               ),
         floatingActionButton: Visibility(

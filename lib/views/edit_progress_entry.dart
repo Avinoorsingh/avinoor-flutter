@@ -267,9 +267,10 @@ class _ProgressState extends State<EditProgressEntry> {
                   margin:const EdgeInsets.only(right: 20,top: 10),
                   child:
                 ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor:update==false? Colors.brown:Colors.green),
-                onPressed: ()async{
+                onPressed: () async {
                   setState(() {
                     if(update==false){
+                    remarkController.text="";
                     update=true;
                     }
                     else{

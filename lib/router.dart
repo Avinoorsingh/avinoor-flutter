@@ -335,6 +335,7 @@ class CustomRouter {
         builder: (context, state) => ProjectLevelPage(
         clientData: state.extra,
           from: state.queryParams["from"],
+          index:state.queryParams['index'],
         ),
       ),
       GoRoute(

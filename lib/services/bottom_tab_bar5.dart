@@ -80,16 +80,16 @@ void initState(){
           isScrollable: true,
           tabs:  [
             Tab(
-              child: Text("ONGOING",style:textStyleBodyText1 ,),
-            ),
-            Tab(
-            child: Text("UPCOMING",style:textStyleBodyText1 ,),
-            ),
-            Tab(
               child: Text("COMPLETED",style:textStyleBodyText1 ,),
             ),
             Tab(
+              child: Text("ONGOING",style:textStyleBodyText1 ,),
+            ),
+            Tab(
               child: Text("IN QUALITY",style:textStyleBodyText1 ,),
+            ),
+            Tab(
+            child: Text("UPCOMING",style:textStyleBodyText1 ,),
             ),
           ],
         ),

@@ -177,10 +177,7 @@ class _SnagState extends State<SnagDetailOffline> {
     newGroupedDeImages[key]=newValue;
   });
   }
-  print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  print(groupedDeSnagImages);
-  print(newGroupedDeSnagImages);
-   print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
+ 
   // print(deSnagImage);
   // print(newGroupedDeSnagImages);
     // print("I am here, here is the viewpoint");
@@ -291,19 +288,12 @@ class _SnagState extends State<SnagDetailOffline> {
                 builder: (_) => imageDialog('My Image',markController.text.isEmpty?"assets/images/user_fill.png":'http://nodejs.hackerkernel.com/colab${markController.text}', context));
               },
             child: 
-            Container(
-              height: 200,
-              width: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                image: DecorationImage(
-                  image: Image.network("http://nodejs.hackerkernel.com/colab${markController.text}",  errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
+            SizedBox(
+            height: 200,
+            width: 200,
+             child: Image.network("http://nodejs.hackerkernel.com/colab${markController.text}",  errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
                           return Container();
-                          },) as ImageProvider,
-                  fit: BoxFit.fill,
-                  alignment: Alignment.topCenter,
-                ),
-              ),
+                          },),
           ),
             )
           ),

@@ -24,15 +24,17 @@ import '../theme/text_styles.dart';
 
 // ignore: must_be_immutable
 class ProjectLevelPage extends StatefulWidget {
-  ProjectLevelPage({Key? key,required this.from, required this.clientData}) : super(key: key);
+  ProjectLevelPage({Key? key,required this.from, required this.clientData, required this.index}) : super(key: key);
 
   // ignore: prefer_typing_uninitialized_variables
   final from;
+  // ignore: prefer_typing_uninitialized_variables
+  final index;
   dynamic clientData;
 
   @override
   // ignore: no_logic_in_create_state
-  State<ProjectLevelPage> createState() => _ProjectLevelPageState(clientData);
+  State<ProjectLevelPage> createState() => _ProjectLevelPageState(clientData,index);
 }
 
 class _ProjectLevelPageState extends State<ProjectLevelPage> {
@@ -52,9 +54,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   var clientDataGet;
   List pages=[];
   
-  _ProjectLevelPageState(clientData){
+  _ProjectLevelPageState(clientData,index){
      List pages = [
-    ProjectLevelPage1(clientData: clientData,),
+    ProjectLevelPage1(clientData: clientData,index: index,),
     const ProjectLevelPage2(),
     const ProjectLevelPage3(),
   ];
@@ -197,6 +199,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     if(mounted){
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
+    getClientProjectsController.getSelectedProjects(context:context);
     }
      return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){

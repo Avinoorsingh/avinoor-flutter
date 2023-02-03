@@ -115,7 +115,9 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
     GetBuilder<GetOnUpComingData>(builder: (_){
       final signInController=Get.find<SignInController>();
       for(int i=0;i<list1.length;i++){
-        list1=signInController.getOnGoingUpComingData!.data!;
+        if(signInController.getOnGoingUpComingData!.data!=null){
+      list1=signInController.getOnGoingUpComingData!.data!;
+        }
        activityHead.add(list1[i].activityHead!);
        activity.add(list1[i].activity!);
        locationName.add(list1[i].locationName!);

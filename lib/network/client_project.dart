@@ -49,10 +49,10 @@ class GetClientProject extends GetxController {
             );
 
            var resSuccess=jsonDecode(res.body);
-          //  print(resSuccess);
            if(resSuccess['data'].length>1){
-             for(var data in  resSuccess['data']){
-            clientProjects.add(ClientProfileData.fromJson(data));
+            clientProjects.clear();
+             for(int i=0;resSuccess['data'].length;i++){
+            clientProjects.add(ClientProfileData.fromJson(resSuccess['data'][i]));
            }
       if(getClientProjects.isEmpty){
       getClientProjects = clientProjects.toSet().toList();
@@ -61,7 +61,6 @@ class GetClientProject extends GetxController {
       update();
            }
     } catch (e) {
-      // EasyLoading.dismiss();
       isLoading = false;
       update();
       if (kDebugMode) {
@@ -72,21 +71,21 @@ class GetClientProject extends GetxController {
   }
 
 
-   Future getSelectedProjects(
+   getSelectedProjects(
       {
       selectedDate,
       required BuildContext context,
      }) async {
     try {
-      //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
       isLoading = true;
-      var getUserDataUrl=Uri.parse(Config.getSelectedProjectApi+selectedDate);
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           var tokenValue=sharedPreferences.getString('token');
           var clientId=sharedPreferences.getString('client_id');
           var id=sharedPreferences.getString('id'); 
-      // update();
-      var res=await http.get(
+          var date=sharedPreferences.getString('date');
+          var index=sharedPreferences.getString('index');
+          var getUserDataUrl=Uri.parse(Config.getSelectedProjectApi+(selectedDate??date));
+          var res=await http.get(
             getUserDataUrl,
             headers: {
               "Content-Type": "application/json",
@@ -96,12 +95,19 @@ class GetClientProject extends GetxController {
               'id':id!,
             }
             );
-
-           Map<String, dynamic> resSuccess=jsonDecode(res.body);
+           Map<String, dynamic> resSuccess;
+           resSuccess={};
+           resSuccess=jsonDecode(res.body);
+           if(resSuccess['data']!=null){
            if(resSuccess['data'].length>1){
-             for(var data in  resSuccess['data']){
-            clientProjects.add(ClientProfileData.fromJson(data));
-           }
+             clientProjects.clear();
+             for(int i=0;i<resSuccess['data'].length;i++){
+             clientProjects.add(ClientProfileData.fromJson(resSuccess['data'][i]));
+             }
+            if(index!=null){
+            signInController.getProjectData= clientProjects[int.parse(index)];
+            update();
+            }
       if(getClientProjects.isEmpty){
       getClientProjects = clientProjects.toSet().toList();
       }
@@ -111,15 +117,19 @@ class GetClientProject extends GetxController {
             else if(resSuccess['data'].length<=1){
               try {
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-              sharedPreferences.setString("projectIdd",resSuccess['data'][0]['project_id'].toString());
-               var result= ClientProfileData.fromJson(resSuccess['data']);
-               getSingleProjectData=result; 
+              String id=resSuccess['data'][0]['project_id'].toString();
+              sharedPreferences.setString("projectIdd",id);
+               var result= ClientProfileData.fromJson(resSuccess['data'][0]);
+                signInController.getProjectData=result;
+                update();
               } catch (e) {
                 if (kDebugMode) {
+                  print("error");
                   print(e);
                 }
               }
             }
+           }
     } catch (e) {
       // EasyLoading.dismiss();
       isLoading = false;
@@ -213,8 +223,7 @@ class GetUserProfileNetwork extends GetxController{
             );
           Map<String,dynamic> cData3=jsonDecode(res.body);
           LocationList result3=LocationList.fromJson(cData3['data']);
-          signInController.getLocationList=result3;    
-          // print(cData3);
+          signInController.getLocationList=result3;
           update();
             } catch (e) {
               if (kDebugMode) {

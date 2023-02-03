@@ -280,10 +280,16 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                 itemBuilder: (context, index) {
                   return 
                   InkWell(
-                    onTap: (){
-                        DependencyInjector.initializeControllers();
+                    onTap: () async {
+                      var format = DateFormat("MM/dd/yyyy");
+                      var parsedDate = format.parse(dateInput.text.split(":")[1].trim());
+                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      await sharedPreferences.setString('date',DateFormat("yyyy-MM-dd").format(parsedDate).toString());
+                      await sharedPreferences.setString('index', index.toString());
+                       DependencyInjector.initializeControllers();
                         // ignore: use_build_context_synchronously
-                        context.pushNamed('PROJECTLEVELPAGE', queryParams: {"from": "client"},
+                        context.pushNamed('PROJECTLEVELPAGE', 
+                        queryParams: {"from": "client","index":index.toString()},
                         extra: clientData[index]);  
                     },
                     child: 

@@ -378,7 +378,7 @@ class _ThreeSixtyImageState extends State<AddThreeSixtyImage> {
       );
      },
     )
-  ):Container(child: Center(child: Text("Viewpoints Not available",style: textStyleBodyText1,)),)
+  ):Center(child: Text("Viewpoints Not available",style: textStyleBodyText1,))
  )
 ],
 ),

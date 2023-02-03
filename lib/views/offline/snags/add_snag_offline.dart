@@ -26,10 +26,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config.dart';
-import '../controller/signInController.dart';
-import '../models/category_list.dart';
-import '../network/client_project.dart';
+import '../../../config.dart';
+import '../../../controller/signInController.dart';
+import '../../../models/category_list.dart';
+import '../../../network/client_project.dart';
 
 // ignore: must_be_immutable
 class AddSnag extends StatefulWidget {
@@ -44,7 +44,6 @@ class AddSnag extends StatefulWidget {
 
 class _MyProfilePageState extends State<AddSnag> {
   final getSnag = Get.find<GetNewSnag>();
-   final getClientProjectsController = Get.find<GetClientProject>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -106,8 +105,8 @@ class _MyProfilePageState extends State<AddSnag> {
   CroppedFile? croppedFile;
   Future pickImage() async {
     try {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    croppedFile = await ImageCropper().cropImage(
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  croppedFile = await ImageCropper().cropImage(
     sourcePath: image!.path,
     aspectRatioPresets: [
       CropAspectRatioPreset.square,
@@ -191,7 +190,6 @@ setState(() => this.image = imageTemp);
         }
       }
      EasyLoading.dismiss();
-   // print(dropDownNotifier.value);
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
@@ -220,8 +218,7 @@ setState(() => this.image = imageTemp);
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,),
                 readOnly: true,
-               controller: dateInput1,
-             // "Date:  ${getFormatedDate(DateTime.now().toString())}",
+                controller: dateInput1,
               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 22),
             ),
           ),
@@ -362,6 +359,9 @@ setState(() => this.image = imageTemp);
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
                   subLocationController.text=value.substring(0,value.indexOf('?'));
+                  // linking_activity_id.text="";
+                  // subSubV="";
+                  // subSubLocationController.text="";
                   }
                 });
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -1171,9 +1171,8 @@ setState(() => this.image = imageTemp);
                     );
                     EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
                     // await getSnag.getSnagData(context: context);
-                    await getSnag.getSnagData(context: context);
-                    await getClientProjectsController.getSelectedProjects(context:context);
-                    Get.put(GetNewSnag()); 
+                    // await getSnag.getSnagData(context: context);
+                    // Get.put(GetNewSnag()); 
                          // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                     } catch (e) {

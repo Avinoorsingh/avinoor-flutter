@@ -54,7 +54,7 @@ class _NewSnagState extends State<ClosedSnagsOffline> {
   Widget build(BuildContext context) {
     var outputFormat = DateFormat('dd/MM/yyyy');
     var outputFormat1 = DateFormat('dd/MM/yyyy');
-     if(snagData.isNotEmpty && subLocationName.isEmpty){
+    if(snagData.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<snagData.length;i++){
          if(snagData[0].data![i].snagStatus=="C"){
        subLocationName.add(snagData[0].data![i].subLocation!.subLocationName);
