@@ -595,7 +595,7 @@ setState(() => this.image = imageTemp);
               await showDialog(
                 useSafeArea: true,
                 context: context,
-                builder: (_) => imageDialog('Marker File','https://nodejs.hackerkernel.com/colab${viewpointImagesUrl.first}' , context, imageKey));
+                builder: (_) => imageDialog('Marker File', 'https://nodejs.hackerkernel.com/colab${viewpointImagesUrl.first}' , context, imageKey));
                 assetImageController.text=sharedPreferences.getString('imgPath').toString();
                 setState(() {});
               },
@@ -626,12 +626,11 @@ setState(() => this.image = imageTemp);
           Container(
            padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
             child: 
-          Text("Select Viewpoints",style: textStyleBodyText1.copyWith(color: Colors.grey,fontSize: 14),)
+          Text("Select Viewpoints", style: textStyleBodyText1.copyWith(color: Colors.grey,fontSize: 14),)
           )
          ],),
       },
       ListView.builder(
-              // padding: const EdgeInsets.only(bottom: 10,right: 120),
               physics:const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
                 itemCount: viewpoints2.length,
@@ -642,8 +641,8 @@ setState(() => this.image = imageTemp);
           Container(
            margin: const EdgeInsets.all(20.0),
            padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
-            child: 
-          Text("VIEWPOINT: View ${index1+1}",style: textStyleBodyText1,)
+           child: 
+            Text("VIEWPOINT: View ${index1+1}",style: textStyleBodyText1,)
           )
          ],),
          Container(
@@ -675,35 +674,35 @@ setState(() => this.image = imageTemp);
                    height: 150,
                    width: 80,
                    child:
-                  InkWell(
-                      onTap: () {
-                        return;
-                      },
-                          child:
-                          FittedBox(
-                           child:
-                           Container(
-                            margin: const EdgeInsets.only(top:10),
-                            height: 150,
-                            width: 65,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              image:DecorationImage(
-                                image:FileImage(File( viewpoints2[index1]['image'][index].path)),
-                              fit: BoxFit.cover,
-                              ),
+                      InkWell(
+                          onTap: () {
+                            return;
+                          },
+                              child:
+                              FittedBox(
+                              child:
+                              Container(
+                                margin: const EdgeInsets.only(top:10),
+                                height: 150,
+                                width: 65,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  image:DecorationImage(
+                                    image:FileImage(File( viewpoints2[index1]['image'][index].path)),
+                                  fit: BoxFit.cover,
+                                  ),
+                                )
+                              )
                             )
                           )
-                        )
-                      )
-                    );
-                  }
-                ),
-              ],
-            )
-          ),
+                        );
+                      }
+                    ),
+                  ],
+                )
+              ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                    Container(
                     margin: const EdgeInsets.all(10),
@@ -713,7 +712,7 @@ setState(() => this.image = imageTemp);
                   gradient: const LinearGradient(
                     begin: Alignment(-0.95, 0.0),
                     end: Alignment(1.0, 0.0),
-                    colors: [Color.fromARGB(173, 57, 54, 54),Color.fromARGB(250, 19, 14, 14)],
+                    colors: [Color.fromARGB(173, 57, 54, 54), Color.fromARGB(250, 19, 14, 14)],
                     stops: [0.0, 1.0],
                   ),
                 ),
@@ -725,7 +724,7 @@ setState(() => this.image = imageTemp);
                       disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
                       shadowColor: Colors.transparent,
                   ),
-                  onPressed: ()async{
+                  onPressed: () async {
                       final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                       final File imagefile = File(image!.path);
                       viewpoints2[index1]['image'].add(imagefile);
@@ -744,17 +743,19 @@ setState(() => this.image = imageTemp);
                   ),
                 ),
               ),
-        ]),
-        ]
-      ),
+            ]),
+            ]
+          ),
          ),
-          ]);}),
+        ]);}),
          Container(
             width: double.infinity,
             margin: const EdgeInsets.all(20.0),
            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
+              border: Border.all(
+              width: 1, 
+              color: Colors.black),
               borderRadius: BorderRadius.circular(5),
             ),
             child: 
@@ -778,12 +779,12 @@ setState(() => this.image = imageTemp);
                 enabledBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                      width: 1, color:Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                      width: 1, color:Colors.grey[300]!),
                 ),
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,),
@@ -809,25 +810,25 @@ setState(() => this.image = imageTemp);
                 Text("DEBIT TO",style: textStyleBodyText1,),
               ],),),
               const SizedBox(height: 10,),
-              DropdownButtonFormField(
-                 value: dropdownvalueDebitTo,
-                icon: const Padding( 
-                 padding: EdgeInsets.only(left:20),
-                 child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-                ), 
-               iconEnabledColor: Colors.grey,
-               style: const TextStyle(
-                 color: Colors.black,
-                 fontSize: 14
-               ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder( //<-- SEE HERE
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+                  DropdownButtonFormField(
+                    value: dropdownvalueDebitTo,
+                    icon: const Padding( 
+                    padding: EdgeInsets.only(left:20),
+                    child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+                    ), 
+                  iconEnabledColor: Colors.grey,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14
+                  ), 
+                  dropdownColor: AppColors.white,
+                  decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                  ),
+                ),
                  isExpanded: true,
                  items: debitTo.map((String items){
                    return DropdownMenuItem(
