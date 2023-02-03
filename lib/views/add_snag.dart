@@ -952,7 +952,9 @@ setState(() => this.image = imageTemp);
               margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
             decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black),
+              border: Border.all(
+              width: 1, 
+              color: Colors.black),
               borderRadius: BorderRadius.circular(5),
             ),
             child: 
