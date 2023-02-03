@@ -413,9 +413,9 @@ setState(() => this.image = imageTemp);
                 decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
                 borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-               ),
+                focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1),
+                ),
                 ),
               isExpanded: true,
               items: null,
@@ -530,10 +530,10 @@ setState(() => this.image = imageTemp);
               fontSize: 14
             ), 
             dropdownColor: AppColors.white,
-            decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+            decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-                focusedBorder: OutlineInputBorder( //<-- SEE HERE
+                focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey, width: 1),
               ),
             ),
@@ -582,7 +582,7 @@ setState(() => this.image = imageTemp);
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-            Center(child: Text("Mark Location",style: textStyleBodyText1,),),
+            Center(child: Text("Mark Location", style: textStyleBodyText1,),),
             if(viewpointImagesUrl.isNotEmpty)
             Center(child:  
             Card(
