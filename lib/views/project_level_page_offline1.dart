@@ -24,7 +24,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
     "ACTIVITIES",
     "SNAGS",
   ];
-   List<String> iconText = [];
+  List<String> iconText = [];
   late DatabaseProvider databaseProvider;
   List<ProgressOffline> progressData=[];
   List<SnagDataOffline> snagData=[];
@@ -77,15 +77,15 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                   children: [
                   Column(
                   children: [
-                        Container(
-                          height: 90,
-                          width: 100,
-                        padding: const EdgeInsets.all(10),
-                        child: Image.asset(items[i].toString(),
-                        fit: BoxFit.fill,
-                        ),
-                        ),
-                        if(i!=3)...{
+                    Container(
+                      height: 90,
+                      width: 100,
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(items[i].toString(),
+                      fit: BoxFit.fill,
+                      ),
+                    ),
+                    if(i!=3)...{
                         Center(child: 
                         Container(
                           padding: const EdgeInsets.only(left: 5,right: 5,top: 8,bottom: 8),
@@ -129,32 +129,33 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                         )
                         ),
                         ),
-                         Positioned(
-                              top: 40,
-                              left: 10,
-                              right: 10,
-                              child: InkWell(
-                                onTap: () {},
-                                child:  const Center(
-                                  child: CircleAvatar(
-                                    backgroundColor:AppColors.primary,
-                                    radius: 12.0,
-                                    child: Text("0", style: TextStyle(color: Colors.black),),
-                                  ),
+                      Positioned(
+                          top: 40,
+                          left: 10,
+                          right: 10,
+                          child: InkWell(
+                          onTap: () {},
+                          child:  const Center(
+                              child: CircleAvatar(
+                                backgroundColor:AppColors.primary,
+                                radius: 12.0,
+                                child: Text("0", style: TextStyle(color: Colors.black),),
                                 ),
                               ),
                             ),
-                        ])
-                        ),
-                        ),
-                        },
-          ],
-        ),
-      ],
-    ),
-  ),
-);
-},
+                            ),
+                            ]
+                            )
+                            ),
+                            ),
+                          },
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1.0,
@@ -164,4 +165,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                 ),
               ),
             )
-    ]);}}
+           ]
+          );
+        }
+      }
