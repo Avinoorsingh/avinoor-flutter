@@ -18,6 +18,8 @@ import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
+import 'package:colab/views/offline/snags/snag_detail_offline.dart';
+import 'package:colab/views/offline/snags/snagsoffline.dart';
 import 'package:colab/views/ongoing_ongoing.dart';
 import 'package:colab/views/post_login_page.dart';
 import 'package:colab/views/project_level_offline.dart';
@@ -68,6 +70,13 @@ class CustomRouter {
         name: 'PROJECTOFFLINE',
         path: projectOffline,
         builder: (context, state) => ProjectLevelOffline(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name: 'SNAGSOFFLINE',
+        path: snagsOffline,
+        builder: (context, state) => SnagsOffline(
           key: state.pageKey,
         ),
       ),
@@ -141,6 +150,15 @@ class CustomRouter {
         name: 'SNAGDETAIL',
         path: snagDetail,
         builder: (context, state) => SnagDetail(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          snagModel: state.extra,
+        ),
+      ),
+      GoRoute(
+        name: 'SNAGDETAILOFFLINE',
+        path: snagDetailOffline,
+        builder: (context, state) => SnagDetailOffline(
           key: state.pageKey,
           from: state.queryParams["from"],
           snagModel: state.extra,

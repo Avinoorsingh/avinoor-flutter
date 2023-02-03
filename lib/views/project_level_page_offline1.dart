@@ -129,7 +129,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                         )
                         ),
                         ),
-                        if(i==0)...{
                          Positioned(
                               top: 40,
                               left: 10,
@@ -145,7 +144,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                                 ),
                               ),
                             ),
-                        }
                         ])
                         ),
                         ),

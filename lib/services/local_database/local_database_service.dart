@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:colab/models/progress_offline.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:flutter/foundation.dart';

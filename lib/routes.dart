@@ -1,6 +1,7 @@
 const String loginPage = '/loginPage';
 const String snags = '/Snags';
 const String projectOffline = '/ProjectOffline';
+const String snagsOffline = '/SnagsOffline';
 const String qualityChecklist = '/QualityCheckList';
 const String activities = '/Activities';
 const String onGoingScreen="/OnGoingHomeScreen";
@@ -17,6 +18,7 @@ const String clientLevel = '/ClientLevel';
 const String logout = '/LogOut';
 const String subLocation = '/SubLocation';
 const String snagDetail = '/SnagDetail';
+const String snagDetailOffline = '/SnagDetailOffline';
 const String snagDetail2 = '/SnagDetail2';
 const String newProgressEntry = '/NewProgressEntry';
 const String addProgressEntry = '/AddProgressEntry';
