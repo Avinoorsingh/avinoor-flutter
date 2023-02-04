@@ -10,8 +10,10 @@ import 'package:colab/models/progress_contractor.dart';
 import 'package:colab/models/progress_location_data.dart';
 import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_data.dart';
+import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -62,7 +64,7 @@ class GetClientProject extends GetxController {
            }
     } catch (e) {
       isLoading = false;
-      update();
+      // update();
       if (kDebugMode) {
         print('getClientData nhi chali !!');
         print(e);
@@ -106,6 +108,7 @@ class GetClientProject extends GetxController {
              }
             if(index!=null){
             signInController.getProjectData= clientProjects[int.parse(index)];
+            // EasyLoading.show(maskType: EasyLoadingMaskType.black);
             update();
             }
       if(getClientProjects.isEmpty){
@@ -131,7 +134,7 @@ class GetClientProject extends GetxController {
             }
            }
     } catch (e) {
-      // EasyLoading.dismiss();
+      EasyLoading.dismiss();
       isLoading = false;
       update();
       if (kDebugMode) {

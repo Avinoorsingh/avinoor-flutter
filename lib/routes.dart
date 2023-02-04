@@ -2,6 +2,7 @@ const String loginPage = '/loginPage';
 const String snags = '/Snags';
 const String projectOffline = '/ProjectOffline';
 const String snagsOffline = '/SnagsOffline';
+const String addSnagsOffline='/AddSnagsOffline';
 const String qualityChecklist = '/QualityCheckList';
 const String activities = '/Activities';
 const String onGoingScreen="/OnGoingHomeScreen";

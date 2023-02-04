@@ -61,10 +61,12 @@ class SignInController extends GetxController {
   ProgressContractor? getProgressContractorList;
   ProgressTrade? getProgressTradeList;
   LabourAttendance? getLabourAttendance;
-  SubLocationList? getSubLocationList;
+  // ignore: prefer_typing_uninitialized_variables
+  var getSubLocationList;
   ProgressSubLocationData? getProgressSubLocationData;
   ProgressSubSubLocationData? getProgressSubSubLocationData;
-  ActivityHead? getActivityHeadList;
+  // ignore: prefer_typing_uninitialized_variables
+  var getActivityHeadList;
   ProgressActivityHeadData? getProgressActivityHeadApi;
   ClientEmployee? getEmployeeList;
   SnagData? getSnagDataList;

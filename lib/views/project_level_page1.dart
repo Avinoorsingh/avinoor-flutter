@@ -68,6 +68,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   @override
   void initState() {
     _selectedDate=DateFormat('yyyy-MM-dd').format(DateTime.now());
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    getClientProjectsController.getSelectedProjects(context:context);
     // _chartData = getChartData(_selectedDate);
     getClientProfileController.getUserProfile(context: context);
      getClientProfileController.getUserProfile(context: context);
@@ -79,7 +81,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
     getClosedDeSnagDataController.getClosedSnagData(context: context);
-    getClientProjectsController.getSelectedProjects(context:context);
     super.initState();
   }
 
@@ -114,6 +115,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   @override
   Widget build(BuildContext context) {
      if(mounted){
+      EasyLoading.show(maskType: EasyLoadingMaskType.black);
     setState(() {});
     }
   final getNewSnagDataController=Get.find<GetNewSnag>();

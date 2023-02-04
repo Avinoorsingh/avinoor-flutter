@@ -104,7 +104,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           }
       } catch (e) {
           if (kDebugMode) {
-            print("error in progress offline data");
+            print("error in saving progress offline data");
             print(e);
           }
         }
@@ -122,11 +122,48 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           }
       } catch (e) {
           if (kDebugMode) {
-            print("error in snag offline data");
+            print("error in saving snag offline data");
             print(e);
           }
         }
+        try{
+          var getAllOfflineDataURL=Uri.parse('${Config.allOfflineData}$clientId/$projectID');
+           var res=await http.get(
+            getAllOfflineDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200){
+          await databaseProvider.insertAllOfflineModel(res.body);
+          }
+      } catch (e) {
+          if (kDebugMode) {
+            print("error in saving all offline data");
+            print(e);
+          }
+        }
+     try {
+       var getCategoryListUrl=Uri.parse("${Config.getCategoryListApi}$clientId/$projectID");
+       var res=await http.get(
+            getCategoryListUrl,
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            }
+          );
+          if(res.statusCode==200){
+          await databaseProvider.insertCategoryModel(res.body);
+          }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving category list");
+        print(e); 
+      }
      }
+  }
   }
 
   @override
@@ -142,10 +179,10 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     databaseProvider = DatabaseProvider();
     databaseProvider.init();
     clientDataGet=widget.clientData;
+    getClientProjectsController.getUpcomingProjects(context: context);
     getClientProfileController.getUserProfile(context: context);
     getLabourDataContractorListController.getContractorListData(context: context);
     getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
-    getClientProjectsController.getUpcomingProjects(context: context);
     getNewSnagDataController.getSnagData(context: context);
     getNewDeSnagDataController.getSnagData(context: context);
     getOpenedSnagDataController.getOpenedSnagData(context: context);
@@ -157,6 +194,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
 
   saveProjectId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(widget.clientData!=null){
     if(widget.clientData.projectid!=null){
         sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
         getClientProfileController.getUserProfile(context: context);
@@ -170,6 +208,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
         getClosedSnagDataController.getClosedSnagData(context: context);
         getClosedDeSnagDataController.getClosedSnagData(context: context);
         DependencyInjector.initializeControllers();
+    }
     }
   }
 

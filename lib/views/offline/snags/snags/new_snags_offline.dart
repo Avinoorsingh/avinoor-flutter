@@ -191,7 +191,7 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
     )),
     floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.pushNamed('ADDSNAG');
+          context.pushNamed('ADDSNAGOFFLINE');
         },
         backgroundColor:AppColors.primary,
         child: const Icon(Icons.add,color: Colors.black,),

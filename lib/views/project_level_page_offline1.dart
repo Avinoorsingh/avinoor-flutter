@@ -103,7 +103,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPageOffline1> {
                           child: 
                         ElevatedButton(
                           onPressed: ()
-                          async{
+                          async {
                         if(i==0){
                             // ignore: use_build_context_synchronously
                            context.pushNamed('ACTIVITIESOFFLINE');

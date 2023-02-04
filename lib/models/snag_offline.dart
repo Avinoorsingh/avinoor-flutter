@@ -34,7 +34,7 @@ class Data {
   int? contractorId;
   String? remark;
   String? deSnagRemark;
-  Null? closeSnagRemark;
+  String? closeSnagRemark;
   String? debitNote;
   int? debitAmount;
   String? dueDate;
@@ -45,8 +45,8 @@ class Data {
   String? snagStatus;
   int? rejectCount;
   int? createdBy;
-  Null? rm;
-  Null? updatedBy;
+  var rm;
+  String? updatedBy;
   String? createdAt;
   String? updatedAt;
   List<SnagViewpoint>? snagViewpoint;
@@ -116,7 +116,7 @@ class Data {
     contractorId = json['contractor_id'];
     remark = json['remark'];
     deSnagRemark = json['de_snag_remark'];
-    closeSnagRemark = json['close_snag_remark'];
+    closeSnagRemark = json['close_snag_remark']??"";
     debitNote = json['debit_note'];
     debitAmount = json['debit_amount'];
     dueDate = json['due_date'];

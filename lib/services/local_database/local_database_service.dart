@@ -6,6 +6,9 @@ import 'package:sqflite/sqflite.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 
+import '../../models/all_offline_data.dart';
+import '../../models/category_list.dart';
+
 class DatabaseProvider {
   late Database _database;
 
@@ -24,6 +27,20 @@ class DatabaseProvider {
           ''' CREATE TABLE my_json_models2 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             snag TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models3 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            allOffline TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models4 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT
             )
           ''',
         );
@@ -83,7 +100,58 @@ class DatabaseProvider {
       }
     }
   }
+  
+  Future<void> insertAllOfflineModel(var allOfflineData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, allOffline FROM my_json_models3',
+        );
 
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models3 SET allOffline = ? WHERE id = ?',
+        [allOfflineData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models3 (allOffline) VALUES (?)',
+        [allOfflineData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving allOffline data => $e");
+      }
+    }
+  }
+
+   Future<void> insertCategoryModel(var categoryData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, category FROM my_json_models4',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models4 SET category = ? WHERE id = ?',
+        [categoryData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models4 (category) VALUES (?)',
+        [categoryData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving category data => $e");
+      }
+    }
+  }
 
   Future<List<ProgressOffline>> getMyJsonModels() async {
     await init();
@@ -93,11 +161,26 @@ class DatabaseProvider {
     });
   }
 
+   Future<CategoryList> getCategoryModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models4');
+      Map<String,dynamic> cData2=(jsonDecode(maps[0]['category']));
+      return CategoryList.fromJson(cData2['data']);
+  }
+
   Future<List<SnagDataOffline>> getSnagModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models2');
     return List.generate(maps.length, (i) {
       return SnagDataOffline.fromJson(jsonDecode(maps[i]['snag']));
+    });
+  }
+
+  Future<List<AllOffline>> getAllOfflineModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models3');
+    return List.generate(maps.length, (i) {
+      return AllOffline.fromJson(jsonDecode(maps[i]['allOffline']));
     });
   }
 }

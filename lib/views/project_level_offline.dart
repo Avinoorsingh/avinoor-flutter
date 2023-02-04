@@ -1,4 +1,5 @@
 import 'package:colab/constants/colors.dart';
+import 'package:colab/models/all_offline_data.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/project_level_page_offline1.dart';
@@ -22,6 +23,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   var clientDataGet;
   List pages=[];
   List<ProgressOffline> progressData=[];
+  List<AllOffline> allOfflineData=[];
   List<SnagDataOffline> snagData=[];
   late DatabaseProvider databaseProvider;
   
@@ -48,10 +50,12 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagData= await databaseProvider.getSnagModel();
-    print("Fetched");
-    print(snagData[0].data![0].category);
-    print("Fetched");
     return snagData;
+  }
+
+  Future<List<AllOffline>> fetchAllData() async {
+    allOfflineData= await databaseProvider.getAllOfflineModel();
+    return allOfflineData;
   }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');

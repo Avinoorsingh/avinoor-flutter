@@ -4,19 +4,18 @@ import 'dart:io';
 import 'dart:math';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
-import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
+import 'package:colab/views/activity_head_offline.dart';
+import 'package:colab/views/sub_location.dart';
+import 'package:colab/views/sub_location_offline.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
-import 'package:colab/models/location_list.dart';
 import 'package:colab/views/activity_head.dart';
-import 'package:colab/views/sub_location.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
@@ -28,21 +27,23 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../config.dart';
 import '../../../controller/signInController.dart';
+import '../../../models/all_offline_data.dart';
 import '../../../models/category_list.dart';
 import '../../../network/client_project.dart';
+import '../../../services/local_database/local_database_service.dart';
 
 // ignore: must_be_immutable
-class AddSnag extends StatefulWidget {
-  AddSnag({Key? key,from}) : super(key: key);
+class AddSnagOffline extends StatefulWidget {
+  AddSnagOffline({Key? key,from}) : super(key: key);
 
   // ignore: prefer_typing_uninitialized_variables
   var from;
 
   @override
-  State<AddSnag> createState() => _MyProfilePageState();
+  State<AddSnagOffline> createState() => _MyProfilePageState();
 }
 
-class _MyProfilePageState extends State<AddSnag> {
+class _MyProfilePageState extends State<AddSnagOffline> {
   final getSnag = Get.find<GetNewSnag>();
   late String subV="";
   late String subSubV="";
@@ -68,7 +69,6 @@ class _MyProfilePageState extends State<AddSnag> {
   TextEditingController dateInput1 = TextEditingController();
   TextEditingController contractorInput = TextEditingController(text: "No Contractor");
   TextEditingController contractorID = TextEditingController();
-  final location = ["Select Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue = 'Select Location';  
   final location2 = ["Select Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue2 = 'Select Sub Location';  
@@ -86,6 +86,9 @@ class _MyProfilePageState extends State<AddSnag> {
    List<int> categoryID=[];
    List<String> locationList=[];
    List<int> locationListID=[];
+   var subLocationList=[];
+   var activityHead=[];
+   List<int> subSubLocationListID=[];
    List<String> assignedToList=[];
    List<int> assignedToListIndex=[];
    List<String> priority=[
@@ -139,11 +142,20 @@ setState(() => this.image = imageTemp);
     }
   }
     late List<bool> isSelected;
+    List<AllOffline> allOfflineData=[];
+    CategoryList? categoryData;
+    List snagData2=[];
+    late DatabaseProvider databaseProvider;
+    List dateDifference=[];
   
     @override
   void initState() {
     super.initState(); 
     isSelected=[true,false,false];
+    databaseProvider = DatabaseProvider();
+    databaseProvider.init();
+    super.initState();
+    fetchAllData();
     dateInput.text =getFormatedDate(DateTime.now().toString()); 
     dateInput1.text =getFormatedDate(DateTime.now().toString()); 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
@@ -156,47 +168,80 @@ setState(() => this.image = imageTemp);
     return outputFormat.format(inputDate);
     }
 
+    Future<List<AllOffline>> fetchAllData() async {
+    allOfflineData= await databaseProvider.getAllOfflineModel();
+     await fetchCategoryData();
+     setState(() {
+       
+     });
+    return allOfflineData;
+    }
+
+    Future<CategoryList> fetchCategoryData() async {
+    categoryData = await databaseProvider.getCategoryModel();
+    return categoryData!;
+    }
+
   bool iconPressed=false;
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
-      if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
+      if(allOfflineData.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
         assignedToListIndex.add(8989898);
-        for(int i=0;i<signInController.getEmployeeList!.data!.length;i++){
-          assignedToList.add(signInController.getEmployeeList!.data![i].userId.toString());
-          assignedToListIndex.add(signInController.getEmployeeList!.data![i].id!);
+        // for(int i=0;i<allOfflineData[0].upcomingProgress!.length;i++){
+        //   assignedToList.add(snagData[0].data![i].employee!.userId.toString());
+        //   assignedToListIndex.add(snagData[0].data![i].employee!.id!);
+        // }
+     
+      if(categoryData!=null){
+      if(categoryData!.data!=null){
+      if(categoryData!.data!.isNotEmpty && categoryNew.isEmpty){
+        for(int i=0;i<categoryData!.data!.length;i++){
+          categoryNew.add(categoryData!.data![i].name!);
+          categoryID.add(categoryData!.data![i].id!); 
         }
       }
-      if(signInController.getCategoryList!=null){
-      if(signInController.getCategoryList!.data!.isNotEmpty && categoryNew.isEmpty && categoryNew.isEmpty){
-        List<Data>? categoryList=signInController.getCategoryList?.data;
-        for(var data in categoryList!){
-          categoryNew.add(data.name!);
-          categoryID.add(data.id!);
-        }
       }
       }
-       if(signInController.getLocationList!.data!.isNotEmpty && locationList.isEmpty){
-        List<LocationData>? locationList1=signInController.getLocationList?.data;
+       if(allOfflineData.isNotEmpty && locationList.isEmpty){
         locationList.add("Select Location");
         locationListID.add(999098);
-        for(var data in locationList1!){
-          locationList.add(data.locationName!);
+        for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
+          locationList.add(allOfflineData[0].locationOfflineData![i].locationName!);
+          locationListID.add(allOfflineData[0].locationOfflineData![i].locationId!); 
         }
-         for(var data in locationList1){
-          locationListID.add(data.locationId!);
+       }
+        if(allOfflineData.isNotEmpty && subLocationList.isEmpty){
+        for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
+          subLocationList.add(allOfflineData[0].locationOfflineData![i].subLocationInfo!);
         }
-      }
-     EasyLoading.dismiss();
+       }
+       try {
+        if(allOfflineData.isNotEmpty && activityHead.isEmpty){
+        for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
+          if(allOfflineData[0].locationOfflineData!.isNotEmpty){
+          for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
+            for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
+                 activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].activityList!);
+            }
+          }
+          }
+        }
+       }
+       } catch (e) {
+        print(e); 
+       }
+       print(activityHead);
+       }
+    EasyLoading.dismiss();
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.primary,
-        title: Text("Create Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+        title: Text("Create Snag", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
-      body: SingleChildScrollView(
+      body:allOfflineData.isNotEmpty? SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,8 +274,8 @@ setState(() => this.image = imageTemp);
           ),
           SizedBox(height: 90,child: 
           ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(15),
           itemCount: categoryNew.length,
           itemBuilder: (BuildContext context, int index){
@@ -304,13 +349,10 @@ setState(() => this.image = imageTemp);
                 );
               }).toList(),
               onChanged: (String? newValue) async{
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
-                  var projectid= sharedPreferences.getString("projectIdd");
                 setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
-                   subLocationController.text="";  
+                  subLocationController.text="";  
                   subV="";
                   linking_activity_id.text="";
                   subSubV="";
@@ -319,27 +361,22 @@ setState(() => this.image = imageTemp);
                   subLocationId.text="";
                    });
                   try {
-                    var getSubLocationListUrl=Uri.parse(Config.getSubLocationListApi);
-                    var res=await http.post(
-                    getSubLocationListUrl,
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                      body: {
-                              "client_id":signInController.getProjectData?.clientid.toString(),
-                              "project_id":projectid,
-                              "location_id":locationListID[locationList.indexOf(newValue!)].toString(),
-                            }
-                            );
-                  Map<String,dynamic> cData3=jsonDecode(res.body);
-                  SubLocationList result3=SubLocationList.fromJson(cData3['data']);
-                  signInController.getSubLocationList=result3; 
-                          } catch (e) {
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
+                  // ignore: prefer_typing_uninitialized_variables
+                  var item;
+                  for(int i=0;i<subLocationList.length;i++){
+                    for(int j=0;j<subLocationList[i].length;j++){
+                      if(subLocationList[i][j].locationId==locationListID[locationList.indexOf(newValue!)]){
+                         item=subLocationList[i];
+                         break;
+                      }
+                    }
+                  }
+                  signInController.getSubLocationList=item;
+                    } catch (e) {
+                        if (kDebugMode) {
+                          print(e);
+                        }
+                      }
               },
             ),
           ),
@@ -359,37 +396,15 @@ setState(() => this.image = imageTemp);
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
                   subLocationController.text=value.substring(0,value.indexOf('?'));
-                  // linking_activity_id.text="";
-                  // subSubV="";
-                  // subSubLocationController.text="";
                   }
                 });
-                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
                 try {
-                    var getActivityHeadApiUrl=Uri.parse(Config.getActivityHeadApi);
-                    var res=await http.post(
-                     getActivityHeadApiUrl,
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                      body: {
-                              "client_id":signInController.getProjectData?.clientid.toString(),
-                              "project_id":projectId.text,
-                              "location_id":locationId.text,
-                              "sub_loc_id":subLocationId.text,
-                              "sub_sub_loc_id":subSubLocationId.text,
-                            }
-                          );
-                      Map<String,dynamic> cData4=jsonDecode(res.body);
-                      ActivityHead result4=ActivityHead.fromJson(cData4['data']);
-                      signInController.getActivityHeadList=result4;
-                          } catch (e) {
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
+                    signInController.getActivityHeadList=activityHead;
+                  } catch (e) {
+                      if (kDebugMode) {
+                          print(e);
+                        }
+                      }
                   }
                   else if(locationController.text.isEmpty){
                     EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1136,7 +1151,7 @@ setState(() => this.image = imageTemp);
                       "sub_loc_id": int.parse(subLocationId.text),
                       "sub_sub_loc_id": int.parse(subSubLocationId.text),
                       "activity_head_id": 1,
-                      "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
+                      // "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
                       "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
                       'debet_contractor_id':2,
                       "remark": remarkController.text,
@@ -1194,16 +1209,16 @@ setState(() => this.image = imageTemp);
              )
             
         ])
-          ));
+          ):const Center(child: CircularProgressIndicator(color: AppColors.primary,)));
   }
-     );
+    //  );
   }
-}
+// }
 
 
 Route _createRoute() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const SubLocation(),
+    pageBuilder: (context, animation, secondaryAnimation) =>  const SubLocationOffline(),
    transitionsBuilder: (context, animation, secondaryAnimation, child) {
   const begin = Offset(0.0, 1.0);
   const end = Offset.zero;
@@ -1221,7 +1236,7 @@ Route _createRoute() {
 
 Route _createRoute2() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const ActivityHeadPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => const ActivityHeadOffline(),
    transitionsBuilder: (context, animation, secondaryAnimation, child) {
   const begin = Offset(0.0, 1.0);
   const end = Offset.zero;
