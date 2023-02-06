@@ -522,6 +522,15 @@ setState(() => this.image = imageTemp);
                         break;
                       }
                     }
+                    for(int i=0; i < subSubLocationInfo.length; i++) {
+                        for(int j=0; j < subSubLocationInfo[i].subSubLocationActivity.length; j++) {
+                          if(subSubLocationInfo[i].subSubLocationActivity[j].linkActivityId == int.parse(linking_activity_id.text)) {
+                            contractorInput.text = subSubLocationInfo[i].subSubLocationActivity[j].contractorName;
+                            contractorID.text=subSubLocationInfo[i].subSubLocationActivity[j].contId.toString();
+                            break;
+                          }
+                        }
+                      }
                   if(viewPointNumberList.isNotEmpty){
                     try {
                       if(viewpoints.isEmpty && viewpointsID.isEmpty){
@@ -539,12 +548,12 @@ setState(() => this.image = imageTemp);
                     }
                   }
                   setState(() {});
-                          } catch (e) {
-                            if (kDebugMode) {
-                              print(e);
-                            }
-                          }
-            }
+                  } catch (e) {
+                      if (kDebugMode) {
+                        print(e);
+                      }
+                    }
+             }
              else if(locationController.text.isEmpty){
               EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
             }
@@ -564,10 +573,10 @@ setState(() => this.image = imageTemp);
               fontSize: 14
             ), 
             dropdownColor: AppColors.white,
-            decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+            decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-                focusedBorder: OutlineInputBorder( //<-- SEE HERE
+                focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey, width: 1),
               ),
             ),
