@@ -49,5 +49,6 @@ class Config{
   static const String saveLabourDataApi="http://nodejs.hackerkernel.com/colab/api/labour_attendance";
   static const String getProgressOfflineData="http://nodejs.hackerkernel.com/colab/api/progress_offline_data/";
   static const String getSnagOfflineData="http://nodejs.hackerkernel.com/colab/api/get_snag_data_offline/";
+  static const String getContractorOfflineData="http://nodejs.hackerkernel.com/colab/api/contractor_offline_data/";
   static const String allOfflineData="http://nodejs.hackerkernel.com/colab/api/ongoing_progress_offline_data/";
 }

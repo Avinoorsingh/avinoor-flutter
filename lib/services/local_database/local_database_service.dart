@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 
 import '../../models/all_offline_data.dart';
 import '../../models/category_list.dart';
+import '../../models/contractor_data_offline.dart';
 
 class DatabaseProvider {
   late Database _database;
@@ -41,6 +42,13 @@ class DatabaseProvider {
           ''' CREATE TABLE my_json_models4 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             category TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models5 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            contractor TEXT
             )
           ''',
         );
@@ -153,6 +161,32 @@ class DatabaseProvider {
     }
   }
 
+  Future<void> insertContractorModel(var contractorData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, contractor FROM my_json_models5',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models5 SET contractor = ? WHERE id = ?',
+        [contractorData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models5 (contractor) VALUES (?)',
+        [contractorData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving contractor data => $e");
+      }
+    }
+  }
+
   Future<List<ProgressOffline>> getMyJsonModels() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models');
@@ -181,6 +215,14 @@ class DatabaseProvider {
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models3');
     return List.generate(maps.length, (i) {
       return AllOffline.fromJson(jsonDecode(maps[i]['allOffline']));
+    });
+  }
+
+  Future<List<ContractorDataOffline>> getContractorModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models5');
+    return List.generate(maps.length, (i) {
+      return ContractorDataOffline.fromJson(jsonDecode(maps[i]['contractor']));
     });
   }
 }

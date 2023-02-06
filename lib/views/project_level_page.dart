@@ -163,6 +163,25 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
         print(e); 
       }
      }
+       try {
+       var getContractorListUrl=Uri.parse("${Config.getContractorOfflineData}$clientId/$projectID");
+       var res=await http.get(
+            getContractorListUrl,
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            }
+          );
+          if(res.statusCode==200){
+          await databaseProvider.insertContractorModel(res.body);
+          }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving contractor list");
+        print(e); 
+      }
+     }
   }
   }
 
