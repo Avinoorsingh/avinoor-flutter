@@ -215,11 +215,12 @@ class SupplyProjectContractorBoqDetails {
   int? uomId;
   int? rate;
   int? quantityId;
-  double? quantity;
+  int? quantity;
   String? activityName;
   String? activityHead;
   int? conversionFactor;
   int? amount;
+  // ignore: prefer_typing_uninitialized_variables
   var grandTotal;
   int? createdBy;
   int? updatedBy;

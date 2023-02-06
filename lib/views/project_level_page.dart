@@ -182,8 +182,27 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
         print(e); 
       }
      }
-  }
-  }
+     try {
+     var getEmployeesUrl=Uri.parse("${Config.getEmployees}$projectID");
+        var res=await http.get(
+            getEmployeesUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200){
+          await databaseProvider.insertEmployeeModel(res.body);
+          }
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting employee list");
+                print(e);
+              }
+            }
+     }
+    }
+
 
   @override
   void dispose() {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:colab/constants/colors.dart';
+import 'package:colab/models/contractor_data_offline.dart';
 import 'package:colab/views/activity_head_offline.dart';
 import 'package:colab/views/sub_location_offline.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../controller/signInController.dart';
 import '../../../models/all_offline_data.dart';
 import '../../../models/category_list.dart';
+import '../../../models/clientEmployee.dart';
 import '../../../network/client_project.dart';
 import '../../../services/local_database/local_database_service.dart';
 
@@ -68,7 +70,9 @@ class _MyProfilePageState extends State<AddSnagOffline> {
   String dropdownvalue2 = 'Select Sub Location';  
   final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue3 = 'Select Activity Head';  
-  final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
+  List<String> debitTo = [];
+  Map<String, dynamic> itemsDebit={};
+  List<int> debitToId=[];
   String dropdownvalueDebitTo = 'Select Debit to';  
   final assignedTo=["Select Name","Name 1"];
   String dropdownvalueAssignedTo="Select Name";
@@ -138,6 +142,8 @@ setState(() => this.image = imageTemp);
     late List<bool> isSelected;
     List<AllOffline> allOfflineData=[];
     CategoryList? categoryData;
+    ContractorDataOffline? contractorData;
+    ClientEmployee? employeeData;
     List snagData2=[];
     late DatabaseProvider databaseProvider;
     List dateDifference=[];
@@ -165,6 +171,8 @@ setState(() => this.image = imageTemp);
     Future<List<AllOffline>> fetchAllData() async {
     allOfflineData= await databaseProvider.getAllOfflineModel();
      await fetchCategoryData();
+     await fetchContractorData();
+     await fetchEmployeeData();
      setState(() {
        
      });
@@ -176,6 +184,17 @@ setState(() => this.image = imageTemp);
     return categoryData!;
     }
 
+    Future<ContractorDataOffline> fetchContractorData() async {
+    contractorData = await databaseProvider.getContractorModel();
+    return contractorData!;
+    }
+
+    Future<ClientEmployee> fetchEmployeeData() async {
+    employeeData = await databaseProvider.getEmployeeModel();
+    print(employeeData!.data!.length);
+    return employeeData!;
+    }
+
   bool iconPressed=false;
   @override
   Widget build(BuildContext context) {
@@ -183,17 +202,34 @@ setState(() => this.image = imageTemp);
       if(allOfflineData.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
         assignedToListIndex.add(8989898);
-        // for(int i=0;i<allOfflineData[0].upcomingProgress!.length;i++){
-        //   assignedToList.add(snagData[0].data![i].employee!.userId.toString());
-        //   assignedToListIndex.add(snagData[0].data![i].employee!.id!);
-        // }
-     
+        if(employeeData!=null){
+          if(employeeData!.data!=null){
+        for(int i=0;i<employeeData!.data!.length;i++){
+          assignedToList.add(employeeData!.data![i].userId.toString());
+          assignedToListIndex.add(employeeData!.data![i].id!);
+        }
+          }
+        }
       if(categoryData!=null){
       if(categoryData!.data!=null){
       if(categoryData!.data!.isNotEmpty && categoryNew.isEmpty){
         for(int i=0;i<categoryData!.data!.length;i++){
           categoryNew.add(categoryData!.data![i].name!);
           categoryID.add(categoryData!.data![i].id!); 
+        }
+      }
+      }
+      }
+      if(contractorData!=null){
+      if(contractorData!.data!=null){
+      if(contractorData!.data!.isNotEmpty && debitTo.isEmpty){
+        debitTo.add("Select Debit to");
+        debitToId.add(8989898);
+        itemsDebit={};
+        for(int i=0;i<contractorData!.data!.length;i++){
+          itemsDebit[contractorData!.data![i].id.toString()] = contractorData!.data![i].contractorName;
+          debitTo.add(contractorData!.data![i].contractorName!);
+          debitToId.add(contractorData!.data![i].id!); 
         }
       }
       }
@@ -420,10 +456,10 @@ setState(() => this.image = imageTemp);
                 fontSize: 14
                 ), 
                 dropdownColor: AppColors.white,
-                decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+                decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-              focusedBorder: OutlineInputBorder( //<-- SEE HERE
+              focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 1),
                ),
                 ),
@@ -808,7 +844,7 @@ setState(() => this.image = imageTemp);
               ],),),
               const SizedBox(height: 10,),
               DropdownButtonFormField(
-                 value: dropdownvalueDebitTo,
+                value: debitToController.text.isNotEmpty?debitToController.text:null,
                 icon: const Padding( 
                  padding: EdgeInsets.only(left:20),
                  child:Icon(Icons.arrow_drop_down_outlined,size: 30)
@@ -819,20 +855,20 @@ setState(() => this.image = imageTemp);
                  fontSize: 14
                ), 
           dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
-        focusedBorder: OutlineInputBorder( //<-- SEE HERE
+        focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey, width: 1),
       ),
     ),
                  isExpanded: true,
-                 items: debitTo.map((String items){
-                   return DropdownMenuItem(
-                     value: items,
-                     child: Text(items),
-                   );
-                 }).toList(),
+                items: itemsDebit.keys.map<DropdownMenuItem<String>>((String key) {
+              return DropdownMenuItem<String>(
+                value: key,
+                child: Text(itemsDebit[key]),
+              );
+            }).toList(),
                  onChanged: (String? newValue){
                    setState(() {
                      dropdownvalueDebitTo = newValue!;
@@ -930,12 +966,12 @@ setState(() => this.image = imageTemp);
                 enabledBorder:OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                      width: 1, color:Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                      width: 1, color:Colors.grey[300]!),
                 ),
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,),
@@ -972,7 +1008,7 @@ setState(() => this.image = imageTemp);
                  fontSize: 14
                ), 
           dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
@@ -1186,7 +1222,7 @@ setState(() => this.image = imageTemp);
                 minimumSize: const Size(150,40),
                 backgroundColor:const Color.fromARGB(255, 84, 216, 88)
               ),
-              child: const Text("Save",style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
+              child: const Text("Save", style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
             ],
           )
              )

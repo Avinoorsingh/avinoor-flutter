@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 
 import '../../models/all_offline_data.dart';
 import '../../models/category_list.dart';
+import '../../models/clientEmployee.dart';
 import '../../models/contractor_data_offline.dart';
 
 class DatabaseProvider {
@@ -49,6 +50,13 @@ class DatabaseProvider {
           ''' CREATE TABLE my_json_models5 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             contractor TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models6 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee TEXT
             )
           ''',
         );
@@ -187,6 +195,32 @@ class DatabaseProvider {
     }
   }
 
+   Future<void> insertEmployeeModel(var employeeData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, employee FROM my_json_models6',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models6 SET employee = ? WHERE id = ?',
+        [employeeData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models6 (employee) VALUES (?)',
+        [employeeData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving employee data => $e");
+      }
+    }
+  }
+
   Future<List<ProgressOffline>> getMyJsonModels() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models');
@@ -218,11 +252,15 @@ class DatabaseProvider {
     });
   }
 
-  Future<List<ContractorDataOffline>> getContractorModel() async {
+  Future<ContractorDataOffline> getContractorModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models5');
-    return List.generate(maps.length, (i) {
-      return ContractorDataOffline.fromJson(jsonDecode(maps[i]['contractor']));
-    });
+      return ContractorDataOffline.fromJson(jsonDecode(maps[0]['contractor']));
+    }
+
+  Future<ClientEmployee> getEmployeeModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models6');
+      return ClientEmployee.fromJson(jsonDecode(maps[0]['employee']));
+    }
   }
-}

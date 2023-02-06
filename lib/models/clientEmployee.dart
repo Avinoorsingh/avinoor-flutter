@@ -9,6 +9,7 @@ class ClientEmployee {
   ClientEmployee.fromJson(var json) {
     data =  [];
     if(json!=null){
+      try {
     for(var data1 in json){
       try {
       data?.add(EmployeeData.fromJson(data1)); 
@@ -18,6 +19,13 @@ class ClientEmployee {
              print(e);
         }
       }   
+      }
+      } catch (e) {
+        if(data!.isEmpty){
+        for(int i=0;i<json['data'].length;i++){
+           data?.add(EmployeeData.fromJson(json['data'][i])); 
+        }
+      }
       }
     }
   }
