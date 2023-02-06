@@ -3,15 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:colab/constants/colors.dart';
-import 'package:colab/models/activity_head.dart';
-import 'package:colab/models/viewpoints.dart';
 import 'package:colab/views/activity_head_offline.dart';
-import 'package:colab/views/sub_location.dart';
 import 'package:colab/views/sub_location_offline.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
-import 'package:colab/views/activity_head.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -25,7 +20,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../config.dart';
 import '../../../controller/signInController.dart';
 import '../../../models/all_offline_data.dart';
 import '../../../models/category_list.dart';
@@ -230,9 +224,10 @@ setState(() => this.image = imageTemp);
         }
        }
        } catch (e) {
-        print(e); 
+        if (kDebugMode) {
+          print(e);
+        } 
        }
-       print(activityHead);
        }
     EasyLoading.dismiss();
     return Scaffold(
@@ -458,58 +453,46 @@ setState(() => this.image = imageTemp);
               subSubV=value.substring(0,value.indexOf('}'));
               subSubLocationController.text=value.substring(0,value.indexOf('}'));
              });
-              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  var token=sharedPreferences.getString('token');
-                    var getContractorNameUrl=Uri.parse("${Config.getContractorName}${clientId.text}/${projectId.text}/${linking_activity_id.text}");
-                    var res=await http.get(
-                     getContractorNameUrl,
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                          );
-                  Map<String,dynamic> cData5=jsonDecode(res.body);
-                  if(res.body.isNotEmpty){
-                    try {
-                    contractorInput.text=cData5['data'][0]['contractor_name'];
-                    contractorID.text=cData5['data'][0]['id'].toString();
-                    } catch (e) {
-                      if (kDebugMode) {
-                        print(e);
+                  try {
+                    List subLocationInfo = [];
+                    List subSubLocationInfo = [];
+                    List viewPointNumberList = [];
+                    subLocationInfo.clear();
+                    subSubLocationInfo.clear();
+                    viewPointNumberList.clear();
+                    viewpointImagesUrl.clear();
+
+
+                    for (var i = 0; i < allOfflineData.length; i++) {
+                      if (allOfflineData[0].locationOfflineData![i].locationId == int.parse(locationId.text)) {
+                        subLocationInfo = allOfflineData[0].locationOfflineData![i].subLocationInfo!;
+                        break;
                       }
-                      contractorInput.text="No Contractor";
-                       setState(() {});
                     }
-                  }
-                  if(cData5['data'].isNotEmpty){
-                  if(cData5['data'][0]['contractor_name']==null){
-                    contractorInput.text="";
-                  }
-                  }
-                    try {
-                    var getViewPointsUrl=Uri.parse(Config.getViewpoints);
-                    var res=await http.post(
-                     getViewPointsUrl,
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                      body: {
-                            "loc_id":locationId.text,
-                            "sub_loc_id":  subLocationId.text,
-                            "sub_sub_location_id":subSubLocationId.text,
+                    for (var i = 0; i < subLocationInfo.length; i++) {
+                      if (subLocationInfo[i].locationId == int.parse(locationId.text) &&
+                          subLocationInfo[i].subLocId == int.parse(subLocationId.text)) {
+                        subSubLocationInfo = subLocationInfo[i].subSubLocationInfo;
+                        break;
                       }
-                            );
-                  Map<String,dynamic> cData6=jsonDecode(res.body);
-                  ViewPointsApi result7=ViewPointsApi.fromJson(cData6);
-                  if(res.body.isNotEmpty){
+                    }
+
+                    for (var i = 0; i < subSubLocationInfo.length; i++) {
+                      if (subSubLocationInfo[i].locationId == int.parse(locationId.text) &&
+                          subSubLocationInfo[i].subLocId == int.parse(subLocationId.text) &&
+                          subSubLocationInfo[i].subLocationId == int.parse(subSubLocationId.text)) {
+                        viewPointNumberList = subSubLocationInfo[i].viewPointNumberlist;
+                        viewpointImagesUrl.add(subSubLocationInfo[i].masterImage.masterFile.toString());
+                        break;
+                      }
+                    }
+                  if(viewPointNumberList.isNotEmpty){
                     try {
                       if(viewpoints.isEmpty && viewpointsID.isEmpty){
-                        for(int i=0;i<result7.data!.length;i++){
-                          viewpoints2.add({'index':result7.data![i].viewpoint,'image':[]});
-                          viewpoints.add(result7.data![i].viewpoint!);
-                          viewpointsID.add(result7.data![i].viewpointNameId.toString());
-                          viewpointImagesUrl.add(result7.data![i].masterFile.toString());
+                        for(int i=0;i<viewPointNumberList.length;i++){
+                          viewpoints2.add({'index':viewPointNumberList[i].viewpoint,'image':[]});
+                          viewpoints.add(viewPointNumberList[i].viewpoint!);
+                          viewpointsID.add(viewPointNumberList[i].id.toString());
                           setState(() {});
                         }
                       }
