@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
 
@@ -65,13 +64,13 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
   List formDataList = [];
 
    @override
- void initState(){
+  void initState(){
     databaseProvider = DatabaseProvider();
     databaseProvider.init();
     super.initState();
     fetchSnagData();
     super.initState();
- }
+  }
 
   List<SnagDataOffline> snagDataOffline=[];
 
@@ -93,16 +92,16 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                       if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocationId==int.parse(widget.subSubLocID)
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].locationId==int.parse(widget.locID) 
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocId==int.parse(widget.subLocID)){
-                        list1=formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].upcomingActivityList;
-                        break;
+                      list1=formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].upcomingActivityList;
+                      break;
                       }
                     }
                   }
                 }
                }
             }
-          setState(() {});
-        }
+        setState(() {});
+      }
      EasyLoading.dismiss();
      }
      else if(formDataList.isEmpty){
@@ -133,17 +132,19 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
      subLocationController.text=list1[0].subLocationName!;
      subSubLocationController.text=list1[0].subSubLocationName!;
      }
-     else{
-           EasyLoading.show(maskType: EasyLoadingMaskType.black);
+     else {
+        EasyLoading.show(maskType: EasyLoadingMaskType.black);
      }
     EasyLoading.dismiss();
     return 
      Scaffold(
     body:(list1.isNotEmpty)?
     Container(margin: const EdgeInsets.only(top: 90),
-    child:  ListView(
+    child: ListView(
       children: [
-        Padding(padding: const EdgeInsets.only(left: 10,right: 10,top: 60),
+        Padding(padding: const EdgeInsets.only(left: 10,
+        right: 10,
+        top: 60),
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -160,23 +161,24 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                   print(upComingModel[index]);
                                 }
                               },
-                              child: 
-                              Card(
+                              child: Card(
                               color: Colors.orangeAccent,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:
                               Container(
-                                padding: const EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 0),
+                                padding: const EdgeInsets.only(left: 10,
+                                right: 10,
+                                top: 5,
+                                bottom: 0),
                                   decoration: BoxDecoration(
                                     border: Border.all(width: 0.5),
                                     color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10)
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                // height: 0,
                                 width: 230,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,8 +187,8 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
-                                    borderRadius: BorderRadius.circular(4)
-                                   ), 
+                                    borderRadius: BorderRadius.circular(4),
+                                    ), 
                                     child:Center(child: Text('${activity[index]} ${activityHead[index]}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
@@ -197,15 +199,17 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                     color:checkListAvail[index]!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
                                    ), 
                                    child:
-                                    Center(child:Text(checkListAvail[index]!=null?"Checklist Available":"Checklist NA",style: textStyleBodyText2,),),),
-                                    const SizedBox(height: 10,),
-                                  ],),
-                            )),
+                                   Center(child:Text(checkListAvail[index]!=null?"Checklist Available":"Checklist NA",style: textStyleBodyText2,),),),
+                                   const SizedBox(height: 10,),
+                                  ],
+                                ),
+                              )
                             ),
+                          ),
                           Positioned(
                            right: 0,
                            left: 225,
-                              child:
+                            child:
                             InkWell(
                             splashColor: Colors.transparent,
                               onTap: () {
@@ -219,24 +223,29 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                               color: AppColors.extraLightBlue,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:
                               Container(
-                                padding: const EdgeInsets.only(left: 10,right: 10,top: 0,bottom: 0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 0.5),
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10)
+                                padding: const EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                                top: 0,
+                                bottom: 0
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 0.5),
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(10),
                                   ),
-                                // height: 0,
                                 width: 80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                   Center(child: 
+                                   Center(
+                                   child: 
                                    Text("Planned Start",
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
                                     ),
@@ -244,22 +253,23 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
-                                    borderRadius: BorderRadius.circular(4)
-                                   ), 
+                                    borderRadius: BorderRadius.circular(4),
+                                    ), 
                                     child:Center(child: Text(plannedDates[index]!='null'?outputFormat1.format(DateTime.parse(plannedDates[index].toString())):"",
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
-                                    Center(child: 
-                                    Text("Planned Finish",
-                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
+                                    Center(
+                                      child: 
+                                      Text("Planned Finish",
+                                      style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
                                     ),
-                                     Container(width: 100, 
+                                    Container(width: 100, 
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
-                                   ), 
-                                     child:Center(child: Text(finishDates[index]!='null'?outputFormat1.format(DateTime.parse(finishDates[index].toString())):"",
+                                    ), 
+                                    child:Center(child: Text(finishDates[index]!='null'?outputFormat1.format(DateTime.parse(finishDates[index].toString())):"",
                                     style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
                                     const SizedBox(height: 12,),
                                   ],),
@@ -270,7 +280,6 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                               top: 10,
                               bottom: 20,
                               left: 355,
-                              //MediaQuery.of(context).size.width/1.22,
                               child: InkWell(
                                 onTap: () {},
                                 child: Center(
@@ -292,7 +301,7 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
               )
             ):Container()
           );
-}
-);
-}
+        }
+      );
+    }
 }
