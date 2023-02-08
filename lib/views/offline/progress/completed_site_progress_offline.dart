@@ -26,7 +26,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgressOffline> {
     Scaffold(
     body: 
     Container(margin: const EdgeInsets.only(top: 90),
-    child: Center(child: Text("Work in progress",style: textStyleBodyText1.copyWith(color: AppColors.lightGrey),),)
+    child: Center(child: Text("Work in progress",style: textStyleBodyText1.copyWith(color: AppColors.grey),),)
 ),
 );
 }

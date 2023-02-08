@@ -1,14 +1,11 @@
-import 'dart:convert';
 import 'package:colab/models/upcoming_progress.dart';
-import 'package:http/http.dart' as http;
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../controller/signInController.dart';
+import '../../../services/local_database/local_database_service.dart';
 import '../../../theme/text_styles.dart';
 
 class UpComingProgressOffline extends StatefulWidget {
@@ -31,7 +28,9 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
   List<String?> remark=[];
   List dateDifference=[];
   UpcomingProgress1?  progressData;
-  List<UpcomingProgressData> list1=[];
+  List list1=[];
+  late DatabaseProvider databaseProvider;
+  List formDataList = [];
   // PageController for pagination
   final scrollController=ScrollController();
   // ignore: prefer_final_fields
@@ -40,57 +39,26 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
   
   // Function to perform the POST request and update the data list
   Future<void> _getData() async {
-     EasyLoading.show(maskType: EasyLoadingMaskType.black);
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var token=sharedPreferences.getString('token');
-    // Set up the POST request body
-    Map<String, String> body = {
-      'cid':'1',
-      'pid':'1',
-      'page_number':'$_page'
-    };
-    Map<String, String> requestHeaders={
-      "Accept": "application/json",
-      "Authorization": "Bearer $token",
-    };
-
-    // Perform the POST request
-    var response = await http.post(
-      Uri.parse('http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add'),
-      body: body,
-      headers: requestHeaders,
-    );
-    // Update the data list with the response data
-    setState(() {
-     progressData = UpcomingProgress1.fromJson(jsonDecode(response.body));
-     if(progressData!.data!=null){
-     list1=list1+progressData!.data!;
-     EasyLoading.dismiss();
-     }
-     else if(progressData!.data==null){
-      EasyLoading.dismiss();
-     }
-    });
+    formDataList=await databaseProvider.getAllOfflineModel();
+    if(formDataList.isNotEmpty){
+      for(int i=0;i<formDataList.length;i++){
+        for(int j=0;j<formDataList[i].upcomingProgress.length;j++){
+        list1.add(formDataList[i].upcomingProgress[j]);
+        }
+      }
+    }
+    setState(() {});
   }
 
- 
- @override
+  @override
  void initState(){
-  super.initState();
-  scrollController.addListener(_scrollController);
-    // Get the initial data
+    databaseProvider = DatabaseProvider();
+    databaseProvider.init();
+    super.initState();
     _getData();
+  super.initState();
  }
 
- void _scrollController(){
-  if(scrollController.position.pixels==scrollController.position.maxScrollExtent){
-    setState(() {
-      _page++;
-      _getData();
-    });
-  }
-  else{}
- }
 
  @override
   void dispose() {
@@ -125,9 +93,8 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
                           children: [
                             InkWell(
                               onTap: (){
-                                context.pushNamed("NEWPROGRESSENTRY");
                               },
-                              child: 
+                            child: 
                              Card(
                               color: Colors.orangeAccent,
                               borderOnForeground: true,
@@ -251,6 +218,12 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
                               ),
                             ),
                           ],);
-  }))]):Container()));
+                        }
+                      )
+                    )
+                  ]
+                ):Container()
+              )
+            );
   }
 }

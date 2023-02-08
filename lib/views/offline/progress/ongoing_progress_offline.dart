@@ -9,6 +9,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../controller/signInController.dart';
+import '../../../models/snag_offline.dart';
+import '../../../services/local_database/local_database_service.dart';
 import '../../../theme/text_styles.dart';
 
 class OnGoingProgressOffline extends StatefulWidget {
@@ -52,22 +54,46 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
   TextEditingController subLocationNameController=TextEditingController();
   TextEditingController subSubLocationNameController=TextEditingController();
   TextEditingController locationNameController=TextEditingController();
+  List<SnagDataOffline> snagDataOffline=[];
+  List snagData2=[];
+  late DatabaseProvider databaseProvider;
+  List formDataList = [];
   
- 
- @override
+  @override
  void initState(){
+    databaseProvider = DatabaseProvider();
+    databaseProvider.init();
+    super.initState();
+    fetchSnagData();
   super.initState();
  }
 
+  Future<List<SnagDataOffline>> fetchSnagData() async {
+    snagDataOffline= await databaseProvider.getSnagModel();
+     setState(() {
+      snagDataOffline;
+    });
+    await fetchSnagsFromLocal();
+    return snagDataOffline;
+  }
+
+  fetchSnagsFromLocal() async {
+     formDataList=await databaseProvider.getAllOfflineModel();
+     setState(() {
+       
+     });
+  }
+
   @override
   Widget build(BuildContext context) {
-      final signInController=Get.find<SignInController>();
-     if(signInController.getOnGoingProcessData!.data!.isNotEmpty && locationName.isEmpty){
-      for(int i=0;i<signInController.getOnGoingProcessData!.data!.length;i++){
-       locationName.add(signInController.getOnGoingProcessData!.data![i].locationName!);
-       locationDraft.add(signInController.getOnGoingProcessData!.data![i].draftCount??0);
-       locationID.add(signInController.getOnGoingProcessData!.data![i].locationId!);
-       locationCount.add(signInController.getOnGoingProcessData!.data![i].count??0);
+     if(formDataList.isNotEmpty && locationName.isEmpty){
+      for(int i=0;i<formDataList.length;i++){
+        for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
+          locationName.add(formDataList[i].locationOfflineData[j].locationName);
+          locationDraft.add(0);
+          locationID.add(formDataList[i].locationOfflineData[j].locationId);
+          locationCount.add(formDataList[i].locationOfflineData[j].countLoc??0);
+        }
      }
      }
     EasyLoading.dismiss();
@@ -128,33 +154,26 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
                              subLocationID.clear();
                              subLocationCount.clear();
                              subLocationDraft.clear();
-                             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              var token=sharedPreferences.getString('token');
-                              var projectID=sharedPreferences.getString('projectIdd');
-                              var clientID=sharedPreferences.getString('client_id');
                                 try {
                                   locationIDController.text=locationID[index].toString();
                                   locationNameController.text=locationName[index].toString();
-                                var getCompletedProgressListUrl=Uri.parse("${Config.getSubLocationProgressApi}$clientID/${projectID??"1"}/${locationID[index].toString()}/ONG");
-                                  var res=await http.get(
-                                      getCompletedProgressListUrl,
-                                      headers:{
-                                        "Accept": "application/json",
-                                        "Authorization": "Bearer $token",
-                                      },
-                                    );
-                                    var cData4=jsonDecode(res.body);
-                                    if(cData4!=null){
                                       subLocationName.clear();
                                       subLocationID.clear();
                                       subLocationCount.clear();
                                       subLocationDraft.clear();
-                                      for(int i=0;i<cData4['data'].length;i++){
-                                      subLocationName.add(cData4['data'][i]['sub_location_name']);
-                                      subLocationID.add(cData4['data'][i]['sub_loc_id']);
-                                      subLocationCount.add(cData4['data'][i]['draft_count']);
-                                      subLocationDraft.add(cData4['data'][i]['count']);
-                                    }
+                                      var subLocData=[];
+                                      for(int i=0;i<formDataList.length;i++){
+                                        for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
+                                          if(formDataList[i].locationOfflineData[j].locationId==int.parse(locationIDController.text)){
+                                            subLocData=formDataList[i].locationOfflineData[j].subLocationInfo;
+                                          }
+                                        }
+                                      }
+                                      for(int i=0;i<subLocData.length;i++){
+                                      subLocationName.add(subLocData[i].subLocationName);
+                                      subLocationID.add(subLocData[i].subLocId);
+                                      subLocationCount.add(0);
+                                      subLocationDraft.add(subLocData[i].countSubLoc);
                                     }
                                     setState(() {});
                                     }
@@ -196,6 +215,10 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
                         onExpansionChanged:
                               (bool t)  async{
                              if(t==true){
+                              print("#####################");
+                              print(subLocationID);
+                              print(index);
+                              print(subLocationID[index]);
                              setState(() {selectedIndex1 = index;});
                              subSubLocationName.clear();
                              subSubLocationCount.clear();
@@ -203,46 +226,41 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
                              subSubLocationID.clear();
                              subLocationIDController.text=subLocationID[index].toString();
                              subLocationNameController.text=subLocationName[index].toString();
-                             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              var token=sharedPreferences.getString('token');
-                              var projectID=sharedPreferences.getString('projectIdd');
-                              var clientID=sharedPreferences.getString('client_id');
-                              clientIDController.text=clientID.toString();
-                              projectIDController.text=projectID.toString();
-                                try {
-                                var getOnGoingProgressListUrl=Uri.parse("${Config.getSubSubLocationProgressApi}$clientID/${projectID??"1"}/${locationIDController.text}/${subLocationID[index]}/ONG");
-                                  var res=await http.get(
-                                      getOnGoingProgressListUrl,
-                                      headers:{
-                                        "Accept": "application/json",
-                                        "Authorization": "Bearer $token",
-                                      },
-                                    );
-                                    var cData4=jsonDecode(res.body);
-                                    subSubLocationName.clear();
-                                    subSubLocationCount.clear();
-                                    subSubLocationDraft.clear();
-                                    subSubLocationID.clear();
-                                    if(cData4!=null){
-                                      for(int i=0;i<cData4['data'].length;i++){
-                                      subSubLocationName.add(cData4['data'][i]['sub_sub_location_name']);
-                                      subSubLocationCount.add(cData4['data'][i]['count']);
-                                      subSubLocationDraft.add(cData4['data'][i]['draft_count']);
-                                      subSubLocationID.add(cData4['data'][i]['sub_location_id'].toString());
-                                    }
-                                    }
-                                    setState(() {});
-                                    }
-                                    catch(e){
-                                        subSubLocationName.clear();
-                                        subLocationID.clear();
-                                        setState(() {});
-                                      if (kDebugMode) {
-                                        print("Error is here");
-                                        print(e);
+                              try {
+                              subSubLocationName.clear();
+                              subSubLocationCount.clear();
+                              subSubLocationDraft.clear();
+                              subSubLocationID.clear();
+                              var subSubLocData=[];
+                              for(int i=0;i<formDataList.length;i++){
+                                for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
+                                      for(int k=0;k<formDataList[i].locationOfflineData[j].subLocationInfo.length;k++){
+                                        if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subLocId==int.parse(subLocationIDController.text)){
+                                          subSubLocData=formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo;
+                                        }
                                       }
                                     }
-                                 }else{
+                                  }
+                                if(subSubLocData.isNotEmpty){
+                                  for(int i=0;i<subSubLocData.length;i++){
+                                    subSubLocationName.add(subSubLocData[i].subSubLocationName);
+                                    subSubLocationCount.add(subSubLocData[i].countSubSubLoc);
+                                    subSubLocationDraft.add(0);
+                                    subSubLocationID.add(subSubLocData[i].subLocationId.toString());
+                                  }
+                                }
+                                setState(() {});
+                               }
+                                catch(e){
+                                  subSubLocationName.clear();
+                                  subLocationID.clear();
+                                  setState(() {});
+                                  if (kDebugMode) {
+                                    print("Error is here");
+                                    print(e);
+                                    }
+                                  }
+                                 } else {
                                   setState(() {
                                      selectedIndex1=-1;
                                   });

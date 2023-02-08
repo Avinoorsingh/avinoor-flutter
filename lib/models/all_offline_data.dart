@@ -124,7 +124,8 @@ class SubSubLocationInfo {
   int? countSubSubLoc;
 
   SubSubLocationInfo(
-      {this.subSubLocationName,
+      {
+      this.subSubLocationName,
       this.subLocationId,
       this.locationId,
       this.subLocId,
