@@ -138,7 +138,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           //   },
           //   );
           // if(res.statusCode==200){
-            print(ValueOffline.getString());
           await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
           // }
       } catch (e) {

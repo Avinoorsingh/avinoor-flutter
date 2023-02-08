@@ -1,14 +1,8 @@
-import 'dart:convert';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:colab/config.dart';
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../controller/signInController.dart';
 import '../../../models/snag_offline.dart';
 import '../../../services/local_database/local_database_service.dart';
 import '../../../theme/text_styles.dart';
@@ -215,10 +209,6 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
                         onExpansionChanged:
                               (bool t)  async{
                              if(t==true){
-                              print("#####################");
-                              print(subLocationID);
-                              print(index);
-                              print(subLocationID[index]);
                              setState(() {selectedIndex1 = index;});
                              subSubLocationName.clear();
                              subSubLocationCount.clear();
@@ -302,7 +292,7 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
                         title:
                             InkWell(
                             onTap: (){
-                              context.pushNamed('ONGOINGHOMESCREEN',queryParams:{"cID":clientIDController.text,"pID":projectIDController.text,"locID":locationIDController.text.toString(),"subLocID":subLocationIDController.text.toString(),"subSubLocID":subSubLocationID[index]!,"loc":locationNameController.text,"subLoc":subLocationNameController.text,"subSubLoc":subSubLocationName[index]!} );
+                              context.pushNamed('ONGOINGHOMESCREENOFFLINE',queryParams:{"cID":clientIDController.text,"pID":projectIDController.text,"locID":locationIDController.text.toString(),"subLocID":subLocationIDController.text.toString(),"subSubLocID":subSubLocationID[index]!,"loc":locationNameController.text,"subLoc":subLocationNameController.text,"subSubLoc":subSubLocationName[index]!} );
                             },
                             child: 
                          Row(

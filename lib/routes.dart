@@ -7,6 +7,7 @@ const String progressOffline='/progressOffline';
 const String qualityChecklist = '/QualityCheckList';
 const String activities = '/Activities';
 const String onGoingScreen="/OnGoingHomeScreen";
+const String onGoingOfflineScreen="/OnGoingOfflineHomeScreen";
 const String areaOfConcern = '/AreaOfConcern';
 const String newSnags = '/NewSnags';
 const String desnags= '/DeSnags';

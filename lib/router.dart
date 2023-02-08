@@ -19,6 +19,7 @@ import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/offline/progress/activity_progress_offline.dart';
+import 'package:colab/views/offline/progress/ongoing_screens/ongoing_ongoing_offline.dart';
 import 'package:colab/views/offline/snags/add_snag_offline.dart';
 import 'package:colab/views/offline/snags/snag_detail_offline.dart';
 import 'package:colab/views/offline/snags/snagsoffline.dart';
@@ -100,6 +101,21 @@ class CustomRouter {
         name: 'ONGOINGHOMESCREEN',
         path: onGoingScreen,
         builder: (context, state) => OnGoingOnGoingScreen(
+          key: state.pageKey,
+          cID: state.queryParams['cID'],
+          pID: state.queryParams['pID'],
+          locID: state.queryParams['locID'],
+          subLocID: state.queryParams['subLocID'],
+          subSubLocID: state.queryParams['subSubLocID'],
+          locationName: state.queryParams['loc'],
+          subLocationName: state.queryParams['subLoc'],
+          subSubLocationName: state.queryParams['subSubLoc'],
+        ),
+      ),
+       GoRoute(
+        name: 'ONGOINGHOMESCREENOFFLINE',
+        path: onGoingOfflineScreen,
+        builder: (context, state) => OnGoingOnGoingOfflineScreen(
           key: state.pageKey,
           cID: state.queryParams['cID'],
           pID: state.queryParams['pID'],

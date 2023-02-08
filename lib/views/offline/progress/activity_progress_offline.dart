@@ -7,7 +7,6 @@ import 'package:colab/views/offline/progress/inquality_progess_offline.dart';
 import 'package:colab/views/offline/progress/upcoming_progress_offline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import 'ongoing_progress_offline.dart';
 
 // ignore: non_constant_identifier_names
