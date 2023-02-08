@@ -11,7 +11,7 @@ import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
 
 class UpComingInsideOngoingOffline extends StatefulWidget {
-  const UpComingInsideOngoingOffline({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
+  const UpComingInsideOngoingOffline({Key? key, this.cID, this.pID, this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
 
   // ignore: prefer_typing_uninitialized_variables
   final cID;
@@ -170,7 +170,8 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                               elevation: 0,
                               child:
                               Container(
-                                padding: const EdgeInsets.only(left: 10,
+                                padding: const EdgeInsets.only(
+                                left: 10,
                                 right: 10,
                                 top: 5,
                                 bottom: 0),
@@ -183,24 +184,29 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(width: 200, 
+                                    Container(
+                                    width: 200, 
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4),
                                     ), 
-                                    child:Center(child: Text('${activity[index]} ${activityHead[index]}',
+                                    child:Center(
+                                    child: Text('${activity[index]} ${activityHead[index]}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
-                                    Center(child:Text('${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}',style: textStyleBodyText2),),
-                                    Center(child:Text(contractorName[index]!='null'?"${contractorName[index]}":"Contractor Not Available",style: textStyleBodyText2,),),
-                                    Container(width: 200, 
+                                    Center(
+                                      child:Text('${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}',style: textStyleBodyText2),),
+                                    Center(
+                                      child:Text(contractorName[index]!='null'?"${contractorName[index]}":"Contractor Not Available",style: textStyleBodyText2,),),
+                                    Container(
+                                    width: 200, 
                                     decoration:BoxDecoration(
                                     color:checkListAvail[index]!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
-                                   ), 
-                                   child:
-                                   Center(child:Text(checkListAvail[index]!=null?"Checklist Available":"Checklist NA",style: textStyleBodyText2,),),),
-                                   const SizedBox(height: 10,),
+                                    ), 
+                                    child:
+                                    Center(child:Text(checkListAvail[index]!=null?"Checklist Available":"Checklist NA",style: textStyleBodyText2,),),),
+                                    const SizedBox(height: 10,),
                                   ],
                                 ),
                               )
@@ -218,7 +224,7 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                   tapped=index;
                                 });
                               },
-                              child:
+                            child:
                             Card(
                               color: AppColors.extraLightBlue,
                               borderOnForeground: true,
@@ -235,10 +241,10 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                 bottom: 0
                                 ),
                                 decoration: BoxDecoration(
-                                  border: Border.all(width: 0.5),
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(10),
-                                  ),
+                                border: Border.all(width: 0.5),
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                ),
                                 width: 80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -247,9 +253,11 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                    Center(
                                    child: 
                                    Text("Planned Start",
-                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
+                                    style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),
                                     ),
-                                    Container(width: 100, 
+                                    ),
+                                    Container(
+                                    width: 100, 
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
@@ -263,19 +271,26 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                       Text("Planned Finish",
                                       style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),
                                     ),
-                                    Container(width: 100, 
+                                    Container(
+                                    width: 100, 
                                     decoration: BoxDecoration(
                                     color: AppColors.navyblue,
                                     border: Border.all(width: 0.5),
-                                    borderRadius: BorderRadius.circular(4)
+                                    borderRadius: BorderRadius.circular(4),
                                     ), 
-                                    child:Center(child: Text(finishDates[index]!='null'?outputFormat1.format(DateTime.parse(finishDates[index].toString())):"",
-                                    style: textStyleBodyText2.copyWith(color: AppColors.white),),),),
+                                    child:Center(
+                                      child: Text(finishDates[index]!='null'?outputFormat1.format(DateTime.parse(finishDates[index].toString())):"",
+                                    style: textStyleBodyText2.copyWith(color: AppColors.white),
+                                    ),
+                                    ),
+                                    ),
                                     const SizedBox(height: 12,),
-                                  ],),
-                            )),
+                                  ],
+                                ),
+                              )
                             ),
-                             ),
+                            ),
+                            ),
                             Positioned(
                               top: 10,
                               bottom: 20,
@@ -287,21 +302,25 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                                     height: 25,
                                     width: 25,
                                     color:Colors.orange,
-                                    child: const Center(child:Text("-00",style: TextStyle(color: AppColors.white),),),
+                                    child: const Center(child:
+                                    Text("-00",
+                                    style: TextStyle(color: AppColors.white),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        );
-                      }
-                    )
+                          ),
+                        ],
+                      );
+                    }
                   )
-                ]
-              )
-            ):Container()
-          );
-        }
-      );
-    }
+                )
+              ]
+            )
+          ):Container()
+        );
+      }
+    );
+  }
 }
