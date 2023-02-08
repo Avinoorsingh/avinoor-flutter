@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class SnagData {
+  // ignore: prefer_typing_uninitialized_variables
   var status;
   List<FetchSnagData>? data;
 
@@ -41,23 +42,26 @@ class FetchSnagData {
   int? activityHeadId;
   int? activityId;
   int? contractorId;
-  var remark;
-  var deSnagRemark;
-  var closeSnagRemark;
-  var debitNote;
+  String? remark;
+  String? deSnagRemark;
+  String? closeSnagRemark;
+  String? debitNote;
   int? debitAmount;
-  var dueDate;
+  String? dueDate;
   int? assignedTo;
   int? debetContractorId;
-  var markupFile;
+  String? markupFile;
+  // ignore: prefer_typing_uninitialized_variables
   var snagPriority;
+  // ignore: prefer_typing_uninitialized_variables
   var snagStatus;
   int? rejectCount;
   int? createdby2;
+  // ignore: prefer_typing_uninitialized_variables
   var rm;
   int? updatedBy;
-  var createdAt;
-  var updatedAt;
+  String? createdAt;
+  String? updatedAt;
   Location? location;
   SubLocation? subLocation;
   SubSubLocation? subSubLocation;
@@ -177,16 +181,9 @@ class FetchSnagData {
     }
     } catch (e) {
      if (kDebugMode) {
-       print("}}}}}}}}}}}}}}}}}}}}{{");
        print(e); 
      }
     }
-    // if (json['snagViewpoint'] != null) {
-    //   snagViewpoint = <Null>[];
-    //   json['snagViewpoint'].forEach((v) {
-    //     snagViewpoint!.add(SnagV.fromJson(v));
-    //   });
-    // }
     employee = json['employee'] != null
         ? Employee.fromJson(json['employee'])
         : null;
@@ -269,11 +266,11 @@ class Location {
   int? locationId;
   int? projectId;
   int? clientId;
-  var locationName;
-  var createdAt;
- var updatedAt;
- int? createdby2;
- int? updatedBy;
+  String? locationName;
+  String? createdAt;
+  String? updatedAt;
+  int? createdby2;
+  int? updatedBy;
 
   Location(
       {this.locationId,
@@ -316,11 +313,11 @@ class SubLocation {
   int? projectId;
   int? clientId;
   int? orderNo;
-  var subLocationName;
+  String? subLocationName;
   int? createdby2;
   int? updatedBy;
-  var createdAt;
-  var updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   SubLocation(
       {this.subLocId,
@@ -369,11 +366,11 @@ class SubSubLocation {
   int? projectId;
   int? locationId;
   int? subLocId;
-  var subSubLocationName;
+  String? subSubLocationName;
   int? createdby2;
   int? updatedBy;
-  var createdAt;
- var updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   SubSubLocation(
       {this.subLocationId,
@@ -421,14 +418,16 @@ class ProjectActivityHead {
   int? clientId;
   int? projectId;
   int? activityTypeId;
+  // ignore: prefer_typing_uninitialized_variables
   var activityHead;
   int? activityHeadOrder;
- var import;
- var description;
+ // ignore: prefer_typing_uninitialized_variables
+  var import;
+  String? description;
   int? createdby2;
   int? updatedBy;
-  var createdAt;
-  var updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   ProjectActivityHead(
       {this.activityId,
@@ -481,20 +480,24 @@ class ProjectActivity {
   int? linkingActivityId;
   int? activityId;
   int? budgetId;
+  // ignore: prefer_typing_uninitialized_variables
   var activity;
   int? activityOrder;
   int? uomId;
- var description;
+ String? description;
+  // ignore: prefer_typing_uninitialized_variables
   var corel;
   int? locationId;
   int? subLocId;
   int? subSubLocId;
   int? status;
- var import;
- var createdby2;
- var updatedBy;
-  var createdAt;
-  var updatedAt;
+  // ignore: prefer_typing_uninitialized_variables
+  var import;
+  // ignore: prefer_typing_uninitialized_variables
+  var createdby2;
+  int? updatedBy;
+  String? createdAt;
+  String? updatedAt;
 
   ProjectActivity(
       {this.linkingActivityId,
@@ -561,33 +564,48 @@ class ProjectActivity {
 class ContractorInfo {
   int? id;
   int? clientId;
+  // ignore: prefer_typing_uninitialized_variables
   var vendorCode;
+  // ignore: prefer_typing_uninitialized_variables
   var vendorType;
-  var nameOfCompany;
+  String? nameOfCompany;
+  // ignore: prefer_typing_uninitialized_variables
   var yearOfRegestration;
-  var regesteredAddress;
-  var email;
-  var website;
-  var ownerName;
+  String? regesteredAddress;
+  String? email;
+  String? website;
+  String? ownerName;
+  // ignore: prefer_typing_uninitialized_variables
   var owner;
+  // ignore: prefer_typing_uninitialized_variables
   var contactPerson;
   int? contactNo;
+  // ignore: prefer_typing_uninitialized_variables
   var panNo;
+  // ignore: prefer_typing_uninitialized_variables
   var gstNo;
   int? country;
+  // ignore: prefer_typing_uninitialized_variables
   var state;
+  // ignore: prefer_typing_uninitialized_variables
   var pf;
-  var bankName;
+  String? bankName;
+  // ignore: prefer_typing_uninitialized_variables
   var branch;
+  // ignore: prefer_typing_uninitialized_variables
   var accountNo;
+  // ignore: prefer_typing_uninitialized_variables
   var accountType;
+  // ignore: prefer_typing_uninitialized_variables
   var ifscCode;
+  // ignore: prefer_typing_uninitialized_variables
   var micrCode;
+  // ignore: prefer_typing_uninitialized_variables
   var workAttribute;
-  var createdby2;
-  var updatedBy;
-  var createdAt;
-  var updatedAt;
+  int? createdby2;
+  int? updatedBy;
+  String? createdAt;
+  String? updatedAt;
 
   ContractorInfo(
       {this.id,
@@ -694,19 +712,22 @@ class ProjcontractorInfo {
   int? clientId;
   int? projectId;
   int? clientContractorId;
-  var contractorName;
-  var startDate;
-  var endDate;
+  String? contractorName;
+  String? startDate;
+  String? endDate;
+  // ignore: prefer_typing_uninitialized_variables
   var workOrderNumber;
+  // ignore: prefer_typing_uninitialized_variables
   var scopeOfWork;
+  // ignore: prefer_typing_uninitialized_variables
   var contactNo;
   // ignore: prefer_typing_uninitialized_variables
   var attFile;
   int? grandTotal;
-  var createdby2;
-  var updatedBy;
-  var createdAt;
-  var updatedAt;
+  int? createdby2;
+  int? updatedBy;
+  String? createdAt;
+  String? updatedAt;
 
   ProjcontractorInfo(
       {this.id,
@@ -771,12 +792,12 @@ class Category {
   int? id;
   int? clientId;
   int? projectId;
-  var name;
-  var description;
-  var createdAt;
- var updatedAt;
+  String? name;
+  String? description;
+  String? createdAt;
+  String? updatedAt;
   int? createdby2;
- var updatedBy;
+  int? updatedBy;
 
   Category(
       {this.id,
@@ -819,26 +840,31 @@ class Category {
 class Employee {
   int? id;
   int? clientId;
+  // ignore: prefer_typing_uninitialized_variables
   var userId;
-  var password;
-  var name;
+  String? password;
+  String? name;
+  // ignore: prefer_typing_uninitialized_variables
   var rm;
+  // ignore: prefer_typing_uninitialized_variables
   var mobileNo;
-  var emailId;
+  String? emailId;
   int? roleId;
   int? status;
   int? userType;
-  var lastName;
+  String? lastName;
   int? designation;
+  // ignore: prefer_typing_uninitialized_variables
   var altMobileNo;
-  var emergencyName;
+  String? emergencyName;
+  // ignore: prefer_typing_uninitialized_variables
   var emergencyMobileNo;
-  var dob;
-  var doj;
-  var userImage;
-  var fcmToken;
-  var createdAt;
-  var updatedAt;
+  String? dob;
+  String? doj;
+  String? userImage;
+  String? fcmToken;
+  String? createdAt;
+  String? updatedAt;
 
   Employee(
       {this.id,
@@ -920,26 +946,32 @@ class Employee {
 class CreatedBy {
   int? id;
   int? clientId;
+  // ignore: prefer_typing_uninitialized_variables
   var userId;
+  // ignore: prefer_typing_uninitialized_variables
   var password;
-  var name;
+  String? name;
+  // ignore: prefer_typing_uninitialized_variables
   var rm;
+  // ignore: prefer_typing_uninitialized_variables
   var mobileNo;
-  var emailId;
+  String? emailId;
   int? roleId;
   int? status;
   int? userType;
- var lastName;
+  String? lastName;
   int? designation;
- var altMobileNo;
- var emergencyName;
- var emergencyMobileNo;
- var dob;
- var doj;
- var userImage;
-  var fcmToken;
-  var createdAt;
-  var updatedAt;
+  // ignore: prefer_typing_uninitialized_variables
+  var altMobileNo;
+  String? emergencyName;
+  // ignore: prefer_typing_uninitialized_variables
+  var emergencyMobileNo;
+  String? dob;
+  String? doj;
+  String? userImage;
+  String? fcmToken;
+  String? createdAt;
+  String? updatedAt;
 
   CreatedBy(
       {this.id,
@@ -1022,11 +1054,14 @@ class SnagViewpoint {
   int? id;
   int? snagsMasterId;
   int? viewpointId;
+  // ignore: prefer_typing_uninitialized_variables
   var viewpointFileName;
+  // ignore: prefer_typing_uninitialized_variables
   var desnagsFileName;
+  // ignore: prefer_typing_uninitialized_variables
   var deSnagDate;
-  var createdAt;
-  var updatedAt;
+  String? createdAt;
+  String? updatedAt;
 
   SnagViewpoint(
       {this.id,

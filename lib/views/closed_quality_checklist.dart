@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/signInController.dart';
 import '../models/quality_sub_sub_location_list.dart';
@@ -58,7 +57,6 @@ class _OpenedCheckListState extends State<ClosedQualityCheckList> {
 
   @override
   Widget build(BuildContext context) {
-    var outputFormat = DateFormat('MMM-dd-yyyy');
     return 
     GetBuilder<GetClosedCheckList>(builder: (_){
       final signInController=Get.find<SignInController>();

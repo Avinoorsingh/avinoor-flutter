@@ -1,10 +1,8 @@
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
 import '../../../../theme/text_styles.dart';

@@ -18,6 +18,7 @@ import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
+import 'package:colab/views/offline/progress/activity_progress_offline.dart';
 import 'package:colab/views/offline/snags/add_snag_offline.dart';
 import 'package:colab/views/offline/snags/snag_detail_offline.dart';
 import 'package:colab/views/offline/snags/snagsoffline.dart';
@@ -343,6 +344,13 @@ class CustomRouter {
         name: 'ADDSNAGOFFLINE',
         path: addSnagsOffline,
         builder: (context, state) => AddSnagOffline(
+          key: state.pageKey,
+        ),
+      ),
+       GoRoute(
+        name: 'ACTIVITIESOFFLINE',
+        path: progressOffline,
+        builder: (context, state) => ActivityProgressOffline(
           key: state.pageKey,
         ),
       ),

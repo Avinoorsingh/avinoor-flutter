@@ -10,7 +10,6 @@ import 'package:colab/models/progress_contractor.dart';
 import 'package:colab/models/progress_location_data.dart';
 import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_data.dart';
-import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -108,7 +107,6 @@ class GetClientProject extends GetxController {
              }
             if(index!=null){
             signInController.getProjectData= clientProjects[int.parse(index)];
-            // EasyLoading.show(maskType: EasyLoadingMaskType.black);
             update();
             }
       if(getClientProjects.isEmpty){
@@ -122,6 +120,9 @@ class GetClientProject extends GetxController {
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               String id=resSuccess['data'][0]['project_id'].toString();
               sharedPreferences.setString("projectIdd",id);
+              if (kDebugMode) {
+                print("Id is setted");
+              }
                var result= ClientProfileData.fromJson(resSuccess['data'][0]);
                 signInController.getProjectData=result;
                 update();

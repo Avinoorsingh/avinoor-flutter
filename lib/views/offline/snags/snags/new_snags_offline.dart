@@ -31,6 +31,7 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
   List snagData2=[];
   late DatabaseProvider databaseProvider;
   List dateDifference=[];
+  List formDataList = [];
  
  @override
  void initState(){
@@ -46,24 +47,45 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
      setState(() {
       snagData;
     });
+    await fetchSnagsFromLocal();
     return snagData;
+  }
+
+  fetchSnagsFromLocal() async {
+     formDataList=await databaseProvider.getSnagFormData();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(mounted){
+      fetchSnagsFromLocal();
+        setState(() {});
+    }
     var outputFormat = DateFormat('dd/MM/yyyy');
     var outputFormat1 = DateFormat('dd/MM/yyyy');
      if(snagData.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<snagData.length;i++){
-        if(snagData[0].data![i].snagStatus=="N"){
-       subLocationName.add(snagData[0].data![i].subLocation!.subLocationName);
-       subSubLocationName.add(snagData[0].data![i].subSubLocation!.subSubLocationName);
+       if(snagData[0].data![i].snagStatus=="N"){
+       subLocationName.add("${snagData[0].data![i].subLocation!.subLocationName} / ${snagData[0].data![i].subSubLocation!.subSubLocationName}");
+       subSubLocationName.add("");
        locationName.add(snagData[0].data![i].location!.locationName);
        remark.add(snagData[0].data![i].remark);
        dueDates.add(snagData[0].data![i].dueDate);
        createdDates.add(snagData[0].data![i].createdAt);
        snagData2.add(snagData[0].data![i]);
        dateDifference.add(DateTime.now().difference(DateTime.parse(snagData[0].data![i].createdAt!)).inDays);
+      }
+      if(formDataList.isNotEmpty){
+        for(int i=0;i<formDataList.length;i++){
+            subLocationName.add(formDataList[i]['snags_info']['subLocName']);
+            subSubLocationName.add(formDataList[i]['snags_info']['subSubLocName']);
+            locationName.add(formDataList[i]['snags_info']['locationName']);
+            remark.add(formDataList[i]['snags_data']['remark']);
+            dueDates.add(formDataList[i]['snags_data']['due_date']);
+            createdDates.add(formDataList[i]['snags_data']['due_date']);
+            snagData2.add(formDataList[i]);
+            dateDifference.add(DateTime.now().difference(DateTime.parse(formDataList[i]['snags_data']['due_date']!)).inDays); 
+        }
       }
       }
      }
@@ -119,7 +141,7 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
+                                    Text("${subLocationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
                                     Text("${locationName[index]}",style: textStyleHeadline4.copyWith(fontSize: 14),),
                                     const SizedBox(height: 20,),
                                     Row(

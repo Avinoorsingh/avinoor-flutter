@@ -470,7 +470,6 @@ class _AddProgressState extends State<AddProgressEntry> {
              if(locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute(locationId.text));
              setState(() {
-              print(value);
                   if(value.isNotEmpty){
                   subSubLocationId.text=value.substring(value.indexOf('?')+1,value.indexOf('&'));
                   clientId.text=value.substring(value.indexOf('&')+1,value.indexOf('*'));
@@ -499,7 +498,6 @@ class _AddProgressState extends State<AddProgressEntry> {
                               "sub_sub_loc_id":subSubLocationId.text,
                             }
                             );
-                             print(res.body);
                             Map<String,dynamic> cData4=jsonDecode(res.body);
                             if(cData4['success']==true){
                             ProgressActivityHeadData result4=ProgressActivityHeadData.fromJson(cData4);

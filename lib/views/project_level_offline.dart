@@ -1,9 +1,7 @@
-import 'package:colab/constants/colors.dart';
 import 'package:colab/models/all_offline_data.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/project_level_page_offline1.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';

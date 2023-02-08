@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:colab/constants/colors.dart';
@@ -132,7 +131,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
     ],
   );
   var imageTemp = File(croppedFile!.path);
-setState(() => this.image = imageTemp);
+  setState(() => this.image = imageTemp);
     } catch(e) {
       if (kDebugMode) {
         print('Failed to pick image: $e');
@@ -191,7 +190,6 @@ setState(() => this.image = imageTemp);
 
     Future<ClientEmployee> fetchEmployeeData() async {
     employeeData = await databaseProvider.getEmployeeModel();
-    print(employeeData!.data!.length);
     return employeeData!;
     }
 
@@ -512,7 +510,6 @@ setState(() => this.image = imageTemp);
                         break;
                       }
                     }
-
                     for (var i = 0; i < subSubLocationInfo.length; i++) {
                       if (subSubLocationInfo[i].locationId == int.parse(locationId.text) &&
                           subSubLocationInfo[i].subLocId == int.parse(subLocationId.text) &&
@@ -1019,22 +1016,22 @@ setState(() => this.image = imageTemp);
           dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
-                 isExpanded: true,
-                 items: assignedToList.map((String items){
-                   return DropdownMenuItem(
-                     value: items,
-                     child: Text(items),
+          ),
+          focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+          ),
+              isExpanded: true,
+              items: assignedToList.map((String items){
+              return DropdownMenuItem(
+                    value: items,
+                    child: Text(items),
                    );
                  }).toList(),
-                 onChanged: (String? newValue){
+              onChanged: (String? newValue){
                    setState(() {
                     snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)].toString();
-                     dropdownvalueAssignedTo = newValue.toString();
+                    dropdownvalueAssignedTo = newValue.toString();
                    });
                  },
                ),
@@ -1128,6 +1125,9 @@ setState(() => this.image = imageTemp);
                 else if(subSubLocationId.text.isEmpty){
                   EasyLoading.showToast("Please select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
                 }
+                 else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
+                  EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
+                }
                 else if(remarkController.text.isEmpty){
                   EasyLoading.showToast("Please enter a remark",toastPosition: EasyLoadingToastPosition.bottom);
                 }
@@ -1137,20 +1137,16 @@ setState(() => this.image = imageTemp);
                 else if(snapAssignedToController.text.isEmpty){
                   EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
                 }
-                else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
-                  EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
-                }
                 else if(priorityController.text.isEmpty){
                   EasyLoading.showToast("Please assign priority",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else{
                 // ignore: non_constant_identifier_names
                 List VID=[];
+                Map<String, dynamic> snagData = {};
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
                 FormData formData=FormData(); 
-                var dio = Dio();
                 for(int i=0;i<viewpoints2.length;i++){
                   if(viewpoints2[i]['image'].isNotEmpty){
                   for(int j=0;j<viewpoints2[i]['image'].length;j++){
@@ -1159,19 +1155,17 @@ setState(() => this.image = imageTemp);
                   }
                   }
                 }
-                    if(viewpointsToSent.isNotEmpty){
-                    for (var item in viewpointsToSent) {
-                      formData.files.add(
-                        MapEntry("viewpoint_${VID[viewpointsToSent.indexOf(item)]}", await MultipartFile.fromFile(viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1), filename: 'image1'))
-                      );
+                  if(viewpointsToSent.isNotEmpty){
+                    for (var item in viewpointsToSent){
+                      snagData["viewpoint_${VID[viewpointsToSent.indexOf(item)]}"]=viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1);
                     }
-                    }
+                  }
                 try {
-                formData.files.add(MapEntry("markup_file", await MultipartFile.fromFile(assetImageController.text, filename: "image_name")));
+                  snagData['markup_file']=assetImageController.text;
                 } catch (e) {
                   formData.fields.add(const MapEntry('markup_file', ''));
                 }
-                formData.fields.add(MapEntry('snags_data', jsonEncode({
+                snagData['snags_data']= ({
                       "client_id":int.parse(clientId.text),
                       "project_id": int.parse(projectId.text),
                       "category_id": int.parse(categoryIDController.text),
@@ -1190,36 +1184,27 @@ setState(() => this.image = imageTemp);
                       "created_by": int.parse(createdById!),
                       "snag_status": "N",
                       "snag_priority": priorityController.text== "Critical"?'CR':priorityController.text=="Major"?'MA':priorityController.text=="Minor"?'MI':"",
-                   }
-                   )
-                   )
-                   );
+                   });
+                    snagData['snags_info']= ({
+                      "locationName": locationController.text,
+                      "subLocName": subLocationController.text,
+                      "subSubLocName": subSubLocationController.text,
+                      "activity": subSubV,
+                      "assigned_to": dropdownvalueAssignedTo,
+                      "createdBy": "The Lake Admin",
+                   });
                     if (kDebugMode) {
-                      print(formData.fields);
+                      print("{{{{{{{{{{{{{}}}");
+                      print(snagData);
+                      print("{{{{{{{{{{{{{}}}");
                     }
                   try {
-                    await dio.post(
-                  "http://nodejs.hackerkernel.com/colab/api/add_snags",
-                  data: formData,
-                  options: Options(
-                    followRedirects: false,
-                    validateStatus: (status) {
-                      return status! < 500;
-                    },
-                    headers: {
-                      "authorization": "Bearer ${token!}",
-                      "Content-type": "application/json",
-                    },
-                  ),
-                    );
-                    EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
-                    // await getSnag.getSnagData(context: context);
-                    // await getSnag.getSnagData(context: context);
-                    // Get.put(GetNewSnag()); 
-                         // ignore: use_build_context_synchronously
+                    await databaseProvider.insertSnagFormData(snagData);
+                    EasyLoading.showToast("Snag Saved", toastPosition: EasyLoadingToastPosition.bottom); 
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                     } catch (e) {
-                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                      EasyLoading.showToast("unknown error occured",toastPosition: EasyLoadingToastPosition.bottom);
                       EasyLoading.dismiss();
                      if (kDebugMode) {
                        print(e);

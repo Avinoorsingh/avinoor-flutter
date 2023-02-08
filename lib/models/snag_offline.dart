@@ -45,6 +45,7 @@ class Data {
   String? snagStatus;
   int? rejectCount;
   int? createdBy;
+  // ignore: prefer_typing_uninitialized_variables
   var rm;
   String? updatedBy;
   String? createdAt;

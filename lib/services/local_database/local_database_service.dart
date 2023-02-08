@@ -60,6 +60,12 @@ class DatabaseProvider {
             )
           ''',
         );
+        db.execute(
+          ''' CREATE TABLE form_data (
+            id INTEGER PRIMARY KEY, 
+            snagData TEXT
+            )
+          ''');
       },
       version: 1,
     );
@@ -195,7 +201,7 @@ class DatabaseProvider {
     }
   }
 
-   Future<void> insertEmployeeModel(var employeeData) async {
+  Future<void> insertEmployeeModel(var employeeData) async {
     try {
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, employee FROM my_json_models6',
@@ -219,6 +225,20 @@ class DatabaseProvider {
         print("Error in saving employee data => $e");
       }
     }
+  }
+
+  Future<void> insertSnagFormData(var formData) async {
+    String serializedFormData = json.encode(formData);
+    await _database.insert('form_data', {'snagData':serializedFormData});
+  }
+
+  Future<List<Map<String, dynamic>>> getSnagFormData() async {
+    final List<Map<String, dynamic>> formDataRows = await _database.query('form_data');
+    List<Map<String, dynamic>> formDataList = [];
+    for (var formDataRow in formDataRows) {
+      formDataList.add(jsonDecode(formDataRow['snagData']));
+    }
+    return formDataList;
   }
 
   Future<List<ProgressOffline>> getMyJsonModels() async {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/area_of_concern_model.dart';
 import 'package:colab/models/category_list.dart';
 import 'package:colab/models/clientEmployee.dart';
@@ -33,7 +32,6 @@ import '../models/progress_location_data.dart';
 import '../models/progress_subSublocation_data.dart';
 import '../models/progress_trade_data.dart';
 import '../models/section_detail.dart';
-import '../models/sub_location_list.dart';
 import '../network/client_project.dart';
 import '../services/helper/dependency_injector.dart';
 

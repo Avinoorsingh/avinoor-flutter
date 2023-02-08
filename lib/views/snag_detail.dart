@@ -182,14 +182,6 @@ class _SnagState extends State<SnagDetail> {
     newGroupedDeImages[key]=newValue;
   });
   }
-  print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  print(groupedDeSnagImages);
-  print(newGroupedDeSnagImages);
-   print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  // print(deSnagImage);
-  // print(newGroupedDeSnagImages);
-    // print("I am here, here is the viewpoint");
-    // print(groupedViewpoints);
     dateInput.text =getFormatedDate(DateTime.now().toString());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }

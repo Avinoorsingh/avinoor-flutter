@@ -198,15 +198,6 @@ class _SnagState2 extends State<SnagDetail2> {
   groupedDeSnagImages.forEach((key, value) {
   groupedOnlyDeSnag[key] = List.filled(value.length, 'null');
 });
-  
-  print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  print(viewpointID);
-  print(groupedViewpointsID);
-   print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}{{{{{{{{{{");
-  // print(deSnagImage);
-  // print(newGroupedDeSnagImages);
-    // print("I am here, here is the viewpoint");
-    // print(groupedViewpoints);
     dateInput.text =getFormatedDate(DateTime.now().toString());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }

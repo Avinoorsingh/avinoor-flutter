@@ -1,3 +1,4 @@
+// ignore: file_names
 class ProgressSubSubLocationData {
   bool? success;
   List<ProgressSubSubLocationListData>? data;

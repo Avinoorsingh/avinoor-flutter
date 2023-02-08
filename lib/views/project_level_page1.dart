@@ -61,7 +61,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     "AREAS OF CONCERN",
     "DRAWING MASTER",
   ];
-   List<String> iconText = [];
+ List<String> iconText = [];
  late List<ExpenseData> _chartData=[];
  late String _selectedDate;
 
@@ -72,7 +72,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     getClientProjectsController.getSelectedProjects(context:context);
     // _chartData = getChartData(_selectedDate);
     getClientProfileController.getUserProfile(context: context);
-     getClientProfileController.getUserProfile(context: context);
+    getClientProfileController.getUserProfile(context: context);
     getLabourDataContractorListController.getContractorListData(context: context);
     getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
     getNewSnagDataController.getSnagData(context: context);
@@ -114,10 +114,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   
   @override
   Widget build(BuildContext context) {
-     if(mounted){
-      EasyLoading.show(maskType: EasyLoadingMaskType.black);
+  if(mounted){
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     setState(() {});
-    }
+  }
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
   final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();

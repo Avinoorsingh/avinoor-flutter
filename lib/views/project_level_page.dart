@@ -74,12 +74,12 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
       subscription = Connectivity().onConnectivityChanged.listen(
         (ConnectivityResult result) async {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          if (!isDeviceConnected && isAlertSet == false){
-            showDialogBox();
-            setState(() => isAlertSet = true);
-          }
           if (isDeviceConnected){
             saveData();
+          }
+          else if (!isDeviceConnected && isAlertSet == false){
+            showDialogBox();
+            setState(() => isAlertSet = true);
           }
         },
       );
@@ -277,8 +277,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
     getClientProjectsController.getSelectedProjects(context:context);
+    getConnectivity();
     }
-     return 
+    return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
       final signInController=Get.find<SignInController>();
       return signInController.getClientProfile?.clientid!=null? Scaffold(
