@@ -1,11 +1,9 @@
-import 'package:colab/network/onGoingSiteProgress/ongoing_site_network.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
@@ -81,7 +79,7 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
   }
 
   fetchSnagsFromLocal() async {
-     formDataList=await databaseProvider.getAllOfflineModel();
+     formDataList = await databaseProvider.getAllOfflineModel();
      if(formDataList.isNotEmpty){
       for(int i=0;i<formDataList.length;i++){
         for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
@@ -113,8 +111,6 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
   @override
   Widget build(BuildContext context) {
      var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return 
-    GetBuilder<GetOnUpComingData>(builder: (_){
       for(int i=0;i<list1.length;i++){
        activityHead.add(list1[i].activityHead!);
        activity.add(list1[i].activity!);
@@ -137,15 +133,17 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
      }
     EasyLoading.dismiss();
     return 
-     Scaffold(
+    Scaffold(
     body:(list1.isNotEmpty)?
     Container(margin: const EdgeInsets.only(top: 90),
     child: ListView(
       children: [
-        Padding(padding: const EdgeInsets.only(left: 10,
+        Padding(padding: const EdgeInsets.only(
+        left: 10,
         right: 10,
-        top: 60),
-            child:
+        top: 60
+        ),
+          child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -156,7 +154,8 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                           children: [
                             InkWell(
                               onTap: (){
-                                context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index]);
+                                context.pushNamed("UPCOMINGPROGRESSENTRYOFFLINE",
+                                extra:upComingModel[index]);
                                 if (kDebugMode) {
                                   print(upComingModel[index]);
                                 }
@@ -321,6 +320,4 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
           ):Container()
         );
       }
-    );
   }
-}

@@ -2,13 +2,9 @@ import 'dart:math';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/services/bottom_tab_bar5.dart';
 import 'package:colab/theme/text_styles.dart';
-import 'package:colab/views/completed_inside_ongoing.dart';
-import 'package:colab/views/inquality_inside_ongoing.dart';
 import 'package:colab/views/offline/progress/ongoing_screens/upcoming_inside_ongoing_offline.dart';
-import 'package:colab/views/upcoming_inside_ongoing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import '../completed_site_progress_offline.dart';
 import 'ongoing_inside_ongoing_offline.dart';
 
@@ -89,4 +85,5 @@ class _ActivityPageState extends State<OnGoingOnGoingOfflineScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerTop),
     );
-  }}
+  }
+}

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:colab/models/progress_offline.dart';
+import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,6 +11,8 @@ import '../../models/all_offline_data.dart';
 import '../../models/category_list.dart';
 import '../../models/clientEmployee.dart';
 import '../../models/contractor_data_offline.dart';
+import '../../models/labour_attendance.dart';
+import '../../models/progress_contractor.dart';
 
 class DatabaseProvider {
   late Database _database;
@@ -53,10 +56,31 @@ class DatabaseProvider {
             )
           ''',
         );
-         db.execute(
+        db.execute(
           ''' CREATE TABLE my_json_models6 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             employee TEXT
+            )
+          ''',
+        );
+        db.execute(
+          ''' CREATE TABLE my_json_models8 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            contractorDebit TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models9 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            labour TEXT
+            )
+          ''',
+        );
+         db.execute(
+          ''' CREATE TABLE my_json_models7 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            trade TEXT
             )
           ''',
         );
@@ -66,6 +90,18 @@ class DatabaseProvider {
             snagData TEXT
             )
           ''');
+        db.execute(
+          ''' CREATE TABLE progress_data (
+            id INTEGER PRIMARY KEY, 
+            progressData TEXT
+            )
+        ''');
+        db.execute(
+          ''' CREATE TABLE upcoming_data (
+            id INTEGER PRIMARY KEY, 
+            upcomingData TEXT
+            )
+        ''');
       },
       version: 1,
     );
@@ -201,6 +237,84 @@ class DatabaseProvider {
     }
   }
 
+   Future<void> insertTrade(var tradeData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, trade FROM my_json_models7',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models7 SET trade = ? WHERE id = ?',
+        [tradeData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models7 (trade) VALUES (?)',
+        [tradeData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving trade data => $e");
+      }
+    }
+  }
+
+   Future<void> insertContractorForDebit(var contractorForDebitData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, contractorDebit FROM my_json_models8',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models8 SET contractorDebit = ? WHERE id = ?',
+        [contractorForDebitData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models8 (contractorDebit) VALUES (?)',
+        [contractorForDebitData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving contractorForDebitData data => $e");
+      }
+    }
+  }
+
+  Future<void> insertLabourAttendanceToday(var labourData) async {
+    try {
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, labour FROM my_json_models9',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models9 SET labour = ? WHERE id = ?',
+        [labourData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models9 (labour) VALUES (?)',
+        [labourData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving labour data => $e");
+      }
+    }
+  }
+
   Future<void> insertEmployeeModel(var employeeData) async {
     try {
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
@@ -230,6 +344,16 @@ class DatabaseProvider {
   Future<void> insertSnagFormData(var formData) async {
     String serializedFormData = json.encode(formData);
     await _database.insert('form_data', {'snagData':serializedFormData});
+  }
+
+  Future<void> insertProgressFormData(var formData) async {
+    String serializedFormData = json.encode(formData);
+    await _database.insert('progress_data', {'progressData':serializedFormData});
+  }
+
+   Future<void> insertUpcomingInsideOnGoingFormData(var formData) async {
+    String serializedFormData = json.encode(formData);
+    await _database.insert('upcoming_data', {'upcomingData':serializedFormData});
   }
 
   Future<List<Map<String, dynamic>>> getSnagFormData() async {
@@ -283,4 +407,22 @@ class DatabaseProvider {
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models6');
       return ClientEmployee.fromJson(jsonDecode(maps[0]['employee']));
     }
-  }
+  
+  Future<ProgressTrade> getTradeModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models7');
+      return ProgressTrade.fromJson(jsonDecode(maps[0]['trade']));
+    }
+   
+  Future<ProgressContractor> getContractorForDebitModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models8');
+      return ProgressContractor.fromJson(jsonDecode(maps[0]['contractorDebit']));
+    }
+
+  Future<LabourAttendance> getLabourAttendanceModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models9');
+      return LabourAttendance.fromJson(jsonDecode(maps[0]['labour']));
+    }
+}

@@ -257,7 +257,7 @@ class GetUserProfileNetwork extends GetxController{
                 print(e);
               }
             }
-      try {
+    try {
      var getProgressContractorListUrl=Uri.parse(Config.getProgressContractorApi);
         var res=await http.post(
             getProgressContractorListUrl,
@@ -273,12 +273,12 @@ class GetUserProfileNetwork extends GetxController{
           Map<String,dynamic> cData3=jsonDecode(res.body);
           ProgressContractor result3=ProgressContractor.fromJson(cData3);
           signInController.getProgressContractorList=result3;    
-            } catch (e) {
+          } catch (e) {
               if (kDebugMode) {
                 print("error in getting progress contractor list");
                 print(e);
               }
-            }
+          }
            try {
      var getProgressTradeUrl=Uri.parse(Config.getProgressTradeApi);
         var res=await http.get(
@@ -310,12 +310,12 @@ class GetUserProfileNetwork extends GetxController{
           Map<String,dynamic> cData3=jsonDecode(res.body);
           LabourAttendance result3=LabourAttendance.fromJson(cData3);
           signInController.getLabourAttendance=result3;    
-            } catch (e) {
+          } catch (e) {
               if (kDebugMode) {
                 print("error in getting labour attendance");
                 print(e);
               }
-            }
+          }
     try {
      var getEmployeesUrl=Uri.parse("${Config.getEmployees}$projectID");
         var res=await http.get(

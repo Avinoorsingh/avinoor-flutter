@@ -1,12 +1,9 @@
-import 'package:colab/models/ongoing_ongoing_progress_data.dart';
 import 'package:colab/network/onGoingSiteProgress/ongoing_site_network.dart';
 import 'package:colab/constants/colors.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../controller/signInController.dart';
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
@@ -219,7 +216,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
                         children: [
                           InkWell(
                             onTap: (){
-                              context.pushNamed('EDITPROGRESSENTRY',extra: editData[index]);
+                              context.pushNamed('EDITPROGRESSENTRYOFFLINE',extra: editData[index]);
                             },
                             child:
                         Column(children: [

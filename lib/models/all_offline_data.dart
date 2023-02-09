@@ -78,11 +78,13 @@ class SubLocationInfo {
   int? countSubLoc;
 
   SubLocationInfo(
-      {this.subLocId,
+      {
+      this.subLocId,
       this.subLocationName,
       this.locationId,
       this.subSubLocationInfo,
-      this.countSubLoc});
+      this.countSubLoc
+      });
 
   SubLocationInfo.fromJson(Map<String, dynamic> json) {
     subLocId = json['sub_loc_id'];

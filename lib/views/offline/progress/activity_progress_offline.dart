@@ -38,8 +38,8 @@ class _ActivityPageState extends State<ActivityProgressOffline> {
         appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Site Progress Offline",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
-      ),
+        title: Text("Site Progress Offline",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+        ),
         key: ScaffoldStateKey,
         body: TabBarView(
                 key: Key(Random().nextInt(1000).toString()),

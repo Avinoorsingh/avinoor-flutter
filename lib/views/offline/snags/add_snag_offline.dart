@@ -205,7 +205,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
         for(int i=0;i<employeeData!.data!.length;i++){
           assignedToList.add(employeeData!.data![i].userId.toString());
           assignedToListIndex.add(employeeData!.data![i].id!);
-        }
+            }
           }
         }
       if(categoryData!=null){
@@ -475,18 +475,18 @@ class _MyProfilePageState extends State<AddSnagOffline> {
             )
           ),
           Container(
-           margin: const EdgeInsets.only(left:20,right:20),
-           padding: const EdgeInsets.only(top: 20,bottom: 20),
+           margin: const EdgeInsets.only(left:20, right:20),
+           padding: const EdgeInsets.only(top: 20, bottom: 20),
             child:
              InkWell(
                 onTap: () async {
                   if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
-             String value= await Navigator.of(context).push(_createRoute2());
-             setState(() {
-              linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
-              subSubV=value.substring(0,value.indexOf('}'));
-              subSubLocationController.text=value.substring(0,value.indexOf('}'));
-             });
+                  String value= await Navigator.of(context).push(_createRoute2());
+                  setState(() {
+                    linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
+                    subSubV=value.substring(0,value.indexOf('}'));
+                    subSubLocationController.text=value.substring(0,value.indexOf('}'));
+                  });
                   try {
                     List subLocationInfo = [];
                     List subSubLocationInfo = [];
@@ -495,8 +495,6 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                     subSubLocationInfo.clear();
                     viewPointNumberList.clear();
                     viewpointImagesUrl.clear();
-
-
                     for (var i = 0; i < allOfflineData.length; i++) {
                       if (allOfflineData[0].locationOfflineData![i].locationId == int.parse(locationId.text)) {
                         subLocationInfo = allOfflineData[0].locationOfflineData![i].subLocationInfo!;
@@ -1328,4 +1326,5 @@ return Dialog(
       ),
     ],
   ),
-);}
+);
+}

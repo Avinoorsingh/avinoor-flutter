@@ -19,7 +19,10 @@ import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
 import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/offline/progress/activity_progress_offline.dart';
+import 'package:colab/views/offline/progress/add_progress_offline.dart';
+import 'package:colab/views/offline/progress/ongoing_screens/edit_progress_entry_offline.dart';
 import 'package:colab/views/offline/progress/ongoing_screens/ongoing_ongoing_offline.dart';
+import 'package:colab/views/offline/progress/ongoing_screens/upcoming_progress_entry_offline.dart';
 import 'package:colab/views/offline/snags/add_snag_offline.dart';
 import 'package:colab/views/offline/snags/snag_detail_offline.dart';
 import 'package:colab/views/offline/snags/snagsoffline.dart';
@@ -200,10 +203,17 @@ class CustomRouter {
           snagModel: state.extra,
         ),
       ),
-        GoRoute(
+      GoRoute(
         name:'ADDPROGRESSENTRY',
         path: addProgressEntry,
         builder: (context, state) => AddProgressEntry(
+          key: state.pageKey,
+        ),
+      ),
+      GoRoute(
+        name:'ADDPROGRESSOFFLINE',
+        path: addProgressEntryOffline,
+        builder: (context, state) => AddProgressEntryOffline(
           key: state.pageKey,
         ),
       ),
@@ -217,9 +227,27 @@ class CustomRouter {
         ),
       ),
       GoRoute(
+        name:'UPCOMINGPROGRESSENTRYOFFLINE',
+        path: upcomingProgressEntryOffline,
+        builder: (context, state) => UpComingEntryOffline(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          editModel: state.extra,
+        ),
+      ),
+      GoRoute(
         name:'EDITPROGRESSENTRY',
         path: editProgressEntry,
         builder: (context, state) => EditProgressEntry(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          editModel: state.extra,
+        ),
+      ),
+      GoRoute(
+        name:'EDITPROGRESSENTRYOFFLINE',
+        path: editProgressEntryOffline,
+        builder: (context, state) => EditProgressEntryOffline(
           key: state.pageKey,
           from: state.queryParams["from"],
           editModel: state.extra,

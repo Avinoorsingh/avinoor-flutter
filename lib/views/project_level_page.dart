@@ -88,6 +88,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
 
   saveData () async {
      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await getClientProfileController.getUserProfile(context: context);
+    await getClientProjectsController.getUpcomingProjects(context: context);
+    await getClientProjectsController.getSelectedProjects(context:context);
      var tokenValue=sharedPreferences.getString('token');
      var clientId=sharedPreferences.getString('client_id');
      var projectID=sharedPreferences.getString('projectIdd');
@@ -202,6 +205,59 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
                 print(e);
               }
             }
+          try {
+     var getProgressTradeUrl=Uri.parse(Config.getProgressTradeApi);
+        var res=await http.get(
+            getProgressTradeUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+            databaseProvider.insertTrade(res.body);
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in saving trade list");
+                print(e);
+              }
+            }
+       try {
+     var getProgressContractorListUrl=Uri.parse(Config.getProgressContractorApi);
+        var res=await http.post(
+            getProgressContractorListUrl,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            body: {
+              "client_id":clientId,
+              "project_id":projectID,
+            }
+            );
+           databaseProvider.insertContractorForDebit(res.body);
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in saving progress contractor list");
+                print(e);
+              }
+            }
+       try {
+     DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+     var getLabourAttendanceURL=Uri.parse('${Config.getLabourAttendanceApi}${dateFormat.format(DateTime.now())}/$clientId/$projectID');
+        var res=await http.get(
+            getLabourAttendanceURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+         databaseProvider.insertLabourAttendanceToday(res.body);
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in saving labour attendance data");
+                print(e);
+              }
+            }
      }
     }
 
@@ -215,7 +271,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   @override
   void initState(){
     super.initState();
-    getConnectivity();
     databaseProvider = DatabaseProvider();
     databaseProvider.init();
     clientDataGet=widget.clientData;
@@ -229,6 +284,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     getClosedSnagDataController.getClosedSnagData(context: context);
     getClosedDeSnagDataController.getClosedSnagData(context: context);
+    getConnectivity();
     saveProjectId();
   }
 
@@ -276,10 +332,17 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   @override
   Widget build(BuildContext context) {
     if(mounted){
+    try {
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
     getClientProjectsController.getSelectedProjects(context:context);
     getConnectivity();
+      } catch (e) {
+        getConnectivity();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
     return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){

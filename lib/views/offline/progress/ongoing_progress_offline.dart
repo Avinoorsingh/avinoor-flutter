@@ -95,11 +95,10 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
     Scaffold(
     floatingActionButton:FloatingActionButton(
           onPressed: () {
-            // Add your onPressed code here!
-            context.pushNamed('ADDPROGRESSENTRY');
+            context.pushNamed('ADDPROGRESSOFFLINE');
           },
           backgroundColor: AppColors.primary,
-          child: const Icon(Icons.add,color: AppColors.black,),
+          child: const Icon(Icons.add, color: AppColors.black,),
         ),
     body: 
     Container(margin: const EdgeInsets.only(top: 90),
