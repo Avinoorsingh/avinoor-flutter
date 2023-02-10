@@ -102,6 +102,12 @@ class DatabaseProvider {
             upcomingData TEXT
             )
         ''');
+        db.execute(
+          ''' CREATE TABLE outer_progress (
+            id INTEGER PRIMARY KEY, 
+            outerProgressData TEXT
+            )
+        ''');
       },
       version: 1,
     );
@@ -344,6 +350,11 @@ class DatabaseProvider {
   Future<void> insertSnagFormData(var formData) async {
     String serializedFormData = json.encode(formData);
     await _database.insert('form_data', {'snagData':serializedFormData});
+  }
+
+   Future<void> insertOuterProgressFormData(var formData) async {
+    String serializedFormData = json.encode(formData);
+    await _database.insert('outer_progress', {'outerProgressData':serializedFormData});
   }
 
   Future<void> insertProgressFormData(var formData) async {

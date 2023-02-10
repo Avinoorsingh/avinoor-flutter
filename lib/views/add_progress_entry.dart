@@ -11,6 +11,7 @@ import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/network/client_project.dart';
 import 'package:colab/views/sub_location_progress.dart';
 import 'package:colab/views/sub_sub_location_progress.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -227,8 +228,6 @@ class _AddProgressState extends State<AddProgressEntry> {
       if(signInController.getProgressLocationList?.data!=null){
       if(signInController.getProgressLocationList!.data!.isNotEmpty && locationList.isEmpty){
         List<ProgressLocationListData>? locationList1=signInController.getProgressLocationList?.data;
-        locationList.add("Select Location");
-        locationID.add(0);
         for(var data in locationList1!){
           locationList.add(data.locationName!);
           locationID.add(data.locationId!);
@@ -400,34 +399,39 @@ class _AddProgressState extends State<AddProgressEntry> {
            Container(
            margin: const EdgeInsets.only(left:20,right:20,),
            padding: const EdgeInsets.only(bottom: 20,),
-            child: 
-           DropdownButtonFormField(
-              value: locationList[0],
-             icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14
-              ), 
-              dropdownColor: AppColors.white,
-              decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
+            child:
+              DropdownSearch<String>(
+              autoValidateMode: AutovalidateMode.onUserInteraction,
+              items: locationList,
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                          ),
+                          hintText: "Select Location",
+                          hintStyle: TextStyle(fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          fontSize: 14)
+                        ),
+                      ),
+              popupProps: PopupPropsMultiSelection.menu(
+                        showSelectedItems: true,
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ),
                 ),
-              ),
-              isExpanded: true,
-              items: locationList.map((String items){
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-                }).toList(),
-                onChanged: (String? newValue) async {
+              onChanged: (String? newValue) async {
                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
                   var projectID=sharedPreferences.getString('projectIdd');
@@ -459,9 +463,10 @@ class _AddProgressState extends State<AddProgressEntry> {
                     print(e);
                   }
                 }
-              },
-            ),
-          ),
+                },
+              //selectedItem: "",
+              ),
+           ),
           Container(
            margin: const EdgeInsets.only(left:20,right:20),
             child: 

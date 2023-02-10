@@ -542,15 +542,16 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       }
                     }
                   }
-                  signInController.getSubLocationList=item;
-                  setState(() {});
-                    } catch (e) {
-                        if (kDebugMode) {
-                          print(e);
-                        }
-                      }
-              },
-            ),
+                       signInController.getSubLocationList=item;
+                       setState(() {});
+                        ///////////////////////////////////////////////////
+                 }catch(e){
+                  if (kDebugMode) {
+                    print(e);
+                  }
+                 }
+                }
+              ),
           ),
            Container(
            margin: const EdgeInsets.only(left:20,right:20),
@@ -573,7 +574,6 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 try {
                     signInController.getActivityHeadList=activityHead;
                     setState(() {});
-                    print(activityHead);
                   } catch (e) {
                       if (kDebugMode) {
                           print(e);
@@ -669,6 +669,55 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           }
                         }
                     }
+
+                     ///////////////////////////////////////////////////
+                    List subLocationInfo2 = [];
+                    List subSubLocationInfo2 = [];
+                    List viewPointNumberList2 = [];
+                    subLocationInfo2.clear();
+                    subSubLocationInfo2.clear();
+                    viewPointNumberList2.clear();
+                    viewpointImagesUrl.clear();
+                    for (var i = 0; i < allOfflineData.length; i++) {
+                      if (allOfflineData[0].locationOfflineData![i].locationId == int.parse(locationId.text)) {
+                        subLocationInfo2 = allOfflineData[0].locationOfflineData![i].subLocationInfo!;
+                        break;
+                      }
+                    }
+                    for (var i = 0; i < subLocationInfo2.length; i++) {
+                      if (subLocationInfo2[i].locationId == int.parse(locationId.text) &&
+                          subLocationInfo2[i].subLocId == int.parse(subLocationId.text)) {
+                        subSubLocationInfo2 = subLocationInfo2[i].subSubLocationInfo;
+                        break;
+                      }
+                    }
+                   for (var i = 0; i < subLocationInfo2.length; i++) {
+                      if (subLocationInfo2[i].locationId == int.parse(locationId.text) &&
+                          subLocationInfo2[i].subLocId == int.parse(subLocationId.text)) {
+                        subSubLocationInfo2 = subLocationInfo2[i].subSubLocationInfo;
+                        break;
+                      }
+                    }
+                    for (var i = 0; i < subSubLocationInfo2.length; i++) {
+                      if (subSubLocationInfo2[i].locationId == int.parse(locationId.text) &&
+                          subSubLocationInfo2[i].subLocId == int.parse(subLocationId.text) &&
+                          subSubLocationInfo2[i].subLocationId == int.parse(subSubLocationId.text)) {
+                        viewPointNumberList2 = subSubLocationInfo2[i].viewPointNumberlist;
+                        viewpointImagesUrl.add(subSubLocationInfo2[i].masterImage.masterFile.toString());
+                        break;
+                      }
+                    }
+                    for(int i=0; i < subSubLocationInfo2.length; i++) {
+                        for(int j=0; j < subSubLocationInfo2[i].subSubLocationActivity.length; j++) {
+                          if(subSubLocationInfo2[i].subSubLocationActivity[j].linkActivityId == int.parse(linking_activity_id.text)) {
+                            pwrContractorName.text = subSubLocationInfo2[i].subSubLocationActivity[j].contractorName;
+                            pwrContractorId.text=subSubLocationInfo2[i].subSubLocationActivity[j].contId.toString();
+                            uOfName.text=subSubLocationInfo2[i].subSubLocationActivity[j].uomName.toString();
+                            totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].totalQuantity.toString();
+                            break;
+                          }
+                        }
+                      }
                   }catch(e){
                     if (kDebugMode) {
                       print(e);
@@ -721,7 +770,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
               Text("Quantity: ${int.parse(_sliderValue.toInt().toString())} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
-            ],),
+            ],
+            ),
             Slider(
               divisions: 100,
               activeColor: AppColors.primary,
@@ -873,7 +923,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       _dropdownValues2.add("Please Select");
                       for(var data in list1!){
                         for(var data2 in data.labourDetails!){
-                          if (groupedList.containsKey(data2.contractorName)) {
+                          if (groupedList.containsKey(data2.contractorName)){
                                 groupedList[data2.contractorName]!.add(data2.name!);
                                 } 
                           else {
@@ -901,7 +951,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                    if(newValue!="Select Contractor Name"){
                    for (var i = 0; i < subItems.length; i++) {
                         for (var j = 0; j < subItems[i].length; j++) {
-                          if (subItems[i][j] != 'Please Select'){
+                          if (subItems[i][j] != 'Please Select') {
                             _selectedDropdownValues2[i].add('Please Select');
                             _controllers2[i].add(TextEditingController());
                           }
@@ -1387,6 +1437,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 var token=sharedPreferences.getString('token');
                 var projectID=sharedPreferences.getString('projectIdd');
                 var clientID=sharedPreferences.getString('client_id');
+                Map<String, dynamic> outerProgress = {};
                 FormData formData=FormData(); 
                 var dio = Dio();
                 if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
@@ -1430,11 +1481,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   }
                 }
                 try {
-                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                outerProgress["progress_image"]= _selectedImage!.path;
                 } catch (e) {
                   formData.fields.add(const MapEntry('progress_image', ''));
                 }
-                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                outerProgress['progress_data']= (
                     {
                       "client_id": int.parse(clientID!),
                       "project_id": int.parse(projectID!),
@@ -1459,37 +1510,16 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       "contractorLabourDetails": [],
                       "progressDetails": newList,
                     }
-                   )
-                   )
                    );
                   try {
-                  var res= await dio.post(
-                  Config.saveLabourSupplyProgressApi,
-                  data: formData,
-                  options: Options(
-                    followRedirects: false,
-                    validateStatus: (status) {
-                      return status! < 500;
-                    },
-                    headers: {
-                      "authorization": "Bearer ${token!}",
-                      "Content-type": "application/json",
-                    },
-                  ),
-                    );
-                    if(res.statusCode==200){
+                    await databaseProvider.insertOuterProgressFormData(outerProgress);
                     EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                    else{
-                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
                 }catch(e){
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 }
                 if(priorityController.text=="PRW"){
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
                 var projectID=sharedPreferences.getString('projectIdd');
                 var clientID=sharedPreferences.getString('client_id');
                   List pWRLabourDetailsList = [];
@@ -1500,11 +1530,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       });
                     }
                 try {
-                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                outerProgress["progress_image"]= _selectedImage!.path;
                 } catch (e) {
                   formData.fields.add(const MapEntry('progress_image', ''));
                 }
-                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                outerProgress['progress_data'] =(
                     {
                       "client_id": int.parse(clientID!),
                       "project_id": int.parse(projectID!),
@@ -1524,30 +1554,10 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       "contractorLabourDetails": [],
                       "progressDetails": [],
                     }
-                   )
-                   )
                    );
                   try {
-                  var res= await dio.post(
-                  Config.saveLabourSupplyProgressApi,
-                  data: formData,
-                  options: Options(
-                    followRedirects: false,
-                    validateStatus: (status) {
-                      return status! < 500;
-                    },
-                    headers: {
-                      "authorization": "Bearer ${token!}",
-                      "Content-type": "application/json",
-                    },
-                  ),
-                    );
-                    if(res.statusCode==200){
+                    await databaseProvider.insertOuterProgressFormData(outerProgress);
                     EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
-                    else{
-                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                    }
                 }catch(e){
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                 }
