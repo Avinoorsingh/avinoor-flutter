@@ -286,8 +286,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             GestureDetector(
                               onTap: ()async{
                                 await getNewSnagDataController.getSnagData(context: context);
-                                await getOpenedSnagDataController.getOpenedSnagData(context: context);
-                                await getClosedSnagDataController.getClosedSnagData(context: context);
+                                // await getOpenedSnagDataController.getOpenedSnagData(context: context);
+                                // await getClosedSnagDataController.getClosedSnagData(context: context);
                                // ignore: use_build_context_synchronously
                                 context.pushNamed('SNAGS');
                               },
@@ -306,8 +306,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           child: 
                         MaterialButton(onPressed: () async {
                           await getNewSnagDataController.getSnagData(context: context);
-                          await getOpenedSnagDataController.getOpenedSnagData(context: context);
-                          await getClosedSnagDataController.getClosedSnagData(context: context);
+                          // await getOpenedSnagDataController.getOpenedSnagData(context: context);
+                          // await getClosedSnagDataController.getClosedSnagData(context: context);
                           // ignore: use_build_context_synchronously
                           context.pushNamed('SNAGS');
                         },
@@ -346,8 +346,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     GestureDetector(
                         onTap: () async{
                         await getNewDeSnagDataController.getSnagData(context: context);
-                        await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-                        await getClosedDeSnagDataController.getClosedSnagData(context: context);
+                        // await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                        // await getClosedDeSnagDataController.getClosedSnagData(context: context);
                         // ignore: use_build_context_synchronously
                         context.pushNamed('DESNAGS');
                         },
@@ -367,8 +367,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           MaterialButton(onPressed: ()
                          async {
                         await getNewDeSnagDataController.getSnagData(context: context);
-                        await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-                        await getClosedDeSnagDataController.getClosedSnagData(context: context);
+                        // await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+                        // await getClosedDeSnagDataController.getClosedSnagData(context: context);
                             // ignore: use_build_context_synchronously
                             context.pushNamed('DESNAGS');
                         },

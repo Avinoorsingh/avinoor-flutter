@@ -85,6 +85,7 @@ class GetClientProject extends GetxController {
           var id=sharedPreferences.getString('id'); 
           var date=sharedPreferences.getString('date');
           var index=sharedPreferences.getString('index');
+          if(selectedDate!=null || date!=null){
           var getUserDataUrl=Uri.parse(Config.getSelectedProjectApi+(selectedDate??date));
           var res=await http.get(
             getUserDataUrl,
@@ -119,12 +120,13 @@ class GetClientProject extends GetxController {
               try {
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               String id=resSuccess['data'][0]['project_id'].toString();
+              if(id.isNotEmpty){
               sharedPreferences.setString("projectIdd",id);
-              if (kDebugMode) {
-                print("Id is setted");
               }
+              if(resSuccess['data'][0]!=null){
                var result= ClientProfileData.fromJson(resSuccess['data'][0]);
                 signInController.getProjectData=result;
+              }
                 update();
               } catch (e) {
                 if (kDebugMode) {
@@ -134,10 +136,10 @@ class GetClientProject extends GetxController {
               }
             }
            }
+          }
     } catch (e) {
       EasyLoading.dismiss();
       isLoading = false;
-      update();
       if (kDebugMode) {
         print('getProject data nhi chali !!');
         print(e);
