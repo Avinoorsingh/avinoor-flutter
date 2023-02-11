@@ -1247,7 +1247,6 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                   try {
                     databaseProvider.insertProgressFormData(mappedData);
                     EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
-                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                 }catch(e){
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
