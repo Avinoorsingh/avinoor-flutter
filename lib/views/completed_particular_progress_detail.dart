@@ -1,10 +1,16 @@
+import 'dart:convert';
+
+import 'package:colab/config.dart';
+import 'package:colab/models/daily_progress.dart';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class CompletedParticularProgressDetail extends StatefulWidget {
@@ -28,22 +34,64 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
   final descriptionController=TextEditingController();
   final assignedToController=TextEditingController();
   final statusController = TextEditingController();
-  var _sliderValue=100.0;
+  final progressDataController = TextEditingController();
+  final labourORprw = TextEditingController();
+  final quantityController = TextEditingController();
+  final achievedController = TextEditingController();
+  final cumulativeController = TextEditingController();
+  final remarkController = TextEditingController();
+  final uOfMNameController=TextEditingController();
+  final totalQuantity=TextEditingController();
+  DailyProgress? progressData;
+  var _sliderValue=0.0;
 
-  @override
-  void initState() {
-    super.initState(); 
-    // statusController.text=widget.concernModel?.status??"";
-    locationController.text=widget.concernModel?.locationName??"";
-    subLocationController.text=widget.concernModel?.subLocationName??"";
-    subSubLocationController.text=widget.concernModel?.subSubLocationName??"";
-    activityController.text=widget.concernModel?.activity??"";
-    activityHeadController.text=widget.concernModel?.activityHead??"";
-    // otherLocationController.text=widget.concernModel?.otherLocation??"";
-    // descriptionController.text=widget.concernModel?.description??"";
-    // assignedToController.text=widget.concernModel?.assigneeName??"";
+   Future<void> _getData() async {
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var token=sharedPreferences.getString('token');
+    // Set up the POST request body
+    Map<String, String> requestHeaders={
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    };
+    // Perform the get request
+    var response = await http.get(
+      Uri.parse('${Config.getDailyProgressData}${widget.concernModel.progressId}'),
+      headers: requestHeaders,
+    );
+    // Update the data with the response data
+    setState(() {
+     progressData = DailyProgress.fromJson(jsonDecode(response.body));
+     if(progressData!.data!=null){
+    locationController.text=progressData!.data![0].locationName??"";
+    subLocationController.text=progressData!.data![0].subLocationName??"";
+    subSubLocationController.text=progressData!.data![0].subSubLocationName??"";
+    activityController.text=progressData!.data![0].activity??"";
+    activityHeadController.text=progressData!.data![0].activityHead??"";
+    assignedToController.text=progressData!.data![0].debetContactor??"";
+    quantityController.text=progressData!.data![0].totalQuantity!=null?progressData!.data![0].totalQuantity.toString():"";
+    achievedController.text=progressData!.data![0].achivedQuantity!=null?progressData!.data![0].achivedQuantity.toString():"";
+    cumulativeController.text=progressData!.data![0].cumulativeQuantity!=null?progressData!.data![0].cumulativeQuantity.toString():"";
+    remarkController.text=progressData!.data![0].remarks!=null?progressData!.data![0].remarks.toString():"";
+    uOfMNameController.text=progressData!.data![0].uomName!=null?progressData!.data![0].uomName.toString():"";
+    _sliderValue=progressData!.data![0].progressPercentage!=null?double.parse(progressData!.data![0].progressPercentage.toString()):0.0;
+    totalQuantity.text=progressData!.data![0].totalQuantity!=null?progressData!.data![0].totalQuantity.toString():"";
+    EasyLoading.dismiss();
+     }
+     else if(progressData!.data==null){
+      EasyLoading.dismiss();
+     }
+    });
   }
-   
+
+ 
+ @override
+ void initState(){
+  super.initState();
+  EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    // Get the initial data
+    _getData();
+ }   
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +127,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                   borderRadius: BorderRadius.circular(10),
                   color: AppColors.primary,
                 ),
-                child:Center(child:Text('Labour Supply',style: textStyleBodyText1,),),
+                child:Center(child:Text('Labour Supply', style: textStyleBodyText1,),),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 20,right: 20),
@@ -98,7 +146,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(locationController.text.isEmpty?"D Series (D01- D06)":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
+            Center(child: Text(locationController.text.isEmpty?"":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
               const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -106,7 +154,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
+            Center(child: Text(subLocationController.text.isEmpty?"":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -114,10 +162,11 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-             Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
+             Center(child: Text(activityHeadController.text.isEmpty?"":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
+          const SizedBox(height: 10,),
           CustomContainer2(
             child:
           Column(children: [
@@ -143,19 +192,19 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 CUM",style: textStyleBodyText1),
+              Text("0 ${uOfMNameController.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
-              Text("267 CUM",style: textStyleBodyText1)
+              Text("${totalQuantity.text} ${uOfMNameController.text}",style: textStyleBodyText1)
             ],),
             const SizedBox(height: 30,),
             Container(
               margin:const EdgeInsets.only(left: 20,right:20),
               child: 
             Row(children: [
-               Text("TOTAL QUANTITY: 267",style: textStyleBodyText4),
+               Text("TOTAL QUANTITY: ${totalQuantity.text}",style: textStyleBodyText4),
             ],)
             ),
             const SizedBox(height: 30,),
@@ -175,7 +224,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text('80.1',style: textStyleBodyText4,),),
+                  child:Center(child: Text(achievedController.text,style: textStyleBodyText4,),),
                 ),
                 ),
               ),
@@ -192,7 +241,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text('267.0',style: textStyleBodyText4,),),
+                  child:Center(child: Text(cumulativeController.text,style: textStyleBodyText4,),),
                 ),
                 ),
               ),
@@ -215,7 +264,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                 Text("Remark",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextField3(enabled: false,controller: otherLocationController,hintText: "Enter here",)
+               CustomTextField3(enabled: false,controller: remarkController,hintText: "Enter here",)
           ])
             ),
             CustomContainer2(child:

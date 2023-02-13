@@ -41,8 +41,8 @@ class CustomTextField extends StatelessWidget {
             width: 1, color:Colors.grey[300]!), 
       ),
       ),
-       maxLines: null,
-       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+      maxLines: 4,
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,height: 0.4),
     );
   }
 }
@@ -136,8 +136,7 @@ class CustomTextField3 extends StatelessWidget {
       ),
       ),
        maxLines: null,
-       style: textStyleHeadline2.copyWith(
-        fontWeight: FontWeight.w400,fontSize: 16,height: 0.5),
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
     );
   }
 }

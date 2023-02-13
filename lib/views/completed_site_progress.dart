@@ -172,7 +172,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                              if(t==true){
                              setState(() {selectedIndex1 = index;});
                              subSubLocationName.clear();
-                              subSubLocationID.clear();
+                             subSubLocationID.clear();
                              subLocationIDController.text=subLocationID[index].toString();
                              subLocationNameController.text=subLocationName[index].toString();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
