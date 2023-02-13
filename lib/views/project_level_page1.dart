@@ -130,8 +130,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
   final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
   final getClosedQualityDataController=Get.find<GetClosedCheckList>();
-  final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
-  final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
+  // final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+  // final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
   return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
       final signInController=Get.find<SignInController>();
