@@ -1,21 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'package:colab/config.dart';
 import 'package:colab/models/labour_attendance.dart';
 import 'package:colab/models/progress_contractor.dart';
-import 'package:colab/models/progress_list_all_data.dart';
-import 'package:colab/models/progress_location_data.dart';
-import 'package:colab/models/progress_quantity_data.dart';
 import 'package:colab/models/progress_trade_data.dart';
-import 'package:colab/network/client_project.dart';
-import 'package:colab/views/sub_location_progress.dart';
-import 'package:colab/views/sub_sub_location_progress.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:http/http.dart' as http;
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
@@ -25,10 +14,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_painter/image_painter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/colors.dart';
 import 'package:dio/dio.dart';
@@ -36,9 +23,6 @@ import '../../../controller/signInController.dart';
 import '../../../models/all_offline_data.dart';
 import '../../../models/category_list.dart';
 import '../../../models/clientEmployee.dart';
-import '../../../models/contractor_data_offline.dart';
-import '../../../models/progress_activityHead_data.dart';
-import '../../../models/progress_sublocation_data.dart';
 import '../../../services/local_database/local_database_service.dart';
 import '../../activity_head_offline.dart';
 import '../../sub_location_offline.dart';
@@ -1434,12 +1418,10 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 else{
                 if(progressCreatedFlag!=true){
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var token=sharedPreferences.getString('token');
                 var projectID=sharedPreferences.getString('projectIdd');
                 var clientID=sharedPreferences.getString('client_id');
                 Map<String, dynamic> outerProgress = {};
                 FormData formData=FormData(); 
-                var dio = Dio();
                 if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
                 List progressDetails = [];
                 for (var subList in contractorLabourDetails) {
