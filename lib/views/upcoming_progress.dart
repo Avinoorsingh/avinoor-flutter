@@ -41,7 +41,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   
   // Function to perform the POST request and update the data list
   Future<void> _getData() async {
-     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var token=sharedPreferences.getString('token');
     // Set up the POST request body

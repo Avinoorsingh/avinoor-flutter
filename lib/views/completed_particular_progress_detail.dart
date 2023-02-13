@@ -33,15 +33,15 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
   @override
   void initState() {
     super.initState(); 
-    statusController.text=widget.concernModel?.status??"";
+    // statusController.text=widget.concernModel?.status??"";
     locationController.text=widget.concernModel?.locationName??"";
     subLocationController.text=widget.concernModel?.subLocationName??"";
     subSubLocationController.text=widget.concernModel?.subSubLocationName??"";
     activityController.text=widget.concernModel?.activity??"";
     activityHeadController.text=widget.concernModel?.activityHead??"";
-    otherLocationController.text=widget.concernModel?.otherLocation??"";
-    descriptionController.text=widget.concernModel?.description??"";
-    assignedToController.text=widget.concernModel?.assigneeName??"";
+    // otherLocationController.text=widget.concernModel?.otherLocation??"";
+    // descriptionController.text=widget.concernModel?.description??"";
+    // assignedToController.text=widget.concernModel?.assigneeName??"";
   }
    
 
@@ -52,7 +52,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Completed Site Progress",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("Completed Site Progress", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(

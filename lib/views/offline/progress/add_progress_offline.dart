@@ -346,7 +346,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
           _dropdownValues.add(data.trade!);
           _dropdownValuesID.add(data.id!);
         }
-      }
+       }
       }
        try {
         if(allOfflineData.isNotEmpty && activityHead.isEmpty){
@@ -355,11 +355,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
           for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
                  activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].activityList!);
-            }
+             }
+           }
           }
-          }
+         }
         }
-       }
        } catch (e) {
         if (kDebugMode) {
           print(e);
@@ -370,9 +370,10 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
       appBar: AppBar(
       foregroundColor: Colors.black,
       backgroundColor:AppColors.primary,
-      title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+      title: Text("CREATE NEW PROGRESS ENTRY", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
-      body:progressTrade!=null?SingleChildScrollView(
+      body:progressTrade!=null? 
+      SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -380,8 +381,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             const SizedBox(height: 10,),
             Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(left:20.0,right: 20.0),
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 3,bottom: 3),
+            margin: const EdgeInsets.only(left:20.0, right: 20.0),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
             decoration: BoxDecoration(
               border: Border.all(width: 0.2, color: Colors.blueGrey),
               borderRadius: BorderRadius.circular(5),
@@ -400,13 +401,13 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    builder: (BuildContext context, Widget? child) {
+                    builder: (BuildContext context, Widget? child){
                     return Theme(
                       data: ThemeData.light().copyWith(
                           primaryColor: AppColors.primary,
                           buttonTheme: const ButtonThemeData(
-                            textTheme: ButtonTextTheme.primary
-                          ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
+                          textTheme: ButtonTextTheme.primary), 
+                        colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
                       ),
                      child: child!,
                     );
@@ -424,7 +425,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 20),
             ),
                ),
-                const SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Column(
               children: [
               Center(child: Row(
@@ -467,43 +468,44 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     ),
                   ),
                 )
-            );
-          }),
+               );
+              }
+            ),
           ),
-          ]),
-          if(priorityController.text!="Misc.")...{
-             Container(
+         ]),
+        if(priorityController.text!="Misc.")...{
+          Container(
            margin: const EdgeInsets.only(left:20,right:20,),
            padding: const EdgeInsets.only(bottom: 20,),
-            child: 
+           child: 
            DropdownButtonFormField(
-              value: locationList[0],
+             value: locationList[0],
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+              child:Icon(Icons.arrow_drop_down_outlined,size: 30),
              ), 
             iconEnabledColor: Colors.grey,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14
             ), 
-                dropdownColor: AppColors.white,
-                decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-                ),
-              ),
-              isExpanded: true,
-              items: locationList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
+            dropdownColor: AppColors.white,
+            decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+            ),
+            isExpanded: true,
+            items: locationList.map((String items){
+              return 
+              DropdownMenuItem(
+                value: items,
+                child: Text(items),
                 );
               }).toList(),
-              onChanged: (String? newValue) async{
+            onChanged: (String? newValue) async {
                 setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
@@ -514,35 +516,35 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   subSubLocationController.text="";
                   subSubLocationId.text="";
                   subLocationId.text="";
-                   });
-                  try {
+                });
+             try {
                   // ignore: prefer_typing_uninitialized_variables
-                  var item;
-                  for(int i=0;i<subLocationList.length;i++){
-                    for(int j=0;j<subLocationList[i].length;j++){
-                      if(subLocationList[i][j].locationId==locationListID[locationList.indexOf(newValue!)]){
-                         item=subLocationList[i];
-                         break;
-                      }
+                var item;
+                for(int i=0;i<subLocationList.length;i++){
+                  for(int j=0;j<subLocationList[i].length;j++){
+                    if(subLocationList[i][j].locationId==locationListID[locationList.indexOf(newValue!)]){
+                      item=subLocationList[i];
+                      break;
                     }
                   }
-                       signInController.getSubLocationList=item;
-                       setState(() {});
-                        ///////////////////////////////////////////////////
-                 }catch(e){
+                }
+                signInController.getSubLocationList=item;
+                setState(() {});
+                ///////////////////////////////////////////////////
+                } catch(e){
                   if (kDebugMode) {
                     print(e);
                   }
                  }
                 }
               ),
-          ),
+            ),
            Container(
            margin: const EdgeInsets.only(left:20,right:20),
             child: 
             InkWell(
-                onTap: () async {
-                  if(locationController.text.isNotEmpty){
+            onTap: () async {
+            if(locationController.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute());
              setState(() {
                   if(value.isNotEmpty){
@@ -555,19 +557,19 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   subLocationController.text=value.substring(0,value.indexOf('?'));
                   }
                 });
-                try {
-                    signInController.getActivityHeadList=activityHead;
-                    setState(() {});
-                  } catch (e) {
-                      if (kDebugMode) {
-                          print(e);
-                        }
-                      }
+              try {
+                signInController.getActivityHeadList=activityHead;
+                setState(() {});
+                } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                    }
                   }
-                  else if(locationController.text.isEmpty){
+                }
+                else if(locationController.text.isEmpty){
                     EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
-                  }
-            },
+                }
+              },
               child: 
               DropdownButtonFormField(
                 onTap: () {
@@ -586,10 +588,10 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
+                focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1),
                ),
-                ),
+              ),
               isExpanded: true,
               items: null,
               // ignore: unnecessary_null_comparison
@@ -601,7 +603,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 });
               },
             ),
-            )
+           )
           ),
           Container(
            margin: const EdgeInsets.only(left:20,right:20),
@@ -653,8 +655,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           }
                         }
                     }
-
-                     ///////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////
                     List subLocationInfo2 = [];
                     List subSubLocationInfo2 = [];
                     List viewPointNumberList2 = [];
@@ -675,7 +676,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         break;
                       }
                     }
-                   for (var i = 0; i < subLocationInfo2.length; i++) {
+                    for (var i = 0; i < subLocationInfo2.length; i++) {
                       if (subLocationInfo2[i].locationId == int.parse(locationId.text) &&
                           subLocationInfo2[i].subLocId == int.parse(subLocationId.text)) {
                         subSubLocationInfo2 = subLocationInfo2[i].subSubLocationInfo;
@@ -702,20 +703,20 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           }
                         }
                       }
-                  }catch(e){
+                   } catch(e){
                     if (kDebugMode) {
                       print(e);
                     }
                   }
-             }
-             else if(locationController.text.isEmpty){
-              EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
-            }
-            else if(subLocationId.text.isEmpty){
-              EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
-            }
-                },
-              child:  
+                }
+                else if(locationController.text.isEmpty){
+                  EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+              },
+           child:  
            DropdownButtonFormField(
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
@@ -734,11 +735,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             borderSide: BorderSide(color: Colors.grey, width: 1),
               ),
             ),
-              isExpanded: true,
-              items: null,
-              // ignore: unnecessary_null_comparison
-              hint: Text(subSubV==null||subSubV.isEmpty?dropdownvalue3:subSubV, style:const TextStyle(color: Colors.black),),
-              onChanged: (String? newValue){
+            isExpanded: true,
+            items: null,
+            // ignore: unnecessary_null_comparison
+            hint: Text(subSubV==null||subSubV.isEmpty?dropdownvalue3:subSubV, style:const TextStyle(color: Colors.black),),
+            onChanged: (String? newValue){
                 setState(() {
                   subSubLocationController.text=newValue!;
                   dropdownvalue3 = newValue;
@@ -747,7 +748,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             ),
              ),
           ),
-           CustomContainer2(
+          CustomContainer2(
             child:
           Column(children: [
             Row(
@@ -777,7 +778,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uOfName.text.isEmpty?"UNIT":uOfName.text}",style: textStyleBodyText1),
+              Text("0 ${uOfName.text.isEmpty?"UNIT":uOfName.text}", style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
@@ -789,7 +790,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               margin:const EdgeInsets.only(left: 20,right:20),
               child: 
             Row(children: [
-               Text("TOTAL QUANTITY: ${totalQuantity.text}",style: textStyleBodyText4),
+               Text("TOTAL QUANTITY: ${totalQuantity.text}", style: textStyleBodyText4),
             ],)
             ),
             const SizedBox(height: 30,),
@@ -814,8 +815,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Achived",style: textStyleBodyText4,),),
-              ]),
+              Center(child: Text("Achived", style: textStyleBodyText4,
+              ),),]),
               Column(children: [
                 Card(
                 elevation: 4,
@@ -831,7 +832,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Cumulative",style: textStyleBodyText4,),),
+              Center(child: Text("Cumulative", style: textStyleBodyText4,),),
               ])
             ],
           )
@@ -1086,19 +1087,16 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
                       contractorLabourDetails[outerIndex].removeAt(index);
                       _deleteMore2(outerIndex,index); 
-                        if (kDebugMode) {}
-                       });}else{
+                       });
+                       }
+                       else{
                           EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
                        }
                        } else {
                           EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
                           if (kDebugMode) {
                             print(_items2[outerIndex]['$outerIndex']);
-                          }
-                          if (kDebugMode) {
                             print("i am here");
-                          }
-                          if (kDebugMode) {
                             print(index);
                           }
                       }
@@ -1123,7 +1121,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
+              Text("Over-Time", style: textStyleBodyText1.copyWith(fontSize: 16),)
             ],),
             const SizedBox(height: 20,),
             SizedBox(height:100,
@@ -1182,8 +1180,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                             enteredValues[index]=value.toString();
                           },
                         )
-                      )
-                    ,]);
+                      ),
+                      ]);
                     },
                     ),
                     ),
@@ -1193,20 +1191,21 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     child: const Text("Add More"),
                     onPressed: () {_addMore();}
                     ),
-                    ])
-          },
-             if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
+                  ]
+                )
+            },
+            if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
               if(labourList.length+2<=contractorList.length)...{
-            IconButton(onPressed: (){
-              setState(() {
-                _items2.add({'${outerIndex+1}':['Item ${_items2.length+1}']});
-                contractorLabourDetails.add([]);
-                labourList.add("1");
-              });
-            }, icon:const Icon(Icons.add_circle)),
+              IconButton(onPressed: (){
+                setState(() {
+                  _items2.add({'${outerIndex+1}':['Item ${_items2.length+1}']});
+                  contractorLabourDetails.add([]);
+                  labourList.add("1");
+                });
+              }, icon:const Icon(Icons.add_circle)),
               },
             IconButton(onPressed: (){
               setState(() {
@@ -1274,17 +1273,14 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 value: key,
                 child: Text(itemsDebit[key]),
               );
-            }).toList(),
+              }).toList(),
               onChanged: (String? newValue) async {
                 setState(() {
                   debitToController.text=newValue!;
                   dropdownvalueDebitTo = newValue;
                 });
-              },
-            ),
-          ),
-          ]))},
-             if(_selectedImage != null)
+              },),),]))},
+            if(_selectedImage != null)
             Container(
               margin:const EdgeInsets.only(top: 20),
               child: 
@@ -1305,7 +1301,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               onPressed:(){
                     showDialog(
                    context: context,
-                   builder: (BuildContext context) {
+                   builder: (BuildContext context){
                      return SimpleDialog(
                       alignment: Alignment.center,
                        children: <Widget>[
@@ -1319,7 +1315,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                                 children: <Widget>[
                                   
                                   const SizedBox(width: 10),
-                                  const Icon(Icons.image,size: 70,color: Colors.grey,),
+                                  const Icon(Icons.image, size: 70,color: Colors.grey,),
                                   Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
                                 ],
                               ),
@@ -1336,8 +1332,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                                 const SizedBox(width: 10),
                                  const Icon(Icons.camera_alt,size: 70,color: Colors.grey,),
                                 Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
-                              ],
-                            ),
+                                ],
+                              ),
                              onPressed: () {
                                // Call the _pickImage function with the camera source
                                _pickImage(ImageSource.camera);
@@ -1369,7 +1365,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             Container(
             height: 45,
             width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20,),
+            margin:const EdgeInsets.only(left: 20, right: 20,),
               child: 
              ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
@@ -1382,15 +1378,15 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
             Container(
             height: 35,
             width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20,top: 20,bottom: 20),
+            margin:const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
               child:
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [ 
              ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
-                backgroundColor: const Color.fromARGB(255, 0, 203, 173),
+              minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
+              backgroundColor: const Color.fromARGB(255, 0, 203, 173),
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:(){},
@@ -1422,15 +1418,15 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 var clientID=sharedPreferences.getString('client_id');
                 Map<String, dynamic> outerProgress = {};
                 FormData formData=FormData(); 
-                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
+                if(priorityController.text=="Labour Supply"|| priorityController.text=="Misc."){
                 List progressDetails = [];
-                for (var subList in contractorLabourDetails) {
+                for (var subList in contractorLabourDetails){
                   for (var map in subList) {
                     // ignore: non_constant_identifier_names
                     var contractor_id = map.values.first[0];
                     var contractorLabourDetails1 = {
                       "contractor_labour_linking_id": map.keys.first.toString(),
-                      "time": map.values.first[1].toString()
+                      "time": map.values.first[1].toString(),
                     };
                     bool contractorExist = false;
                     for (var progress in progressDetails) {

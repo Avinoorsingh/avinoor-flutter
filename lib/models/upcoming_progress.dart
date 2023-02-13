@@ -53,7 +53,8 @@ class UpcomingProgressData {
   String? updatedAt;
 
   UpcomingProgressData(
-      {this.progressId,
+      {
+      this.progressId,
       this.quantity,
       this.quantityId,
       this.locationName,

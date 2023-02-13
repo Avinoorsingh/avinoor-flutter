@@ -36,6 +36,13 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
   int? selectedIndex=-1;
   int? selectedIndex1=-1;
   int? selectedIndex2=-1;
+  List<String?> subSubLocationID=[];
+  TextEditingController subLocationIDController=TextEditingController();
+  TextEditingController clientIDController=TextEditingController();
+  TextEditingController projectIDController=TextEditingController();
+  TextEditingController subLocationNameController=TextEditingController();
+  TextEditingController subSubLocationNameController=TextEditingController();
+  TextEditingController locationNameController=TextEditingController();
  
  @override
  void initState(){
@@ -101,8 +108,11 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
                               var clientID=sharedPreferences.getString('client_id');
+                              clientIDController.text=clientID.toString();
+                              projectIDController.text=projectID.toString();
                                 try {
                                 locationIDController.text=locationID[index].toString();
+                                locationNameController.text=locationName[index].toString();
                                 var getCompletedProgressListUrl=Uri.parse("${Config.getSubLocationProgressApi}$clientID/${projectID??"1"}/${locationID[index].toString()}/COM");
                                   var res=await http.get(
                                       getCompletedProgressListUrl,
@@ -162,6 +172,9 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                              if(t==true){
                              setState(() {selectedIndex1 = index;});
                              subSubLocationName.clear();
+                              subSubLocationID.clear();
+                             subLocationIDController.text=subLocationID[index].toString();
+                             subLocationNameController.text=subLocationName[index].toString();
                              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               var token=sharedPreferences.getString('token');
                               var projectID=sharedPreferences.getString('projectIdd');
@@ -177,15 +190,18 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                     );
                                     var cData4=jsonDecode(res.body);
                                     subSubLocationName.clear();
+                                    subSubLocationID.clear();
                                     if(cData4!=null){
                                       for(int i=0;i<cData4['data'].length;i++){
                                       subSubLocationName.add(cData4['data'][i]['sub_sub_location_name']);
+                                      subSubLocationID.add(cData4['data'][i]['sub_location_id'].toString());
                                     }
                                     }
                                     setState(() {});
                                     }
                                     catch(e){
                                         subSubLocationName.clear();
+                                        subSubLocationID.clear();
                                         subLocationID.clear();
                                         setState(() {});
                                       if (kDebugMode) {
@@ -229,6 +245,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                               title: InkWell(
                                 onTap: (){
                                   context.pushNamed('COMPLETEDPARTICULARPROGRESS',extra: completedData[index],
+                                   queryParams:{"cID":clientIDController.text,"pID":projectIDController.text,"locID":locationIDController.text.toString(),"subLocID":subLocationIDController.text.toString(),"subSubLocID":subSubLocationID[index]!,"loc":locationNameController.text,"subLoc":subLocationNameController.text,"subSubLoc":subSubLocationName[index]!}
                                   );
                                 },
                                 child: Text(subSubLocationName[index]!,style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),

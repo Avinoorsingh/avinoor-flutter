@@ -115,7 +115,7 @@ class CustomRouter {
           subSubLocationName: state.queryParams['subSubLoc'],
         ),
       ),
-       GoRoute(
+      GoRoute(
         name: 'ONGOINGHOMESCREENOFFLINE',
         path: onGoingOfflineScreen,
         builder: (context, state) => OnGoingOnGoingOfflineScreen(
@@ -137,6 +137,14 @@ class CustomRouter {
           key: state.pageKey,
           from: state.queryParams["from"],
           completedModel: state.extra,
+          cID: state.queryParams['cID'],
+          pID: state.queryParams['pID'],
+          locId: state.queryParams['locID'],
+          subLocId: state.queryParams['subLocID'],
+          subSubLocId: state.queryParams['subSubLocID'],
+          locationName: state.queryParams['loc'],
+          subLocationName: state.queryParams['subLoc'],
+          subSubLocationName: state.queryParams['subSubLoc'],
         ),
       ),
       GoRoute(

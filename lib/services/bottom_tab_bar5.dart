@@ -18,10 +18,6 @@ class BottomTabBar5 extends StatefulWidget {
 }
 
 class _BottomTabBarState5 extends State<BottomTabBar5> {
-  //  final getNewCheckList = Get.find<GetNewCheckList>();
-  //  final getOpenedCheckList=Get.find<GetOpenedCheckList>();
-  //  final getClosedCheckList=Get.find<GetClosedCheckList>();
-  //  final signInController=Get.find<SignInController>();
 
 @override
 void initState(){
