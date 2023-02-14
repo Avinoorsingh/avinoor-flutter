@@ -1,9 +1,5 @@
 import 'dart:async';
 import 'package:colab/constants/colors.dart';
-import 'package:colab/network/area_of_concern_network.dart';
-import 'package:colab/network/labourData/labour_data_network.dart';
-import 'package:colab/network/progress_network.dart';
-import 'package:colab/network/quality_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -25,38 +21,38 @@ class _SplashScreenState extends State<SplashScreen> {
   
   final signInController = Get.find<SignInController>();
   final getProfile = GetUserProfileNetwork();
-  final getSnagData=GetNewSnag();
-  final getProjectSnagData=Get.find<GetNewSnag>();
-  final getLabourDataContractorList=GetLabourDataContractor();
-  final getLabourDataContractorListData=Get.find<GetLabourDataContractor>();
-  final getLabourDataOfSelectedContractorList=GetSelectedContractorData();
-  final getLabourDataOfSelectedContractorListData=Get.find<GetSelectedContractorData>();
-  final getLabourDataToday=GetLabourDataToday();
-  final getLabourDataTodayListData=Get.find<GetLabourDataToday>();
-  final getCompletedSiteProgress =GetCompletedSiteProgress();
-  final getCompletedSiteProgressData=Get.find<GetCompletedSiteProgress>();
-  final getInQualitySiteProgress =GetInEqualitySiteProgress();
-  final getInQualitySiteProgressData=Get.find<GetInEqualitySiteProgress>();
-  final getOnGoingSiteProgress =GetOnGoingSiteProgress();
-  final getOnGoingSiteProgressData=Get.find<GetOnGoingSiteProgress>();
-  final getNewQualityData=GetNewCheckList();
-  final getProjectNewQualityData=Get.find<GetNewCheckList>();
-  final getAreaOfConcernData=GetAreaOfConcern();
-  final getProjectAreaOfConcernData=Get.find<GetAreaOfConcern>();
-  final getOpenedQualityData=GetOpenedCheckList();
-  final getProjectOpenedQualityData=Get.find<GetOpenedCheckList>();
-  final getClosedQualityData=GetClosedCheckList();
-  final getProjectClosedQualityData=Get.find<GetClosedCheckList>();
-  final getDeSnagData=GetNewDeSnag();
-  final getProjectDeSnagData=Get.find<GetNewDeSnag>();
-  final getOpenedSnag=GetOpenedSnag();
-  final getOpenedSnagData=Get.find<GetOpenedSnag>();
-  final getOpenedDeSnag=GetOpenedDeSnag();
-  final getOpenedDeSnagData=Get.find<GetOpenedDeSnag>();
-  final getClosedSnag=GetClosedSnag();
-  final getClosedSnagData=Get.find<GetClosedSnag>();
-  final getClosedDeSnag=GetClosedDeSnag();
-  final getClosedDeSnagData=Get.find<GetClosedDeSnag>();
+  // final getSnagData=GetNewSnag();
+  // final getProjectSnagData=Get.find<GetNewSnag>();
+  // final getLabourDataContractorList=GetLabourDataContractor();
+  // final getLabourDataContractorListData=Get.find<GetLabourDataContractor>();
+  // final getLabourDataOfSelectedContractorList=GetSelectedContractorData();
+  // final getLabourDataOfSelectedContractorListData=Get.find<GetSelectedContractorData>();
+  // final getLabourDataToday=GetLabourDataToday();
+  // final getLabourDataTodayListData=Get.find<GetLabourDataToday>();
+  // final getCompletedSiteProgress =GetCompletedSiteProgress();
+  // final getCompletedSiteProgressData=Get.find<GetCompletedSiteProgress>();
+  // final getInQualitySiteProgress =GetInEqualitySiteProgress();
+  // final getInQualitySiteProgressData=Get.find<GetInEqualitySiteProgress>();
+  // final getOnGoingSiteProgress =GetOnGoingSiteProgress();
+  // final getOnGoingSiteProgressData=Get.find<GetOnGoingSiteProgress>();
+  // final getNewQualityData=GetNewCheckList();
+  // final getProjectNewQualityData=Get.find<GetNewCheckList>();
+  // final getAreaOfConcernData=GetAreaOfConcern();
+  // final getProjectAreaOfConcernData=Get.find<GetAreaOfConcern>();
+  // final getOpenedQualityData=GetOpenedCheckList();
+  // final getProjectOpenedQualityData=Get.find<GetOpenedCheckList>();
+  // final getClosedQualityData=GetClosedCheckList();
+  // final getProjectClosedQualityData=Get.find<GetClosedCheckList>();
+  // final getDeSnagData=GetNewDeSnag();
+  // final getProjectDeSnagData=Get.find<GetNewDeSnag>();
+  // final getOpenedSnag=GetOpenedSnag();
+  // final getOpenedSnagData=Get.find<GetOpenedSnag>();
+  // final getOpenedDeSnag=GetOpenedDeSnag();
+  // final getOpenedDeSnagData=Get.find<GetOpenedDeSnag>();
+  // final getClosedSnag=GetClosedSnag();
+  // final getClosedSnagData=Get.find<GetClosedSnag>();
+  // final getClosedDeSnag=GetClosedDeSnag();
+  // final getClosedDeSnagData=Get.find<GetClosedDeSnag>();
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
     void goToHome()async {
@@ -69,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // ignore: use_build_context_synchronously
     context.goNamed('CLIENTLEVELPAGE');
    }
-    if(sharedPreferences.getBool('isProjectSignedIn')==true){
+  if(sharedPreferences.getBool('isProjectSignedIn')==true){
       await getClientProjectsController.getUpcomingProjects(context: context);
     // ignore: use_build_context_synchronously
     context.goNamed('PROJECTLEVELPAGE');
@@ -99,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
      EasyLoading.show(maskType: EasyLoadingMaskType.black);
     Timer waitNavigate =
-        Timer(Duration(milliseconds: isDynamic ? 2100 : 0), () {
+        Timer(Duration(milliseconds: isDynamic ? 100 : 0), () {
       if (mounted && isDynamic) {
         goToHome();
       }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import '../constants/colors.dart';
+import '../network/progress_network.dart';
 import '../theme/text_styles.dart';
 
 
@@ -11,10 +14,9 @@ class BottomTabBar4 extends StatefulWidget {
 }
 
 class _BottomTabBarState4 extends State<BottomTabBar4> {
-  //  final getNewCheckList = Get.find<GetNewCheckList>();
-  //  final getOpenedCheckList=Get.find<GetOpenedCheckList>();
-  //  final getClosedCheckList=Get.find<GetClosedCheckList>();
-  //  final signInController=Get.find<SignInController>();
+  final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgressDataController=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
 
 @override
 void initState(){
@@ -42,8 +44,12 @@ void initState(){
           ],
         ),
         child: TabBar(
-          onTap: (int i) {
-            setState(() {});
+          onTap: (int i)async {
+            await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+            await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+            await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
+            setState(() {
+            });
           },  
           padding: const EdgeInsets.all(0),
           controller: DefaultTabController.of(context),

@@ -939,7 +939,7 @@ class _ProgressState extends State<EditProgressEntryOffline> {
           );
           }),
             },
-          const SizedBox(height: 20,),
+          const SizedBox(height: 10,),
             CustomContainer2(
             child: 
             Column(children: [

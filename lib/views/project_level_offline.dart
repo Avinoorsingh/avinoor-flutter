@@ -1,4 +1,5 @@
 import 'package:colab/models/all_offline_data.dart';
+import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/project_level_page_offline1.dart';
@@ -21,7 +22,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   var clientDataGet;
   List pages=[];
   List<ProgressOffline> progressData=[];
-  List<AllOffline> allOfflineData=[];
+  List<AllOfflineData> allOfflineData=[];
   List<SnagDataOffline> snagData=[];
   late DatabaseProvider databaseProvider;
   
@@ -48,10 +49,11 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagData= await databaseProvider.getSnagModel();
+    await fetchAllData();
     return snagData;
   }
 
-  Future<List<AllOffline>> fetchAllData() async {
+  Future<List<AllOfflineData>> fetchAllData() async {
     allOfflineData= await databaseProvider.getAllOfflineModel();
     return allOfflineData;
   }

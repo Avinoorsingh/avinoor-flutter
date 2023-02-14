@@ -1,34 +1,70 @@
-class ProgressOffline {
-  List<ProgressOfflineData>? data;
+class AllOfflineData {
+  List<LocationOfflineData>? locationOfflineData;
+  List? ongoingProgress;
+  List<MasterImageOfSnag>? masterImageOfSnag;
+  List<LabourSupply>? labourSupply;
 
-  ProgressOffline({this.data});
+  AllOfflineData(
+      {this.locationOfflineData,
+      this.ongoingProgress,
+      this.masterImageOfSnag,
+      this.labourSupply});
 
-  ProgressOffline.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = <ProgressOfflineData>[];
-      json['data'].forEach((v) {
-        data!.add(ProgressOfflineData.fromJson(v));
+  AllOfflineData.fromJson(Map<String, dynamic> json) {
+    if (json['locationOfflineData'] != null) {
+      locationOfflineData = <LocationOfflineData>[];
+      json['locationOfflineData'].forEach((v) {
+        locationOfflineData!.add(LocationOfflineData.fromJson(v));
+      });
+    }
+    if (json['masterImageOfSnag'] != null) {
+      masterImageOfSnag = <MasterImageOfSnag>[];
+      json['masterImageOfSnag'].forEach((v) {
+        masterImageOfSnag!.add(MasterImageOfSnag.fromJson(v));
+      });
+    }
+    if (json['labourSupply'] != null) {
+      labourSupply = <LabourSupply>[];
+      json['labourSupply'].forEach((v) {
+        labourSupply!.add(LabourSupply.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    if (locationOfflineData != null) {
+      data['locationOfflineData'] =
+          locationOfflineData!.map((v) => v.toJson()).toList();
+    }
+    if (ongoingProgress != null) {
+      data['ongoingProgress'] =
+          ongoingProgress!.map((v) => v.toJson()).toList();
+    }
+    if (masterImageOfSnag != null) {
+      data['masterImageOfSnag'] =
+          masterImageOfSnag!.map((v) => v.toJson()).toList();
+    }
+    if (labourSupply != null) {
+      data['labourSupply'] = labourSupply!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class ProgressOfflineData {
-  num? locationId;
+class LocationOfflineData {
+  int? locationId;
   String? locationName;
   List<SubLocationInfo>? subLocationInfo;
+  int? countLoc;
 
-  ProgressOfflineData({this.locationId, this.locationName, this.subLocationInfo});
+  LocationOfflineData(
+      {this.locationId,
+      this.locationName,
+      this.subLocationInfo,
+      this.countLoc});
 
-  ProgressOfflineData.fromJson(Map<String, dynamic> json) {
+  LocationOfflineData.fromJson(Map<String, dynamic> json) {
     locationId = json['location_id'];
     locationName = json['location_name'];
     if (json['subLocationInfo'] != null) {
@@ -37,6 +73,7 @@ class ProgressOfflineData {
         subLocationInfo!.add(SubLocationInfo.fromJson(v));
       });
     }
+    countLoc = json['count_loc'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,81 +84,208 @@ class ProgressOfflineData {
       data['subLocationInfo'] =
           subLocationInfo!.map((v) => v.toJson()).toList();
     }
+    data['count_loc'] = countLoc;
     return data;
   }
 }
 
 class SubLocationInfo {
-  num? subLocId;
+  int? subLocId;
   String? subLocationName;
+  int? locationId;
+  ViewPointMaster? viewPointMaster;
   List<SubSubLocationInfo>? subSubLocationInfo;
+  int? countSubLoc;
 
   SubLocationInfo(
-      {this.subLocId, this.subLocationName, this.subSubLocationInfo});
+      {this.subLocId,
+      this.subLocationName,
+      this.locationId,
+      this.viewPointMaster,
+      this.subSubLocationInfo,
+      this.countSubLoc});
 
   SubLocationInfo.fromJson(Map<String, dynamic> json) {
     subLocId = json['sub_loc_id'];
     subLocationName = json['sub_location_name'];
+    locationId = json['location_id'];
+    viewPointMaster = json['viewPointMaster'] != null
+        ? ViewPointMaster.fromJson(json['viewPointMaster'])
+        : null;
     if (json['subSubLocationInfo'] != null) {
       subSubLocationInfo = <SubSubLocationInfo>[];
       json['subSubLocationInfo'].forEach((v) {
         subSubLocationInfo!.add(SubSubLocationInfo.fromJson(v));
       });
     }
+    countSubLoc = json['count_sub_loc'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['sub_loc_id'] = subLocId;
     data['sub_location_name'] = subLocationName;
+    data['location_id'] = locationId;
+    if (viewPointMaster != null) {
+      data['viewPointMaster'] = viewPointMaster!.toJson();
+    }
     if (subSubLocationInfo != null) {
       data['subSubLocationInfo'] =
           subSubLocationInfo!.map((v) => v.toJson()).toList();
     }
+    data['count_sub_loc'] = countSubLoc;
+    return data;
+  }
+}
+
+class ViewPointMaster {
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  int? locationId;
+  int? subLocId;
+  String? fileName;
+
+  ViewPointMaster({
+      this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.locationId,
+      this.subLocId,
+      this.fileName
+      });
+
+  ViewPointMaster.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    locationId = json['location_id'];
+    subLocId = json['sub_loc_id'];
+    fileName = json['file_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['location_id'] = locationId;
+    data['sub_loc_id'] = subLocId;
+    data['file_name'] = fileName;
     return data;
   }
 }
 
 class SubSubLocationInfo {
   String? subSubLocationName;
-  num? subLocationId;
+  int? subLocationId;
+  int? locationId;
+  int? subLocId;
+  List<ViewPointNumberlist>? viewPointNumberlist;
   List<SubSubLocationActivity>? subSubLocationActivity;
+  int? countSubSubLoc;
 
   SubSubLocationInfo(
-      {this.subSubLocationName,
+      {
+      this.subSubLocationName,
       this.subLocationId,
-      this.subSubLocationActivity});
+      this.locationId,
+      this.subLocId,
+      this.viewPointNumberlist,
+      this.subSubLocationActivity,
+      this.countSubSubLoc});
 
   SubSubLocationInfo.fromJson(Map<String, dynamic> json) {
     subSubLocationName = json['sub_sub_location_name'];
     subLocationId = json['sub_location_id'];
+    locationId = json['location_id'];
+    subLocId = json['sub_loc_id'];
+    if (json['viewPointNumberlist'] != null) {
+      viewPointNumberlist = <ViewPointNumberlist>[];
+      json['viewPointNumberlist'].forEach((v) {
+        viewPointNumberlist!.add(ViewPointNumberlist.fromJson(v));
+      });
+    }
     if (json['subSubLocationActivity'] != null) {
       subSubLocationActivity = <SubSubLocationActivity>[];
       json['subSubLocationActivity'].forEach((v) {
         subSubLocationActivity!.add(SubSubLocationActivity.fromJson(v));
       });
     }
+    countSubSubLoc = json['count_sub_sub_loc'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['sub_sub_location_name'] = subSubLocationName;
     data['sub_location_id'] = subLocationId;
+    data['location_id'] = locationId;
+    data['sub_loc_id'] = subLocId;
+    if (viewPointNumberlist != null) {
+      data['viewPointNumberlist'] =
+          viewPointNumberlist!.map((v) => v.toJson()).toList();
+    }
     if (subSubLocationActivity != null) {
       data['subSubLocationActivity'] =
           subSubLocationActivity!.map((v) => v.toJson()).toList();
     }
+    data['count_sub_sub_loc'] = countSubSubLoc;
+    return data;
+  }
+}
+
+class ViewPointNumberlist {
+  int? id;
+  int? viewpointSubSubLocId;
+  int? subSubLocationId;
+  String? viewpoint;
+  int? viewpointMasterId;
+  String? createdAt;
+  String? updatedAt;
+
+  ViewPointNumberlist(
+      {
+      this.id,
+      this.viewpointSubSubLocId,
+      this.subSubLocationId,
+      this.viewpoint,
+      this.viewpointMasterId,
+      this.createdAt,
+      this.updatedAt});
+
+  ViewPointNumberlist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    viewpointSubSubLocId = json['viewpoint_sub_sub_loc_id'];
+    subSubLocationId = json['sub_sub_location_id'];
+    viewpoint = json['viewpoint'];
+    viewpointMasterId = json['viewpoint_master_id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['viewpoint_sub_sub_loc_id'] = viewpointSubSubLocId;
+    data['sub_sub_location_id'] = subSubLocationId;
+    data['viewpoint'] = viewpoint;
+    data['viewpoint_master_id'] = viewpointMasterId;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class SubSubLocationActivity {
-  num? linkingActivityId;
+  int? linkingActivityId;
   String? activity;
-  num? quantity;
-  num? productivity;
-  List<ContractorName>? contractorName;
-  ProjectActivityOne? projectActivityOne;
+  int? quantity;
+  // ignore: prefer_typing_uninitialized_variables
+  var productivity;
+  String? activityHead;
+  String? contractorName;
+  String? uomName;
+  int? contId;
   ProgressAdd? progressAdd;
 
   SubSubLocationActivity(
@@ -129,24 +293,21 @@ class SubSubLocationActivity {
       this.activity,
       this.quantity,
       this.productivity,
+      this.activityHead,
       this.contractorName,
-      this.projectActivityOne,
+      this.uomName,
+      this.contId,
       this.progressAdd});
 
-  SubSubLocationActivity.fromJson(Map<String, dynamic> json){
+  SubSubLocationActivity.fromJson(Map<String, dynamic> json) {
     linkingActivityId = json['linking_activity_id'];
     activity = json['activity'];
     quantity = json['quantity'];
     productivity = json['productivity'];
-    if (json['ContractorName'] != null) {
-      contractorName = <ContractorName>[];
-      json['ContractorName'].forEach((v) {
-        contractorName!.add(ContractorName.fromJson(v));
-      });
-    }
-    projectActivityOne = json['projectActivityOne'] != null
-        ? ProjectActivityOne.fromJson(json['projectActivityOne'])
-        : null;
+    activityHead = json['activity_head'];
+    contractorName = json['contractor_name'];
+    uomName = json['uom_name'];
+    contId = json['cont_id'];
     progressAdd = json['progressAdd'] != null
         ? ProgressAdd.fromJson(json['progressAdd'])
         : null;
@@ -158,13 +319,10 @@ class SubSubLocationActivity {
     data['activity'] = activity;
     data['quantity'] = quantity;
     data['productivity'] = productivity;
-    if (contractorName != null) {
-      data['ContractorName'] =
-          contractorName!.map((v) => v.toJson()).toList();
-    }
-    if (projectActivityOne != null) {
-      data['projectActivityOne'] = projectActivityOne!.toJson();
-    }
+    data['activity_head'] = activityHead;
+    data['contractor_name'] = contractorName;
+    data['uom_name'] = uomName;
+    data['cont_id'] = contId;
     if (progressAdd != null) {
       data['progressAdd'] = progressAdd!.toJson();
     }
@@ -172,98 +330,19 @@ class SubSubLocationActivity {
   }
 }
 
-class ContractorName {
-  num? id;
-  num? clientId;
-  num? linkingActivityId;
-  num? projectId;
-  num? lineItemId;
-  num? locationId;
-  num? subLocId;
-  num? subSubLocId;
-  num? quantityId;
-  String? createdAt;
-  String? updatedAt;
-  String? contractorName;
-
-  ContractorName(
-      {this.id,
-      this.clientId,
-      this.linkingActivityId,
-      this.projectId,
-      this.lineItemId,
-      this.locationId,
-      this.subLocId,
-      this.subSubLocId,
-      this.quantityId,
-      this.createdAt,
-      this.updatedAt,
-      this.contractorName});
-
-  ContractorName.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    clientId = json['client_id'];
-    linkingActivityId = json['linking_activity_id'];
-    projectId = json['project_id'];
-    lineItemId = json['line_item_id'];
-    locationId = json['location_id'];
-    subLocId = json['sub_loc_id'];
-    subSubLocId = json['sub_sub_loc_id'];
-    quantityId = json['quantity_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    contractorName = json['contractor_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['client_id'] = clientId;
-    data['linking_activity_id'] = linkingActivityId;
-    data['project_id'] = projectId;
-    data['line_item_id'] = lineItemId;
-    data['location_id'] = locationId;
-    data['sub_loc_id'] = subLocId;
-    data['sub_sub_loc_id'] = subSubLocId;
-    data['quantity_id'] = quantityId;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
-    data['contractor_name'] = contractorName;
-    return data;
-  }
-}
-
-class ProjectActivityOne {
-  String? activityHead;
-
-  ProjectActivityOne({this.activityHead});
-
-  ProjectActivityOne.fromJson(Map<String, dynamic> json) {
-    activityHead = json['activity_head'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['activity_head'] = activityHead;
-    return data;
-  }
-}
-
 class ProgressAdd {
-  num? id;
-  num? clientId;
-  num? projectId;
-  num? type;
-  num? linkActivityId;
-  num? contractorId;
-  num? debetContactor;
+  int? id;
+  int? clientId;
+  int? projectId;
+  int? type;
+  int? linkActivityId;
+  int? contractorId;
+  int? debetContactor;
   String? remarks;
-  num? createdBy;
-  num? updatedBy;
+  int? createdBy;
+  int? updatedBy;
   String? createdAt;
   String? updatedAt;
-  num? progressPercentage;
-  num? commulativeQuantity;
   EmployeeInfo? employeeInfo;
   List<ProgressDailyInfo>? progressDailyInfo;
 
@@ -280,8 +359,6 @@ class ProgressAdd {
       this.updatedBy,
       this.createdAt,
       this.updatedAt,
-      this.progressPercentage,
-      this.commulativeQuantity,
       this.employeeInfo,
       this.progressDailyInfo});
 
@@ -298,8 +375,6 @@ class ProgressAdd {
     updatedBy = json['updated_by'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    progressPercentage = json['progress_percentage'];
-    commulativeQuantity = json['commulative_quantity'];
     employeeInfo = json['employeeInfo'] != null
         ? EmployeeInfo.fromJson(json['employeeInfo'])
         : null;
@@ -325,8 +400,6 @@ class ProgressAdd {
     data['updated_by'] = updatedBy;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
-    data['progress_percentage'] = progressPercentage;
-    data['commulative_quantity'] = commulativeQuantity;
     if (employeeInfo != null) {
       data['employeeInfo'] = employeeInfo!.toJson();
     }
@@ -339,19 +412,19 @@ class ProgressAdd {
 }
 
 class EmployeeInfo {
-  num? id;
-  num? clientId;
+  int? id;
+  int? clientId;
   String? userId;
   String? password;
   String? name;
   String? rm;
   String? mobileNo;
   String? emailId;
-  num? roleId;
-  num? status;
-  num? userType;
+  int? roleId;
+  int? status;
+  int? userType;
   String? lastName;
-  num? designation;
+  int? designation;
   String? altMobileNo;
   String? emergencyName;
   String? emergencyMobileNo;
@@ -440,22 +513,22 @@ class EmployeeInfo {
 }
 
 class ProgressDailyInfo {
-  num? dailyId;
-  num? progressId;
-  num? contractorId;
-  num? cumulativeQuantity;
-  num? achivedQuantity;
-  num? totalQuantity;
+  int? dailyId;
+  int? progressId;
+  int? contractorId;
+  int? cumulativeQuantity;
+  int? achivedQuantity;
+  int? totalQuantity;
   String? progressDate;
-  num? progressPercentage;
-  num? debetContactor;
-  num? progType;
+  int? progressPercentage;
+  int? debetContactor;
+  int? progType;
   String? remarks;
-  num? draftStatus;
+  int? draftStatus;
   String? createdAt;
   String? updatedAt;
-  DebitContractor? debitContractor;
   ProgressImagebyDaily? progressImagebyDaily;
+  DebitContractor? debitContractor;
   List<ProgressLabourLinkings>? progressLabourLinkings;
   List<ProgressContByPwr>? progressContByPwr;
 
@@ -474,8 +547,8 @@ class ProgressDailyInfo {
       this.draftStatus,
       this.createdAt,
       this.updatedAt,
-      this.debitContractor,
       this.progressImagebyDaily,
+      this.debitContractor,
       this.progressLabourLinkings,
       this.progressContByPwr});
 
@@ -494,11 +567,11 @@ class ProgressDailyInfo {
     draftStatus = json['draft_status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    debitContractor = json['debitContractor'] != null
-        ? DebitContractor.fromJson(json['debitContractor'])
-        : null;
     progressImagebyDaily = json['progressImagebyDaily'] != null
         ? ProgressImagebyDaily.fromJson(json['progressImagebyDaily'])
+        : null;
+    debitContractor = json['debitContractor'] != null
+        ? DebitContractor.fromJson(json['debitContractor'])
         : null;
     if (json['progressLabourLinkings'] != null) {
       progressLabourLinkings = <ProgressLabourLinkings>[];
@@ -530,11 +603,11 @@ class ProgressDailyInfo {
     data['draft_status'] = draftStatus;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
-    if (debitContractor != null) {
-      data['debitContractor'] = debitContractor!.toJson();
-    }
     if (progressImagebyDaily != null) {
       data['progressImagebyDaily'] = progressImagebyDaily!.toJson();
+    }
+    if (debitContractor != null) {
+      data['debitContractor'] = debitContractor!.toJson();
     }
     if (progressLabourLinkings != null) {
       data['progressLabourLinkings'] =
@@ -548,26 +621,10 @@ class ProgressDailyInfo {
   }
 }
 
-class DebitContractor {
-  String? contractorName;
-
-  DebitContractor({this.contractorName});
-
-  DebitContractor.fromJson(Map<String, dynamic> json) {
-    contractorName = json['contractor_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['contractor_name'] = contractorName;
-    return data;
-  }
-}
-
 class ProgressImagebyDaily {
-  num? id;
-  num? progressId;
-  num? progressDailyId;
+  int? id;
+  int? progressId;
+  int? progressDailyId;
   String? fileName;
   String? createdAt;
   String? updatedAt;
@@ -601,20 +658,36 @@ class ProgressImagebyDaily {
   }
 }
 
+class DebitContractor {
+  String? contractorName;
+
+  DebitContractor({this.contractorName});
+
+  DebitContractor.fromJson(Map<String, dynamic> json) {
+    contractorName = json['contractor_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['contractor_name'] = contractorName;
+    return data;
+  }
+}
+
 class ProgressLabourLinkings {
-  num? progessLinkId;
-  num? progressDailyId;
-  num? progressId;
-  num? contractorId;
+  int? progessLinkId;
+  int? progressDailyId;
+  int? progressId;
+  int? contractorId;
   String? progressDate;
-  num? contractorLabourLinkingId;
+  int? contractorLabourLinkingId;
   String? time;
-  num? createdBy;
-  num? updatedBy;
+  int? createdBy;
+  int? updatedBy;
   String? createdAt;
   String? updatedAt;
-  ProgressLabourInfoByCll? progressLabourInfoByCll;
   ProgressContractorInfoByPc? progressContractorInfoByPc;
+  ProgressLabourInfoByCll? progressLabourInfoByCll;
 
   ProgressLabourLinkings(
       {this.progessLinkId,
@@ -628,8 +701,8 @@ class ProgressLabourLinkings {
       this.updatedBy,
       this.createdAt,
       this.updatedAt,
-      this.progressLabourInfoByCll,
-      this.progressContractorInfoByPc});
+      this.progressContractorInfoByPc,
+      this.progressLabourInfoByCll});
 
   ProgressLabourLinkings.fromJson(Map<String, dynamic> json) {
     progessLinkId = json['progess_link_id'];
@@ -643,12 +716,12 @@ class ProgressLabourLinkings {
     updatedBy = json['updated_by'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    progressLabourInfoByCll = json['progressLabourInfoByCll'] != null
-        ? ProgressLabourInfoByCll.fromJson(json['progressLabourInfoByCll'])
-        : null;
     progressContractorInfoByPc = json['progressContractorInfoByPc'] != null
         ? ProgressContractorInfoByPc.fromJson(
             json['progressContractorInfoByPc'])
+        : null;
+    progressLabourInfoByCll = json['progressLabourInfoByCll'] != null
+        ? ProgressLabourInfoByCll.fromJson(json['progressLabourInfoByCll'])
         : null;
   }
 
@@ -665,34 +738,54 @@ class ProgressLabourLinkings {
     data['updated_by'] = updatedBy;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
-    if (progressLabourInfoByCll != null) {
-      data['progressLabourInfoByCll'] = progressLabourInfoByCll!.toJson();
-    }
     if (progressContractorInfoByPc != null) {
       data['progressContractorInfoByPc'] =
           progressContractorInfoByPc!.toJson();
+    }
+    if (progressLabourInfoByCll != null) {
+      data['progressLabourInfoByCll'] = progressLabourInfoByCll!.toJson();
     }
     return data;
   }
 }
 
+class ProgressContractorInfoByPc {
+  String? contractorName;
+  int? id;
+
+  ProgressContractorInfoByPc({this.contractorName, this.id});
+
+  ProgressContractorInfoByPc.fromJson(Map<String, dynamic> json) {
+    contractorName = json['contractor_name'];
+    id = json['id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['contractor_name'] = contractorName;
+    data['id'] = id;
+    return data;
+  }
+}
+
 class ProgressLabourInfoByCll {
-  num? id;
-  num? clientId;
-  num? projectId;
-  num? clientContractorId;
+  int? id;
+  int? clientId;
+  int? projectId;
+  int? clientContractorId;
   String? type;
-  num? tradeId;
-  num? workingHrs;
+  int? tradeId;
+  int? workingHrs;
   String? name;
-  num? rate;
-  num? otRate;
+  int? rate;
+  int? otRate;
   String? aadhar;
   String? createdAt;
   String? updatedAt;
 
   ProgressLabourInfoByCll(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.projectId,
       this.clientContractorId,
@@ -741,34 +834,15 @@ class ProgressLabourInfoByCll {
   }
 }
 
-class ProgressContractorInfoByPc {
-  String? contractorName;
-  num? id;
-
-  ProgressContractorInfoByPc({this.contractorName, this.id});
-
-  ProgressContractorInfoByPc.fromJson(Map<String, dynamic> json) {
-    contractorName = json['contractor_name'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['contractor_name'] = contractorName;
-    data['id'] = id;
-    return data;
-  }
-}
-
 class ProgressContByPwr {
-  num? id;
-  num? progressId;
-  num? progressDailyId;
-  num? contractorId;
-  num? pwrType;
+  int? id;
+  int? progressId;
+  int? progressDailyId;
+  int? contractorId;
+  int? pwrType;
   // ignore: prefer_typing_uninitialized_variables
   var labourType;
-  num? labourCount;
+  int? labourCount;
   String? progressDate;
   String? createdAt;
   String? updatedAt;
@@ -823,10 +897,10 @@ class ProgressContByPwr {
 }
 
 class PwrContractorInfoByPc {
-  num? id;
-  num? clientId;
-  num? projectId;
-  num? clientContractorId;
+  int? id;
+  int? clientId;
+  int? projectId;
+  int? clientContractorId;
   String? contractorName;
   String? startDate;
   String? endDate;
@@ -835,9 +909,9 @@ class PwrContractorInfoByPc {
   String? contactNo;
   // ignore: prefer_typing_uninitialized_variables
   var attFile;
-  num? grandTotal;
-  num? createdBy;
-  num? updatedBy;
+  int? grandTotal;
+  int? createdBy;
+  int? updatedBy;
   String? createdAt;
   String? updatedAt;
 
@@ -894,6 +968,206 @@ class PwrContractorInfoByPc {
     data['grand_total'] = grandTotal;
     data['created_by'] = createdBy;
     data['updated_by'] = updatedBy;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    return data;
+  }
+}
+
+class MasterImageOfSnag {
+  int? locationId;
+  int? subLocId;
+  int? subSubLocationId;
+  int? viewpointNameId;
+  String? fileName;
+  int? fileNameId;
+  String? viewpoint;
+  String? masterFile;
+
+  MasterImageOfSnag(
+      {this.locationId,
+      this.subLocId,
+      this.subSubLocationId,
+      this.viewpointNameId,
+      this.fileName,
+      this.fileNameId,
+      this.viewpoint,
+      this.masterFile});
+
+  MasterImageOfSnag.fromJson(Map<String, dynamic> json) {
+    locationId = json['location_id'];
+    subLocId = json['sub_loc_id'];
+    subSubLocationId = json['sub_sub_location_id'];
+    viewpointNameId = json['viewpoint_name_id'];
+    fileName = json['file_name'];
+    fileNameId = json['file_name_id'];
+    viewpoint = json['viewpoint'];
+    masterFile = json['master_file'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['location_id'] = locationId;
+    data['sub_loc_id'] = subLocId;
+    data['sub_sub_location_id'] = subSubLocationId;
+    data['viewpoint_name_id'] = viewpointNameId;
+    data['file_name'] = fileName;
+    data['file_name_id'] = fileNameId;
+    data['viewpoint'] = viewpoint;
+    data['master_file'] = masterFile;
+    return data;
+  }
+}
+
+class LabourSupply {
+  int? id;
+  int? clientId;
+  int? projectId;
+  int? clientContractorId;
+  String? contractorName;
+  String? startDate;
+  String? endDate;
+  String? workOrderNumber;
+  String? scopeOfWork;
+  String? contactNo;
+  // ignore: prefer_typing_uninitialized_variables
+  var attFile;
+  int? grandTotal;
+  int? createdBy;
+  int? updatedBy;
+  String? createdAt;
+  String? updatedAt;
+  List<ContractorLabourLinking>? contractorLabourLinking;
+
+  LabourSupply(
+      {this.id,
+      this.clientId,
+      this.projectId,
+      this.clientContractorId,
+      this.contractorName,
+      this.startDate,
+      this.endDate,
+      this.workOrderNumber,
+      this.scopeOfWork,
+      this.contactNo,
+      this.attFile,
+      this.grandTotal,
+      this.createdBy,
+      this.updatedBy,
+      this.createdAt,
+      this.updatedAt,
+      this.contractorLabourLinking});
+
+  LabourSupply.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    clientId = json['client_id'];
+    projectId = json['project_id'];
+    clientContractorId = json['client_contractor_id'];
+    contractorName = json['contractor_name'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+    workOrderNumber = json['work_order_number'];
+    scopeOfWork = json['scope_of_work'];
+    contactNo = json['contact_no'];
+    attFile = json['att_file'];
+    grandTotal = json['grand_total'];
+    createdBy = json['created_by'];
+    updatedBy = json['updated_by'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    if (json['contractorLabourLinking'] != null) {
+      contractorLabourLinking = <ContractorLabourLinking>[];
+      json['contractorLabourLinking'].forEach((v) {
+        contractorLabourLinking!.add(ContractorLabourLinking.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['client_id'] = clientId;
+    data['project_id'] = projectId;
+    data['client_contractor_id'] = clientContractorId;
+    data['contractor_name'] = contractorName;
+    data['start_date'] = startDate;
+    data['end_date'] = endDate;
+    data['work_order_number'] = workOrderNumber;
+    data['scope_of_work'] = scopeOfWork;
+    data['contact_no'] = contactNo;
+    data['att_file'] = attFile;
+    data['grand_total'] = grandTotal;
+    data['created_by'] = createdBy;
+    data['updated_by'] = updatedBy;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (contractorLabourLinking != null) {
+      data['contractorLabourLinking'] =
+          contractorLabourLinking!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ContractorLabourLinking {
+  int? id;
+  int? clientId;
+  int? projectId;
+  int? clientContractorId;
+  String? type;
+  int? tradeId;
+  int? workingHrs;
+  String? name;
+  int? rate;
+  int? otRate;
+  String? aadhar;
+  String? createdAt;
+  String? updatedAt;
+
+  ContractorLabourLinking(
+      {this.id,
+      this.clientId,
+      this.projectId,
+      this.clientContractorId,
+      this.type,
+      this.tradeId,
+      this.workingHrs,
+      this.name,
+      this.rate,
+      this.otRate,
+      this.aadhar,
+      this.createdAt,
+      this.updatedAt});
+
+  ContractorLabourLinking.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    clientId = json['client_id'];
+    projectId = json['project_id'];
+    clientContractorId = json['client_contractor_id'];
+    type = json['type'];
+    tradeId = json['trade_id'];
+    workingHrs = json['working_hrs'];
+    name = json['name'];
+    rate = json['rate'];
+    otRate = json['ot_rate'];
+    aadhar = json['aadhar'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['client_id'] = clientId;
+    data['project_id'] = projectId;
+    data['client_contractor_id'] = clientContractorId;
+    data['type'] = type;
+    data['trade_id'] = tradeId;
+    data['working_hrs'] = workingHrs;
+    data['name'] = name;
+    data['rate'] = rate;
+    data['ot_rate'] = otRate;
+    data['aadhar'] = aadhar;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     return data;

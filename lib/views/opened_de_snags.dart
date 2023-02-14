@@ -43,6 +43,8 @@ class _NewSnagState extends State<OpenedDeSnags> {
     var outputFormat1 = DateFormat('dd/MM/yyyy');
     return GetBuilder<GetOpenedDeSnag>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getDeSnagDataOpenedList!=null){
+        if(signInController.getDeSnagDataOpenedList!.data!=null){
      if(signInController.getDeSnagDataOpenedList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getDeSnagDataOpenedList!.data!.length;i++){
        subLocationName.add(signInController.getDeSnagDataOpenedList!.data![i].subLocation!.subLocationName);
@@ -56,6 +58,8 @@ class _NewSnagState extends State<OpenedDeSnags> {
        dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getDeSnagDataOpenedList!.data![i].createdAt!)).inDays);
       }
      }
+      }
+      }
     EasyLoading.dismiss();
     return 
     Scaffold(

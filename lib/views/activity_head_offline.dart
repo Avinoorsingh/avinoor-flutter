@@ -20,14 +20,14 @@ class _ActivityHeadPageState extends State<ActivityHeadOffline> {
        if(signInController.getActivityHeadList!.isNotEmpty && activityHead.isEmpty){
         var subLocationList=signInController.getActivityHeadList;
           for(var data2 in subLocationList[0]){
-          activityHead.add(data2.activityHead!);
-          activityHeadActivity.add(data2.activity);
-          activityID.add(data2.activityId.toString());
+          activityHead.add(data2.activityHead);
+          activityHeadActivity.add(subLocationList[0]);
+          activityID.add(data2.activity);
           }
       }
     return Scaffold(
       body: ListView.builder(
-        itemCount: activityHead.length,
+        itemCount: activityHeadActivity.length,
         itemBuilder: (context, i) {
           return ExpansionTile(
             title: Text(activityHead[i], style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal,),),

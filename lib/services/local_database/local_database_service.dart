@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/progress_offline.dart';
 import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_offline.dart';
@@ -6,8 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
-
-import '../../models/all_offline_data.dart';
 import '../../models/category_list.dart';
 import '../../models/clientEmployee.dart';
 import '../../models/contractor_data_offline.dart';
@@ -368,6 +367,7 @@ class DatabaseProvider {
   }
 
   Future<List<Map<String, dynamic>>> getSnagFormData() async {
+    await init();
     final List<Map<String, dynamic>> formDataRows = await _database.query('form_data');
     List<Map<String, dynamic>> formDataList = [];
     for (var formDataRow in formDataRows) {
@@ -399,11 +399,11 @@ class DatabaseProvider {
     });
   }
 
-  Future<List<AllOffline>> getAllOfflineModel() async {
+  Future<List<AllOfflineData>> getAllOfflineModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models3');
     return List.generate(maps.length, (i) {
-      return AllOffline.fromJson(jsonDecode(maps[i]['allOffline']));
+      return AllOfflineData.fromJson(jsonDecode(maps[i]['allOffline']));
     });
   }
 

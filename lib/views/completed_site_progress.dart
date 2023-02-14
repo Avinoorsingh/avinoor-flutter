@@ -54,6 +54,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
     return 
     GetBuilder<GetCompletedSiteProgress>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getCompletedProgressData!=null){
+        if(signInController.getCompletedProgressData!.data!=null){
      if(signInController.getCompletedProgressData!.data!.isNotEmpty && locationName.isEmpty){
       for(int i=0;i<signInController.getCompletedProgressData!.data!.length;i++){
        locationName.add(signInController.getCompletedProgressData!.data![i].locationName!);
@@ -61,6 +63,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
        completedData.add(signInController.getCompletedProgressData!.data![i]);
       }
      }
+    }
+    }
     EasyLoading.dismiss();
     return 
     Scaffold(

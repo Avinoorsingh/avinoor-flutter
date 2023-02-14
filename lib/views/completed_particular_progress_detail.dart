@@ -525,7 +525,7 @@ return Dialog(
           '$path',
           fit: BoxFit.contain,
         ),
-        ),
+       ),
       ),
     ],
   ),

@@ -49,12 +49,16 @@ class GetCompletedProgressDaState extends State<InQualityProgress> {
     return 
     GetBuilder<GetInEqualitySiteProgress>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getInEqualityProgressData!=null){
+        if(signInController.getInEqualityProgressData!.data!=null){
      if(signInController.getInEqualityProgressData!.data!.isNotEmpty && locationName.isEmpty){
       for(int i=0;i<signInController.getInEqualityProgressData!.data!.length;i++){
        locationName.add(signInController.getInEqualityProgressData!.data![i].locationName!);
        locationID.add(signInController.getInEqualityProgressData!.data![i].locationId!);
       }
      }
+    }
+    }
     EasyLoading.dismiss();
     return 
     Scaffold(

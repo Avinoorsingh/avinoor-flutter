@@ -874,7 +874,7 @@ class ProgressContractorInfoByPc {
 
   ProgressContractorInfoByPc({this.contractorName, this.id});
 
-  ProgressContractorInfoByPc.fromJson(Map<String, dynamic> json) {
+  ProgressContractorInfoByPc.fromJson(Map<String, dynamic> json){
     contractorName = json['contractor_name'];
     id = json['id'];
   }

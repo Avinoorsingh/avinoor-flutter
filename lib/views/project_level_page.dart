@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
-import 'package:colab/services/helper/offline_data_json.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/loading_data_screen.dart';
 import 'package:colab/views/project_level_page1.dart';
@@ -87,7 +85,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
       );
 
   saveData () async {
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await getClientProfileController.getUserProfile(context: context);
     await getClientProjectsController.getUpcomingProjects(context: context);
     await getClientProjectsController.getSelectedProjects(context:context);
@@ -132,17 +130,18 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           }
         }
         try{
-          // var getAllOfflineDataURL=Uri.parse('${Config.allOfflineData}$clientId/$projectID');
-          //  var res=await http.get(
-          //   getAllOfflineDataURL,
-          //   headers: {
-          //     "Accept": "application/json",
-          //     "Authorization": "Bearer $tokenValue",
-          //   },
-          //   );
-          // if(res.statusCode==200){
-          await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
-          // }
+          var getAllOfflineDataURL=Uri.parse('${Config.allOfflineData}$clientId/$projectID');
+           var res=await http.get(
+            getAllOfflineDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200){
+             await databaseProvider.insertAllOfflineModel(res.body);
+          // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
+          }
       } catch (e) {
           if (kDebugMode) {
             print("error in saving all offline data");
@@ -276,14 +275,14 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     clientDataGet=widget.clientData;
     getClientProjectsController.getUpcomingProjects(context: context);
     getClientProfileController.getUserProfile(context: context);
-    getLabourDataContractorListController.getContractorListData(context: context);
-    getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
-    getNewSnagDataController.getSnagData(context: context);
-    getNewDeSnagDataController.getSnagData(context: context);
-    getOpenedSnagDataController.getOpenedSnagData(context: context);
-    getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-    getClosedSnagDataController.getClosedSnagData(context: context);
-    getClosedDeSnagDataController.getClosedSnagData(context: context);
+    // getLabourDataContractorListController.getContractorListData(context: context);
+    // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
+    // getNewSnagDataController.getSnagData(context: context);
+    // getNewDeSnagDataController.getSnagData(context: context);
+    // getOpenedSnagDataController.getOpenedSnagData(context: context);
+    // getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+    // getClosedSnagDataController.getClosedSnagData(context: context);
+    // getClosedDeSnagDataController.getClosedSnagData(context: context);
     getConnectivity();
     saveProjectId();
   }
@@ -294,15 +293,15 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     if(widget.clientData.projectid!=null){
         sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
         getClientProfileController.getUserProfile(context: context);
-        getLabourDataContractorListController.getContractorListData(context: context);
-        getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
+        // getLabourDataContractorListController.getContractorListData(context: context);
+        // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
         getClientProjectsController.getUpcomingProjects(context: context);
-        getNewSnagDataController.getSnagData(context: context);
-        getNewDeSnagDataController.getSnagData(context: context);
-        getOpenedSnagDataController.getOpenedSnagData(context: context);
-        getOpenedDeSnagDataController.getOpenedSnagData(context: context);
-        getClosedSnagDataController.getClosedSnagData(context: context);
-        getClosedDeSnagDataController.getClosedSnagData(context: context);
+        // getNewSnagDataController.getSnagData(context: context);
+        // getNewDeSnagDataController.getSnagData(context: context);
+        // getOpenedSnagDataController.getOpenedSnagData(context: context);
+        // getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+        // getClosedSnagDataController.getClosedSnagData(context: context);
+        // getClosedDeSnagDataController.getClosedSnagData(context: context);
         DependencyInjector.initializeControllers();
     }
     }

@@ -35,19 +35,19 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
  
  @override
  void initState(){
-    databaseProvider = DatabaseProvider();
-    databaseProvider.init();
-    super.initState();
-    fetchSnagData();
+  databaseProvider = DatabaseProvider();
+  databaseProvider.init();
+  super.initState();
+  fetchSnagData();
   super.initState();
  }
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagData= await databaseProvider.getSnagModel();
+    await fetchSnagsFromLocal();
      setState(() {
       snagData;
     });
-    await fetchSnagsFromLocal();
     return snagData;
   }
 

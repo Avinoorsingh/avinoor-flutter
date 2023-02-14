@@ -21,7 +21,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../controller/signInController.dart';
-import '../../../models/all_offline_data.dart';
+import '../../../models/all_offline_data2.dart';
 import '../../../models/category_list.dart';
 import '../../../models/clientEmployee.dart';
 import '../../../network/client_project.dart';
@@ -139,7 +139,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
     }
   }
     late List<bool> isSelected;
-    List<AllOffline> allOfflineData=[];
+    List<AllOfflineData> allOfflineData=[];
     CategoryList? categoryData;
     ContractorDataOffline? contractorData;
     ClientEmployee? employeeData;
@@ -167,7 +167,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
     return outputFormat.format(inputDate);
     }
 
-    Future<List<AllOffline>> fetchAllData() async {
+    Future<List<AllOfflineData>> fetchAllData() async {
     allOfflineData= await databaseProvider.getAllOfflineModel();
      await fetchCategoryData();
      await fetchContractorData();
@@ -251,7 +251,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
           if(allOfflineData[0].locationOfflineData!.isNotEmpty){
           for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
-                 activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].activityList!);
+                 activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
             }
           }
           }
@@ -431,6 +431,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                     signInController.getActivityHeadList=activityHead;
                   } catch (e) {
                       if (kDebugMode) {
+                        print("Error");
                           print(e);
                         }
                       }
@@ -482,7 +483,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                 onTap: () async {
                   if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
                   String value= await Navigator.of(context).push(_createRoute2());
-                  setState(() {
+                  setState((){
                     linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
                     subSubV=value.substring(0,value.indexOf('}'));
                     subSubLocationController.text=value.substring(0,value.indexOf('}'));
@@ -491,13 +492,16 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                     List subLocationInfo = [];
                     List subSubLocationInfo = [];
                     List viewPointNumberList = [];
+                    List masterImage=[];
                     subLocationInfo.clear();
                     subSubLocationInfo.clear();
                     viewPointNumberList.clear();
                     viewpointImagesUrl.clear();
+                    masterImage.clear();
                     for (var i = 0; i < allOfflineData.length; i++) {
                       if (allOfflineData[0].locationOfflineData![i].locationId == int.parse(locationId.text)) {
                         subLocationInfo = allOfflineData[0].locationOfflineData![i].subLocationInfo!;
+                        masterImage=allOfflineData[0].masterImageOfSnag!;
                         break;
                       }
                     }
@@ -511,15 +515,15 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                     for (var i = 0; i < subSubLocationInfo.length; i++) {
                       if (subSubLocationInfo[i].locationId == int.parse(locationId.text) &&
                           subSubLocationInfo[i].subLocId == int.parse(subLocationId.text) &&
-                          subSubLocationInfo[i].subLocationId == int.parse(subSubLocationId.text)) {
-                        viewPointNumberList = subSubLocationInfo[i].viewPointNumberlist;
-                        viewpointImagesUrl.add(subSubLocationInfo[i].masterImage.masterFile.toString());
-                        break;
+                          subSubLocationInfo[i].subLocationId == int.parse(subSubLocationId.text)){
+                          viewPointNumberList = subSubLocationInfo[i].viewPointNumberlist;
+                          viewpointImagesUrl.add(masterImage[i].masterFile.toString());
+                          break;
                       }
                     }
                     for(int i=0; i < subSubLocationInfo.length; i++) {
                         for(int j=0; j < subSubLocationInfo[i].subSubLocationActivity.length; j++) {
-                          if(subSubLocationInfo[i].subSubLocationActivity[j].linkActivityId == int.parse(linking_activity_id.text)) {
+                          if(subSubLocationInfo[i].subSubLocationActivity[j].linkingActivityId == int.parse(linking_activity_id.text)) {
                             contractorInput.text = subSubLocationInfo[i].subSubLocationActivity[j].contractorName;
                             contractorID.text=subSubLocationInfo[i].subSubLocationActivity[j].contId.toString();
                             break;
