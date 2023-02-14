@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/services/helper/dependency_injector.dart';
@@ -102,7 +103,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
           await databaseProvider.insertMyJsonModel(res.body);
           }
       } catch (e) {
@@ -120,7 +121,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
           await databaseProvider.insertSnagModel(res.body);
           }
       } catch (e) {
@@ -138,7 +139,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
              await databaseProvider.insertAllOfflineModel(res.body);
           // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
           }
@@ -158,7 +159,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             }
           );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
           await databaseProvider.insertCategoryModel(res.body);
           }
     } catch (e) {
@@ -177,7 +178,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             }
           );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
           await databaseProvider.insertContractorModel(res.body);
           }
     } catch (e) {
@@ -195,7 +196,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
           await databaseProvider.insertEmployeeModel(res.body);
           }
             } catch (e) {
@@ -213,7 +214,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
+            if(jsonDecode(res.body)['success']!=false){
             databaseProvider.insertTrade(res.body);
+            }
             } catch (e) {
               if (kDebugMode) {
                 print("error in saving trade list");
@@ -233,7 +236,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "project_id":projectID,
             }
             );
+           if(jsonDecode(res.body)['success']!=false){
            databaseProvider.insertContractorForDebit(res.body);
+              }
             } catch (e) {
               if (kDebugMode) {
                 print("error in saving progress contractor list");
@@ -250,7 +255,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-         databaseProvider.insertLabourAttendanceToday(res.body);
+            if(jsonDecode(res.body)['success']!=false){
+            databaseProvider.insertLabourAttendanceToday(res.body);
+            }
             } catch (e) {
               if (kDebugMode) {
                 print("error in saving labour attendance data");

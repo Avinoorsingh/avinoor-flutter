@@ -434,6 +434,7 @@ class DatabaseProvider {
   Future<LabourAttendance> getLabourAttendanceModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models9');
+    print(jsonDecode(maps[0]['labour']));
       return LabourAttendance.fromJson(jsonDecode(maps[0]['labour']));
     }
 }

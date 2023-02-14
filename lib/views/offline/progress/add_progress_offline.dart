@@ -276,25 +276,25 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
           locationList.add(allOfflineData[0].locationOfflineData![i].locationName!);
           locationListID.add(allOfflineData[0].locationOfflineData![i].locationId!); 
         }
-       }
+      }
       if(contractorData!=null){
       if(contractorData!.data!=null){
       if(contractorData!.data!.isNotEmpty && debitTo.isEmpty){
-        List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
+      List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
         if(debitTo.isEmpty){
         debitTo.add("Select Debit to");
         debitToID.add(99999);
         itemsDebit={};
         for(var data in debitToList1!){
           itemsDebit[data.pid.toString()] = data.contractorName;
-           debitTo.add("Select Debit to");
-           debitToID.add(8989898);
-           itemsDebit={};
+          debitTo.add("Select Debit to");
+          debitToID.add(8989898);
+          itemsDebit={};
         for(int i=0;i<contractorData!.data!.length;i++){
           itemsDebit[contractorData!.data![i].pid.toString()] = contractorData!.data![i].contractorName;
           debitTo.add(contractorData!.data![i].contractorName!);
           debitToID.add(contractorData!.data![i].pid!); 
-        }
+         }
         }
         debitTo.toSet().toList();
         debitToID.toSet().toList();
@@ -302,9 +302,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
       }
       if(allOfflineData.isNotEmpty && subLocationList.isEmpty){
         for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
-          subLocationList.add(allOfflineData[0].locationOfflineData![i].subLocationInfo!);
-        }
+        subLocationList.add(allOfflineData[0].locationOfflineData![i].subLocationInfo!);
        }
+      }
       if(labourAttendance.mainData!=null){
         List<MainData>? contractorList1=labourAttendance.mainData;
         if(contractorList.isEmpty){
@@ -319,7 +319,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
           subItems.add([]);
           if(data.labourDetails!.isNotEmpty){
           for(var data2 in data.labourDetails!){
-            if (contractorLabourLinkingId.containsKey(data2.contractorId)) {
+            if (contractorLabourLinkingId.containsKey(data2.contractorId)){;
               contractorLabourLinkingId[data2.contractorId]!.add(data2.contractorLabourLinkingId!);
             } 
             else {
@@ -327,9 +327,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
              }
            }
           }
+         }
         }
-        }
-        }
+       }
       }
       }
       }
@@ -348,24 +348,24 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
         }
        }
       }
-       try {
+      try {
         if(allOfflineData.isNotEmpty && activityHead.isEmpty){
         for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
           if(allOfflineData[0].locationOfflineData!.isNotEmpty){
           for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
-                 activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
+              activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
              }
            }
-          }
          }
         }
-       } catch (e) {
+       }
+      } catch (e) {
         if (kDebugMode) {
           print(e);
         } 
-       }
       }
+    }
     return Scaffold(
       appBar: AppBar(
       foregroundColor: Colors.black,
@@ -648,7 +648,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     }
                     for(int i=0; i < subSubLocationInfo.length; i++) {
                         for(int j=0; j < subSubLocationInfo[i].subSubLocationActivity.length; j++) {
-                          if(subSubLocationInfo[i].subSubLocationActivity[j].linkActivityId == int.parse(linking_activity_id.text)) {
+                          if(subSubLocationInfo[i].subSubLocationActivity[j].linkingActivityId == int.parse(linking_activity_id.text)) {
                             contractorInput.text = subSubLocationInfo[i].subSubLocationActivity[j].contractorName;
                             contractorID2.text=subSubLocationInfo[i].subSubLocationActivity[j].contId.toString();
                             break;
@@ -687,17 +687,19 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           subSubLocationInfo2[i].subLocId == int.parse(subLocationId.text) &&
                           subSubLocationInfo2[i].subLocationId == int.parse(subSubLocationId.text)) {
                         viewPointNumberList2 = subSubLocationInfo2[i].viewPointNumberlist;
-                        viewpointImagesUrl.add(subSubLocationInfo2[i].masterImage.masterFile.toString());
+                        // viewpointImagesUrl.add(subSubLocationInfo2[i].masterImage.masterFile.toString());
                         break;
                       }
                     }
                     for(int i=0; i < subSubLocationInfo2.length; i++) {
                         for(int j=0; j < subSubLocationInfo2[i].subSubLocationActivity.length; j++) {
-                          if(subSubLocationInfo2[i].subSubLocationActivity[j].linkActivityId == int.parse(linking_activity_id.text)) {
+                          if(subSubLocationInfo2[i].subSubLocationActivity[j].linkingActivityId == int.parse(linking_activity_id.text)) {
                             pwrContractorName.text = subSubLocationInfo2[i].subSubLocationActivity[j].contractorName;
                             pwrContractorId.text=subSubLocationInfo2[i].subSubLocationActivity[j].contId.toString();
                             uOfName.text=subSubLocationInfo2[i].subSubLocationActivity[j].uomName.toString();
-                            totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].totalQuantity.toString();
+                            for(int k=0;k<subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo.length;k++){
+                            totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[k].totalQuantity.toString();
+                            }
                             break;
                           }
                         }
@@ -790,7 +792,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
               child: 
             Row(children: [
                Text("TOTAL QUANTITY: ${totalQuantity.text}", style: textStyleBodyText4),
-            ],)
+            ],
+            ),
             ),
             const SizedBox(height: 30,),
             Container(
@@ -1000,9 +1003,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     }
                     if(!keyExists){
                       try {
-                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                      contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
                       }catch(e){
-                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
+                      contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
                       }
                     }
                     }
@@ -1256,7 +1259,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   elevation: 0,
                   splashFactory: NoSplash.splashFactory),
                   onPressed:(){
-                        showDialog(
+                      showDialog(
                       context: context,
                       builder: (BuildContext context){
                         return SimpleDialog(
