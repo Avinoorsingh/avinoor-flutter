@@ -336,12 +336,12 @@ class _SnagState extends State<SnagDetail> {
                     child:
                     Column(
                       children: [
-                          Row(
+                      Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                        Center(child: Text("Snag Image",style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
+                        Center(child: Text("Snag Image", style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
                         const SizedBox(width: 10,),
-                        Center(child: Text("De-Snag Image",style: textStyleBodyText1.copyWith(fontSize: 16, color:Colors.grey),),),
+                        Center(child: Text("De-Snag Image", style: textStyleBodyText1.copyWith(fontSize: 16, color:Colors.grey),),),
                   ],),
                   const SizedBox(height: 10,),
                 Row(
@@ -359,7 +359,7 @@ class _SnagState extends State<SnagDetail> {
                         shrinkWrap: true,
                           itemCount: groupedViewpoints[outerKey]?.length,
                           itemBuilder: (context, innerIndex) {
-                            return
+                          return
                         GestureDetector(
                       onTap: () async {
                         await showDialog(
@@ -377,11 +377,13 @@ class _SnagState extends State<SnagDetail> {
                           fit: BoxFit.fill,
                           child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
                         height: 10,
-                        width: 30,),),
+                        width: 30,
+                        ),
+                        ),
                         )
-                      );
-                          }
-                         )
+                        );
+                        }
+                        )
                       )
                     ],
                   ),
@@ -393,103 +395,104 @@ class _SnagState extends State<SnagDetail> {
                        SizedBox(
                         width: MediaQuery.of(context).size.width/2.5,
                         child:
-                         ListView.builder(
+                        ListView.builder(
                         physics:const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                          itemCount: groupedDeSnagImages[outerKey]?.length,
-                          itemBuilder: (context, innerIndex) {
-                            return
+                        itemCount: groupedDeSnagImages[outerKey]?.length,
+                        itemBuilder: (context, innerIndex){
+                        return
                       // ignore: unnecessary_null_comparison
                       newGroupedDeImages[outerKey]![innerIndex]!=null?
-                       GestureDetector(
+                      GestureDetector(
                       onTap: () async {},
                       child: 
                       Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if(newGroupedDeSnagImages[outerKey]![innerIndex].isNotEmpty)
-                  Container(
-                  margin:const EdgeInsets.only(top: 10,bottom: 10),
-                  height: 100,
-                  width: 30,
-                  child:
-                   FittedBox(
-                   fit: BoxFit.fill,
-                   child:
-                  InkWell(
-                      onTap: () {
-                        return;
-                      },
+                  children: <Widget>[
+                    if(newGroupedDeSnagImages[outerKey]![innerIndex].isNotEmpty)
+                      Container(
+                      margin:const EdgeInsets.only(top: 10,bottom: 10),
+                      height: 100,
+                      width: 30,
                       child:
-                        FittedBox(
-                           child:
-                           Container(
-                            margin: const EdgeInsets.only(top:10,bottom: 10,),
-                            height: 10,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              image:DecorationImage(
-                                image:FileImage(File(newGroupedDeSnagImages[outerKey]![innerIndex][0].path?? "")),
-                              fit: BoxFit.cover,
-                              ),
+                      FittedBox(
+                      fit: BoxFit.fill,
+                      child:
+                      InkWell(
+                          onTap: () {
+                            return;
+                          },
+                          child:
+                            FittedBox(
+                              child:
+                              Container(
+                                margin: const EdgeInsets.only(top:10,bottom: 10,),
+                                height: 10,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  image:DecorationImage(
+                                    image:FileImage(File(newGroupedDeSnagImages[outerKey]![innerIndex][0].path?? "")),
+                                  fit: BoxFit.cover,
+                                  ),
+                                )
+                              )
                             )
                           )
-                        )
-                      )
-                    ),
-                  ),
-                Container(
-                margin: EdgeInsets.only(top:15,bottom: 15,left:newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?35:5,right: 10),
-                width: MediaQuery.of(context).size.width/4.5,
-                decoration: widget.from=='desnagnew'? BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(
-                    begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
-                    colors: [Color.fromARGB(173, 57, 54, 54),Color.fromARGB(250, 19, 14, 14)],
-                    stops: [0.0, 1.0],
-                  ),
-                ):null,
-                child: widget.from=='desnagnew' || groupedDeSnagImages[outerKey][innerIndex].isEmpty?
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
-                  ),
-                  onPressed: () async {
-                      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                      final File imagefile = File(image!.path);
-                      newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?
-                      newGroupedDeSnagImages[outerKey]![innerIndex].add(imagefile): newGroupedDeSnagImages[outerKey]![innerIndex][0]=imagefile;
-                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                        var token=sharedPreferences.getString('token');
-                        FormData formData=FormData(); 
-                        var dio = Dio();
-                        formData.fields.add(MapEntry('viewpoint_id', viewpoints[outerIndex]['id'].toString()));
-                        formData.files.add(
-                        MapEntry("de_snag_image", await MultipartFile.fromFile(newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].substring(1,newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].length), filename: 'de_snag_image')));
-                        var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
-                        data:formData,
-                        options: Options(
-                            followRedirects: false,
-                            validateStatus: (status) {
-                              return status! < 500;
-                            },
-                            headers: {
-                              "authorization": "Bearer ${token!}",
-                              "Content-type": "application/json",
-                            },
-                          ),
-                        );
-                           setState(() { });
-                        if (kDebugMode) {
-                          print(res);
-                        }
-                  },
+                        ),
+                      ),
+                    Container(
+                    margin: EdgeInsets.only(top:15,bottom: 15,left:newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?35:5,right: 10),
+                    width: MediaQuery.of(context).size.width/4.5,
+                    decoration: widget.from=='desnagnew'? BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      gradient: const LinearGradient(
+                        begin: Alignment(-0.95, 0.0),
+                        end: Alignment(1.0, 0.0),
+                        colors: [Color.fromARGB(173, 57, 54, 54),Color.fromARGB(250, 19, 14, 14)],
+                        stops: [0.0, 1.0],
+                      ),
+                    ):null,
+                    child: widget.from=='desnagnew' || groupedDeSnagImages[outerKey][innerIndex].isEmpty?
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        splashFactory: NoSplash.splashFactory,
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                        backgroundColor: Colors.transparent,
+                          disabledForegroundColor: Colors.transparent.withOpacity(0.38), 
+                          disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                          shadowColor: Colors.transparent,
+                        ),
+                        onPressed: () async {
+                          final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                          final File imagefile = File(image!.path);
+                          newGroupedDeSnagImages[outerKey]![innerIndex].isEmpty?
+                          newGroupedDeSnagImages[outerKey]![innerIndex].add(imagefile): newGroupedDeSnagImages[outerKey]![innerIndex][0]=imagefile;
+                            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                            var token=sharedPreferences.getString('token');
+                            FormData formData=FormData(); 
+                            var dio = Dio();
+                            formData.fields.add(MapEntry('viewpoint_id', viewpoints[outerIndex]['id'].toString()));
+                            formData.files.add(
+                            MapEntry("de_snag_image", await MultipartFile.fromFile(newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].substring(1,newGroupedDeSnagImages[outerKey]![innerIndex][0].path.split(': ')[0].length), filename: 'de_snag_image')));
+                            var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
+                            data:formData,
+                            options: Options(
+                                followRedirects: false,
+                                validateStatus: (status) {
+                                  return status! < 500;
+                                },
+                                headers: {
+                                  "authorization": "Bearer ${token!}",
+                                  "Content-type": "application/json",
+                                },
+                              ),
+                            );
+                            setState(() { });
+                            if (kDebugMode) {
+                              print(res);
+                            }
+                      },
                   child: const Center(
                     child: Text(
                       'Upload Image',
@@ -507,7 +510,7 @@ class _SnagState extends State<SnagDetail> {
                         await showDialog(
                           useSafeArea: true,
                           context: context,
-                          builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
+                          builder: (_) => imageDialog('Snag Image', 'https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
                         },
                       child:  Container(
                         margin:const EdgeInsets.only(top: 10,bottom: 10),
@@ -520,23 +523,23 @@ class _SnagState extends State<SnagDetail> {
                           height: 25,
                           width: 20,
                           ),
-                            ),
+                        ),
                       )
-                 )
-              ),
+                    )
+                  ),
                   ]
                 ),
               ):Container();
-                  }))],
+                }))],
                     ),
                   ]
                 )
               ]
             )
-                ),
-              ],
+            ),
+            ],
             );
-          }),
+            }),
             }
             ])
             ),
@@ -548,7 +551,7 @@ class _SnagState extends State<SnagDetail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 Text("REMARK",style: textStyleBodyText1.copyWith(fontSize: 14),),
-              ],),),
+                ],),),
                const SizedBox(height: 10,),
                CustomTextFieldGrey(enabled: false,controller: remarkController,)
           ])
@@ -565,7 +568,7 @@ class _SnagState extends State<SnagDetail> {
               ],),),
                const SizedBox(height: 10,),
                CustomTextFieldGrey(enabled: false,controller: deSnagRemarkController,)
-          ])
+            ])
             ),
             },
             },
@@ -577,7 +580,7 @@ class _SnagState extends State<SnagDetail> {
                 children: [
                 Text("DEBIT TO",
                 style: textStyleBodyText1.copyWith(fontSize: 14),),
-              ],),),
+                ],),),
                 CustomContainer(child:
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -585,7 +588,7 @@ class _SnagState extends State<SnagDetail> {
               Center(child: Text("Select debit to",textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14),),),
               const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,),
               ]))
-          ])
+             ])
             ),
             const SizedBox(height: 10,),
              CustomContainer(
@@ -597,7 +600,7 @@ class _SnagState extends State<SnagDetail> {
              Text("Due Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDateController.text))}",style: textStyleBodyText1.copyWith(fontSize: 14),),
             ),
             ])
-          ),
+            ),
            const SizedBox(height: 10,),
             CustomContainer2(child: 
             Column(children: [
@@ -850,83 +853,83 @@ class _SnagState extends State<SnagDetail> {
                   var token=sharedPreferences.getString('token');
                   var createdById=sharedPreferences.getString('id');
                    showDialog(
-    context: context,
-    builder: (BuildContext context1) {
-      return 
-      Container(
-        decoration:const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-         width: MediaQuery.of(context1).size.width/1,
-        child:
-      AlertDialog(
-        elevation: 2,
-        title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
-        content:
-        SizedBox(width: MediaQuery.of(context1).size.width/1,child:
-            TextField(
-              enabled: true,
-              controller: closingRemarkController,
-              textAlign: TextAlign.center,
-               decoration: InputDecoration(
-                filled: true,
-                hintText: "Type remark here",
-                fillColor: Colors.grey[200],
-                hintStyle:const TextStyle(color: Colors.grey,),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[500]!), //<-- SEE HERE
-                ),
-                errorBorder: InputBorder.none,
-                disabledBorder:OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                      width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                ),),
-               maxLines: 1,
-              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-            ),
-        ),
-        actions: <Widget>[
-                  Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: MediaQuery.of(context1).size.width/3,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    splashFactory: NoSplash.splashFactory,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
-                    backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
+            context: context,
+            builder: (BuildContext context1) {
+              return 
+              Container(
+                decoration:const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
                   ),
-                  onPressed: ()async{
-                   closingRemarkController.text="";
-                   Navigator.pop(context1);
-                  },
-                  child: const Center(
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        letterSpacing: -0.3858822937011719,
-                      ),
+                ),
+                width: MediaQuery.of(context1).size.width/1,
+                child:
+              AlertDialog(
+                elevation: 2,
+                title: Text('Snag',textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14).copyWith(fontSize: 20,color: Colors.grey),),
+                content:
+                SizedBox(width: MediaQuery.of(context1).size.width/1,child:
+                    TextField(
+                      enabled: true,
+                      controller: closingRemarkController,
                       textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: "Type remark here",
+                        fillColor: Colors.grey[200],
+                        hintStyle:const TextStyle(color: Colors.grey,),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 1, color:Colors.grey[500]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              width: 1, color:Colors.grey[500]!),
+                        ),
+                        errorBorder: InputBorder.none,
+                        disabledBorder:OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(
+                              width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                        ),),
+                      maxLines: 1,
+                      style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
                     ),
-                  ),
                 ),
+                actions: <Widget>[
+                          Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context1).size.width/3,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.5),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            splashFactory: NoSplash.splashFactory,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                            backgroundColor: Colors.transparent,
+                              disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                              shadowColor: Colors.transparent,
+                          ),
+                          onPressed: () async {
+                          closingRemarkController.text="";
+                          Navigator.pop(context1);
+                          },
+                          child: const Center(
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                letterSpacing: -0.3858822937011719,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
               ),
               Container(
                 width: MediaQuery.of(context1).size.width/3,
@@ -944,8 +947,8 @@ class _SnagState extends State<SnagDetail> {
                     splashFactory: NoSplash.splashFactory,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
                     backgroundColor: Colors.transparent,
-                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                      shadowColor: Colors.transparent,
+                    disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                    shadowColor: Colors.transparent,
                   ),
                   onPressed: ()async{
                     if(closingRemarkController.text.isNotEmpty){
