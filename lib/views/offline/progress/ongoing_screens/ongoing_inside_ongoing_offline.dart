@@ -78,59 +78,49 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
 
   fetchSnagsFromLocal() async {
      formDataList=await databaseProvider.getAllOfflineModel();
-     if(formDataList.isNotEmpty){
-      for(int i=0;i<formDataList.length;i++){
-        for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
-            if(formDataList[i].locationOfflineData[j].locationId==int.parse(widget.locID)){
-                for(int k=0;k<formDataList[i].locationOfflineData[j].subLocationInfo.length;k++){
-                  if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subLocId==int.parse(widget.subLocID)){
-                    for(int l=0;l<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo.length;l++){
-                      if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocationId==int.parse(widget.subSubLocID)){
-                        list1=formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity;
-                        break;
-                      }
-                    }
-                  }
-                }
-               }
-            }
-            setState(() {});
-           }
-     EasyLoading.dismiss();
-     }
-     else if(formDataList.isEmpty){
-      EasyLoading.dismiss();
-     }
-     setState(() {
-       
-     });
+     setState(() {});
   }
 
 
   @override
   Widget build(BuildContext context) {
      if(activityHead.isEmpty){
-      for(int i=0;i<list1.length;i++){
-       activityHead.add(list1[i].activityHead!);
-       activity.add(list1[i].activity!);
-       triggerID.add(list1[i].triggerId??0);
-       percentage.add(list1[i].progressPercentage??0);
-       uomName.add(list1[i].uomName??"");
-       editData.add(list1[i]);
+       if(formDataList.isNotEmpty){
+         for(int i=0;i<formDataList.length;i++){
+        for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
+            if(formDataList[i].locationOfflineData[j].locationId==int.parse(widget.locID)){
+                for(int k=0;k<formDataList[i].locationOfflineData[j].subLocationInfo.length;k++){
+                  if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subLocId==int.parse(widget.subLocID)){
+                    for(int l=0;l<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo.length;l++){
+                      if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocationId==int.parse(widget.subSubLocID)
+                      && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].locationId==int.parse(widget.locID) 
+                      && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocId==int.parse(widget.subLocID)){
+                        for(int m=0;m<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity.length;m++){
+                           if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd!=null){
+                              activityHead.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activityHead!);
+                              activity.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activity!);
+                              uomName.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].uomName!);
+                              percentage.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].progressAdd?.progressDailyInfo[0]?.progressPercentage??0);
+                              triggerID.add(0);
+                              //  percentage.add(list1[i].progressAdd?.progressDailyInfo[0]?.progressPercentage??0);
+                              editData.add(formDataList[i]);
+                           }
+                        }
+                      }
+                    }
+                  }
+                }
+               }
+            }
+      }
+     EasyLoading.dismiss();
      }
-     if(list1.isNotEmpty){
-     locationController.text=list1[0].locationName!;
-     subLocationController.text=list1[0].subLocationName!;
-     subSubLocationController.text=list1[0].subSubLocationName!;
-     }
-     else{
-           EasyLoading.show(maskType: EasyLoadingMaskType.black);
-     }
-     }
+       setState(() {});
+    }
     EasyLoading.dismiss();
     return 
      Scaffold(
-    body: (list1.isNotEmpty)?
+    body: (formDataList.isNotEmpty)?
     Container(margin: const EdgeInsets.only(top: 150,),
     child: ListView(
       children: [

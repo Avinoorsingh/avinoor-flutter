@@ -40,10 +40,12 @@ class LocationOfflineData {
   int? countLoc;
 
   LocationOfflineData(
-      {this.locationId,
+      {
+      this.locationId,
       this.locationName,
       this.subLocationInfo,
-      this.countLoc});
+      this.countLoc
+      });
 
   LocationOfflineData.fromJson(Map<String, dynamic> json) {
     locationId = json['location_id'];
@@ -212,13 +214,15 @@ class ViewPointNumberlist {
   String? updatedAt;
 
   ViewPointNumberlist(
-      {this.id,
+      {
+      this.id,
       this.viewpointSubSubLocId,
       this.subSubLocationId,
       this.viewpoint,
       this.viewpointMasterId,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt
+      });
 
   ViewPointNumberlist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -288,7 +292,8 @@ class SubSubLocationActivity {
   int? updatedBy;
 
   SubSubLocationActivity(
-      {this.linkingActivityId,
+      {
+      this.linkingActivityId,
       this.activity,
       this.quantity,
       this.productivity,
@@ -328,7 +333,8 @@ class SubSubLocationActivity {
       this.type,
       this.linkActivityId,
       this.createdBy,
-      this.updatedBy});
+      this.updatedBy
+      });
 
   SubSubLocationActivity.fromJson(Map<String, dynamic> json) {
     linkingActivityId = json['linking_activity_id'];
@@ -453,7 +459,8 @@ class LabourSupply {
   List<ContractorLabourLinking>? contractorLabourLinking;
 
   LabourSupply(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.projectId,
       this.clientContractorId,
@@ -469,7 +476,8 @@ class LabourSupply {
       this.updatedBy,
       this.createdAt,
       this.updatedAt,
-      this.contractorLabourLinking});
+      this.contractorLabourLinking
+      });
 
   LabourSupply.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -538,7 +546,8 @@ class ContractorLabourLinking {
   String? updatedAt;
 
   ContractorLabourLinking(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.projectId,
       this.clientContractorId,
@@ -550,7 +559,8 @@ class ContractorLabourLinking {
       this.otRate,
       this.aadhar,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt
+      });
 
   ContractorLabourLinking.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -604,7 +614,8 @@ class ProgressOngoingData {
   EmployeeInfo? employeeInfo;
 
   ProgressOngoingData(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.projectId,
       this.type,
@@ -617,7 +628,8 @@ class ProgressOngoingData {
       this.createdAt,
       this.updatedAt,
       this.progressDailyInfo,
-      this.employeeInfo});
+      this.employeeInfo
+      });
 
   ProgressOngoingData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -689,7 +701,8 @@ class ProgressDailyInfo {
   List<ProgressContByPwr>? progressContByPwr;
 
   ProgressDailyInfo(
-      {this.dailyId,
+      {
+      this.dailyId,
       this.progressId,
       this.contractorId,
       this.cumulativeQuantity,
@@ -706,7 +719,8 @@ class ProgressDailyInfo {
       this.debitContractor,
       this.progressLabourLinkings,
       this.progressImagebyDaily,
-      this.progressContByPwr});
+      this.progressContByPwr
+      });
 
   ProgressDailyInfo.fromJson(Map<String, dynamic> json) {
     dailyId = json['daily_id'];
@@ -809,7 +823,8 @@ class ProgressLabourLinkings {
   ContractorLabourLinking? progressLabourInfoByCll;
 
   ProgressLabourLinkings(
-      {this.progessLinkId,
+      {
+      this.progessLinkId,
       this.progressDailyId,
       this.progressId,
       this.contractorId,
@@ -821,7 +836,8 @@ class ProgressLabourLinkings {
       this.createdAt,
       this.updatedAt,
       this.progressContractorInfoByPc,
-      this.progressLabourInfoByCll});
+      this.progressLabourInfoByCll
+      });
 
   ProgressLabourLinkings.fromJson(Map<String, dynamic> json) {
     progessLinkId = json['progess_link_id'];
@@ -896,12 +912,14 @@ class ProgressImagebyDaily {
   String? updatedAt;
 
   ProgressImagebyDaily(
-      {this.id,
+      {
+      this.id,
       this.progressId,
       this.progressDailyId,
       this.fileName,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt
+      });
 
   ProgressImagebyDaily.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -939,7 +957,8 @@ class ProgressContByPwr {
   PwrContractorInfoByPc? pwrContractorInfoByPc;
 
   ProgressContByPwr(
-      {this.id,
+      {
+      this.id,
       this.progressId,
       this.progressDailyId,
       this.contractorId,
@@ -949,7 +968,8 @@ class ProgressContByPwr {
       this.progressDate,
       this.createdAt,
       this.updatedAt,
-      this.pwrContractorInfoByPc});
+      this.pwrContractorInfoByPc
+      });
 
   ProgressContByPwr.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1006,7 +1026,8 @@ class PwrContractorInfoByPc {
   String? updatedAt;
 
   PwrContractorInfoByPc(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.projectId,
       this.clientContractorId,
@@ -1021,7 +1042,8 @@ class PwrContractorInfoByPc {
       this.createdBy,
       this.updatedBy,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt
+      });
 
   PwrContractorInfoByPc.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1089,7 +1111,8 @@ class EmployeeInfo {
   String? updatedAt;
 
   EmployeeInfo(
-      {this.id,
+      {
+      this.id,
       this.clientId,
       this.userId,
       this.password,
@@ -1110,7 +1133,8 @@ class EmployeeInfo {
       this.userImage,
       this.fcmToken,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt
+      });
 
   EmployeeInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];

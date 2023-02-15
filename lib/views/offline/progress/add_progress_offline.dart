@@ -261,6 +261,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
 
     Future<LabourAttendance> getLabourAttendanceModel() async {
     labourAttendance = await databaseProvider.getLabourAttendanceModel();
+    print("#####################################");
+    print(labourAttendance);
+    print("#####################################");
     return labourAttendance;
     }
 
@@ -305,13 +308,16 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
         subLocationList.add(allOfflineData[0].locationOfflineData![i].subLocationInfo!);
        }
       }
-      if(labourAttendance.mainData!=null){
-        List<MainData>? contractorList1=labourAttendance.mainData;
-        if(contractorList.isEmpty){
+      if(contractorList.isEmpty){
         contractorList.add("Select Contractor Name");
         subItems.add([]);
         contractorID.add(99999);
         contractorLabourLinkingId={28282828:[]};
+      }
+      if(labourAttendance!=null){
+      if(labourAttendance.mainData!=null){
+        List<MainData>? contractorList1=labourAttendance.mainData;
+        if(contractorList.isNotEmpty){
         if(contractorList1!=null){
         for(var data in contractorList1){
           contractorList.add(data.contractorName!);
@@ -330,6 +336,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
          }
         }
        }
+      }
       }
       }
       }
@@ -889,7 +896,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                 return
                 DropdownMenuItem(
                   value: items,
-                  child: Text(items,style: TextStyle(color: !mainDropdownValue.contains(items)?Colors.black:Colors.grey),),
+                  child: Text(items, style: TextStyle(color: !mainDropdownValue.contains(items)?Colors.black:Colors.grey),),
                 );
               }).toList(),
               onChanged:(String? newValue) async {
@@ -903,10 +910,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   mainDropdownValue.add(newValue);
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
-                     if(signInController.getLabourAttendance!.data!.isNotEmpty && _dropdownValues2.isEmpty){
-                      List<MainData>? list1=signInController.getLabourAttendance?.mainData;
+                     if(labourAttendance.isNotEmpty && _dropdownValues2.isEmpty){
+                      List<MainData>? list1=labourAttendance.mainData;
                       _dropdownValues2.add("Please Select");
-                      for(var data in list1!){
+                      if(list1!.isNotEmpty){
+                      for(var data in list1){
                         for(var data2 in data.labourDetails!){
                           if (groupedList.containsKey(data2.contractorName)){
                                 groupedList[data2.contractorName]!.add(data2.name!);
@@ -919,7 +927,11 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           }
                         }
                       }
+                      }
+                      if(contractorList.isNotEmpty){
                       contractorIDIndex.text=contractorList.indexOf(newValue).toString();
+                      }
+                      if(groupedList.isNotEmpty){
                       groupedMapToList=groupedList.values.toList();
                       for (var sublist in groupedMapToList) {
                           sublist.insert(0, "Please Select");
@@ -932,6 +944,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       finalList.insert(outerIndex,groupedList[contractorController.text]!);
                     }
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
+                     }
                    }else{}}):null;
                    if(newValue!="Select Contractor Name"){
                    for (var i = 0; i < subItems.length; i++) {

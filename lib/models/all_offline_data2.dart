@@ -4,6 +4,7 @@ class AllOfflineData {
   List<MasterImageOfSnag>? masterImageOfSnag;
   List<LabourSupply>? labourSupply;
 
+
   AllOfflineData(
       {this.locationOfflineData,
       this.ongoingProgress,

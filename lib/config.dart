@@ -52,4 +52,5 @@ class Config{
   static const String getContractorOfflineData="http://nodejs.hackerkernel.com/colab/api/contractor_offline_data/";
   static const String allOfflineData="http://nodejs.hackerkernel.com/colab/api/ongoing_progress_offline_data/";
   static const String getDailyProgressData="http://nodejs.hackerkernel.com/colab/api/progress_daily/";
+  static const String offlineUpcomingData="http://nodejs.hackerkernel.com/colab/api/upcoming_offline_data/";
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/services/bottom_tab_bar5.dart';
 import 'package:colab/theme/text_styles.dart';
+import 'package:colab/views/offline/progress/ongoing_screens/completed_inside_ongoing_offline.dart';
 import 'package:colab/views/offline/progress/ongoing_screens/upcoming_inside_ongoing_offline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -61,7 +62,13 @@ class _ActivityPageState extends State<OnGoingOnGoingOfflineScreen> {
                 key: Key(Random().nextInt(1000).toString()),
                 physics:const NeverScrollableScrollPhysics(),
                 children: [
-                const CompletedSiteProgressOffline(),
+                CompletedInsideOnGoingOffline(
+                  cID: widget.cID,
+                  pID: widget.pID,
+                  locID: widget.locID,
+                  subLocID: widget.subLocID,
+                  subSubLocID: widget.subSubLocID,
+                ),
                 OnGoingInsideOnGoingOffline(
                   cID: widget.cID,
                   pID: widget.pID,

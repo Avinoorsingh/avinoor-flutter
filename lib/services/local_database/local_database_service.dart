@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import '../../models/all_offline_upcoming_progress.dart';
 import '../../models/category_list.dart';
 import '../../models/clientEmployee.dart';
 import '../../models/contractor_data_offline.dart';
@@ -107,6 +108,12 @@ class DatabaseProvider {
             outerProgressData TEXT
             )
         ''');
+        db.execute(
+          ''' CREATE TABLE my_json_models12 (
+            id INTEGER PRIMARY KEY, 
+            upcomingOffline TEXT
+            )
+        ''');
       },
       version: 1,
     );
@@ -114,6 +121,8 @@ class DatabaseProvider {
 
   Future<void> insertMyJsonModel(var progressData) async {
     try {
+    await _database.delete('my_json_models');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, progress FROM my_json_models',
         );
@@ -140,6 +149,8 @@ class DatabaseProvider {
 
   Future<void> insertSnagModel(var snagData) async {
     try {
+    await _database.delete('my_json_models2');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, snag FROM my_json_models2',
         );
@@ -166,6 +177,8 @@ class DatabaseProvider {
   
   Future<void> insertAllOfflineModel(var allOfflineData) async {
     try {
+    await _database.delete('my_json_models3');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, allOffline FROM my_json_models3',
         );
@@ -188,10 +201,43 @@ class DatabaseProvider {
         print("Error in saving allOffline data => $e");
       }
     }
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    print("Inserted successfully!");
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+  }
+
+   Future<void> insertUpcomingOfflineModel(var upcomingOfflineData) async {
+    try {
+    await _database.delete('my_json_models12');
+    await init();
+    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+        'SELECT id, upcomingOffline FROM my_json_models12',
+        );
+
+    if (existingRows.isNotEmpty) {
+      final Map<String, dynamic> existingRow = existingRows.first;
+      final int id = existingRow['id'];
+      await _database.rawUpdate(
+        'UPDATE my_json_models12 SET upcomingOffline = ? WHERE id = ?',
+        [upcomingOfflineData, id],
+      );
+    } else {
+      await _database.rawInsert(
+        'INSERT INTO my_json_models12 (upcomingOffline) VALUES (?)',
+        [upcomingOfflineData],
+      );
+    }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in saving upcomingOffline data => $e");
+      }
+    }
   }
 
    Future<void> insertCategoryModel(var categoryData) async {
     try {
+    await _database.delete('my_json_models4');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, category FROM my_json_models4',
         );
@@ -218,6 +264,8 @@ class DatabaseProvider {
 
   Future<void> insertContractorModel(var contractorData) async {
     try {
+    await  _database.delete('my_json_models5');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, contractor FROM my_json_models5',
         );
@@ -244,6 +292,8 @@ class DatabaseProvider {
 
    Future<void> insertTrade(var tradeData) async {
     try {
+    await _database.delete('my_json_models7');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, trade FROM my_json_models7',
         );
@@ -270,6 +320,8 @@ class DatabaseProvider {
 
    Future<void> insertContractorForDebit(var contractorForDebitData) async {
     try {
+    await _database.delete('my_json_models8');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, contractorDebit FROM my_json_models8',
         );
@@ -296,6 +348,8 @@ class DatabaseProvider {
 
   Future<void> insertLabourAttendanceToday(var labourData) async {
     try {
+    await _database.delete('my_json_models9');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, labour FROM my_json_models9',
         );
@@ -322,6 +376,8 @@ class DatabaseProvider {
 
   Future<void> insertEmployeeModel(var employeeData) async {
     try {
+    await _database.delete('my_json_models6');
+    await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, employee FROM my_json_models6',
         );
@@ -407,6 +463,14 @@ class DatabaseProvider {
     });
   }
 
+   Future<List<AllOfflineUpcomingProgress>> getupcomingOfflineModel() async {
+    await init();
+    final List<Map<String, dynamic>> maps = await _database.query('my_json_models12');
+    return List.generate(maps.length, (i) {
+      return AllOfflineUpcomingProgress.fromJson(jsonDecode(maps[i]['upcomingOffline']));
+    });
+  }
+
   Future<ContractorDataOffline> getContractorModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models5');
@@ -431,10 +495,11 @@ class DatabaseProvider {
       return ProgressContractor.fromJson(jsonDecode(maps[0]['contractorDebit']));
     }
 
-  Future<LabourAttendance> getLabourAttendanceModel() async {
+  getLabourAttendanceModel() async {
     await init();
     final List<Map<String, dynamic>> maps = await _database.query('my_json_models9');
-    print(jsonDecode(maps[0]['labour']));
+    if(maps.isNotEmpty){
       return LabourAttendance.fromJson(jsonDecode(maps[0]['labour']));
+    }
     }
 }

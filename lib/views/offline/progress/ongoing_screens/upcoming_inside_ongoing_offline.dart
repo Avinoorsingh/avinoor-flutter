@@ -1,3 +1,4 @@
+import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/constants/colors.dart';
@@ -56,7 +57,7 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
   TextEditingController locationController=TextEditingController();
   TextEditingController subLocationController=TextEditingController();
   TextEditingController subSubLocationController=TextEditingController();
-  List list1=[];
+  List<LocationOfflineData> list1=[];
   List upComingModel=[];
   late DatabaseProvider databaseProvider;
   List formDataList = [];
@@ -90,8 +91,13 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
                       if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocationId==int.parse(widget.subSubLocID)
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].locationId==int.parse(widget.locID) 
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocId==int.parse(widget.subLocID)){
-                      list1=formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].upcomingActivityList;
-                      break;
+                        for(int m=0;m<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity.length;m++){
+                           if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd==null){
+                           list1.add(formDataList[i].locationOfflineData[j]);
+                          //  break;
+                           }
+                        }
+                      // break;
                       }
                     }
                   }
@@ -111,26 +117,39 @@ class _OnProgressState extends State<UpComingInsideOngoingOffline> {
   @override
   Widget build(BuildContext context) {
      var outputFormat1 = DateFormat('dd/MM/yyyy');
-      for(int i=0;i<list1.length;i++){
-       activityHead.add(list1[i].activityHead!);
-       activity.add(list1[i].activity!);
-       locationName.add(list1[i].locationName!);
-       subLocationName.add(list1[i].subLocationName!);
-       subSubLocationName.add(list1[i].subSubLocationName!);
-       contractorName.add(list1[i].contractorName??"null");
-       checkListAvail.add(list1[i].startTrigger);
-       plannedDates.add(list1[i].createdAt.toString());
-       finishDates.add(list1[i].updatedAt.toString());
-       upComingModel.add(list1[i]);
+        if(formDataList.isNotEmpty){
+        for(int i=0;i<formDataList.length;i++){
+        for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
+            if(formDataList[i].locationOfflineData[j].locationId==int.parse(widget.locID)){
+                for(int k=0;k<formDataList[i].locationOfflineData[j].subLocationInfo.length;k++){
+                  if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subLocId==int.parse(widget.subLocID)){
+                    for(int l=0;l<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo.length;l++){
+                      if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocationId==int.parse(widget.subSubLocID)
+                      && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].locationId==int.parse(widget.locID) 
+                      && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocId==int.parse(widget.subLocID)){
+                        for(int m=0;m<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity.length;m++){
+                           if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd==null){
+                              locationName.add(formDataList[i].locationOfflineData[j].locationName!);
+                              subLocationName.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subLocationName!);
+                              subSubLocationName.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationName!);
+                              contractorName.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].contractorName??"null");
+                              activityHead.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activityHead!);
+                              activity.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activity!);
+                              checkListAvail.add(0);
+                              plannedDates.add("2023-01-08T15:34:12.000Z".toString());
+                              finishDates.add("2024-01-09T15:34:12.000Z".toString());
+                              upComingModel.add(list1[i]);
+                           }
+                        }
+                      }
+                    }
+                  }
+                }
+            }
+      }
+     EasyLoading.dismiss();
      }
-     if(list1.isNotEmpty){
-     locationController.text=list1[0].locationName!;
-     subLocationController.text=list1[0].subLocationName!;
-     subSubLocationController.text=list1[0].subSubLocationName!;
-     }
-     else {
-        EasyLoading.show(maskType: EasyLoadingMaskType.black);
-     }
+    }
     EasyLoading.dismiss();
     return 
     Scaffold(

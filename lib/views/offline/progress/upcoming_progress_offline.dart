@@ -33,13 +33,14 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
   List formDataList = [];
 
   Future<void> _getData() async {
-    formDataList=await databaseProvider.getAllOfflineModel();
+    formDataList=await databaseProvider.getupcomingOfflineModel();
     if(formDataList.isNotEmpty){
       for(int i=0;i<formDataList.length;i++){
         for(int j=0;j<formDataList[i].upcomingProgress.length;j++){
         list1.add(formDataList[i].upcomingProgress[j]);
         }
       }
+      print(list1.length);
     }
     setState(() {});
   }
@@ -109,7 +110,7 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child:Text('${list1[index].locationName!} / ${list1[index].subLocationName!} / ${list1[index].subSubLocationName!}',style: textStyleBodyText2),),
-                                    Center(child:Text(list1[index].contractorName??"No Contractor",style: textStyleBodyText2,),),
+                                    Center(child:Text("No Contractor",style: textStyleBodyText2,),),
                                     Container(width: 200, 
                                     decoration:BoxDecoration(
                                     color:list1[index].startTrigger!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,
@@ -137,7 +138,7 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
                               color: AppColors.extraLightBlue,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:

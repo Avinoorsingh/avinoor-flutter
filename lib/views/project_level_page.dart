@@ -149,6 +149,25 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
             print(e);
           }
         }
+       try{
+          var getAllOfflineUpcomingDataURL=Uri.parse('${Config.offlineUpcomingData}$clientId/$projectID');
+           var res=await http.get(
+            getAllOfflineUpcomingDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+             await databaseProvider.insertUpcomingOfflineModel(res.body);
+          // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
+          }
+      } catch (e) {
+          if (kDebugMode) {
+            print("error in saving all offline data");
+            print(e);
+          }
+        }
      try {
        var getCategoryListUrl=Uri.parse("${Config.getCategoryListApi}$clientId/$projectID");
        var res=await http.get(
