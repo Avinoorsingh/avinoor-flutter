@@ -201,9 +201,9 @@ class DatabaseProvider {
         print("Error in saving allOffline data => $e");
       }
     }
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-    print("Inserted successfully!");
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    if (kDebugMode) {
+      print("Inserted successfully!");
+    }
   }
 
    Future<void> insertUpcomingOfflineModel(var upcomingOfflineData) async {

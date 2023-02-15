@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'package:colab/models/area_of_concern_model.dart';
 import 'package:colab/models/category_list.dart';

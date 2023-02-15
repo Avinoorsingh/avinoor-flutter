@@ -40,7 +40,6 @@ class _UpcomingProgressState extends State<UpComingProgressOffline> {
         list1.add(formDataList[i].upcomingProgress[j]);
         }
       }
-      print(list1.length);
     }
     setState(() {});
   }

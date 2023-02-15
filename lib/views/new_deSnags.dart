@@ -1,10 +1,10 @@
-// ignore: file_names
-import 'package:colab/constants/colors.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../constants/colors.dart';
 import '../controller/signInController.dart';
 import '../network/client_project.dart';
 import '../theme/text_styles.dart';

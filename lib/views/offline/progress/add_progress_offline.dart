@@ -261,9 +261,6 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
 
     Future<LabourAttendance> getLabourAttendanceModel() async {
     labourAttendance = await databaseProvider.getLabourAttendanceModel();
-    print("#####################################");
-    print(labourAttendance);
-    print("#####################################");
     return labourAttendance;
     }
 
@@ -325,7 +322,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
           subItems.add([]);
           if(data.labourDetails!.isNotEmpty){
           for(var data2 in data.labourDetails!){
-            if (contractorLabourLinkingId.containsKey(data2.contractorId)){;
+            if (contractorLabourLinkingId.containsKey(data2.contractorId)){
               contractorLabourLinkingId[data2.contractorId]!.add(data2.contractorLabourLinkingId!);
             } 
             else {

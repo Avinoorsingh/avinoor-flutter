@@ -1,4 +1,3 @@
-import 'package:colab/models/all_offline_data.dart';
 import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
