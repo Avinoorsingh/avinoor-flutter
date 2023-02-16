@@ -121,7 +121,8 @@ class DatabaseProvider {
 
   Future<void> insertMyJsonModel(var progressData) async {
     try {
-    await _database.delete('my_json_models');
+    await _database.execute('DELETE FROM my_json_models');
+    // await _database.delete('my_json_models');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, progress FROM my_json_models',
@@ -149,7 +150,8 @@ class DatabaseProvider {
 
   Future<void> insertSnagModel(var snagData) async {
     try {
-    await _database.delete('my_json_models2');
+    // await _database.execute('DELETE FROM my_json_models2');
+    // await _database.delete('my_json_models2');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, snag FROM my_json_models2',
@@ -177,7 +179,8 @@ class DatabaseProvider {
   
   Future<void> insertAllOfflineModel(var allOfflineData) async {
     try {
-    await _database.delete('my_json_models3');
+    await _database.execute('DELETE FROM my_json_models3');
+    // await _database.delete('my_json_models3');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, allOffline FROM my_json_models3',
@@ -208,7 +211,8 @@ class DatabaseProvider {
 
    Future<void> insertUpcomingOfflineModel(var upcomingOfflineData) async {
     try {
-    await _database.delete('my_json_models12');
+    await _database.execute('DELETE FROM my_json_models12');
+    // await _database.delete('my_json_models12');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, upcomingOffline FROM my_json_models12',
@@ -236,7 +240,8 @@ class DatabaseProvider {
 
    Future<void> insertCategoryModel(var categoryData) async {
     try {
-    await _database.delete('my_json_models4');
+    await _database.execute('DELETE FROM my_json_models4');
+    // await _database.delete('my_json_models4');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, category FROM my_json_models4',
@@ -264,7 +269,8 @@ class DatabaseProvider {
 
   Future<void> insertContractorModel(var contractorData) async {
     try {
-    await  _database.delete('my_json_models5');
+    await _database.execute('DELETE FROM my_json_models5');
+    // await  _database.delete('my_json_models5');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, contractor FROM my_json_models5',
@@ -292,7 +298,8 @@ class DatabaseProvider {
 
    Future<void> insertTrade(var tradeData) async {
     try {
-    await _database.delete('my_json_models7');
+    await _database.execute('DELETE FROM my_json_models7');
+    // await _database.delete('my_json_models7');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, trade FROM my_json_models7',
@@ -320,7 +327,8 @@ class DatabaseProvider {
 
    Future<void> insertContractorForDebit(var contractorForDebitData) async {
     try {
-    await _database.delete('my_json_models8');
+    await _database.execute('DELETE FROM my_json_models8');
+    // await _database.delete('my_json_models8');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, contractorDebit FROM my_json_models8',
@@ -348,7 +356,8 @@ class DatabaseProvider {
 
   Future<void> insertLabourAttendanceToday(var labourData) async {
     try {
-    await _database.delete('my_json_models9');
+    await _database.execute('DELETE FROM my_json_models9');
+    // await _database.delete('my_json_models9');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, labour FROM my_json_models9',
@@ -376,7 +385,8 @@ class DatabaseProvider {
 
   Future<void> insertEmployeeModel(var employeeData) async {
     try {
-    await _database.delete('my_json_models6');
+    await _database.execute('DELETE FROM my_json_models6');
+    // await _database.delete('my_json_models6');
     await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, employee FROM my_json_models6',

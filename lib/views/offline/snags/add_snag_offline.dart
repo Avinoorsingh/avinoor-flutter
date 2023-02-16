@@ -54,6 +54,8 @@ class _MyProfilePageState extends State<AddSnagOffline> {
   final categoryIDController=TextEditingController();
   // ignore: non_constant_identifier_names
   final linking_activity_id=TextEditingController();
+  final activityId=TextEditingController();
+  final activityHeadId=TextEditingController();
   final remarkController = TextEditingController();
   final debitToController=TextEditingController();
   final debitAmountController=TextEditingController();
@@ -146,6 +148,8 @@ class _MyProfilePageState extends State<AddSnagOffline> {
     List snagData2=[];
     late DatabaseProvider databaseProvider;
     List dateDifference=[];
+    Random random = Random();
+    late int randomNumber;
   
     @override
   void initState() {
@@ -251,7 +255,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
           if(allOfflineData[0].locationOfflineData!.isNotEmpty){
           for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
-                 activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
+              activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
             }
           }
           }
@@ -384,6 +388,8 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   subLocationController.text="";  
                   subV="";
                   linking_activity_id.text="";
+                  activityId.text="";
+                  activityHeadId.text="";
                   subSubV="";
                   subSubLocationController.text="";
                   subSubLocationId.text="";
@@ -484,6 +490,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
                   String value= await Navigator.of(context).push(_createRoute2());
                   setState((){
+                    print(value);
                     linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
                     subSubV=value.substring(0,value.indexOf('}'));
                     subSubLocationController.text=value.substring(0,value.indexOf('}'));
@@ -1154,20 +1161,22 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   for(int j=0;j<viewpoints2[i]['image'].length;j++){
                     viewpointsToSent.add(viewpoints2[i]['image'][j].toString());
                     VID.add(viewpointsID[i]);
-                  }
+                   }
                   }
                 }
-                  if(viewpointsToSent.isNotEmpty){
+                randomNumber=random.nextInt(90) + 10;
+                if(viewpointsToSent.isNotEmpty){
                     for (var item in viewpointsToSent){
-                      snagData["viewpoint_${VID[viewpointsToSent.indexOf(item)]}"]=viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1);
+                      snagData["viewpoint_${randomNumber}_${VID[viewpointsToSent.indexOf(item)]}"]=viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1);
                     }
                   }
                 try {
-                  snagData['markup_file']=assetImageController.text;
+                  snagData['markup_file_$randomNumber']=assetImageController.text;
                 } catch (e) {
                   formData.fields.add(const MapEntry('markup_file', ''));
                 }
                 snagData['snags_data']= ({
+                      "snag_random_id":randomNumber,
                       "client_id":int.parse(clientId.text),
                       "project_id": int.parse(projectId.text),
                       "category_id": int.parse(categoryIDController.text),
@@ -1175,7 +1184,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                       "sub_loc_id": int.parse(subLocationId.text),
                       "sub_sub_loc_id": int.parse(subSubLocationId.text),
                       "activity_head_id": 1,
-                      // "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
+                      "activity_id":1,
                       "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
                       'debet_contractor_id':2,
                       "remark": remarkController.text,

@@ -1,10 +1,20 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
 import 'package:colab/views/project_level_page_offline1.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:go_router/go_router.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/colors.dart';
 import '../models/progress_offline.dart';
 import '../theme/text_styles.dart';
 
@@ -24,6 +34,12 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   List<AllOfflineData> allOfflineData=[];
   List<SnagDataOffline> snagData=[];
   late DatabaseProvider databaseProvider;
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  List formDataList = [];
+  FormData formData=FormData(); 
+  var dio = Dio();
   
   _ProjectLevelPageState(){
      List pages = [
@@ -32,30 +48,124 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
     this.pages=pages;
   }
 
+   getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (isDeviceConnected){
+            fetchSnagsFromLocal();
+          }
+          else if (!isDeviceConnected && isAlertSet == false){
+            showDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
+  
+   Future<List<SnagDataOffline>> fetchSnagData() async {
+    snagData= await databaseProvider.getSnagModel();
+    await fetchSnagsFromLocal();
+     setState(() {
+      snagData;
+    });
+    return snagData;
+  }
+
+  fetchSnagsFromLocal() async {
+    formDataList=await databaseProvider.getSnagFormData();
+    List<dynamic> snagsDataList = formDataList.map((snag) => snag['snags_data']).toList();
+    // Iterate through each snag
+    if(snagsDataList.isNotEmpty){
+       formData.fields.add(MapEntry('snags_data',jsonEncode(snagsDataList)));
+    }
+    for (int i = 0; i < formDataList.length; i++) {
+      Map<String, dynamic> snag = formDataList[i];
+      // Iterate through each viewpoint in the snag
+      snag.forEach((key, value) {
+        if (key.startsWith("viewpoint_")) {
+          // Add the viewpoint file to the formData
+          formData.files.add(MapEntry(key, MultipartFile.fromFileSync(value, filename: "viewpoint_image")));
+        }
+      });
+    }
+      for (int i = 0; i < formDataList.length; i++) {
+      Map<String, dynamic> markup = formDataList[i];
+      // Iterate through each viewpoint in the snag
+      markup.forEach((key, value) {
+        if (key.startsWith("markup_")) {
+          // Add the viewpoint file to the formData
+          if(value.isNotEmpty){
+          formData.files.add(MapEntry(key, MultipartFile.fromFileSync(key, filename: "image${i + 1}")));
+          }
+          else{
+             formData.fields.add(MapEntry(key, ''));
+          }
+        }
+      });
+    }
+     try {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      var token=sharedPreferences.getString('token');
+      var res=await dio.post(
+        "http://nodejs.hackerkernel.com/colab/api/add_offline_snags",
+        data: formData,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+            },
+            headers: {
+              "authorization": "Bearer ${token!}",
+              "Content-type": "application/json",
+              },
+          ),
+        );
+        if (kDebugMode) {
+          print(res.data);
+          print(formData.fields);
+          print(formData.files);
+          formData.fields.clear();
+          formData.files.clear();
+        }
+        EasyLoading.showToast("Snag Saved", toastPosition: EasyLoadingToastPosition.bottom);
+        } catch (e) {
+        EasyLoading.showToast("server error occured", toastPosition: EasyLoadingToastPosition.bottom);
+        EasyLoading.dismiss();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    if (kDebugMode) {
+      print("######################");
+      // print(formData.fields);
+    }
+  }
+
   @override
   void initState(){
     databaseProvider = DatabaseProvider();
     databaseProvider.init();
     super.initState();
-    fetchProgressData();
-    fetchSnagData();
+    getConnectivity();
+    // fetchProgressData();
+    // fetchSnagData();
   }
 
-  Future<List<ProgressOffline>> fetchProgressData() async {
-    progressData= await databaseProvider.getMyJsonModels();
-    return progressData;
-  }
+  // Future<List<ProgressOffline>> fetchProgressData() async {
+  //   progressData= await databaseProvider.getMyJsonModels();
+  //   return progressData;
+  // }
 
-  Future<List<SnagDataOffline>> fetchSnagData() async {
-    snagData= await databaseProvider.getSnagModel();
-    await fetchAllData();
-    return snagData;
-  }
+  // Future<List<SnagDataOffline>> fetchSnagData() async {
+  //   snagData= await databaseProvider.getSnagModel();
+  //   await fetchAllData();
+  //   return snagData;
+  // }
 
-  Future<List<AllOfflineData>> fetchAllData() async {
-    allOfflineData= await databaseProvider.getAllOfflineModel();
-    return allOfflineData;
-  }
+  // Future<List<AllOfflineData>> fetchAllData() async {
+  //   allOfflineData= await databaseProvider.getAllOfflineModel();
+  //   return allOfflineData;
+  // }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');
    getFormatedDate(date) {
@@ -195,4 +305,42 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
      )
     );
   }
+showDialogBox() => showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context1) {
+              return SimpleDialog(
+                alignment: Alignment.center,
+                contentPadding: const EdgeInsets.only(left: 10,right: 10,top: 10),
+                children: <Widget>[
+                Text("No Internet Connection", style: textStyleHeadline3.copyWith(fontWeight: FontWeight.bold),),
+                Text("You need to have Mobile Data or wifi to access this. Press Offline to go Offline feature.",style: textStyleBodyText1.copyWith(color: Colors.black),),
+                SimpleDialogOption(
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                  GestureDetector(onTap : () async {
+                  Navigator.pop(context1, 'Cancel');
+                  setState(() => isAlertSet = false);
+                  isDeviceConnected = await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected && isAlertSet == false) {
+                  showDialogBox();
+                  setState(() => isAlertSet = true);
+                }
+              }, 
+              child: Text("RETRY",style:textStyleBodyText1.copyWith(color: AppColors.primary),),),
+              const SizedBox(width: 20),
+              GestureDetector( 
+               onTap: (){
+                  Navigator.pop(context1);
+                  context.pushNamed('PROJECTOFFLINE');
+                }, 
+                child: Text("OFFLINE",style:textStyleBodyText1.copyWith(color: AppColors.primary),),)
+              ],
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

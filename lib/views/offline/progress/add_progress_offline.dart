@@ -310,7 +310,6 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
         subItems.add([]);
         contractorID.add(99999);
         contractorLabourLinkingId={28282828:[]};
-      }
       if(labourAttendance!=null){
       if(labourAttendance.mainData!=null){
         List<MainData>? contractorList1=labourAttendance.mainData;
@@ -333,6 +332,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
          }
         }
        }
+      }
       }
       }
       }
@@ -907,7 +907,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   mainDropdownValue.add(newValue);
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
-                     if(labourAttendance.isNotEmpty && _dropdownValues2.isEmpty){
+                     if(labourAttendance!=null && _dropdownValues2.isEmpty){
                       List<MainData>? list1=labourAttendance.mainData;
                       _dropdownValues2.add("Please Select");
                       if(list1!.isNotEmpty){
@@ -1367,7 +1367,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     if(linkingActivityId.text.isEmpty){
                       EasyLoading.showToast("Linking Activity ID is required",toastPosition: EasyLoadingToastPosition.bottom);
                     }
-                    else if(remarkController.text.isEmpty){
+                    if(remarkController.text.isEmpty){
                       EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
                     }
                     else if(debitToController.text.isEmpty){
