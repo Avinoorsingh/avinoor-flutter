@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/snag_offline.dart';
 import 'package:colab/services/local_database/local_database_service.dart';
@@ -38,7 +37,9 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
   bool isDeviceConnected = false;
   bool isAlertSet = false;
   List formDataList = [];
+  List outerProgressFormDataList=[];
   FormData formData=FormData(); 
+  FormData formData2=FormData(); 
   var dio = Dio();
   
   _ProjectLevelPageState(){
@@ -54,6 +55,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
           if (isDeviceConnected){
             fetchSnagsFromLocal();
+            fetchOuterProgressFromLocal();
           }
           else if (!isDeviceConnected && isAlertSet == false){
             showDialogBox();
@@ -135,11 +137,69 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
           print(e);
         }
       }
-    if (kDebugMode) {
-      print("######################");
-      // print(formData.fields);
+  }
+
+  fetchOuterProgressFromLocal() async {
+    outerProgressFormDataList = await databaseProvider.getOuterProgressFormData();
+    List<dynamic> progressDataList = outerProgressFormDataList.map((progress) => progress['progress_data']).toList();
+    if(progressDataList.isNotEmpty){
+    Map<String, dynamic> dataToBeSent = {
+      "client_id": progressDataList[0]["client_id"],
+      "project_id": progressDataList[0]["project_id"],
+      "link_activity_id": progressDataList[0]["link_activity_id"],
+      "created_by": progressDataList[0]["client_id"],
+      "daily_progress": progressDataList,
+    };
+    formData2.fields.add(MapEntry('progress_data',jsonEncode([dataToBeSent])));
+    for (int i = 0; i < progressDataList.length; i++) {
+      Map<String, dynamic> progress = progressDataList[i];
+      progress.forEach((key, value) {
+        if(value!=null){
+        if (key.startsWith("progress_image")) {
+          formData2.files.add(MapEntry(key, MultipartFile.fromFileSync(value, filename: "progress_image")));
+        }
+        }
+        else{
+           formData2.fields.add(MapEntry(key, ''));
+        }
+      });
+    }
+      try {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      var token=sharedPreferences.getString('token');
+      var res=await dio.post(
+        "http://nodejs.hackerkernel.com/colab/api/progress_add_offline_data",
+        data: formData2,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+            },
+            headers: {
+              "authorization": "Bearer ${token!}",
+              "Content-type": "application/json",
+              },
+          ),
+        );
+        if (kDebugMode) {
+          print(res.data);
+          print(formData2.fields);
+          print(formData2.files);
+          formData.fields.clear();
+          formData.files.clear();
+        }
+        EasyLoading.showToast("Progress Saved", toastPosition: EasyLoadingToastPosition.bottom);
+        } catch (e) {
+        EasyLoading.showToast("server error occured", toastPosition: EasyLoadingToastPosition.bottom);
+        EasyLoading.dismiss();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
   }
+
+
 
   @override
   void initState(){
@@ -147,25 +207,8 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
     databaseProvider.init();
     super.initState();
     getConnectivity();
-    // fetchProgressData();
-    // fetchSnagData();
   }
 
-  // Future<List<ProgressOffline>> fetchProgressData() async {
-  //   progressData= await databaseProvider.getMyJsonModels();
-  //   return progressData;
-  // }
-
-  // Future<List<SnagDataOffline>> fetchSnagData() async {
-  //   snagData= await databaseProvider.getSnagModel();
-  //   await fetchAllData();
-  //   return snagData;
-  // }
-
-  // Future<List<AllOfflineData>> fetchAllData() async {
-  //   allOfflineData= await databaseProvider.getAllOfflineModel();
-  //   return allOfflineData;
-  // }
 
   final f = DateFormat('yyyy-MM-dd hh:mm a');
    getFormatedDate(date) {
@@ -173,7 +216,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
       var inputDate = inputFormat.parse(date);
       var outputFormat = DateFormat('dd/MM/yyyy');
     return outputFormat.format(inputDate);
-    }
+  }
 
     List<String> items = [
     "assets/images/my_tools_img.png",

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:colab/models/all_offline_data2.dart';
 import 'package:colab/models/labour_attendance.dart';
 import 'package:colab/models/progress_contractor.dart';
@@ -45,6 +46,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
+  final activityController = TextEditingController();
+  final activityHeadController = TextEditingController();
   final linkingActivityId=TextEditingController();
   final pwrContractorId=TextEditingController();
   final pwrContractorName=TextEditingController();
@@ -67,6 +70,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
   List<int> contractorID=[];
   Map<int, List<int>> contractorLabourLinkingId={};
   List<int> debitToID=[];
+  Random random = Random();
+  late int randomNumber;
 
   Map<String, List<String>> groupedList = {};
   List groupedMapToList=[];
@@ -621,6 +626,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
                     subSubV=value.substring(0,value.indexOf('}'));
                     subSubLocationController.text=value.substring(0,value.indexOf('}'));
+                    List<String> parts = subSubV.split("/");
+                    activityController.text=parts[0];
+                    activityHeadController.text=parts[1];
                   });
                   try {
                     List subLocationInfo = [];
@@ -701,8 +709,19 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                             pwrContractorName.text = subSubLocationInfo2[i].subSubLocationActivity[j].contractorName;
                             pwrContractorId.text=subSubLocationInfo2[i].subSubLocationActivity[j].contId.toString();
                             uOfName.text=subSubLocationInfo2[i].subSubLocationActivity[j].uomName.toString();
-                            for(int k=0;k<subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo.length;k++){
+                            print(")))))))))))))))))))))))((((((((");
+                            // print(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[0].totalQuantity.toString());
+                            print(")))))))))))))))))))))))((((((((");
+                            if(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd!=null){
+                            for(int k=0;k<subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd?.progressDailyInfo.length;k++){
                             totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[k].totalQuantity.toString();
+                            }
+                            }
+                            if(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd==null){
+                              if (kDebugMode) {
+                                print("I am here");
+                              }
+                            totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].quantity.toString();
                             }
                             break;
                           }
@@ -1364,7 +1383,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                   elevation: 0,
                   splashFactory: NoSplash.splashFactory),
                   onPressed:() async {
-                    if(linkingActivityId.text.isEmpty){
+                    if(linking_activity_id.text.isEmpty){
                       EasyLoading.showToast("Linking Activity ID is required",toastPosition: EasyLoadingToastPosition.bottom);
                     }
                     if(remarkController.text.isEmpty){
@@ -1381,6 +1400,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                     var projectID=sharedPreferences.getString('projectIdd');
                     var clientID=sharedPreferences.getString('client_id');
+                    randomNumber=random.nextInt(90) + 10;
                     Map<String, dynamic> outerProgress = {};
                     FormData formData=FormData(); 
                     if(priorityController.text=="Labour Supply"|| priorityController.text=="Misc."){
@@ -1424,15 +1444,30 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       }
                     }
                     try {
-                    outerProgress["progress_image"]= _selectedImage!.path;
+                    outerProgress["progress_image_$randomNumber"]= _selectedImage!.path;
                     } catch (e) {
-                      formData.fields.add(const MapEntry('progress_image', ''));
+                      formData.fields.add(MapEntry('progress_image_$randomNumber', ''));
                     }
-                    outerProgress['progress_data']= (
-                        {
+                    outerProgress["progress_filter"]=({
+                        "locID":locationId.text,
+                        "subLocID":subLocationId.text,
+                        "subSubLocID":subSubLocationId.text,
+                        "activity":activityController.text,
+                        "activityHead":activityHeadController.text,
+                        "uomName":uOfName.text,
+                        "locationName":locationController.text,
+                        "subLocationName":subLocationController.text,
+                        "subSubLocationName":subSubLocationController.text,
+                        "contractorName":contractorController.text
+                    });
+                    outerProgress["progress_data"]= (
+                        [{
+                          "daily_progress_random_id":randomNumber,
                           "client_id": int.parse(clientID!),
                           "project_id": int.parse(projectID!),
-                          "link_activity_id":linkingActivityId.text.isNotEmpty?int.parse(linkingActivityId.text):"",
+                          "prog_type": 0,
+                          "draft_status": 0,
+                          "link_activity_id":linking_activity_id.text.isNotEmpty?int.parse(linking_activity_id.text):"",
                           "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
                           "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
                           "remarks": remarkController.text,
@@ -1452,14 +1487,16 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           ],
                           "contractorLabourDetails": [],
                           "progressDetails": newList,
-                        }
+                        }]
                       );
-                      try {
+                    try {
                         await databaseProvider.insertOuterProgressFormData(outerProgress);
                         EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                     }
+                    // ignore: use_build_context_synchronously
+                    // Navigator.pop(context);
                     }
                     if(priorityController.text=="PRW"){
                     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -1481,7 +1518,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         {
                           "client_id": int.parse(clientID!),
                           "project_id": int.parse(projectID!),
-                          "link_activity_id":int.parse(linkingActivityId.text),
+                          "link_activity_id":int.parse(linking_activity_id.text),
                           "achived_quantity": achivedController.text,
                           "total_quantity":int.parse(totalQuantity.text),
                           "remarks": remarkController.text,
@@ -1492,14 +1529,15 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                           "cumulative_quantity": comulativeController.text,
                           "type": 2,
                           "save_type": "save",
-                          "created_by":int.parse(clientId.text),
+                          "created_by":int.parse(clientID),
                           "PWRLabourDetails": pWRLabourDetailsList,
                           "contractorLabourDetails": [],
                           "progressDetails": [],
                         }
                       );
                     try {
-                        await databaseProvider.insertOuterProgressFormData(outerProgress);
+                      print(outerProgress);
+                      await databaseProvider.insertOuterProgressFormData(outerProgress);
                         EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
                       EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);

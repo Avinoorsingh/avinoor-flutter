@@ -67,6 +67,7 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
   List editModel=[];
   late DatabaseProvider databaseProvider;
   List formDataList = [];
+  List ongoingLocalDataList=[];
 
    @override
   void initState(){
@@ -81,6 +82,7 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagDataOffline= await databaseProvider.getSnagModel();
+    ongoingLocalDataList=await databaseProvider.getOuterProgressFormData();
     await fetchSnagsFromLocal();
     return snagDataOffline;
   }
@@ -92,7 +94,8 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
 
   @override
   Widget build(BuildContext context) {
-     if(formDataList.isNotEmpty && locationName.isEmpty){
+    if(locationName.isEmpty){
+     if(formDataList.isNotEmpty){
         for(int i=0;i<formDataList.length;i++){
         for(int j=0;j<formDataList[i].locationOfflineData.length;j++){
             if(formDataList[i].locationOfflineData[j].locationId==int.parse(widget.locID)){
@@ -122,9 +125,34 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
                 }
             }
       }
-      setState(() {});
+     }
+    }
+     if(ongoingLocalDataList.isNotEmpty){
+         for(int i=0;i<ongoingLocalDataList.length;i++){
+          print(ongoingLocalDataList);
+            if(ongoingLocalDataList[i]["progress_filter"]["subSubLocID"]==(widget.subSubLocID)
+                && ongoingLocalDataList[i]["progress_filter"]["locID"]==(widget.locID) 
+                && ongoingLocalDataList[i]["progress_filter"]["subLocID"]==(widget.subLocID)){
+                  for(int j=0;j<ongoingLocalDataList[i]["progress_data"].length;j++){
+                  if(ongoingLocalDataList[i]["progress_data"][j]["progress_percentage"]=="100"){
+                    activityHead.add(ongoingLocalDataList[i]["progress_filter"]["activityHead"]);
+                    activity.add(ongoingLocalDataList[i]["progress_filter"]["activity"]);
+                    locationName.add(ongoingLocalDataList[i]["progress_filter"]["locationName"]);
+                    subLocationName.add(ongoingLocalDataList[i]["progress_filter"]["subLocationName"]);
+                    subSubLocationName.add(ongoingLocalDataList[i]["progress_filter"]["subSubLocationName"]);
+                    contractorName.add(ongoingLocalDataList[i]["progress_filter"]["contractorName"]);
+                    checkListAvail.add("0");
+                    plannedDates.add("2023-01-08T15:34:12.000Z".toString());
+                    finishDates.add("2024-01-09T15:34:12.000Z".toString());
+                    editModel.add(ongoingLocalDataList[i]);
+                  }
+                  }
+                }
+               }
      EasyLoading.dismiss();
      }
+    setState(() {});
+    EasyLoading.dismiss();
     }
     EasyLoading.dismiss();
     return 

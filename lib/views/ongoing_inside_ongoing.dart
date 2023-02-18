@@ -118,9 +118,9 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
        editData.add(list1[i]);
      }
      if(list1.isNotEmpty){
-     locationController.text=list1[0].locationName!;
-     subLocationController.text=list1[0].subLocationName!;
-     subSubLocationController.text=list1[0].subSubLocationName!;
+    //  locationController.text=list1[0].locationName!;
+    //  subLocationController.text=list1[0].subLocationName!;
+    //  subSubLocationController.text=list1[0].subSubLocationName!;
      }
      else{
            EasyLoading.show(maskType: EasyLoadingMaskType.black);
@@ -134,18 +134,6 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
     child: ListView(
       controller: scrollController,
       children: [
-      //   CustomContainer3(child: 
-      //       Column(children: [
-      //         Center(child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //           Center(child: Text("${locationController.text} / ${subLocationController.text} / ${subSubLocationController.text}",style: textStyleBodyText1.copyWith(color: AppColors.white,))),
-      //           ]
-      //         )
-      //       )
-      //     ]
-      //   )
-      // ),
         const SizedBox(height: 20,),
         Stack(children: [
         ListView.builder(

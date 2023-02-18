@@ -110,7 +110,7 @@ class GetLabourDataToday extends GetxController{
       }
       try {
       var getLabourByDateUrl=Uri.parse("${Config.getLabourDataOfTodayApi}$date/$clientID/$projectID");
-        var res=await http.get(
+      var res=await http.get(
             getLabourByDateUrl,
             headers:{
               "Accept": "application/json",
@@ -123,10 +123,10 @@ class GetLabourDataToday extends GetxController{
           signInController.getLabourByDate=result;
           }
           else if(data['success']==false){
-            signInController.getLabourByDate!.data=null;
+            signInController.getLabourByDate?.data=null;
           }
           update();
-            } catch (e) {
+        } catch (e) {
               if (kDebugMode) {
                 print("error in getting labour data by date");
                 print(e);

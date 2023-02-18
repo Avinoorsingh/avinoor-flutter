@@ -44,6 +44,7 @@ class _LabourState extends State<LabourData> {
     GetBuilder<GetLabourDataToday>(builder: (_){
     final signInController=Get.find<SignInController>();
     if(signInController.getLabourByDate!=null){
+      if(signInController.getLabourByDate!.data!=null){
      if(signInController.getLabourByDate!.data!.isNotEmpty && contractorName.isEmpty){
       for(int i=0;i<signInController.getLabourByDate!.data!.length;i++){
         contractorName.add(signInController.getLabourByDate!.data![i].contractorName??"");
@@ -55,6 +56,7 @@ class _LabourState extends State<LabourData> {
         dateOfLabourData.add(signInController.getLabourByDate!.data![i].labourDate);
       }
      }
+      }
     }
     EasyLoading.dismiss();
     return 

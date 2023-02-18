@@ -82,7 +82,9 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
               key:Key(selectedIndex.toString()),
               itemCount: locationName.length,
               itemBuilder: (BuildContext context, int index){
-              return Card(
+              return  StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -269,7 +271,7 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
       ],
     ),
   )
-);
+);});
 }
 )
 ),

@@ -53,7 +53,7 @@ class _ActivityPageState extends State<OnGoingOnGoingScreen> {
     return 
     DefaultTabController(
       length: 4,
-      initialIndex: 0,
+      initialIndex: 1,
       child: Scaffold(
         appBar: AppBar(
         foregroundColor: Colors.black,

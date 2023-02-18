@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:colab/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_painter/image_painter.dart';
@@ -63,6 +62,8 @@ class _AddLabourDataState extends State<AddLabourData> {
   Widget build(BuildContext context) {
     return GetBuilder<GetLabourDataContractor>(builder: (_){
       final signInController=Get.find<SignInController>();
+      if(signInController.getLabourDataContractorListData!=null){
+        if(signInController.getLabourDataContractorListData!.data!=null){
       if(signInController.getLabourDataContractorListData!.data!.isNotEmpty && contractorList.isEmpty){
         contractorList.add("Select Name");
         contractorListID.add(88899182);
@@ -73,13 +74,18 @@ class _AddLabourDataState extends State<AddLabourData> {
           }
         }
       }
+        }
+      }
+      if(signInController.getLabourDataOfSelectedContractor!=null){
+        if(signInController.getLabourDataOfSelectedContractor!.data!=null){
       if(signInController.getLabourDataOfSelectedContractor!.data!.isNotEmpty && contractorData.isEmpty){
         for(int i=0;i<signInController.getLabourDataOfSelectedContractor!.data!.length;i++){
           contractorData.add(signInController.getLabourDataOfSelectedContractor!.data![i]);
         }
       }
-     EasyLoading.dismiss();
-
+      }
+    }
+    EasyLoading.dismiss();
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.black,
@@ -92,13 +98,13 @@ class _AddLabourDataState extends State<AddLabourData> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           const SizedBox(height: 20,),
-          Center(child: Text("Contractor Name",style: textStyleBodyText1,),),
+          Center(child: Text("Contractor Name", style: textStyleBodyText1,),),
           Container(
            margin:const EdgeInsets.only(left: 10,right: 10),
            padding: const EdgeInsets.only(bottom: 20,),
             child: 
            DropdownButtonFormField(
-             value: contractorList[0],
+             value:contractorList.isNotEmpty?contractorList[0]:"Select Name",
              icon: const Padding( 
               padding: EdgeInsets.only(left:20),
               child:Icon(Icons.arrow_drop_down_outlined,size: 30)

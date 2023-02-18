@@ -159,7 +159,7 @@ class _ProgressState extends State<EditProgressEntry> {
     EasyLoading.dismiss();
     locationController.text=widget.editModel?.locationName??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
-    subSubLocationController.text=widget.editModel?.subSubLocationName??"";
+    subSubLocationController.text=widget.editModel?.subSubLocationName ?? "";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
     quantityController.text=widget.editModel?.totalQuantity.toString()??"";
@@ -194,6 +194,8 @@ class _ProgressState extends State<EditProgressEntry> {
           locationID.add(data.locationId!);
         }
       }
+      if(signInController.getProgressContractorList!=null){
+        if(signInController.getProgressContractorList!.data!=null){
       if(signInController.getProgressContractorList!.data!.isNotEmpty && contractorList.isEmpty){
         if(signInController.getProgressContractorList!.data!.isNotEmpty && debitTo.isEmpty){
         List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
@@ -234,6 +236,8 @@ class _ProgressState extends State<EditProgressEntry> {
             }
           }
         }
+      }
+      }
       }
       if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
         List<ProgressTradeData>? locationList1=signInController.getProgressTradeList?.data;
@@ -750,8 +754,6 @@ class _ProgressState extends State<EditProgressEntry> {
                           // print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
                           }
                           contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
-                          // print("-----------------------------------");
-                          // print(contractorLabourDetails);
                           },
                           controller: _controllers2[outerIndex][index],
                         ),

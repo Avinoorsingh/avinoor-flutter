@@ -894,6 +894,7 @@ class _AddProgressState extends State<AddProgressEntry> {
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+          if(subItems.isNotEmpty)
           if(subItems[outerIndex].isNotEmpty)
           ListView.builder(
               physics:const NeverScrollableScrollPhysics(),

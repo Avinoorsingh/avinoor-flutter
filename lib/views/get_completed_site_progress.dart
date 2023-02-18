@@ -86,7 +86,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Completed Site Progress",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("Completed Site Progress", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -487,7 +487,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
             ),
               }
             },
-          const SizedBox(height: 20,),
+          // const SizedBox(height: 20,),
             CustomContainer2(
             child: 
             Column(children: [

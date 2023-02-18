@@ -59,6 +59,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
   final getDataController=GetOnGoingDetail();
   late DatabaseProvider databaseProvider;
   List formDataList = [];
+  List ongoingLocalDataList=[];
   List<SnagDataOffline> snagDataOffline=[];
  
   @override
@@ -72,12 +73,13 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagDataOffline= await databaseProvider.getSnagModel();
-    await fetchSnagsFromLocal();
+    await fetchDataFromLocal();
     return snagDataOffline;
   }
 
-  fetchSnagsFromLocal() async {
+  fetchDataFromLocal() async {
      formDataList=await databaseProvider.getAllOfflineModel();
+     ongoingLocalDataList=await databaseProvider.getOuterProgressFormData();
      setState(() {});
   }
 
@@ -96,7 +98,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].locationId==int.parse(widget.locID) 
                       && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subLocId==int.parse(widget.subLocID)){
                         for(int m=0;m<formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity.length;m++){
-                           if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd!=null){
+                           if(formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd!=null && formDataList[i].locationOfflineData[j].subLocationInfo[k].subSubLocationInfo[l].subSubLocationActivity[m].progressAdd.progressDailyInfo[0]?.progressPercentage.toString()!='100'){
                               activityHead.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activityHead!);
                               activity.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].activity!);
                               uomName.add(formDataList[i].locationOfflineData[j].subLocationInfo![k].subSubLocationInfo![l].subSubLocationActivity![m].uomName!);
@@ -115,7 +117,26 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
       }
      EasyLoading.dismiss();
      }
-       setState(() {});
+      if(ongoingLocalDataList.isNotEmpty){
+         for(int i=0;i<ongoingLocalDataList.length;i++){
+            if(ongoingLocalDataList[i]["progress_filter"]["subSubLocID"]==(widget.subSubLocID)
+                && ongoingLocalDataList[i]["progress_filter"]["locID"]==(widget.locID) 
+                && ongoingLocalDataList[i]["progress_filter"]["subLocID"]==(widget.subLocID)){
+                   for(int j=0;j<ongoingLocalDataList[i]["progress_data"].length;j++){
+                  if(ongoingLocalDataList[i]["progress_data"][j]["progress_percentage"]!="100"){
+                    activityHead.add(ongoingLocalDataList[i]["progress_filter"]["activityHead"]);
+                    activity.add(ongoingLocalDataList[i]["progress_filter"]["activity"]);
+                    uomName.add(ongoingLocalDataList[i]["progress_filter"]["uomName"]);
+                    percentage.add(int.parse(ongoingLocalDataList[i]["progress_data"][j]["progress_percentage"]));
+                    triggerID.add(0);
+                    editData.add(ongoingLocalDataList[i]);
+                  }
+                 }
+                }
+               }
+     EasyLoading.dismiss();
+     }
+    setState(() {});
     }
     EasyLoading.dismiss();
     return 
@@ -134,7 +155,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
             return 
              Stack(children: [
               Container(
-                padding: const EdgeInsets.only(left: 10,right: 25,bottom: 20),
+                padding: const EdgeInsets.only(left: 10, right: 25, bottom: 20),
                 child:
             Card(
                 shape: RoundedRectangleBorder(

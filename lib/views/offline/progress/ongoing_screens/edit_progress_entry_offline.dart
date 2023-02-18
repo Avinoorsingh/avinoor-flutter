@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:colab/config.dart';
 import 'package:colab/models/labour_attendance.dart';
 import 'package:colab/models/progress_contractor.dart';
@@ -51,6 +52,8 @@ class _ProgressState extends State<EditProgressEntryOffline> {
   final statusController = TextEditingController();
   final quantityController=TextEditingController();
   final priorityController=TextEditingController();
+  Random random = Random();
+  late int randomNumber;
   final clientID=TextEditingController();
   final projectID=TextEditingController();
   final activityID=TextEditingController();
@@ -167,6 +170,33 @@ class _ProgressState extends State<EditProgressEntryOffline> {
     getLabourAttendanceModel();
     getProgressTrade();
     super.initState();
+    try {
+      print("jjjjjjjqjsqj");
+      print(widget.editModel);
+      print(widget.editModel['progress_filter']['locationName']);
+      print("ERFVEEWFWEFsss");
+    locationController.text=widget.editModel['progress_filter']['locationName']??"";
+    subLocationController.text=widget.editModel['progress_filter']['subLocationName']??"";
+    subSubLocationController.text=widget.editModel['progress_filter']['subSubLocationName']??"";
+    activityController.text=widget.editModel['progress_filter']['activity']??"";
+    activityHeadController.text=widget.editModel['progress_filter']['activityHead']??"";
+    uomName.text=widget.editModel['progress_filter']['uomName']??"";
+    for(int i=0;i<widget.editModel['progress_data'].length;i++){
+    quantityController.text=(widget.editModel['progress_data'][i]['total_quantity']??0).toString();
+    projectID.text=(widget.editModel['progress_data'][i]['project_id']??"").toString();
+    clientID.text=(widget.editModel['progress_data'][i]['client_id']??"").toString();
+    activityID.text=(widget.editModel['progress_data'][i]['link_activity_id']??"").toString();
+    achivedQuantity.text=(widget.editModel['progress_data'][i]['achived_quantity']??"0.0").toString();
+    comulativeQuantity.text=(widget.editModel['progress_data'][i]['cumulative_quantity']??"0.0").toString();
+    _sliderValue=double.parse((widget.editModel['progress_data'][i]['progress_percentage']??"0.0").toString());
+    remarkController.text=widget.editModel['progress_data'][i]['remarks']??"";
+    progressID.text="1";
+    type.text=widget.editModel['progress_data'][i]['type'].toString();
+    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel['progress_data'][i]['progress_date']??DateTime.now()));
+    }
+    type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
+    } catch (e) {
+     try{
     locationController.text=widget.editModel?.locationName??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
     subSubLocationController.text=widget.editModel?.subSubLocationName??"";
@@ -185,7 +215,13 @@ class _ProgressState extends State<EditProgressEntryOffline> {
     type.text=widget.editModel?.type.toString()??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
-  }
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+        print("Hey! error is here");
+      }
+    }
+    }}
 
   Future<ProgressContractor> getContractorForDebitModel() async {
     progressContractor = await databaseProvider.getContractorForDebitModel();
@@ -430,7 +466,7 @@ class _ProgressState extends State<EditProgressEntryOffline> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
+            Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} ',style: textStyleBodyText1.copyWith(fontSize: 18))),
              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -462,7 +498,7 @@ class _ProgressState extends State<EditProgressEntryOffline> {
               activeColor: AppColors.primary,
               focusNode: null,
               inactiveColor: AppColors.lightGrey,
-                value: _sliderValue,
+                value:_sliderValue,
                 onChanged: (newValue) {
                   setState(() {
                    if(update==true){
@@ -1117,139 +1153,177 @@ class _ProgressState extends State<EditProgressEntryOffline> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:()async {
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var projectID=sharedPreferences.getString('projectIdd');
-                var clientID=sharedPreferences.getString('client_id');
-                FormData formData=FormData(); 
-                  Map<String, dynamic> mappedData= {};
-                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
-                List progressDetails = [];
-                for (var subList in contractorLabourDetails) {
-                  for (var map in subList) {
-                    // ignore: non_constant_identifier_names
-                    var contractor_id = map.values.first[0];
-                    var contractorLabourDetails1 = {
-                      "contractor_labour_linking_id": map.keys.first.toString(),
-                      "time": map.values.first[1].toString()
-                    };
-                    bool contractorExist = false;
-                    for (var progress in progressDetails) {
-                      if (progress['contractor_id'] == contractor_id) {
-                        contractorExist = true;
-                        progress['contractorLabourDetails'].add(contractorLabourDetails1);
-                        break;
+             if(activityID.text.isEmpty){
+                      EasyLoading.showToast("Linking Activity ID is required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    if(remarkController.text.isEmpty){
+                      EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else if(debitToController.text.isEmpty){
+                      EasyLoading.showToast("Debit To is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                    }
+                    else if(contractorLabourDetails.isEmpty){
+                      EasyLoading.showToast("Atleast one contractor is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                    }
+                    else{
+                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                    var projectID=sharedPreferences.getString('projectIdd');
+                    var clientID=sharedPreferences.getString('client_id');
+                    randomNumber=random.nextInt(90) + 10;
+                    Map<String, dynamic> outerProgress = {};
+                    FormData formData=FormData(); 
+                    if(priorityController.text=="Labour Supply"|| priorityController.text=="Misc."){
+                    List progressDetails = [];
+                    for (var subList in contractorLabourDetails){
+                      for (var map in subList) {
+                        // ignore: non_constant_identifier_names
+                        var contractor_id = map.values.first[0];
+                        var contractorLabourDetails1 = {
+                          "contractor_labour_linking_id": map.keys.first.toString(),
+                          "time": map.values.first[1].toString(),
+                        };
+                        bool contractorExist = false;
+                        for (var progress in progressDetails) {
+                          if (progress['contractor_id'] == contractor_id) {
+                            contractorExist = true;
+                            progress['contractorLabourDetails'].add(contractorLabourDetails1);
+                            break;
+                          }
+                        }
+                        if (!contractorExist) {
+                          progressDetails.add({
+                            "contractor_id": contractor_id.toString(),
+                            "contractorLabourDetails": [contractorLabourDetails1]
+                          });
+                        }
                       }
                     }
-                    if (!contractorExist) {
-                      progressDetails.add({
-                        "contractor_id": contractor_id.toString(),
-                        "contractorLabourDetails": [contractorLabourDetails1]
-                      });
+                    List<Map<String, dynamic>> newList = [];
+                    for (Map<String, dynamic> map in progressDetails) {
+                      bool contractorExists = false;
+                      for (Map<String, dynamic> newMap in newList) {
+                        if (newMap["contractor_id"] == map["contractor_id"]) {
+                          newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
+                          contractorExists = true;
+                          break;
+                        }
+                      }
+                      if (!contractorExists) {
+                        newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
+                      }
                     }
-                  }
-                }
-                List<Map<String, dynamic>> newList = [];
-                for (Map<String, dynamic> map in progressDetails) {
-                  bool contractorExists = false;
-                  for (Map<String, dynamic> newMap in newList) {
-                    if (newMap["contractor_id"] == map["contractor_id"]) {
-                      newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
-                      contractorExists = true;
-                      break;
+                    try {
+                    outerProgress["progress_image_$randomNumber"]= _selectedImage!.path;
+                    } catch (e) {
+                      formData.fields.add(MapEntry('progress_image_$randomNumber', ''));
                     }
-                  }
-                  if (!contractorExists) {
-                    newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
-                  }
-                }
-                try {
-                 mappedData["progress_image"]=_selectedImage!.path;
-                } catch (e) {
-                  formData.fields.add(const MapEntry('progress_image', ''));
-                }
-                mappedData['progress_data']=jsonEncode(
-                    {
-                      "id":int.parse(progressID.text),
-                      "client_id": int.parse(clientID!),
-                      "project_id": int.parse(projectID!),
-                      "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
-                      "achived_quantity": achivedQuantity.text.isNotEmpty? achivedQuantity.text:"",
-                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
-                      "remarks": remarkController.text,
-                      "contractor_id": "7",
-                      "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
-                      "debet_contactor":int.parse(debitToController.text),
-                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeQuantity.text,
-                      "type":priorityController.text=="Misc."?1:0,
-                      "save_type": "save",
-                      "created_by":int.parse(clientID),
-                      "PWRLabourDetails": [
-                          {
-                              "labour_count": 1,
-                              "pwr_type": 0
+                    outerProgress["progress_data"]= (
+                        {
+                          "daily_progress_random_id":randomNumber,
+                          "client_id": int.parse(clientID!),
+                          "project_id": int.parse(projectID!),
+                          "prog_type": 0,
+                          "draft_status": 0,
+                          "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
+                          "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
+                          "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                          "remarks": remarkController.text,
+                          "contractor_id": "7",
+                          "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
+                          "debet_contactor":int.parse(debitToController.text),
+                          "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                          "cumulative_quantity": comulativeController.text,
+                          "type":priorityController.text=="Misc."?1:0,
+                          "save_type": "save",
+                          "created_by":int.parse(clientID),
+                          "PWRLabourDetails": [
+                              {
+                                  "labour_count": 1,
+                                  "pwr_type": 0
+                              }
+                          ],
+                          "contractorLabourDetails": [],
+                          "progressDetails": newList,
+                        }
+                      );
+                    try {
+                      print(outerProgress);
+                      var resOriginal = await databaseProvider.getOuterProgressFormData();
+                      var resEdited=resOriginal;
+                      print("#####################");
+                      print(resOriginal);
+                      print("#####################");
+                      for(int i=0;i<resEdited.length;i++){
+                          for(int j=0;j<resEdited[i]['progress_data'].length;j++){
+                          if(resEdited[i]['progress_data'][j]['link_activity_id'].toString() == outerProgress['progress_data']['link_activity_id'].toString()) {
+                            resEdited[i]['progress_data'].add(outerProgress['progress_data']);
+                            break;
                           }
-                      ],
-                      "contractorLabourDetails": [],
-                      "progressDetails": newList,
+                          }
+                        }
+                      print("##############################################");
+                      print("##############################################");
+                      print(resEdited);
+                      print(resOriginal.length);
+                      print(resEdited.length);
+                      print("##############################################");
+                      print("##############################################");
+                        // await databaseProvider.insertOuterProgressFormData(outerProgress);
+                        EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    }catch(e){
+                      EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                     }
-                   );
-                  try {
-                    databaseProvider.insertProgressFormData(mappedData);
-                    EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
                     // ignore: use_build_context_synchronously
-                    Navigator.pop(context);
-                }catch(e){
-                  EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
-                }
-                }
-                if(priorityController.text=="PRW"){
-                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                var projectID=sharedPreferences.getString('projectIdd');
-                var clientID=sharedPreferences.getString('client_id');
-                  List pWRLabourDetailsList = [];
-                    for(int i=0; i<_selectedDropdownValuesID.length; i++){
-                      pWRLabourDetailsList.add({
-                        "labour_count": enteredValues[i],
-                        "pwr_type": _selectedDropdownValuesID[i]
-                      });
+                    // Navigator.pop(context);
                     }
-                try {
-                mappedData["progress_image"]=_selectedImage!.path;
-                } catch (e) {
-                  formData.fields.add(const MapEntry('progress_image', ''));
-                }
-                mappedData['progress_data']= (
-                    {
-                      "id":int.parse(progressID.text),
-                      "client_id": int.parse(clientID!),
-                      "project_id": int.parse(projectID!),
-                      "link_activity_id":int.parse(activityID.text),
-                      "achived_quantity": achivedQuantity.text,
-                      "total_quantity":int.parse(totalQuantity.text),
-                      "remarks": remarkController.text,
-                      "contractor_id": int.parse(pwrContractorId.text),
-                      "progress_percentage": _sliderValue.toInt().toString(),
-                      "debet_contactor":"0",
-                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                      "cumulative_quantity": comulativeQuantity.text,
-                      "type": 2,
-                      "save_type": "save",
-                      "created_by":int.parse(clientId.text),
-                      "PWRLabourDetails": pWRLabourDetailsList,
-                      "contractorLabourDetails": [],
-                      "progressDetails": [],
+                    if(priorityController.text=="PRW"){
+                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                    var projectID=sharedPreferences.getString('projectIdd');
+                    var clientID=sharedPreferences.getString('client_id');
+                      List pWRLabourDetailsList = [];
+                        for(int i=0; i<_selectedDropdownValuesID.length; i++){
+                          pWRLabourDetailsList.add({
+                            "labour_count": enteredValues[i],
+                            "pwr_type": _selectedDropdownValuesID[i]
+                          });
+                        }
+                    try {
+                    outerProgress["progress_image"]= _selectedImage!.path;
+                    } catch (e) {
+                      formData.fields.add(const MapEntry('progress_image', ''));
                     }
-                   );
-                  try {
-                    databaseProvider.insertProgressFormData(mappedData);
-                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    outerProgress['progress_data'] =(
+                        {
+                          "client_id": int.parse(clientID!),
+                          "project_id": int.parse(projectID!),
+                          "link_activity_id":int.parse(activityID.text),
+                          "achived_quantity": achivedController.text,
+                          "total_quantity":int.parse(totalQuantity.text),
+                          "remarks": remarkController.text,
+                          "contractor_id": int.parse(pwrContractorId.text),
+                          "progress_percentage": _sliderValue.toInt().toString(),
+                          "debet_contactor":"0",
+                          "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                          "cumulative_quantity": comulativeController.text,
+                          "type": 2,
+                          "save_type": "save",
+                          "created_by":int.parse(clientID),
+                          "PWRLabourDetails": pWRLabourDetailsList,
+                          "contractorLabourDetails": [],
+                          "progressDetails": [],
+                        }
+                      );
+                    try {
+                      await databaseProvider.insertOuterProgressFormData(outerProgress);
+                        EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
+                    }catch(e){
+                      EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
+                    }
                     // ignore: use_build_context_synchronously
-                    Navigator.pop(context);
-                }catch(e){
-                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
-                }
-                }
+                    // Navigator.pop(context);
+                  }else{
+                    EasyLoading.showToast("Progress Saved", toastPosition: EasyLoadingToastPosition.bottom);
+                  }}
               },
               child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )

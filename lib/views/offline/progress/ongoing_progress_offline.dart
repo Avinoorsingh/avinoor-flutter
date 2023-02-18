@@ -72,7 +72,9 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
   }
 
   fetchSnagsFromLocal() async {
+     formDataList.clear();
      formDataList=await databaseProvider.getAllOfflineModel();
+     print(formDataList.length);
      setState(() {
        
      });

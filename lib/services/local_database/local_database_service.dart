@@ -179,12 +179,12 @@ class DatabaseProvider {
   
   Future<void> insertAllOfflineModel(var allOfflineData) async {
     try {
-    await _database.execute('DELETE FROM my_json_models3');
+    // await _database.execute('DELETE FROM my_json_models3');
     // await _database.delete('my_json_models3');
-    await init();
+    // await init();
     final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
         'SELECT id, allOffline FROM my_json_models3',
-        );
+    );
 
     if (existingRows.isNotEmpty) {
       final Map<String, dynamic> existingRow = existingRows.first;
@@ -438,6 +438,16 @@ class DatabaseProvider {
     List<Map<String, dynamic>> formDataList = [];
     for (var formDataRow in formDataRows) {
       formDataList.add(jsonDecode(formDataRow['snagData']));
+    }
+    return formDataList;
+  }
+
+  Future<List<Map<String, dynamic>>> getOuterProgressFormData() async {
+    await init();
+    final List<Map<String, dynamic>> formDataRows = await _database.query('outer_progress');
+    List<Map<String, dynamic>> formDataList = [];
+    for (var formDataRow in formDataRows) {
+      formDataList.add(jsonDecode(formDataRow['outerProgressData']));
     }
     return formDataList;
   }
