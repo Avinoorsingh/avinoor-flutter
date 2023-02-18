@@ -118,7 +118,9 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
               itemCount: locationName.length,
               key:Key(selectedIndex.toString()),
               itemBuilder: (BuildContext context, int index){
-                return 
+                return  StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -320,7 +322,7 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
 ],
 ),
 )
-);
+);});
 }
 )
 ),
