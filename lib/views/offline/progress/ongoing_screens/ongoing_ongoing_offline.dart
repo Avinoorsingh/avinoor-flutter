@@ -50,12 +50,12 @@ class _ActivityPageState extends State<OnGoingOnGoingOfflineScreen> {
     return 
     DefaultTabController(
       length: 4,
-      initialIndex: 0,
+      initialIndex: 1,
       child: Scaffold(
         appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("ON GOING",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("ON GOING", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
         key: ScaffoldStateKey,
         body: TabBarView(

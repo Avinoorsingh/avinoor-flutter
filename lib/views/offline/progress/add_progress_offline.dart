@@ -709,9 +709,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                             pwrContractorName.text = subSubLocationInfo2[i].subSubLocationActivity[j].contractorName;
                             pwrContractorId.text=subSubLocationInfo2[i].subSubLocationActivity[j].contId.toString();
                             uOfName.text=subSubLocationInfo2[i].subSubLocationActivity[j].uomName.toString();
-                            print(")))))))))))))))))))))))((((((((");
-                            // print(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[0].totalQuantity.toString());
-                            print(")))))))))))))))))))))))((((((((");
+                            // print(")))))))))))))))))))))))((((((((");
+                            // // print(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[0].totalQuantity.toString());
+                            // print(")))))))))))))))))))))))((((((((");
                             if(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd!=null){
                             for(int k=0;k<subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd?.progressDailyInfo.length;k++){
                             totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[k].totalQuantity.toString();
@@ -1490,7 +1490,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         }]
                       );
                     try {
-                        await databaseProvider.insertOuterProgressFormData(outerProgress);
+                        await databaseProvider.insertOuterProgressFormData([outerProgress]);
                         EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1537,7 +1537,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       );
                     try {
                       print(outerProgress);
-                      await databaseProvider.insertOuterProgressFormData(outerProgress);
+                      await databaseProvider.insertOuterProgressFormData([outerProgress]);
                         EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
                       EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);

@@ -47,6 +47,9 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
   List<String?> subSubLocationName=[];
   List<String?> contractorName=[];
   List<String?> checkListAvail=[];
+  List<num?> percentage=[];
+  List<num?> triggerID=[];
+  List<String?> uomName=[];
   List<int?> subSubLocationCount=[];
   List<int?> subSubLocationDraft=[];
   List<String?> plannedDates=[];
@@ -145,6 +148,9 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
                     plannedDates.add("2023-01-08T15:34:12.000Z".toString());
                     finishDates.add("2024-01-09T15:34:12.000Z".toString());
                     editModel.add(ongoingLocalDataList[i]);
+                    triggerID.add(0);
+                    percentage.add(100);
+                    uomName.add(ongoingLocalDataList[i]["progress_filter"]["uomName"]??"");
                   }
                   }
                 }
@@ -162,224 +168,268 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
     child:
     ListView(
       children: [
-            Padding(padding: const EdgeInsets.only(left: 10,right: 10,top: 60),
+            Padding(padding: const EdgeInsets.only(top: 60),
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: locationName.length,
               itemBuilder: (BuildContext context, int index){
-                return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      child:
-                      ClipRRect(
-                      borderRadius: BorderRadius.circular(5.0),
+                return Stack(children: [
+              Container(
+                padding: const EdgeInsets.only(left: 10,right: 25,bottom: 20),
+                child:
+            Card(
+                shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(5.0),
+                    ),
+                child:
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: 
+                    ExpansionTile(
+                    tilePadding:const EdgeInsets.only(right: 30),
+                    collapsedIconColor: Colors.transparent,
+                    iconColor: Colors.transparent,
+                    collapsedTextColor: AppColors.black,
+                    textColor: AppColors.black,
+                    trailing: null,
+                    title:
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    Text('${activityHead[index]} ${activity[index]}',
+                    style: textStyleHeadline3.copyWith(fontSize: 16,color: AppColors.black),
+                    overflow: TextOverflow.ellipsis,),
+                    ]),
+                    subtitle:
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      const SizedBox(height: 10,),
+                    Center(
                       child: 
-                        ExpansionTile(
-                        tilePadding:const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-                        collapsedBackgroundColor: AppColors.navyblue,
-                        collapsedIconColor: Colors.transparent,
-                        iconColor: Colors.transparent,
-                        backgroundColor: AppColors.navyblue,
-                        collapsedTextColor: AppColors.black,
-                        trailing: null,
-                        title:
-                        Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Container(
-                        height: 30,
-                        margin: const EdgeInsets.only(left: 10,right: 10),
-                        padding:const EdgeInsets.symmetric(vertical: 0),
-                        color:AppColors.primary,
-                        child:
-                        Row(children: [
-                        Text(' ${activityHead[index]} ${activity[index]}                  ',
-                        style: textStyleBodyText1.copyWith(color: AppColors.black),
-                        overflow: TextOverflow.ellipsis,),
-                        ])),
-                        Container(
-                          margin:const EdgeInsets.only(right: 10),
-                          child: 
-                        Text("100%",style: textStyleBodyText1.copyWith(color:AppColors.white,fontSize: 18),),
-                        ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // ignore: sized_box_for_whitespace
+                       Text("  In draft",style: textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500)),
+                       Text("        Submit",style: textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500)),
+                       Text("      Completed",style:textStyleHeadline4.copyWith(fontSize: 12,fontWeight: FontWeight.w500))
+                    ]),
+                    ),
+                    const SizedBox(height: 10,),
+                    Center(child:
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            width: 90,
+                            height: 5,
+                            color: Colors.grey,
+                          ),
+                          Container(
+                            width: 90,
+                            height: 5,
+                            color: AppColors.navyblue,
+                          ),
+                          Container(
+                            width: 90,
+                            height: 5,
+                            color: AppColors.navyblue,
+                          ),
+                        ],
+                      )
+                    ),
+                        const SizedBox(height: 30,),
                         ]),
-                        subtitle:
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              // context.pushNamed('GETCOMPLETEDPROGRESSENTRY', extra: editModel[index]);
+                            },
+                            child:
+                        Column(children: [
+                          Container(
+                            padding:const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            color:AppColors.lightGrey,
+                            child: 
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                        Center(
-                          child: 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children:[
-                            Text("",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-                            Text("${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-                            Text(contractorName[index]!=null?"Contractor Available":"Contractor Not Available",style: textStyleBodyText2.copyWith(color: AppColors.white),)
-                          ],
+                            const Text(""),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text("Quantity: 0.0 ${uomName[index]} | 8.0 ${uomName[index]}",style: textStyleBodyText1.copyWith(fontSize: 14),)],
+                            ),
+                        ])
                           ),
-                          ]),
-                          ),
-                            const SizedBox(height: 10,),
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.only(top: 0,bottom: 0),
-                              padding:const EdgeInsets.symmetric(vertical: 0),
-                              color: Colors.grey,
-                              child: Center(child: Text("CheckList NA", style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
-                            ]),
-                            children: [
-                              InkWell(
-                                onTap: (){ 
-                                  context.pushNamed('GETCOMPLETEDPROGRESSENTRY', extra: editModel[index]);
-                                },
-                                child:
-                            Column(children: [
-                              Container(
-                                padding:const EdgeInsets.only(left: 20, right: 20),
+                        Container(
+                                padding:const EdgeInsets.only(left: 20,right: 20,top: 0,bottom: 10),
                                 color:AppColors.lightGrey,
                                 child: 
                             Column(
                               children: [
-                                const Text(""),
                                 Row(
-                                  children: [Text("Quantity- 20 MT / 80 MT", style: textStyleBodyText1.copyWith(fontSize: 14),)],
-                                ),
-                              ])
-                            ),
-                            Container(
-                              padding:const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                              color:AppColors.lightGrey,
-                                child: 
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                    Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                    Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text("Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                    Text("20 dec - 21",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                    Text("PL Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
+                                    Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
+                                    ]),
+                                    ]),
+                                  ],),
+                                Column(children: [
+                                    Container(
+                                      height: 25,
+                                      width: 25,
+                                      color: Colors.deepOrangeAccent,
+                                      child:Center(child:FittedBox(child:Text("-10",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                        Text("Productivity",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("Rs. 600 / MT",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                        Text("Material consum.",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("40%",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                        Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-                                        Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-                                      ],),
-                                    ],),
-                                  ]
-                                )
-                              ),
-                                Container(
-                                    padding:const EdgeInsets.only(left: 20,right: 20,top: 10),
-                                    color:AppColors.lightGrey,
-                                    child: 
-                                Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                        Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                        Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                        Text("Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                        Text("20 dec - 21",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                        Text("PL Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-                                        Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-                                        ]),
-                                        ]),
-                                      ],),
                                     Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          height: 20,
-                                          width: 20,
-                                          color: Colors.deepOrangeAccent,
-                                          child:Center(child:FittedBox(child:Text("-10",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                        Text("Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-                                        Text("20 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),),
-                                        Text("PL Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-                                        Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-                                        ]
-                                      ),
+                                    Text("Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
+                                    Text("20 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),),
+                                    Text("PL Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
+                                    Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
                                     ]
                                   ),
-                                ],
+                                ]
                               ),
+                            ],
+                          ),
                             Column(children: [
                               Container(
-                                height: 20,
-                                width: 20,
+                                height: 25,
+                                width: 25,
                                 color: Colors.greenAccent,
                                 child:Center(child:
                                 FittedBox(child: 
                                 Text("+26",
-                                style: textStyleBodyText4.copyWith(
-                                  color: AppColors.white),
+                                    style: textStyleBodyText4.copyWith(
+                                    color: AppColors.white),
+                                    )
+                                  ),
+                                 )
                                 )
-                              ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ),
+                    Container(
+                                padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                                color:AppColors.lightGrey,
+                                child: 
+                        Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Text("Productivity",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("Rs. 600 / MT",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                    Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                      Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text("Material consum.",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("40%",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                    Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
+                                    Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                                  ],),
+                                ],),
+                              ],
                             )
-                          )
-                        ],
-                      ),
-                    ],
-                    ),
-                  ],
-                )
+                          ),
+                ]
               )
-            ]
+            )
+          ], 
+        )
+          ),
+        ),
+        ),
+         Positioned(
+          top: 30,
+          right: 5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.navyblue,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            height:40,
+            width:50,
+            margin: const EdgeInsets.only(top: 0,bottom: 0),
+            child: Center(child: Text("${percentage[index]} %",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            )
+          )
+        ),
+        ),
+        Positioned(
+          left: 0,
+          right: 20,
+          top: 80,
+          child: Center(
+        child:Container(
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width:250,
+            height: 30,
+            margin: const EdgeInsets.only(top: 0,bottom: 0),
+            child: Center(child: Text(triggerID[index]!=0?"Checklist Closed":"Checklist NA",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            )
+          )
+        ),
           )
         )
-      ]
-    )
-  )
-);
+      ]);
 }
 )
 )

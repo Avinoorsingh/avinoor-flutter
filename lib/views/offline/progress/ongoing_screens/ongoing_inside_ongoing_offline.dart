@@ -59,7 +59,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoingOffline> {
   final getDataController=GetOnGoingDetail();
   late DatabaseProvider databaseProvider;
   List formDataList = [];
-  List ongoingLocalDataList=[];
+  var ongoingLocalDataList=[];
   List<SnagDataOffline> snagDataOffline=[];
  
   @override

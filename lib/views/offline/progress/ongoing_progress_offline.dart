@@ -64,17 +64,19 @@ class _OnProgressState extends State<OnGoingProgressOffline> {
 
   Future<List<SnagDataOffline>> fetchSnagData() async {
     snagDataOffline= await databaseProvider.getSnagModel();
-     setState(() {
+    await fetchSnagsFromLocal();
+    setState(() {
       snagDataOffline;
     });
-    await fetchSnagsFromLocal();
     return snagDataOffline;
   }
 
   fetchSnagsFromLocal() async {
      formDataList.clear();
      formDataList=await databaseProvider.getAllOfflineModel();
-     print(formDataList.length);
+     if (kDebugMode) {
+       print(formDataList.length);
+     }
      setState(() {
        
      });

@@ -123,13 +123,13 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
           ),
         );
         if (kDebugMode) {
-          print(res.data);
-          print(formData.fields);
-          print(formData.files);
-          formData.fields.clear();
-          formData.files.clear();
+          // print(res.data);
+          // print(formData.fields);
+          // print(formData.files);
+          // formData.fields.clear();
+          // formData.files.clear();
         }
-        EasyLoading.showToast("Snag Saved", toastPosition: EasyLoadingToastPosition.bottom);
+        // EasyLoading.showToast("Snag Saved", toastPosition: EasyLoadingToastPosition.bottom);
         } catch (e) {
         EasyLoading.showToast("server error occured", toastPosition: EasyLoadingToastPosition.bottom);
         EasyLoading.dismiss();
@@ -143,16 +143,24 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
     outerProgressFormDataList = await databaseProvider.getOuterProgressFormData();
     List<dynamic> progressDataList = outerProgressFormDataList.map((progress) => progress['progress_data']).toList();
     if(progressDataList.isNotEmpty){
+      for(int i=0;i<progressDataList.length;i++){
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        print(progressDataList[i]);
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        for(int j=0;j<progressDataList[i].length;j++){
     Map<String, dynamic> dataToBeSent = {
-      "client_id": progressDataList[0]["client_id"],
-      "project_id": progressDataList[0]["project_id"],
-      "link_activity_id": progressDataList[0]["link_activity_id"],
-      "created_by": progressDataList[0]["client_id"],
-      "daily_progress": progressDataList,
+      "client_id": progressDataList[i][j]["client_id"],
+      "project_id": progressDataList[i][j]["project_id"],
+      "link_activity_id": progressDataList[i][j]["link_activity_id"],
+      "created_by": progressDataList[i][j]["client_id"],
+      "daily_progress": progressDataList[i],
     };
-    formData2.fields.add(MapEntry('progress_data',jsonEncode([dataToBeSent])));
+    formData2.fields.add(MapEntry('progress_data',jsonEncode(dataToBeSent)));
+      }
+    }
     for (int i = 0; i < progressDataList.length; i++) {
-      Map<String, dynamic> progress = progressDataList[i];
+      for(int j=0;j<progressDataList[i].length;j++){
+      Map<String, dynamic> progress = progressDataList[i][j];
       progress.forEach((key, value) {
         if(value!=null){
         if (key.startsWith("progress_image")) {
@@ -163,6 +171,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
            formData2.fields.add(MapEntry(key, ''));
         }
       });
+      }
     }
       try {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -188,7 +197,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
           formData.fields.clear();
           formData.files.clear();
         }
-        EasyLoading.showToast("Progress Saved", toastPosition: EasyLoadingToastPosition.bottom);
+        // EasyLoading.showToast("Progress Saved", toastPosition: EasyLoadingToastPosition.bottom);
         } catch (e) {
         EasyLoading.showToast("server error occured", toastPosition: EasyLoadingToastPosition.bottom);
         EasyLoading.dismiss();
@@ -303,16 +312,9 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
              borderOnForeground: true,
              child: InkWell(
               onTap: () {},
-                child: Image.network("https://nodejs.hackerkernel.com/colab",
-                          errorBuilder: (BuildContext? context, Object? exception, StackTrace? stackTrace) {
-                          EasyLoading.dismiss();
-                          return const Image(image: AssetImage('assets/images/user_fill.png'), height: 50,
+                child: const Image(image: AssetImage('assets/images/user_fill.png'), height: 50,
                           width: 50,
-                          fit: BoxFit.cover);
-                          },
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover),
+                          fit: BoxFit.cover)
                     ),
                   ),
             ],

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:colab/constants/colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -7,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
 import '../../../../theme/text_styles.dart';
@@ -260,9 +257,12 @@ class _NewSnagOfflineState extends State<NewSnagOffline> {
                                   ),
                             child:InkWell(
                               onTap: (){
-                                context.pushNamed('SNAGDETAILOFFLINE',
-                                queryParams: {"from": "new"},
-                                extra: snagData2[index]);
+                                if (kDebugMode) {
+                                  print(snagData2[index]);
+                                }
+                                // context.pushNamed('SNAGDETAILOFFLINE',
+                                // queryParams: {"from": "new"},
+                                // extra: snagData2[index]);
                               },
                               child: 
                              Row(

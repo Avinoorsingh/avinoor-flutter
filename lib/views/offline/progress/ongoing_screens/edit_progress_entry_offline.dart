@@ -1225,14 +1225,14 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                           "prog_type": 0,
                           "draft_status": 0,
                           "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
-                          "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
-                          "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                          "achived_quantity": achivedQuantity.text.isNotEmpty? achivedController.text:"",
+                          "total_quantity":quantityController.text.isNotEmpty?int.parse(quantityController.text):"",
                           "remarks": remarkController.text,
                           "contractor_id": "7",
                           "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
                           "debet_contactor":int.parse(debitToController.text),
                           "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                          "cumulative_quantity": comulativeController.text,
+                          "cumulative_quantity": comulativeQuantity.text,
                           "type":priorityController.text=="Misc."?1:0,
                           "save_type": "save",
                           "created_by":int.parse(clientID),
@@ -1247,12 +1247,9 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                         }
                       );
                     try {
-                      print(outerProgress);
                       var resOriginal = await databaseProvider.getOuterProgressFormData();
                       var resEdited=resOriginal;
-                      print("#####################");
-                      print(resOriginal);
-                      print("#####################");
+                      await databaseProvider.deleteOuterProgressFormData();
                       for(int i=0;i<resEdited.length;i++){
                           for(int j=0;j<resEdited[i]['progress_data'].length;j++){
                           if(resEdited[i]['progress_data'][j]['link_activity_id'].toString() == outerProgress['progress_data']['link_activity_id'].toString()) {
@@ -1261,13 +1258,9 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                           }
                           }
                         }
-                      print("##############################################");
-                      print("##############################################");
-                      print(resEdited);
-                      print(resOriginal.length);
-                      print(resEdited.length);
-                      print("##############################################");
-                      print("##############################################");
+                      await databaseProvider.insertOuterProgressFormData(resEdited);
+                         // ignore: use_build_context_synchronously
+                         Navigator.pop(context);
                         // await databaseProvider.insertOuterProgressFormData(outerProgress);
                         EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
@@ -1297,8 +1290,8 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                           "client_id": int.parse(clientID!),
                           "project_id": int.parse(projectID!),
                           "link_activity_id":int.parse(activityID.text),
-                          "achived_quantity": achivedController.text,
-                          "total_quantity":int.parse(totalQuantity.text),
+                          "achived_quantity": achivedQuantity.text,
+                          "total_quantity":quantityController.text.isNotEmpty?int.parse(quantityController.text):"",
                           "remarks": remarkController.text,
                           "contractor_id": int.parse(pwrContractorId.text),
                           "progress_percentage": _sliderValue.toInt().toString(),
@@ -1314,14 +1307,29 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                         }
                       );
                     try {
-                      await databaseProvider.insertOuterProgressFormData(outerProgress);
-                        EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
+                     var resOriginal = await databaseProvider.getOuterProgressFormData();
+                      var resEdited=resOriginal;
+                      await databaseProvider.deleteOuterProgressFormData();
+                      for(int i=0;i<resEdited.length;i++){
+                          for(int j=0;j<resEdited[i]['progress_data'].length;j++){
+                          if(resEdited[i]['progress_data'][j]['link_activity_id'].toString() == outerProgress['progress_data']['link_activity_id'].toString()) {
+                            resEdited[i]['progress_data'].add(outerProgress['progress_data']);
+                            break;
+                          }
+                          }
+                        }
+                      await databaseProvider.insertOuterProgressFormData(resEdited);
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                      EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){
                       EasyLoading.showToast("Something went wrong", toastPosition: EasyLoadingToastPosition.bottom);
                     }
                     // ignore: use_build_context_synchronously
                     // Navigator.pop(context);
                   }else{
+                    // ignore: use_build_context_synchronously
+                    // Navigator.pop(context);
                     EasyLoading.showToast("Progress Saved", toastPosition: EasyLoadingToastPosition.bottom);
                   }}
               },

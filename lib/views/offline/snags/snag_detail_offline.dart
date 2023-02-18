@@ -122,6 +122,7 @@ class _SnagState extends State<SnagDetailOffline> {
     @override
   void initState() {
     super.initState(); 
+    try {
     creationController.text=widget.snagModel?.createdAt??"";
     dueDateController.text=widget.snagModel?.dueDate??"";
     categoryController.text=widget.snagModel?.category?.name??"";
@@ -176,7 +177,64 @@ class _SnagState extends State<SnagDetailOffline> {
     newGroupedDeSnagImages[key] = newValue;
     newGroupedDeImages[key]=newValue;
   });
+  }    
+    } catch (e) {
+    creationController.text=widget.snagModel['snags_data']['due_date']??"";
+    dueDateController.text=widget.snagModel['snags_data']['due_date']??"";
+    categoryController.text=widget.snagModel?.category?.name??"";
+    locationController.text=widget.snagModel?.location.locationName??"";
+    subLocationController.text=widget.snagModel?.subLocation.subLocationName??"";
+    subSubLocationController.text=widget.snagModel?.subSubLocation.subSubLocationName??"";
+    if(widget.snagModel?.contractorInfo!=null){
+    contractorInput.text=widget.snagModel?.contractorInfo?.ownerName??"";
+    }
+    markController.text=widget.snagModel?.markupFile??"";
+    remarkController.text=widget.snagModel?.remark??"";
+    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"Not any Remark";
+    debitToController.text="";
+    debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
+    snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
+    snagAssignedToController.text=widget.snagModel?.employee?.name??"";
+    priorityController.text=widget.snagModel?.snagPriority;
+    if(widget.snagModel?.snagViewpoint?.length!=0 && widget.snagModel?.snagViewpoint!=null){
+      for(int i=0;i<widget.snagModel?.snagViewpoint?.length;i++){
+        viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,'deSnagImage':[]});
+        deSnagImage.add({'deSnagImage':widget.snagModel.snagViewpoint[i].desnagsFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,});
+        if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
+        viewpointID.add(widget.snagModel.snagViewpoint[i].id);
+        deSnagImages.add(widget.snagModel.snagViewpoint[i].desnagsFileName);
+        }
+      }
+    }
+
+     for (var map in viewpoints) {
+    // Check if the viewpoints is already in the map
+    if (groupedViewpoints.containsKey(map['id'])) {
+      // If it is, add the name to the list of names for that viewpoint
+      groupedViewpoints[map['id']]?.add(map['fileName']);
+    } else {
+      // If it isn't, create a new list of names for that viewpoint and add the name
+      groupedViewpoints[map['id']] = [map['fileName']];
+    }
   }
+   for (var map in deSnagImage) {
+    // Check if the viewpoints is already in the map
+    if (groupedDeSnagImages.containsKey(map['id'])) {
+      // If it is, add the name to the list of names for that viewpoint
+      groupedDeSnagImages[map['id']]?.add(map['deSnagImage']);
+    } else {
+      // If it isn't, create a new list of names for that viewpoint and add the name
+      groupedDeSnagImages[map['id']] = [map['deSnagImage']];
+    }
+  }
+  if(newGroupedDeImages.isEmpty){
+ groupedDeSnagImages.forEach((key, value) {
+    var newValue = value.map((list) => list!=null ? [] : list).toList();
+    newGroupedDeSnagImages[key] = newValue;
+    newGroupedDeImages[key]=newValue;
+  });
+  }
+    }
  
   // print(deSnagImage);
   // print(newGroupedDeSnagImages);

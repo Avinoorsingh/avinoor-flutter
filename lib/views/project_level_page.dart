@@ -76,7 +76,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
         (ConnectivityResult result) async {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
           if (isDeviceConnected){
-            saveData();
+            await saveData();
           }
           else if (!isDeviceConnected && isAlertSet == false){
             showDialogBox();
@@ -94,6 +94,30 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
      var clientId=sharedPreferences.getString('client_id');
      var projectID=sharedPreferences.getString('projectIdd');
      if(projectID!=null){
+        try{
+          var getAllOfflineDataURL=Uri.parse('${Config.allOfflineData}$clientId/$projectID');
+           var res=await http.get(
+            getAllOfflineDataURL,
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer $tokenValue",
+            },
+            );
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+            var localData= await databaseProvider.getAllOfflineModel();
+            // ignore: unnecessary_null_comparison
+            // await databaseProvider.deleteAllOfflineModel();
+            if(localData.isEmpty){
+             await databaseProvider.insertAllOfflineModel(res.body);
+            }
+          // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
+          }
+      } catch (e) {
+          if (kDebugMode) {
+            print("error in saving all offline data");
+            print(e);
+          }
+        }
      try{
      var getProgressOfflineDataURL=Uri.parse('${Config.getProgressOfflineData}$clientId/$projectID');
      var res=await http.get(
@@ -104,8 +128,11 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
             },
             );
           if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          var localData=await databaseProvider.getMyJsonModels();
+          if(localData.isEmpty){
           await databaseProvider.insertMyJsonModel(res.body);
           }
+        }
       } catch (e) {
           if (kDebugMode) {
             print("error in saving progress offline data");
@@ -122,30 +149,14 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
             },
             );
           if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          var localData=await databaseProvider.getSnagModel();
+          if(localData.isEmpty){
           await databaseProvider.insertSnagModel(res.body);
+          }
           }
       } catch (e) {
           if (kDebugMode) {
             print("error in saving snag offline data");
-            print(e);
-          }
-        }
-        try{
-          var getAllOfflineDataURL=Uri.parse('${Config.allOfflineData}$clientId/$projectID');
-           var res=await http.get(
-            getAllOfflineDataURL,
-            headers: {
-              "Accept": "application/json",
-              "Authorization": "Bearer $tokenValue",
-            },
-            );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
-             await databaseProvider.insertAllOfflineModel(res.body);
-          // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
-          }
-      } catch (e) {
-          if (kDebugMode) {
-            print("error in saving all offline data");
             print(e);
           }
         }
@@ -159,7 +170,10 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
             },
             );
           if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+            var localData=await databaseProvider.getupcomingOfflineModel();
+            if(localData.isEmpty){
              await databaseProvider.insertUpcomingOfflineModel(res.body);
+            }
           // await databaseProvider.insertAllOfflineModel(jsonEncode(ValueOffline.getString()));
           }
       } catch (e) {
@@ -309,7 +323,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     // getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     // getClosedSnagDataController.getClosedSnagData(context: context);
     // getClosedDeSnagDataController.getClosedSnagData(context: context);
-    getConnectivity();
+    // getConnectivity();
     saveProjectId();
   }
 

@@ -1,7 +1,6 @@
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
 import '../constants/colors.dart';
 
 class ProjectLevelPage2 extends StatefulWidget {

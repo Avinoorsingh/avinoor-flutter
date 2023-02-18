@@ -176,38 +176,65 @@ class DatabaseProvider {
       }
     }
   }
-  
-  Future<void> insertAllOfflineModel(var allOfflineData) async {
-    try {
-    // await _database.execute('DELETE FROM my_json_models3');
-    // await _database.delete('my_json_models3');
-    // await init();
-    final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
-        'SELECT id, allOffline FROM my_json_models3',
-    );
 
-    if (existingRows.isNotEmpty) {
-      final Map<String, dynamic> existingRow = existingRows.first;
-      final int id = existingRow['id'];
-      await _database.rawUpdate(
-        'UPDATE my_json_models3 SET allOffline = ? WHERE id = ?',
-        [allOfflineData, id],
-      );
-    } else {
-      await _database.rawInsert(
-        'INSERT INTO my_json_models3 (allOffline) VALUES (?)',
-        [allOfflineData],
-      );
-    }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error in saving allOffline data => $e");
-      }
-    }
+  Future<void> deleteAllOfflineModel() async{
+     await _database.delete('my_json_models3');
+  }
+
+  Future<void> deleteOuterProgressFormData() async{
+    await _database.delete('outer_progress');
+  }
+
+  Future<void> insertAllOfflineModel(var allOfflineData) async {
+  try {
+    await _database.delete('my_json_models3');
+
+    await _database.rawInsert(
+      'INSERT INTO my_json_models3 (allOffline) VALUES (?)',
+      [allOfflineData],
+    );
     if (kDebugMode) {
       print("Inserted successfully!");
     }
+  } catch (e) {
+    if (kDebugMode) {
+      print("Error in saving allOffline data => $e");
+    }
   }
+}
+
+  
+  // Future<void> insertAllOfflineModel(var allOfflineData) async {
+  //   try {
+  //   // await _database.execute('DELETE FROM my_json_models3');
+  //   await _database.delete('my_json_models3');
+  //   await init();
+  //   final List<Map<String, dynamic>> existingRows = await _database.rawQuery(
+  //     'SELECT id, allOffline FROM my_json_models3',
+  //   );
+
+  //   if (existingRows.isNotEmpty) {
+  //     final Map<String, dynamic> existingRow = existingRows.first;
+  //     final int id = existingRow['id'];
+  //     await _database.rawUpdate(
+  //       'UPDATE my_json_models3 SET allOffline = ? WHERE id = ?',
+  //       [allOfflineData, id],
+  //     );
+  //   } else {
+  //     await _database.rawInsert(
+  //       'INSERT INTO my_json_models3 (allOffline) VALUES (?)',
+  //       [allOfflineData],
+  //     );
+  //   }
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print("Error in saving allOffline data => $e");
+  //     }
+  //   }
+  //   if (kDebugMode) {
+  //     print("Inserted successfully!");
+  //   }
+  // }
 
    Future<void> insertUpcomingOfflineModel(var upcomingOfflineData) async {
     try {
@@ -447,7 +474,8 @@ class DatabaseProvider {
     final List<Map<String, dynamic>> formDataRows = await _database.query('outer_progress');
     List<Map<String, dynamic>> formDataList = [];
     for (var formDataRow in formDataRows) {
-      formDataList.add(jsonDecode(formDataRow['outerProgressData']));
+      Map<String, dynamic> formData = jsonDecode(formDataRow['outerProgressData'])[0];
+      formDataList.add(formData);
     }
     return formDataList;
   }
