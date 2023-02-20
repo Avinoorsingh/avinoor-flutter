@@ -53,4 +53,7 @@ class Config{
   static const String allOfflineData="http://nodejs.hackerkernel.com/colab/api/ongoing_progress_offline_data/";
   static const String getDailyProgressData="http://nodejs.hackerkernel.com/colab/api/progress_daily/";
   static const String offlineUpcomingData="http://nodejs.hackerkernel.com/colab/api/upcoming_offline_data/";
+  static const String getUpcomingProgress="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add";
+  static const String getCheckActivityStart="http://nodejs.hackerkernel.com/colab/api/checkActivityStart/";
+  static const String saveManualCheckList="http://nodejs.hackerkernel.com/colab/api/save_manual_checklist";
 }

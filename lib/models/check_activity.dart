@@ -1,16 +1,17 @@
-class ManualCheckList {
+class CheckActivity {
   bool? success;
-  List<ManaulCheckListData>? data;
+  List<CheckActivityData>? data;
 
-  ManualCheckList({this.success, this.data});
+  CheckActivity({this.success, this.data});
 
-  ManualCheckList.fromJson(var json) {
-     data =  [];
-    if(json!=null){
-    for(var data1 in json){
-      data?.add(ManaulCheckListData.fromJson(data1));    
+  CheckActivity.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    if (json['data'] != null) {
+      data = <CheckActivityData>[];
+      json['data'].forEach((v) {
+        data!.add(CheckActivityData.fromJson(v));
+      });
     }
-  }
   }
 
   Map<String, dynamic> toJson() {
@@ -23,11 +24,11 @@ class ManualCheckList {
   }
 }
 
-class ManaulCheckListData {
-  int? sectionId;
-  int? sectionLinkId;
-  int? activityHead;
+class CheckActivityData {
   String? activity;
+  String? activityHead;
+  int? checkSecId;
+  int? checkSecLinkId;
   int? id;
   int? clientId;
   int? projectId;
@@ -37,20 +38,23 @@ class ManaulCheckListData {
   int? triggerId;
   int? activityHeadId;
   int? activityId;
-  String? upload;
+  // ignore: prefer_typing_uninitialized_variables
+  var upload;
   int? status;
-  String? import;
-  String? scheduledTime;
+  // ignore: prefer_typing_uninitialized_variables
+  var import;
+  // ignore: prefer_typing_uninitialized_variables
+  var scheduledTime;
   int? createdBy;
   int? updatedBy;
   String? createdAt;
   String? updatedAt;
 
-  ManaulCheckListData(
-      {this.sectionId,
-      this.sectionLinkId,
+  CheckActivityData(
+      {this.activity,
       this.activityHead,
-      this.activity,
+      this.checkSecId,
+      this.checkSecLinkId,
       this.id,
       this.clientId,
       this.projectId,
@@ -69,11 +73,11 @@ class ManaulCheckListData {
       this.createdAt,
       this.updatedAt});
 
-  ManaulCheckListData.fromJson(Map<String, dynamic> json) {
-    sectionId = json['section_id'];
-    sectionLinkId = json['section_link_id'];
-    activityHead = json['activity_head'];
+  CheckActivityData.fromJson(Map<String, dynamic> json) {
     activity = json['activity'];
+    activityHead = json['activity_head'];
+    checkSecId = json['check_sec_id'];
+    checkSecLinkId = json['check_sec_link_id'];
     id = json['id'];
     clientId = json['client_id'];
     projectId = json['project_id'];
@@ -95,10 +99,10 @@ class ManaulCheckListData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['section_id'] = sectionId;
-    data['section_link_id'] = sectionLinkId;
-    data['activity_head'] = activityHead;
     data['activity'] = activity;
+    data['activity_head'] = activityHead;
+    data['check_sec_id'] = checkSecId;
+    data['check_sec_link_id'] = checkSecLinkId;
     data['id'] = id;
     data['client_id'] = clientId;
     data['project_id'] = projectId;

@@ -492,7 +492,28 @@ class _SnagState2 extends State<SnagDetail2> {
                       shadowColor: Colors.transparent,
                   ),
                   onPressed: () async {
-                      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    showDialog(
+                   context: context,
+                   builder: (BuildContext context) {
+                     return SimpleDialog(
+                      alignment: Alignment.center,
+                       children: <Widget>[
+                        Text("      Choose",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                         SimpleDialogOption(
+                            child: 
+                            Column(
+                                children: <Widget>[
+                                  
+                                  const SizedBox(width: 10),
+                                  const Icon(Icons.image,size: 70,color: Colors.grey,),
+                                  Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
+                                ],
+                              ),
+                             onPressed: () async{
+                                 final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                       final File imagefile = File(image!.path);
                       groupedOnlyDeSnag[outerKey][innerIndex]=imagefile.toString();
                         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -519,6 +540,69 @@ class _SnagState2 extends State<SnagDetail2> {
                         if (kDebugMode) {
                           print(res);
                         }
+                                // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                        },
+                        ),
+                              SimpleDialogOption(
+                                        child: Column(
+                                            children: <Widget>[
+                                                const SizedBox(width: 10),
+                                                const Icon(Icons.camera_alt,size: 70,color: Colors.grey,),
+                                                Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
+                                              ],
+                                            ),
+                                          onPressed: () async {
+                                                  // Call the _pickImage function with the camera source
+                                            final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+                      final File imagefile = File(image!.path);
+                      groupedOnlyDeSnag[outerKey][innerIndex]=imagefile.toString();
+                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                        var token=sharedPreferences.getString('token'); 
+                        FormData formData=FormData(); 
+                        var dio = Dio();
+                        formData.fields.add(MapEntry('viewpoint_id', groupedViewpointsID[outerKey][innerIndex].toString()));
+                        formData.files.add(
+                        MapEntry("de_snag_image", await MultipartFile.fromFile(groupedOnlyDeSnag[outerKey][innerIndex].split(":")[1].trim().replaceAll("'", ""), filename: 'de_snag_image')));
+                        var res= await dio.post("http://nodejs.hackerkernel.com/colab/api/de_snags_image",
+                        data:formData,
+                        options: Options(
+                            followRedirects: false,
+                            validateStatus: (status) {
+                              return status! < 500;
+                            },
+                            headers: {
+                              "authorization": "Bearer ${token!}",
+                              "Content-type": "application/json",
+                            },
+                          ),
+                        );
+                        setState(() { });
+                        if (kDebugMode) {
+                          print(res);
+                        }
+                                                  // Close the modal pop-up
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ]),
+                                              SimpleDialogOption(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    const SizedBox(width: 10),
+                                                    Text("Cancel",style:textStyleBodyText1.copyWith(color: AppColors.primary),),
+                                                  ],
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
                   },
                   child: const Center(
                     child: Text (

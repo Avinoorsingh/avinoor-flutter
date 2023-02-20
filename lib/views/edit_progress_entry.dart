@@ -162,8 +162,16 @@ class _ProgressState extends State<EditProgressEntry> {
     subSubLocationController.text=widget.editModel?.subSubLocationName ?? "";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
-    quantityController.text=widget.editModel?.totalQuantity.toString()??"";
+    try {
+      quantityController.text=widget.editModel?.totalQuantity.toString()??"";
+    } catch (e) {
+      quantityController.text=widget.editModel?.quantity.toString()??"";
+    }
+    try {
     uomName.text=widget.editModel?.uomName??"";
+    } catch (e) {
+      uomName.text="";
+    }
     projectID.text=widget.editModel?.projectId.toString()??"";
     clientID.text=widget.editModel?.clientId.toString()??"";
     activityID.text=widget.editModel?.linkActivityId.toString()??"";
@@ -1160,7 +1168,7 @@ class _ProgressState extends State<EditProgressEntry> {
                       "project_id": int.parse(projectID!),
                       "link_activity_id":activityID.text.isNotEmpty?int.parse(activityID.text):"",
                       "achived_quantity": achivedQuantity.text.isNotEmpty? achivedQuantity.text:"",
-                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                      "total_quantity":quantityController.text.isNotEmpty?int.parse(quantityController.text):"",
                       "remarks": remarkController.text,
                       "contractor_id": "7",
                       "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
@@ -1233,7 +1241,7 @@ class _ProgressState extends State<EditProgressEntry> {
                       "project_id": int.parse(projectID!),
                       "link_activity_id":int.parse(activityID.text),
                       "achived_quantity": achivedQuantity.text,
-                      "total_quantity":int.parse(totalQuantity.text),
+                      "total_quantity":int.parse(quantityController.text),
                       "remarks": remarkController.text,
                       "contractor_id": int.parse(pwrContractorId.text),
                       "progress_percentage": _sliderValue.toInt().toString(),
@@ -1242,7 +1250,7 @@ class _ProgressState extends State<EditProgressEntry> {
                       "cumulative_quantity": comulativeQuantity.text,
                       "type": 2,
                       "save_type": "save",
-                      "created_by":int.parse(clientId.text),
+                      "created_by":int.parse(clientID),
                       "PWRLabourDetails": pWRLabourDetailsList,
                       "contractorLabourDetails": [],
                       "progressDetails": [],

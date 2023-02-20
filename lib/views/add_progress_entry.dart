@@ -109,6 +109,7 @@ class _AddProgressState extends State<AddProgressEntry> {
     _controllers.add(TextEditingController(text: "1"));
     });
     }
+
     void _addMore2(outerIndex,innerIndex) {
     setState(() {
     // _selectedDropdownValues2[outerIndex].add(groupedMapToList[innerIndex][0]);
@@ -132,7 +133,6 @@ class _AddProgressState extends State<AddProgressEntry> {
   List<String> debitTo = [];
   Map<String, dynamic> itemsDebit={};
   String dropdownvalueDebitTo = 'Select Debit to';  
-
   final locationId=TextEditingController();
   final subSubLocationId = TextEditingController();
   final subLocationId = TextEditingController();
@@ -702,20 +702,20 @@ class _AddProgressState extends State<AddProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Quantity: ${int.parse(_sliderValue.toInt().toString())} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
+              Text("Quantity: ${int.parse(_sliderValue.round().toString())} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
             Slider(
               divisions: 100,
               activeColor: AppColors.primary,
               focusNode: null,
               inactiveColor: AppColors.lightGrey,
-                value: _sliderValue,
+                value: _sliderValue.roundToDouble(),
                 onChanged: (newValue) {
                   setState(() {
                     _sliderValue = newValue;
                     if(totalQuantity.text.isNotEmpty){
-                    achivedController.text=((newValue.toInt()/100)*int.parse(totalQuantity.text)).toInt().toString();
-                    comulativeController.text=((newValue.toInt()/100)*int.parse(totalQuantity.text)).toInt().toString();
+                    achivedController.text=((newValue.round()/100)*double.parse(totalQuantity.text).toInt()).toInt().toString();
+                    comulativeController.text=((newValue.round()/100)*double.parse(totalQuantity.text).toInt()).toInt().toString();
                     }
                   });
                 },
@@ -805,9 +805,9 @@ class _AddProgressState extends State<AddProgressEntry> {
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
+              Text("LABOUR", style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
-            if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
+          if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
           Container(
            margin: const EdgeInsets.only(top: 20,),
            padding: const EdgeInsets.only(bottom: 10,),
@@ -1358,10 +1358,10 @@ class _AddProgressState extends State<AddProgressEntry> {
                 else if(remarkController.text.isEmpty){
                   EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
                 }
-                else if(debitToController.text.isEmpty){
+                else if(debitToController.text.isEmpty && priorityController.text=="Labour Supply"){
                   EasyLoading.showToast("Debit To is required",toastPosition: EasyLoadingToastPosition.bottom);  
                 }
-                else if(contractorLabourDetails.isEmpty){
+                else if(contractorLabourDetails.isEmpty && priorityController.text=="Labour Supply"){
                   EasyLoading.showToast("Atleast one contractor is required",toastPosition: EasyLoadingToastPosition.bottom);  
                 }
                 else{

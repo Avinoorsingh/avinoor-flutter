@@ -231,7 +231,15 @@ class _NewQualityCheckListState extends State<NewQualityCheckList> {
             },
           );
           var cData4=jsonDecode(res.body);
-          ManualCheckList result5=ManualCheckList.fromJson(cData4['data']);
+          // print(cData4);
+          late ManualCheckList result5;
+          if(cData4['success']==true){
+          result5=ManualCheckList.fromJson(cData4['data']);
+          }
+          else if(cData4['success']==false){
+            EasyLoading.showToast("No data found",toastPosition: EasyLoadingToastPosition.bottom);
+            result5=ManualCheckList.fromJson(cData4['data']);
+          }
     showDialog(
     useSafeArea: true,
     context: context,

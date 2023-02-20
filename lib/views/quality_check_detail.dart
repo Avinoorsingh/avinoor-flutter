@@ -542,14 +542,81 @@ class _SnagState extends State<QualityCheckDetail> {
                       shadowColor: Colors.transparent,
                   ),
                   onPressed: () async{
-                      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                      final File imagefile = File(image!.path);
-                           setState(() {
-                              sublists[outerIndex][innerIndex]['image'].add(imagefile);
-                            });
-                        if (kDebugMode) {
-                           print(sublists);
-                        }
+                  showDialog(
+                   context: context,
+                   builder: (BuildContext context) {
+                     return SimpleDialog(
+                      alignment: Alignment.center,
+                       children: <Widget>[
+                        Text("      Choose",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                         SimpleDialogOption(
+                            child: 
+                            Column(
+                                children: <Widget>[
+                                  
+                                  const SizedBox(width: 10),
+                                  const Icon(Icons.image,size: 70,color: Colors.grey,),
+                                  Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
+                                ],
+                              ),
+                             onPressed: () async{
+                               // Call the _pickImage function with the gallery source
+                             final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                              final File imagefile = File(image!.path);
+                                  setState(() {
+                                      sublists[outerIndex][innerIndex]['image'].add(imagefile);
+                                    });
+                                if (kDebugMode) {
+                                  print(sublists);
+                                }
+                               // Close the modal pop-up
+                               // ignore: use_build_context_synchronously
+                               Navigator.pop(context);
+                             },
+                           ),
+                          SimpleDialogOption(
+                            child: Column(
+                              children: <Widget>[
+                                const SizedBox(width: 10),
+                                 const Icon(Icons.camera_alt,size: 70,color: Colors.grey,),
+                                Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
+                              ],
+                            ),
+                             onPressed: () async {
+                               // Call the _pickImage function with the camera source
+                                      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+                              final File imagefile = File(image!.path);
+                                  setState(() {
+                                      sublists[outerIndex][innerIndex]['image'].add(imagefile);
+                                    });
+                                if (kDebugMode) {
+                                  print(sublists);
+                                }
+                               // Close the modal pop-up
+                               // ignore: use_build_context_synchronously
+                               Navigator.pop(context);
+                             },
+                           ),
+                        ]),
+                           SimpleDialogOption(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                const SizedBox(width: 10),
+                                Text("Cancel",style:textStyleBodyText1.copyWith(color: AppColors.primary),),
+                              ],
+                            ),
+                             onPressed: () {
+                               Navigator.pop(context);
+                             },
+                           ),
+                         ],
+                       );
+                     },
+                   );
                   },
                   child: 
                   Column(children: const [

@@ -705,9 +705,9 @@ setState(() => this.image = imageTemp);
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                     Container(
-                                      margin: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.all(10),
                                     width: 120,
-                                  decoration: BoxDecoration(
+                                    decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     gradient: const LinearGradient(
                                       begin: Alignment(-0.95, 0.0),
@@ -721,488 +721,554 @@ setState(() => this.image = imageTemp);
                                       splashFactory: NoSplash.splashFactory,
                                       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
                                       backgroundColor: Colors.transparent,
-                                        disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
-                                        shadowColor: Colors.transparent,
+                                      disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                      shadowColor: Colors.transparent,
                                     ),
                                     onPressed: () async {
-                                        final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                                        final File imagefile = File(image!.path);
-                                        viewpoints2[index1]['image'].add(imagefile);
-                                          setState(() { });
-                                    },
-                                    child: const Center(
-                                      child: Text(
-                                        'Upload Image',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xffffffff),
-                                          letterSpacing: -0.3858822937011719,
+                                       showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return SimpleDialog(
+                                          alignment: Alignment.center,
+                                          children: <Widget>[
+                                            Text("      Choose",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                            SimpleDialogOption(
+                                                child: 
+                                                Column(
+                                                    children: <Widget>[
+                                                      
+                                                      const SizedBox(width: 10),
+                                                      const Icon(Icons.image,size: 70,color: Colors.grey,),
+                                                      Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
+                                                    ],
+                                                  ),
+                                                onPressed: () async{
+                                                  // Call the _pickImage function with the gallery source
+                                                    final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                                                    final File imagefile = File(image!.path);
+                                                    viewpoints2[index1]['image'].add(imagefile);
+                                                    setState(() { });
+                                                    // ignore: use_build_context_synchronously
+                                                    Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  SimpleDialogOption(
+                                                            child: Column(
+                                                                children: <Widget>[
+                                                                    const SizedBox(width: 10),
+                                                                    const Icon(Icons.camera_alt,size: 70,color: Colors.grey,),
+                                                                    Text("Camera",style:textStyleBodyText1.copyWith(color: Colors.grey),),
+                                                                  ],
+                                                                ),
+                                                              onPressed: () async {
+                                                                      // Call the _pickImage function with the camera source
+                                                                final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+
+                                                                final File imagefile = File(image!.path);
+                                                                viewpoints2[index1]['image'].add(imagefile);
+                                                                setState(() { });
+                                                                      // Close the modal pop-up
+                                                                      // ignore: use_build_context_synchronously
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                  ),
+                                                                ]),
+                                                                  SimpleDialogOption(
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                                      children: <Widget>[
+                                                                        const SizedBox(width: 10),
+                                                                        Text("Cancel",style:textStyleBodyText1.copyWith(color: AppColors.primary),),
+                                                                      ],
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                        child: const Center(
+                                                          child: Text(
+                                                            'Upload Image',
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Color(0xffffffff),
+                                                              letterSpacing: -0.3858822937011719,
+                                                            ),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]),
+                                                  ]
+                                                ),
+                                              ),
+                                            ]
+                                          );
+                                        }),
+                                        Container(
+                                            width: double.infinity,
+                                            margin: const EdgeInsets.all(20.0),
+                                          padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                              width: 1, 
+                                              color: Colors.black),
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: 
+                                            Column(children: [
+                                              Center(child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                Text("Remark",style: textStyleBodyText1,),
+                                                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),)
+                                              ],),),
+                                              const SizedBox(height: 10,),
+                                            TextField(
+                                              controller: remarkController,
+                                              textAlign: TextAlign.center,
+                                              decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                fillColor: Colors.grey[300],
+                                                filled: true,
+                                                hintText: "Type here",
+                                                hintStyle: const TextStyle(color: Colors.black,),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                  borderSide: BorderSide(
+                                                      width: 1, color:Colors.grey[300]!),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                                  borderSide: BorderSide(
+                                                      width: 1, color:Colors.grey[300]!),
+                                                ),
+                                                errorBorder: InputBorder.none,
+                                                disabledBorder: InputBorder.none,),
+                                              maxLines: null,
+                                              style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+                                            ),
+                                          ])
+                                            ),
+                                            const SizedBox(height: 10,),
+                                            Container(
+                                            width: double.infinity,
+                                              margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                                          padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(width: 1, color: Colors.black),
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: 
+                                            Column(children: [
+                                              Center(child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                Text("DEBIT TO",style: textStyleBodyText1,),
+                                              ],),),
+                                              const SizedBox(height: 10,),
+                                                  DropdownButtonFormField(
+                                                    value: dropdownvalueDebitTo,
+                                                    icon: const Padding( 
+                                                    padding: EdgeInsets.only(left:20),
+                                                    child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+                                                    ), 
+                                                  iconEnabledColor: Colors.grey,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14
+                                                  ), 
+                                                  dropdownColor: AppColors.white,
+                                                  decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.grey, width: 1),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                                                  ),
+                                                ),
+                                                isExpanded: true,
+                                                items: debitTo.map((String items){
+                                                  return DropdownMenuItem(
+                                                    value: items,
+                                                    child: Text(items),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (String? newValue){
+                                                  setState(() {
+                                                    dropdownvalueDebitTo = newValue!;
+                                                    debitToController.text=newValue;
+                                                  });
+                                                },
+                                              ),
+                                            ])
+                                          ),
+                                        Column(children: [
+                                        Container(
+                                          margin: const EdgeInsets.only(left: 20,right: 20),
+                                          padding: const EdgeInsets.only(top: 3,bottom: 3),
+                                          child:
+                                        Row(children: [Text("Due Date",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),)],),
                                         ),
-                                        textAlign: TextAlign.center,
+                                    Container(
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.only(left:20.0,right: 20.0),
+                                      padding: const EdgeInsets.only(left: 10,right: 10,top: 3,bottom: 3),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(width: 0.2, color: Colors.blueGrey),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
+                                      child: 
+                                      TextField(
+                                        decoration: const InputDecoration(
+                                          suffixIcon: Icon(Icons.edit_calendar),
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,),
+                                        readOnly: true,
+                                        controller: dateInput,
+                                        onTap: () async {
+                                          DateTime? pickedDate = await showDatePicker(
+                                              context: context,
+                                              builder: (BuildContext context, Widget? child) {
+                                              return Theme(
+                                                data: ThemeData.light().copyWith(
+                                                    primaryColor: AppColors.primary,
+                                                    buttonTheme: const ButtonThemeData(
+                                                      textTheme: ButtonTextTheme.primary
+                                                    ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
+                                                ),
+                                              child: child!,
+                                              );
+                                              }, 
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime.now(),
+                                              lastDate: DateTime(2100));
+                                          if (pickedDate != null) {
+                                            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                            setState(() {
+                                              dateInput.text =formattedDate;
+                                            });
+                                          } else {}
+                                        },
+                                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 20),
+                                      ),
+                                        )
+                                    ]),
+                                      Container(
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(width: 1, color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: 
+                                      Column(children: [
+                                        Center(child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                          Text("DEBIT AMOUNT ",style: textStyleBodyText1,),
+                                          Text("\u20B9 *",style: textStyleBodyText1.copyWith(color: Colors.red),)
+                                        ],),),
+                                        const SizedBox(height: 10,),
+                                      TextField(
+                                        keyboardType:TextInputType.number,
+                                        controller: debitAmountController,
+                                        inputFormatters: [
+                                                FilteringTextInputFormatter.digitsOnly,
+                                                LengthLimitingTextInputFormatter(7),
+                                              ],
+                                        textAlign: TextAlign.center,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          fillColor:Colors.grey[300],
+                                          filled: true,
+                                          hintText: "Enter here",
+                                          hintStyle: const TextStyle(color: Colors.black,),
+                                          enabledBorder:OutlineInputBorder(
+                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                            borderSide: BorderSide(
+                                                width: 1, color:Colors.grey[300]!),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                            borderSide: BorderSide(
+                                                width: 1, color:Colors.grey[300]!),
+                                          ),
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,),
+                                        maxLines: null,
+                                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+                                      ),
+                                    ])
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                        width: 1, 
+                                        color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: 
+                                      Column(children: [
+                                        Center(child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                          Text("Snag Assigned To",style: textStyleBodyText1,),
+                                        ],),),
+                                        const SizedBox(height: 10,),
+                                        DropdownButtonFormField(
+                                          value: dropdownvalueAssignedTo,
+                                          icon: const Padding( 
+                                          padding: EdgeInsets.only(left:20),
+                                          child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+                                          ), 
+                                        iconEnabledColor: Colors.grey,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14
+                                        ), 
+                                          dropdownColor: AppColors.white,
+                                          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
+                                          borderSide: BorderSide(color: Colors.grey, width: 1),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.grey, width: 1),
+                                          ),
+                                        ),
+                                          isExpanded: true,
+                                          items: assignedToList.map((String items){
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(items),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue){
+                                            setState(() {
+                                              snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)].toString();
+                                              dropdownvalueAssignedTo = newValue.toString();
+                                            });
+                                          },
+                                        ),
+                                        ])
+                                      ),
+                                      Container(
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
+                                      padding: const EdgeInsets.only(left: 0,right: 0,top: 10,bottom: 10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(width: 1, color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: 
+                                      Column(
+                                        children: [
+                                        Center(child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                          Text("Snag Priority",style: textStyleBodyText1,),
+                                        ],),),
+                                        const SizedBox(height: 10,),
+                                    SizedBox(
+                                      height: 75,
+                                      child: 
+                                    ListView.builder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.only(top: 15,bottom: 15,left: 0,right: 0),
+                                    itemCount: 3,
+                                    itemBuilder: (BuildContext context, int index){
+                                      isCardEnabled2.add(false);
+                                      return GestureDetector(
+                                          onTap: (){
+                                            isCardEnabled2.replaceRange(0, isCardEnabled2.length, [for(int i = 0; i < isCardEnabled2.length; i++)false]);
+                                            isCardEnabled2[index]=true;
+                                            priorityController.text=(priority[index]);
+                                            setState(() {});
+                                          },
+                                          child: SizedBox(
+                                            height: 10,
+                                            width: MediaQuery.of(context).size.width/3.7,
+                                            child: Container(
+                                            decoration: BoxDecoration(
+                                              color: isCardEnabled2[index]? AppColors.primary:AppColors.white,
+                                              border: Border.all(width: 1.2,color:  AppColors.primary,),
+                                              ),
+                                              child: Center(
+                                                child: Text(priority[index],textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: isCardEnabled2[index]?Colors.white: AppColors.primary,
+                                                    fontSize: 16
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                         );
+                                       }),
+                                      ),
+                                    ]
+                                  ),
+                                ),
+                              Container(
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
+                                  padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                  child:
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: 
+                                  [
+                                    ElevatedButton(onPressed: (){
+                                      Navigator.pop(context);
+                                    }, 
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size(150,40),
+                                      backgroundColor: AppColors.white
                                     ),
+                                    child: const Text("Cancel",style: TextStyle(color: Colors.black,fontSize: 14, fontWeight: FontWeight.normal),)),
+                                    ElevatedButton(onPressed: () async {
+                                      if(categoryIDController.text.isEmpty){
+                                        EasyLoading.showToast("Please select Category",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(locationId.text.isEmpty){
+                                        EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(subLocationId.text.isEmpty){
+                                        EasyLoading.showToast("Please select Sub Location",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(subSubLocationId.text.isEmpty){
+                                        EasyLoading.showToast("Please select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(remarkController.text.isEmpty){
+                                        EasyLoading.showToast("Please enter a remark",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(debitAmountController.text.isEmpty){
+                                        EasyLoading.showToast("Please enter debit amount",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(snapAssignedToController.text.isEmpty){
+                                        EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
+                                        EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(priorityController.text.isEmpty){
+                                        EasyLoading.showToast("Please assign priority",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else {
+                                      // ignore: non_constant_identifier_names
+                                      List VID=[];
+                                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                      var token=sharedPreferences.getString('token');
+                                      var createdById=sharedPreferences.getString('id');
+                                      FormData formData=FormData(); 
+                                      var dio = Dio();
+                                      for(int i=0;i<viewpoints2.length;i++){
+                                        if(viewpoints2[i]['image'].isNotEmpty){
+                                        for(int j=0;j<viewpoints2[i]['image'].length;j++){
+                                          viewpointsToSent.add(viewpoints2[i]['image'][j].toString());
+                                          VID.add(viewpointsID[i]);
+                                        }
+                                        }
+                                      }
+                                        if(viewpointsToSent.isNotEmpty){
+                                          for (var item in viewpointsToSent) {
+                                            formData.files.add(
+                                              MapEntry("viewpoint_${VID[viewpointsToSent.indexOf(item)]}", await MultipartFile.fromFile(viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1), filename: 'image1'))
+                                            );
+                                          }
+                                        }
+                                      try {
+                                      formData.files.add(MapEntry("markup_file", await MultipartFile.fromFile(assetImageController.text, filename: "image_name")));
+                                      } catch (e) {
+                                        formData.fields.add(const MapEntry('markup_file', ''));
+                                      }
+                                      formData.fields.add(MapEntry('snags_data', jsonEncode({
+                                            "client_id":int.parse(clientId.text),
+                                            "project_id": int.parse(projectId.text),
+                                            "category_id": int.parse(categoryIDController.text),
+                                            "location_id": int.parse(locationId.text),
+                                            "sub_loc_id": int.parse(subLocationId.text),
+                                            "sub_sub_loc_id": int.parse(subSubLocationId.text),
+                                            "activity_head_id": 1,
+                                            "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
+                                            "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
+                                            'debet_contractor_id':2,
+                                            "remark": remarkController.text,
+                                            "debit_note": "this is debit note",
+                                            "debit_amount":int.parse(debitAmountController.text),
+                                            "due_date": dateInput.text,
+                                            "assigned_to": int.parse(snapAssignedToController.text),
+                                            "created_by": int.parse(createdById!),
+                                            "snag_status": "N",
+                                            "snag_priority": priorityController.text== "Critical"?'CR':priorityController.text=="Major"?'MA':priorityController.text=="Minor"?'MI':"",
+                                              }
+                                            )
+                                          )
+                                        );
+                                  if (kDebugMode) {
+                                      print(formData.fields);
+                                  }
+                                  try {
+                                    await dio.post(
+                                  "http://nodejs.hackerkernel.com/colab/api/add_snags",
+                                  data: formData,
+                                  options: Options(
+                                    followRedirects: false,
+                                    validateStatus: (status) {
+                                      return status! < 500;
+                                    },
+                                    headers: {
+                                      "authorization": "Bearer ${token!}",
+                                      "Content-type": "application/json",
+                                    },
                                   ),
-                                ),
-                              ]),
-                              ]
-                            ),
-                          ),
-                          ]);}),
-                  Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(20.0),
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                        width: 1, 
-                        color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      Column(children: [
-                        Center(child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text("Remark",style: textStyleBodyText1,),
-                          Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),)
-                        ],),),
-                        const SizedBox(height: 10,),
-                      TextField(
-                        controller: remarkController,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.grey[300],
-                          filled: true,
-                          hintText: "Type here",
-                          hintStyle: const TextStyle(color: Colors.black,),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                width: 1, color:Colors.grey[300]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                width: 1, color:Colors.grey[300]!),
-                          ),
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,),
-                        maxLines: null,
-                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-                      ),
-                    ])
-                      ),
-                      const SizedBox(height: 10,),
-                      Container(
-                      width: double.infinity,
-                        margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      Column(children: [
-                        Center(child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text("DEBIT TO",style: textStyleBodyText1,),
-                        ],),),
-                        const SizedBox(height: 10,),
-                            DropdownButtonFormField(
-                              value: dropdownvalueDebitTo,
-                              icon: const Padding( 
-                              padding: EdgeInsets.only(left:20),
-                              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-                              ), 
-                            iconEnabledColor: Colors.grey,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14
-                            ), 
-                            dropdownColor: AppColors.white,
-                            decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey, width: 1),
-                            ),
-                          ),
-                          isExpanded: true,
-                          items: debitTo.map((String items){
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue){
-                            setState(() {
-                              dropdownvalueDebitTo = newValue!;
-                              debitToController.text=newValue;
-                            });
-                          },
-                        ),
-                    ])
-                      ),
-                      Column(children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 20,right: 20),
-                          padding: const EdgeInsets.only(top: 3,bottom: 3),
-                          child:
-                        Row(children: [Text("Due Date",style: textStyleHeadline3.copyWith(fontWeight: FontWeight.normal),)],),
-                        ),
-                     Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(left:20.0,right: 20.0),
-                      padding: const EdgeInsets.only(left: 10,right: 10,top: 3,bottom: 3),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.2, color: Colors.blueGrey),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      TextField(
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.edit_calendar),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,),
-                        readOnly: true,
-                        controller: dateInput,
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              builder: (BuildContext context, Widget? child) {
-                              return Theme(
-                                data: ThemeData.light().copyWith(
-                                    primaryColor: AppColors.primary,
-                                    buttonTheme: const ButtonThemeData(
-                                      textTheme: ButtonTextTheme.primary
-                                    ), colorScheme: const ColorScheme.light(primary:AppColors.primary,).copyWith(secondary: const Color(0xFF8CE7F1)),
-                                ),
-                              child: child!,
-                              );
+                                    );
+                                    EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
+                                    await getSnag.getSnagData(context: context);
+                                    await getClientProjectsController.getSelectedProjects(context:context);
+                                    Get.put(GetNewSnag()); 
+                                        // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                    } catch (e) {
+                                      EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
+                                      EasyLoading.dismiss();
+                                    if (kDebugMode) {
+                                      print(e);
+                                    } 
+                                    }
+                                }
                               }, 
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2100));
-                          if (pickedDate != null) {
-                            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                            setState(() {
-                              dateInput.text =formattedDate;
-                            });
-                          } else {}
-                        },
-                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 20),
-                      ),
-                        )
-                    ]),
-                      Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(20.0),
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      Column(children: [
-                        Center(child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text("DEBIT AMOUNT ",style: textStyleBodyText1,),
-                          Text("\u20B9 *",style: textStyleBodyText1.copyWith(color: Colors.red),)
-                        ],),),
-                        const SizedBox(height: 10,),
-                      TextField(
-                        keyboardType:TextInputType.number,
-                        controller: debitAmountController,
-                        inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(7),
-                              ],
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor:Colors.grey[300],
-                          filled: true,
-                          hintText: "Enter here",
-                          hintStyle: const TextStyle(color: Colors.black,),
-                          enabledBorder:OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                width: 1, color:Colors.grey[300]!),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                                width: 1, color:Colors.grey[300]!),
-                          ),
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,),
-                        maxLines: null,
-                        style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-                      ),
-                    ])
-                      ),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                        width: 1, 
-                        color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      Column(children: [
-                        Center(child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text("Snag Assigned To",style: textStyleBodyText1,),
-                        ],),),
-                        const SizedBox(height: 10,),
-                        DropdownButtonFormField(
-                          value: dropdownvalueAssignedTo,
-                          icon: const Padding( 
-                          padding: EdgeInsets.only(left:20),
-                          child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-                          ), 
-                        iconEnabledColor: Colors.grey,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14
-                        ), 
-                          dropdownColor: AppColors.white,
-                          decoration: const InputDecoration(enabledBorder: OutlineInputBorder( //<-- SEE HERE
-                          borderSide: BorderSide(color: Colors.grey, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 1),
-                          ),
-                        ),
-                          isExpanded: true,
-                          items: assignedToList.map((String items){
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue){
-                            setState(() {
-                              snapAssignedToController.text=assignedToListIndex[assignedToList.indexOf(newValue!)].toString();
-                              dropdownvalueAssignedTo = newValue.toString();
-                            });
-                          },
-                        ),
-                        ])
-                      ),
-                      Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
-                      padding: const EdgeInsets.only(left: 0,right: 0,top: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: 
-                      Column(
-                        children: [
-                        Center(child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                          Text("Snag Priority",style: textStyleBodyText1,),
-                        ],),),
-                        const SizedBox(height: 10,),
-                    SizedBox(
-                      height: 75,
-                      child: 
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(top: 15,bottom: 15,left: 0,right: 0),
-                    itemCount: 3,
-                    itemBuilder: (BuildContext context, int index){
-                      isCardEnabled2.add(false);
-                      return GestureDetector(
-                          onTap: (){
-                            isCardEnabled2.replaceRange(0, isCardEnabled2.length, [for(int i = 0; i < isCardEnabled2.length; i++)false]);
-                            isCardEnabled2[index]=true;
-                            priorityController.text=(priority[index]);
-                            setState(() {});
-                          },
-                          child: SizedBox(
-                            height: 10,
-                            width: MediaQuery.of(context).size.width/3.7,
-                            child: Container(
-                            decoration: BoxDecoration(
-                              color: isCardEnabled2[index]? AppColors.primary:AppColors.white,
-                              border: Border.all(width: 1.2,color:  AppColors.primary,),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(150,40),
+                                backgroundColor:const Color.fromARGB(255, 84, 216, 88)
                               ),
-                              child: Center(
-                                child: Text(priority[index],textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: isCardEnabled2[index]?Colors.white: AppColors.primary,
-                                    fontSize: 16
-                                  ),
-                                ),
-                              ),
-                            ),
+                              child: const Text("Save",style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
+                            ],
                           )
-                      );
-                    }),
-                    ),
-                    ]),
-                      ),
-                      Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
-                      padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                      child:
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: 
-                      [
-                        ElevatedButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, 
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(150,40),
-                          backgroundColor: AppColors.white
-                        ),
-                        child: const Text("Cancel",style: TextStyle(color: Colors.black,fontSize: 14, fontWeight: FontWeight.normal),)),
-                        ElevatedButton(onPressed: () async {
-                          if(categoryIDController.text.isEmpty){
-                            EasyLoading.showToast("Please select Category",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(locationId.text.isEmpty){
-                            EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(subLocationId.text.isEmpty){
-                            EasyLoading.showToast("Please select Sub Location",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(subSubLocationId.text.isEmpty){
-                            EasyLoading.showToast("Please select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(remarkController.text.isEmpty){
-                            EasyLoading.showToast("Please enter a remark",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(debitAmountController.text.isEmpty){
-                            EasyLoading.showToast("Please enter debit amount",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(snapAssignedToController.text.isEmpty){
-                            EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
-                            EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else if(priorityController.text.isEmpty){
-                            EasyLoading.showToast("Please assign priority",toastPosition: EasyLoadingToastPosition.bottom);
-                          }
-                          else {
-                          // ignore: non_constant_identifier_names
-                          List VID=[];
-                          SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                          var token=sharedPreferences.getString('token');
-                          var createdById=sharedPreferences.getString('id');
-                          FormData formData=FormData(); 
-                          var dio = Dio();
-                          for(int i=0;i<viewpoints2.length;i++){
-                            if(viewpoints2[i]['image'].isNotEmpty){
-                            for(int j=0;j<viewpoints2[i]['image'].length;j++){
-                              viewpointsToSent.add(viewpoints2[i]['image'][j].toString());
-                              VID.add(viewpointsID[i]);
-                            }
-                            }
-                          }
-                            if(viewpointsToSent.isNotEmpty){
-                              for (var item in viewpointsToSent) {
-                                formData.files.add(
-                                  MapEntry("viewpoint_${VID[viewpointsToSent.indexOf(item)]}", await MultipartFile.fromFile(viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].substring(1,viewpointsToSent[viewpointsToSent.indexOf(item)].split(': ')[1].length-1), filename: 'image1'))
-                                );
-                              }
-                            }
-                          try {
-                          formData.files.add(MapEntry("markup_file", await MultipartFile.fromFile(assetImageController.text, filename: "image_name")));
-                          } catch (e) {
-                            formData.fields.add(const MapEntry('markup_file', ''));
-                          }
-                          formData.fields.add(MapEntry('snags_data', jsonEncode({
-                                "client_id":int.parse(clientId.text),
-                                "project_id": int.parse(projectId.text),
-                                "category_id": int.parse(categoryIDController.text),
-                                "location_id": int.parse(locationId.text),
-                                "sub_loc_id": int.parse(subLocationId.text),
-                                "sub_sub_loc_id": int.parse(subSubLocationId.text),
-                                "activity_head_id": 1,
-                                "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
-                                "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
-                                'debet_contractor_id':2,
-                                "remark": remarkController.text,
-                                "debit_note": "this is debit note",
-                                "debit_amount":int.parse(debitAmountController.text),
-                                "due_date": dateInput.text,
-                                "assigned_to": int.parse(snapAssignedToController.text),
-                                "created_by": int.parse(createdById!),
-                                "snag_status": "N",
-                                "snag_priority": priorityController.text== "Critical"?'CR':priorityController.text=="Major"?'MA':priorityController.text=="Minor"?'MI':"",
-                            }
-                            )
-                            )
-                            );
-                              if (kDebugMode) {
-                                print(formData.fields);
-                              }
-                            try {
-                              await dio.post(
-                            "http://nodejs.hackerkernel.com/colab/api/add_snags",
-                            data: formData,
-                            options: Options(
-                              followRedirects: false,
-                              validateStatus: (status) {
-                                return status! < 500;
-                              },
-                              headers: {
-                                "authorization": "Bearer ${token!}",
-                                "Content-type": "application/json",
-                              },
-                            ),
-                              );
-                              EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
-                              await getSnag.getSnagData(context: context);
-                              await getClientProjectsController.getSelectedProjects(context:context);
-                              Get.put(GetNewSnag()); 
-                                  // ignore: use_build_context_synchronously
-                              Navigator.pop(context);
-                              } catch (e) {
-                                EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
-                                EasyLoading.dismiss();
-                              if (kDebugMode) {
-                                print(e);
-                              } 
-                              }
-                          }
-                        }, 
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(150,40),
-                          backgroundColor:const Color.fromARGB(255, 84, 216, 88)
-                        ),
-                        child: const Text("Save",style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
-                      ],
+                        )   
+                      ]
                     )
-                  )   
-                ]
-              )
-            )
-          );
-        }
-      );
-    }
-}
+                  )
+                );
+              }
+            );
+          }
+      }
 
 
 Route _createRoute() {
