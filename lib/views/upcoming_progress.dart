@@ -272,7 +272,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                 }
                                                 )),);
                                                 formData.fields.add(const MapEntry('progress_image', ""));
-                                                var resOfPost=await dio.post(
+                                                await dio.post(
                                                   Config.saveLabourSupplyProgressApi,
                                                   data: formData,
                                                   options: Options(
@@ -355,15 +355,16 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                   );
                                 }
                               );
+                            }else{
+                                context.pushNamed("NEWPROGRESSENTRY2",extra: list1[index]);
                             }
-                                // context.pushNamed("EDITPROGRESSENTRY",extra: list1[index]);
                           },
                             child: 
                              Card(
                               color: Colors.orangeAccent,
                               borderOnForeground: true,
                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                               elevation: 0,
                               child:

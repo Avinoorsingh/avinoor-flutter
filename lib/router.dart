@@ -17,6 +17,7 @@ import 'package:colab/views/labour_data.dart';
 import 'package:colab/views/logout_screen.dart';
 import 'package:colab/views/my_profile_page.dart';
 import 'package:colab/views/new_progress_entry.dart';
+import 'package:colab/views/new_progress_entry2.dart';
 import 'package:colab/views/new_snags.dart';
 import 'package:colab/views/offline/progress/activity_progress_offline.dart';
 import 'package:colab/views/offline/progress/add_progress_offline.dart';
@@ -209,6 +210,18 @@ class CustomRouter {
           key: state.pageKey,
           from: state.queryParams["from"],
           snagModel: state.extra,
+        ),
+      ),
+       GoRoute(
+        name:'NEWPROGRESSENTRY2',
+        path: newProgressEntry2,
+        builder: (context, state) => NewProgressEntry2(
+          key: state.pageKey,
+          from: state.queryParams["from"],
+          snagModel: state.extra,
+          locName: state.queryParams['locName'],
+          subLocName:state.queryParams['subLocName'],
+          subSubLocName:state.queryParams['subSubLocName'],
         ),
       ),
       GoRoute(

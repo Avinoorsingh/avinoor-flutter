@@ -24,6 +24,7 @@ const String snagDetail = '/SnagDetail';
 const String snagDetailOffline = '/SnagDetailOffline';
 const String snagDetail2 = '/SnagDetail2';
 const String newProgressEntry = '/NewProgressEntry';
+const String newProgressEntry2='/NewProgressEntry2';
 const String addProgressEntry = '/AddProgressEntry';
 const String addProgressEntryOffline = '/AddProgressEntryOffline';
 const String upcomingProgressEntry = '/UpcomingProgressEntry';
