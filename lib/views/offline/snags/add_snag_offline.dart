@@ -490,7 +490,9 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   if(subLocationId.text.isNotEmpty && locationController.text.isNotEmpty){
                   String value= await Navigator.of(context).push(_createRoute2());
                   setState((){
-                    print(value);
+                    if (kDebugMode) {
+                      print(value);
+                    }
                     linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
                     subSubV=value.substring(0,value.indexOf('}'));
                     subSubLocationController.text=value.substring(0,value.indexOf('}'));

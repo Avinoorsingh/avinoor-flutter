@@ -698,9 +698,8 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                       if (subSubLocationInfo2[i].locationId == int.parse(locationId.text) &&
                           subSubLocationInfo2[i].subLocId == int.parse(subLocationId.text) &&
                           subSubLocationInfo2[i].subLocationId == int.parse(subSubLocationId.text)) {
-                        viewPointNumberList2 = subSubLocationInfo2[i].viewPointNumberlist;
-                        // viewpointImagesUrl.add(subSubLocationInfo2[i].masterImage.masterFile.toString());
-                        break;
+                          viewPointNumberList2 = subSubLocationInfo2[i].viewPointNumberlist;
+                          break;
                       }
                     }
                     for(int i=0; i < subSubLocationInfo2.length; i++) {
@@ -709,9 +708,6 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                             pwrContractorName.text = subSubLocationInfo2[i].subSubLocationActivity[j].contractorName;
                             pwrContractorId.text=subSubLocationInfo2[i].subSubLocationActivity[j].contId.toString();
                             uOfName.text=subSubLocationInfo2[i].subSubLocationActivity[j].uomName.toString();
-                            // print(")))))))))))))))))))))))((((((((");
-                            // // print(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[0].totalQuantity.toString());
-                            // print(")))))))))))))))))))))))((((((((");
                             if(subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd!=null){
                             for(int k=0;k<subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd?.progressDailyInfo.length;k++){
                             totalQuantity.text=subSubLocationInfo2[i].subSubLocationActivity[j].progressAdd.progressDailyInfo[k].totalQuantity.toString();
@@ -1458,7 +1454,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         "locationName":locationController.text,
                         "subLocationName":subLocationController.text,
                         "subSubLocationName":subSubLocationController.text,
-                        "contractorName":contractorController.text
+                        "contractorName":contractorController.text,
                     });
                     outerProgress["progress_data"]= (
                         [{
@@ -1506,7 +1502,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         for(int i=0; i<_selectedDropdownValuesID.length; i++){
                           pWRLabourDetailsList.add({
                             "labour_count": enteredValues[i],
-                            "pwr_type": _selectedDropdownValuesID[i]
+                            "pwr_type": _selectedDropdownValuesID[i],
                           });
                         }
                     try {
@@ -1536,7 +1532,9 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
                         }
                       );
                     try {
-                      print(outerProgress);
+                      if (kDebugMode){
+                        print(outerProgress);
+                      }
                       await databaseProvider.insertOuterProgressFormData([outerProgress]);
                         EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     }catch(e){

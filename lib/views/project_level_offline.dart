@@ -108,7 +108,7 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
      try {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var token=sharedPreferences.getString('token');
-      var res=await dio.post(
+      await dio.post(
         "http://nodejs.hackerkernel.com/colab/api/add_offline_snags",
         data: formData,
         options: Options(
@@ -144,9 +144,6 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
     List<dynamic> progressDataList = outerProgressFormDataList.map((progress) => progress['progress_data']).toList();
     if(progressDataList.isNotEmpty){
       for(int i=0;i<progressDataList.length;i++){
-        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        print(progressDataList[i]);
-        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         for(int j=0;j<progressDataList[i].length;j++){
     Map<String, dynamic> dataToBeSent = {
       "client_id": progressDataList[i][j]["client_id"],
@@ -154,11 +151,11 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
       "link_activity_id": progressDataList[i][j]["link_activity_id"],
       "created_by": progressDataList[i][j]["client_id"],
       "daily_progress": progressDataList[i],
-    };
-    formData2.fields.add(MapEntry('progress_data',jsonEncode(dataToBeSent)));
+       };
+    formData2.fields.add(MapEntry('progress_data', jsonEncode(dataToBeSent)));
       }
     }
-    for (int i = 0; i < progressDataList.length; i++) {
+    for (int i = 0; i < progressDataList.length; i++){
       for(int j=0;j<progressDataList[i].length;j++){
       Map<String, dynamic> progress = progressDataList[i][j];
       progress.forEach((key, value) {
@@ -166,14 +163,15 @@ class _ProjectLevelPageState extends State<ProjectLevelOffline> {
         if (key.startsWith("progress_image")) {
           formData2.files.add(MapEntry(key, MultipartFile.fromFileSync(value, filename: "progress_image")));
         }
-        }
-        else{
+      }
+      else{
            formData2.fields.add(MapEntry(key, ''));
-        }
-      });
+          }
+         }
+        );
       }
     }
-      try {
+    try {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var token=sharedPreferences.getString('token');
       var res=await dio.post(

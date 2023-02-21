@@ -265,13 +265,14 @@ class _ProgressState extends State<EditProgressEntry> {
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Edit Progress Entry",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("Edit Progress Entry", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(widget.editModel.triggerId!=1)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -361,7 +362,6 @@ class _ProgressState extends State<EditProgressEntry> {
             ])
             )
         ),
-        //done
         Column(
           children: [
               Center(
@@ -438,6 +438,7 @@ class _ProgressState extends State<EditProgressEntry> {
             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
+          const SizedBox(height: 10,),
           CustomContainer2(
             child:
           Column(children: [
@@ -549,8 +550,8 @@ class _ProgressState extends State<EditProgressEntry> {
             
           ],) 
             ),
+          if(update==true)...{
           const SizedBox(height: 20,),
-            if(update==true)...{
           ListView.builder(
           physics:const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -932,7 +933,7 @@ class _ProgressState extends State<EditProgressEntry> {
           );
           }),
             },
-          const SizedBox(height: 20,),
+          const SizedBox(height: 10,),
             CustomContainer2(
             child: 
             Column(children: [

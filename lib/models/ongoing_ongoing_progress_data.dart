@@ -59,7 +59,8 @@ class OnGoingOnGoingData {
   num? updatedBy;
 
   OnGoingOnGoingData(
-      {this.checklistId,
+      {
+      this.checklistId,
       this.checkStatus,
       this.triggerId,
       this.cmId,

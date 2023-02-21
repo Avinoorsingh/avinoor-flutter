@@ -1,9 +1,9 @@
 import 'package:colab/constants/colors.dart';
 import 'package:colab/models/all_offline_data2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../controller/signInController.dart';
 import '../../../../models/snag_offline.dart';
 import '../../../../services/local_database/local_database_service.dart';
@@ -132,7 +132,9 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
     }
      if(ongoingLocalDataList.isNotEmpty){
          for(int i=0;i<ongoingLocalDataList.length;i++){
-          print(ongoingLocalDataList);
+          if (kDebugMode) {
+            print(ongoingLocalDataList);
+          }
             if(ongoingLocalDataList[i]["progress_filter"]["subSubLocID"]==(widget.subSubLocID)
                 && ongoingLocalDataList[i]["progress_filter"]["locID"]==(widget.locID) 
                 && ongoingLocalDataList[i]["progress_filter"]["subLocID"]==(widget.subLocID)){

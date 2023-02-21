@@ -29,6 +29,7 @@ class UpcomingProgressData {
   int? quantity;
   int? quantityId;
   String? locationName;
+  String? uomName;
   String? contractorName;
   String? subLocationName;
   String? subSubLocationName;
@@ -58,6 +59,7 @@ class UpcomingProgressData {
       this.quantity,
       this.quantityId,
       this.locationName,
+      this.uomName,
       this.contractorName,
       this.subLocationName,
       this.subSubLocationName,
@@ -86,6 +88,7 @@ class UpcomingProgressData {
     quantity = json['quantity'];
     quantityId = json['quantity_id'];
     locationName = json['location_name'];
+    uomName=json['uom_name'];
     contractorName = json['contractor_name'];
     subLocationName = json['sub_location_name'];
     subSubLocationName = json['sub_sub_location_name'];

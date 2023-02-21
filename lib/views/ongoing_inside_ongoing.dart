@@ -384,13 +384,13 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
           child: Center(
         child:Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color:triggerID[index]==1?AppColors.primary:Colors.grey,
               borderRadius: BorderRadius.circular(10),
             ),
             width:250,
             height: 30,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text(triggerID[index]!=0?"Checklist Closed":"Checklist NA",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text(triggerID[index]==1?"Checklist New":"Checklist NA",style: textStyleBodyText1.copyWith(color: AppColors.white),
             )
           )
         ),

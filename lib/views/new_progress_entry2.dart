@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:colab/network/client_project.dart';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
@@ -13,6 +17,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
+import '../controller/signInController.dart';
+import '../models/labour_attendance.dart';
+import '../models/progress_contractor.dart';
+import '../models/progress_location_data.dart';
+import '../models/progress_trade_data.dart';
 
 // ignore: must_be_immutable
 class NewProgressEntry2 extends StatefulWidget {
@@ -55,7 +64,8 @@ class _SnagState extends State<NewProgressEntry2> {
   String dropdownvalue2 = 'Select Sub Location';  
   final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue3 = 'Select Sub Sub Location';  
-  final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
+  List debitTo = [];
+  List<int> debitToID=[];
   String dropdownvalueDebitTo = 'Select Debit to';  
   final assignedTo=["Select Name","Name 1"];
   String dropdownvalueAssignedTo="Select Name";
@@ -64,7 +74,33 @@ class _SnagState extends State<NewProgressEntry2> {
    List<bool> isCardEnabled = [];
    List<bool> isCardEnabled2 = [];
    List<String> deSnagImages=[];
-
+  Map<String, List<String>> groupedList = {};
+  List groupedMapToList=[];
+  final pwrContractorId=TextEditingController();
+  final pwrContractorName=TextEditingController();
+  List<dynamic> finalList=[];
+  final List labourList=["Item 1"];
+  final List<String> _items = ['Item 1'];
+  final List<String> _dropdownValues = [];
+  final List<int> _dropdownValuesID = [];
+  final List<String> _selectedDropdownValues = ['Please Select'];
+  final List<int> _selectedDropdownValuesID = [0];
+  final List<String> enteredValues=[""];
+  final List _items2 = [];
+  final List mainDropdownValue = [];
+  final List subItems=[];
+  final List<String> _dropdownValues2 = [];
+  final List<List<String>> _selectedDropdownValues2 = [];
+  final List<TextEditingController> _controllers = [TextEditingController(text: "1",)];
+  final List<List<TextEditingController>> _controllers2 = [];
+  List<List> contractorLabourDetails=[];
+  bool keyExists = false;
+  final contractorLabourLinkingIDText=TextEditingController();
+  List<String> locationList=[];
+  Map<String, dynamic> itemsDebit={};
+  List<int> locationID=[];
+  List<int> contractorID=[];
+  Map<int, List<int>> contractorLabourLinkingId={};
    List<String> priority=[
     "Labour Supply",
     "PRW",
@@ -73,11 +109,56 @@ class _SnagState extends State<NewProgressEntry2> {
   List viewpoints=[];
   List deSnagImage=[];
   List viewpointID=[];
+  TextEditingController totalQuantity=TextEditingController();
+  final signInController=Get.find<SignInController>();
+  final activityController = TextEditingController();
+  final linkingActivityId=TextEditingController();
+  final activityHeadController = TextEditingController();
+  final otherLocationController = TextEditingController();
+  final quantityController=TextEditingController();
+  final projectID=TextEditingController();
+  TextEditingController achivedQuantity=TextEditingController();
+  TextEditingController contractorName=TextEditingController();
+  TextEditingController comulativeQuantity=TextEditingController(); 
+  final clientID = TextEditingController();
+  final  activityID=TextEditingController();
+  final assignedToController=TextEditingController();
+  TextEditingController achivedController=TextEditingController();
+  TextEditingController comulativeController=TextEditingController();
+  TextEditingController contractorIDIndex = TextEditingController();
+  TextEditingController progressID = TextEditingController();
+  final uomName=TextEditingController();
+  final type=TextEditingController();
   TextEditingController contractorController=TextEditingController();
+  TextEditingController contractorNameController=TextEditingController();
 
   File? image;
   CroppedFile? croppedFile;
   var groupedViewpoints = {};
+
+  void _addMore() {
+    setState(() {
+    _items.add('Item ${_items.length + 1}');
+    _selectedDropdownValues.add(_dropdownValues[0]);
+    _selectedDropdownValuesID.add(_dropdownValuesID[0]);
+    enteredValues.add("");
+    _controllers.add(TextEditingController(text: "1"));
+    });
+    }
+
+    void _addMore2(outerIndex,innerIndex) {
+    setState(() {
+    // _selectedDropdownValues2[outerIndex].add(groupedMapToList[innerIndex][0]);
+    // _controllers2.add(TextEditingController(text: "1"));
+    });
+    }
+     void _deleteMore2(outerIndex,innerIndex) {
+    setState(() {
+    _selectedDropdownValues2[outerIndex].removeAt(innerIndex);
+    _controllers2[outerIndex].removeAt(innerIndex);
+    });
+    }
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -126,52 +207,35 @@ class _SnagState extends State<NewProgressEntry2> {
      List viewpoints2=[];
      var array2=[];
      var _sliderValue=0.0;
-     List<String> contractorList=["Select Contractor Name"];
+    List<String> contractorList=[];
     @override
   void initState() {
     super.initState(); 
     priorityController.text="PRW";
-    creationController.text=widget.snagModel?.createdAt??"";
-    categoryController.text=widget.snagModel?.category?.name??"";
-    locationController.text=widget.snagModel?.location.locationName??"";
-    subLocationController.text=widget.snagModel?.subLocation.subLocationName??"";
-    subSubLocationController.text=widget.snagModel?.subSubLocation.subSubLocationName??"";
-    if(widget.snagModel?.contractorInfo!=null){
-    contractorInput.text=widget.snagModel?.contractorInfo?.ownerName??"";
+    locationController.text=widget.snagModel?.locationName??"";
+    subLocationController.text=widget.snagModel?.subLocationName??"";
+    subSubLocationController.text=widget.snagModel?.subSubLocationName ?? "";
+    activityController.text=widget.snagModel?.activity??"";
+    activityHeadController.text=widget.snagModel?.activityHead??"";
+    contractorNameController.text=widget.snagModel?.contractorName??"";
+    try {
+      totalQuantity.text=widget.snagModel?.totalQuantity.toString()??"";
+    } catch (e) {
+      totalQuantity.text=widget.snagModel?.quantity.toString()??"";
     }
-    markController.text=widget.snagModel?.markupFile??"";
-    remarkController.text=widget.snagModel?.remark??"";
-    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
-    debitToController.text="";
-    dateInput.text=getFormatedDate(DateTime.now().toString());
-    debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
-    snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
-    snagAssignedToController.text=widget.snagModel?.employee?.name??"";
-    priorityController.text=widget.snagModel?.snagPriority;
-    if(widget.snagModel?.snagViewpoint?.length!=0 && widget.snagModel?.snagViewpoint!=null){
-      for(int i=0;i<widget.snagModel?.snagViewpoint?.length;i++){
-        viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,'deSnagImage':[]});
-        if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
-        viewpointID.add(widget.snagModel.snagViewpoint[i].id);
-        deSnagImages.add(widget.snagModel.snagViewpoint[i].desnagsFileName);
-        }
-      }
+    try {
+    uomName.text=widget.snagModel?.uomName??"";
+    } catch (e) {
+      uomName.text="";
     }
-
-     for (var map in viewpoints) {
-    // Check if the viewpoints is already in the map
-    if (groupedViewpoints.containsKey(map['id'])) {
-      // If it is, add the name to the list of names for that viewpoint
-      groupedViewpoints[map['id']]?.add(map['fileName']);
-    } else {
-      // If it isn't, create a new list of names for that viewpoint and add the name
-      groupedViewpoints[map['id']] = [map['fileName']];
-    }
-  }
-
-    // print("I am here, here is the viewpoint");
-    // print(groupedViewpoints);
-    // dateInput.text =getFormatedDate(DateTime.now().toString());
+    activityID.text=widget.snagModel?.linkingActivityId.toString()??"";
+    achivedQuantity.text="";
+    comulativeQuantity.text="";
+    _sliderValue=double.parse("0.0");
+    remarkController.text=widget.snagModel?.description??"";
+    progressID.text=widget.snagModel?.progressId.toString()??"";
+  
+    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.snagModel?.createdAt??DateTime.now()));
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
     final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -193,6 +257,77 @@ class _SnagState extends State<NewProgressEntry2> {
   bool iconPressed=false;
   @override
   Widget build(BuildContext context) {
+    return  GetBuilder<GetUserProfileNetwork>(builder: (_){
+      final signInController=Get.find<SignInController>();
+       if(signInController.getProgressLocationList?.data!=null){
+      if(signInController.getProgressLocationList!.data!.isNotEmpty && locationList.isEmpty){
+        List<ProgressLocationListData>? locationList1=signInController.getProgressLocationList?.data;
+        locationList.add("Select Location");
+        locationID.add(0);
+        for(var data in locationList1!){
+          locationList.add(data.locationName!);
+          locationID.add(data.locationId!);
+        }
+      }
+      if(signInController.getProgressContractorList!=null){
+        if(signInController.getProgressContractorList!.data!=null){
+      if(signInController.getProgressContractorList!.data!.isNotEmpty && contractorList.isEmpty){
+        if(signInController.getProgressContractorList!.data!.isNotEmpty && debitTo.isEmpty){
+        List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
+        if(debitTo.isEmpty){
+        debitTo.add("Select Debit to");
+        debitToID.add(99999);
+        itemsDebit={};
+        for(var data in debitToList1!){
+          itemsDebit[data.pid.toString()] = data.contractorName;
+          debitTo.add(data.contractorName!);
+          debitToID.add(data.pid!);
+        }
+        debitTo.toSet().toList();
+        debitToID.toSet().toList();
+        }
+      }
+        List<MainData>? contractorList1=signInController.getLabourAttendance?.mainData;
+        if(contractorList.isEmpty){
+        contractorList.add("Select Contractor Name");
+        subItems.add([]);
+        contractorID.add(99999);
+        contractorLabourLinkingId={28282828:[]};
+        if(contractorList1!=null){
+        for(var data in contractorList1){
+          contractorList.add(data.contractorName!);
+          contractorID.add(data.id!);
+          subItems.add([]);
+          if(data.labourDetails!.isNotEmpty){
+          for(var data2 in data.labourDetails!){
+             if (contractorLabourLinkingId.containsKey(data2.contractorId)) {
+                    contractorLabourLinkingId[data2.contractorId]!.add(data2.contractorLabourLinkingId!);
+                      } 
+              else {
+                    contractorLabourLinkingId[data2.contractorId!] = [data2.contractorLabourLinkingId!];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      }
+      }
+      if(signInController.getProgressTradeList!.data!.isNotEmpty && _dropdownValues.isEmpty){
+        List<ProgressTradeData>? locationList1=signInController.getProgressTradeList?.data;
+        _dropdownValues.add("Please Select");
+        _dropdownValues.add("Skilled");
+        _dropdownValues.add("UnSkilled");
+        _dropdownValuesID.add(43929329191);
+        _dropdownValuesID.add(0);
+        _dropdownValuesID.add(1);
+        for(var data in locationList1!){
+          _dropdownValues.add(data.trade!);
+          _dropdownValuesID.add(data.id!);
+        }
+      }
+    }
     EasyLoading.dismiss();
     return Scaffold(
       appBar: AppBar(
@@ -258,8 +393,9 @@ class _SnagState extends State<NewProgressEntry2> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                ),),
-           SizedBox(
-            height: 75,child: 
+        SizedBox(
+          height: 75,
+          child: 
           ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -311,18 +447,19 @@ class _SnagState extends State<NewProgressEntry2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Location":subLocationController.text,style: textStyleBodyText1,),),
+            Center(child: Text('${subLocationController.text.isEmpty?"Sub Location":subLocationController.text} / ${subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text}',style: textStyleBodyText1,),),
             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
-          CustomContainer(child:
+          CustomContainer(child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text,style: textStyleBodyText1,),),
+             Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
+          const SizedBox(height: 10,),
            CustomContainer2(
             child:
           Column(children: [
@@ -331,36 +468,40 @@ class _SnagState extends State<NewProgressEntry2> {
               children: [
               Text("Quantity: ${int.parse(_sliderValue.toInt().toString())} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
-            Slider(
+           Slider(
               divisions: 100,
               activeColor: AppColors.primary,
               focusNode: null,
-              inactiveColor: Colors.transparent,
-                value: _sliderValue,
+              inactiveColor: AppColors.lightGrey,
+                value: _sliderValue.roundToDouble(),
                 onChanged: (newValue) {
                   setState(() {
                     _sliderValue = newValue;
+                    if(totalQuantity.text.isNotEmpty){
+                    achivedController.text=((newValue.round()/100)*double.parse(totalQuantity.text).toInt()).toInt().toString();
+                    comulativeController.text=((newValue.round()/100)*double.parse(totalQuantity.text).toInt()).toInt().toString();
+                    }
                   });
                 },
                 min: 0,
                 max: 100,
               ),
-              Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 CUM",style: textStyleBodyText1),
+              Text("0 ${uomName.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
-              Text("267 CUM",style: textStyleBodyText1),
+              Text("${totalQuantity.text} ${uomName.text}",style: textStyleBodyText1),
             ],),
             const SizedBox(height: 30,),
             Container(
               margin:const EdgeInsets.only(left: 20,right:20),
               child: 
             Row(children: [
-               Text("TOTAL QUANTITY: 267",style: textStyleBodyText4),
+               Text("TOTAL QUANTITY: ${totalQuantity.text}",style: textStyleBodyText1),
             ],)
             ),
             const SizedBox(height: 30,),
@@ -375,17 +516,17 @@ class _SnagState extends State<NewProgressEntry2> {
                 elevation: 4,
                 color: AppColors.primary,
                 child: 
-                SizedBox(
+               SizedBox(
                   width: 120,
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text('0.0',style: textStyleBodyText4,),),
+                  child:Center(child: Text(achivedController.text.isEmpty?"0.0":'${achivedController.text}.0',style: textStyleBodyText4,),),
                 ),
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Archived",style: textStyleBodyText4,),),
+              Center(child: Text("Achived",style: textStyleBodyText4,),),
               ]),
               Column(children: [
                 Card(
@@ -397,7 +538,7 @@ class _SnagState extends State<NewProgressEntry2> {
                   child: 
                   Padding(
                   padding:const EdgeInsets.all(8.0),
-                  child:Center(child: Text('0.0',style: textStyleBodyText4,),),
+                  child:Center(child: Text(comulativeController.text.isEmpty?"0.0":'${comulativeController.text}.0',style: textStyleBodyText4,),),
                 ),
                 ),
               ),
@@ -412,23 +553,33 @@ class _SnagState extends State<NewProgressEntry2> {
             ),
           },
           const SizedBox(height: 10,),
+           ListView.builder(
+          physics:const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: labourList.length,
+          itemBuilder: (context, outerIndex) {
+            finalList.add(outerIndex);
+            finalList.insert(outerIndex,groupedList[contractorController.text]);
+            // finalList.add(outerIndex);
+          return 
+          Column(children: [
           CustomContainer2(
             child:
           Column(children: [
-            Row(
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
+              Text("LABOUR", style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
-            if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
-             Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+          if(priorityController.text=='Labour Supply' || priorityController.text=="Misc.")...{
+          Container(
+           margin: const EdgeInsets.only(top: 20,),
            padding: const EdgeInsets.only(bottom: 10,),
-            child: 
+           child: 
            DropdownButtonFormField(
-              value: contractorList[0],
+             value:contractorList.isNotEmpty?contractorList[0]:"",
              icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
+             padding: EdgeInsets.only(left:20),
               child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
             iconEnabledColor: Colors.grey,
@@ -439,35 +590,245 @@ class _SnagState extends State<NewProgressEntry2> {
           dropdownColor: AppColors.white,
           decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+            ),
+            focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+            ),
               isExpanded: true,
-              items: contractorList.map((String items){
+              items:contractorList.map((String items){
                 return
                 DropdownMenuItem(
                   value: items,
-                  child: Text(items),
+                  child: Text(items,style: TextStyle(color: !mainDropdownValue.contains(items)?Colors.black:Colors.grey),),
                 );
               }).toList(),
-              onChanged: (String? newValue) async {
+              onChanged:(String? newValue) async {
+                !mainDropdownValue.contains(newValue)?
                 setState(() {
+                  if(newValue!="Select Contractor Name"){
+                  _items2.add({'$outerIndex':['Item ${_items2.length + 1}']});
+                  contractorLabourDetails.add([]);
+                  _dropdownValues2.clear();
+                  groupedList.clear();
+                  mainDropdownValue.add(newValue);
                   contractorController.text=newValue!;
                   dropdownvalue = newValue;
-                   });
+                     if(signInController.getLabourAttendance!.data!.isNotEmpty && _dropdownValues2.isEmpty){
+                      List<MainData>? list1=signInController.getLabourAttendance?.mainData;
+                      _dropdownValues2.add("Please Select");
+                      for(var data in list1!){
+                        for(var data2 in data.labourDetails!){
+                          if (groupedList.containsKey(data2.contractorName)) {
+                                groupedList[data2.contractorName]!.add(data2.name!);
+                                } 
+                          else {
+                                groupedList[data2.contractorName!] = [data2.name!];
+                                }
+                          if(data2.contractorId==contractorID[contractorList.indexOf(newValue)]){
+                        _dropdownValues2.add(data2.name!);
+                          }
+                        }
+                      }
+                      contractorIDIndex.text=contractorList.indexOf(newValue).toString();
+                      groupedMapToList=groupedList.values.toList();
+                      for (var sublist in groupedMapToList) {
+                              sublist.insert(0, "Please Select");
+                       }
+                      // ignore: unused_local_variable
+                      for (var sublist in groupedMapToList) {
+                              _selectedDropdownValues2.add(["Please Select"]);
+                              _controllers2.add([TextEditingController()]);
+                       }
+                      finalList.insert(outerIndex,groupedList[contractorController.text]!);
+                    }
+                    subItems.insert(outerIndex,groupedList[contractorController.text]);
+                   }else{}}):null;
+                   if(newValue!="Select Contractor Name"){
+                   for (var i = 0; i < subItems.length; i++) {
+                        for (var j = 0; j < subItems[i].length; j++) {
+                          if (subItems[i][j] != 'Please Select'){
+                            _selectedDropdownValues2[i].add('Please Select');
+                            _controllers2[i].add(TextEditingController());
+                          }
+                        }
+                      }
+                   }
               },
             ),
           ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],)
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+          if(subItems.isNotEmpty)
+          if(subItems[outerIndex].isNotEmpty)
+          ListView.builder(
+              physics:const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: _items2[outerIndex]['$outerIndex'].length,
+              itemBuilder: (context, index){
+                // print(contractorIDIndex.text);
+                // print(outerIndex);
+                // print(contractorLabourLinkingId);
+                // print(contractorLabourLinkingId[contractorID[outerIndex+1]]!);
+                // print(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]!);
+              return 
+                Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  SizedBox(
+                    height: 65,
+                    width: 250,
+                    child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    isExpanded: true,
+                    underline: Container(),
+                    value: _selectedDropdownValues2[outerIndex][index],
+                    items:subItems[outerIndex]
+                    .map<DropdownMenuItem<String>>((value) => DropdownMenuItem<String>(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style:!_selectedDropdownValues2[outerIndex].contains(value)?textStyleBodyText1:textStyleBodyText1.copyWith(color: Colors.grey),)),
+                    ))
+                    .toList(),
+                    onChanged: (newValue) {
+                       if(newValue!="Please Select"){
+                      // print("-------------------------------------------");
+                      // print("contractorID");
+                      // print(contractorID[outerIndex+1]);
+                      // print("-------------------------------------------");
+                      // print("Selected value");
+                      // print(newValue);
+                      // print("-----------------------------------");
+                      // print("contractor labour linking id");
+                      contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
+                      // print(contractorLabourLinkingIDText.text);
+                    setState(() {
+                    // ignore: unused_local_variable
+                    int index1;
+                    !_selectedDropdownValues2[outerIndex].contains(newValue)? _selectedDropdownValues2[outerIndex][index]=(newValue.toString()):null;
+
+                    if(_selectedDropdownValues2[outerIndex].contains(newValue)){
+                    for (var i = 0; i < contractorLabourDetails[outerIndex].length; i++) {
+                      if (contractorLabourDetails[outerIndex][i].containsKey(contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1])) {
+                        keyExists = true;
+                        index1 = i;
+                        break;
+                      }
+                    }
+                    if(keyExists){
+                     contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[outerIndex+1]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                    }
+                    if(!keyExists){
+                      try {
+                    contractorLabourDetails[outerIndex][index]={contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]};
+                      }catch(e){
+                         contractorLabourDetails[outerIndex].add({contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]:[contractorID[outerIndex+1],""]});
+                      }
+                    }
+                    }
+                    });}
+                    },
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 55,
+                      child:
+                      CustomTextFieldForNumber(
+                          onSubmitted:(value){
+                          if (kDebugMode) {
+                          print("-------------------------------------------");
+                          print("contractorID");
+                          print(contractorID[outerIndex+1]);
+                          print("-------------------------------------------");
+                          print("entered value");
+                          print(value);
+                          print("+++++++++++++++++++++++++++++++++++++");
+                          print(contractorLabourLinkingId[contractorID[outerIndex+1]]![index]);
+                          print("============================================");
+                          print(index);
+                          print("}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+                          print(contractorLabourDetails);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][0]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          print(contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]);
+                          }
+                          contractorLabourDetails[outerIndex][index][int.parse(contractorLabourLinkingIDText.text)][1]=value;
+                          // print("-----------------------------------");
+                          // print(contractorLabourDetails);
+                          },
+                          controller: _controllers2[outerIndex][index],
+                        ),
+                      )
+                    ,],),
+                    Row(children: [
+                    if(index==_items2[outerIndex]['$outerIndex'].length-1)
+                    IconButton(
+                    icon:const Icon(Icons.add_circle),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    onPressed: () {
+                    setState(() {
+                         if(_items2[outerIndex].containsKey('$outerIndex')){
+                            _items2[outerIndex]['$outerIndex']!.add('Item ${_items2[outerIndex].length + 1}');
+                          }else{
+                            _items2[outerIndex] = ['Item ${_items2[outerIndex].length + 1}'];
+                          }
+                       _addMore2(outerIndex,index);
+                      }
+                    );
+                    }),
+                    if(_selectedDropdownValues2[outerIndex].isNotEmpty)
+                    IconButton(
+                    icon:const Icon(Icons.delete),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    onPressed: () {
+                       if(_selectedDropdownValues2[outerIndex][index]!="Please Select") {
+                         if(index!=0){
+                      setState((){
+                      _items2[outerIndex]['$outerIndex'].remove(_items2[outerIndex]['$outerIndex'][index]);
+                      contractorLabourDetails[outerIndex].removeAt(index);
+                      _deleteMore2(outerIndex,index); 
+                        if (kDebugMode) {}
+                       });}else{
+                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
+                       }
+                       } else {
+                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          if (kDebugMode) {
+                            print(_items2[outerIndex]['$outerIndex']);
+                          }
+                          if (kDebugMode) {
+                            print("i am here");
+                          }
+                          if (kDebugMode) {
+                            print(index);
+                          }
+                      }
+                    }
+                    ),
+                    ]),
+                    ]);
+                    },
+                    ),
           },
           if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
-               CustomContainer(child: 
+          CustomContainer(
+            child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text("Irshad Khan-COMP 3",style: textStyleBodyText1,),),
+            Center(child: Text(contractorNameController.text.isNotEmpty? contractorNameController.text:"No Contractor Selected",style: textStyleBodyText1,),),
              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -478,87 +839,103 @@ class _SnagState extends State<NewProgressEntry2> {
               Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
             ],),
             const SizedBox(height: 20,),
+            SizedBox(height:100,
+            width: MediaQuery.of(context).size.width,
+            child:
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: _items.length,
+                itemBuilder: (context, index) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    SizedBox(
+                      height: 65,
+                      width: 250,
+                      child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    isExpanded: true,
+                    underline: Container(),
+                    value: _selectedDropdownValues[index],
+                    items: _dropdownValues
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: (newValue) {
+                    setState(() {
+                      if (kDebugMode) {
+                        print(newValue);
+                      }
+                    _selectedDropdownValues[index] = newValue.toString();
+                    _selectedDropdownValuesID[index]=_dropdownValuesID[_dropdownValues.indexOf(_selectedDropdownValues[index])];
+                    });
+                    },
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 55,
+                      child:
+                      CustomTextFieldForNumber(
+                          controller: _controllers[index],
+                          onSubmitted: (value){
+                            enteredValues[index]=value.toString();
+                          },
+                        )
+                      )
+                    ,]);
+                    },
+                    ),
+                    ),
+                    Row(children: [
+                    ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+                    child: const Text("Add More"),
+                    onPressed: () {_addMore();}
+                    ),
+                    ])
+          },
+             if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Skilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    ),
-                  )
-                ),
-              ],
-            ),
-                 Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Unskilled',style: textStyleBodyText1.copyWith(fontSize: 18,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
-                    ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    ),
-                  )
-                ),
-              ],
-            )
+              if(labourList.length+2<=contractorList.length)...{
+            IconButton(onPressed: (){
+              setState(() {
+                _items2.add({'${outerIndex+1}':['Item ${_items2.length+1}']});
+                contractorLabourDetails.add([]);
+                labourList.add("1");
+              });
+            }, icon:const Icon(Icons.add_circle)),
+              },
+            IconButton(onPressed: (){
+              setState(() {
+                if(outerIndex==1){
+                labourList.removeAt(outerIndex);
+                }
+              });
+            }, icon:const Icon(Icons.delete)),
+           ])
           }
-          ],) 
-            ),
+          ],
+          )
+          ),
+          ],
+          );
+          }),
             CustomContainer2(
             child: 
             Column(children: [
@@ -572,7 +949,7 @@ class _SnagState extends State<NewProgressEntry2> {
           ])
             ),
             if(priorityController.text=="Labour Supply" || priorityController.text=="Misc.")...{
-          CustomContainer2(
+           CustomContainer2(
             child:
           Column(children: [
               Center(child: Row(
@@ -582,12 +959,12 @@ class _SnagState extends State<NewProgressEntry2> {
               ],),),
                const SizedBox(height: 10,),
              Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
+           margin: const EdgeInsets.only(top: 20),
            padding: const EdgeInsets.only(bottom: 20,),
             child: 
            DropdownButtonFormField(
-              value: debitTo[0],
-             icon: const Padding( 
+             value:debitToController.text.isNotEmpty?debitToController.text:null,
+             icon: const Padding(
               padding: EdgeInsets.only(left:20),
               child:Icon(Icons.arrow_drop_down_outlined,size: 30)
              ), 
@@ -602,21 +979,20 @@ class _SnagState extends State<NewProgressEntry2> {
         ),
         focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
+              ),
+            ),
               isExpanded: true,
-              items: debitTo.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
+              items: itemsDebit.keys.map<DropdownMenuItem<String>>((String key) {
+              return DropdownMenuItem<String>(
+                value: key,
+                child: Text(itemsDebit[key]),
+              );
+            }).toList(),
               onChanged: (String? newValue) async {
                 setState(() {
-                  contractorController.text=newValue!;
+                  debitToController.text=newValue!;
                   dropdownvalueDebitTo = newValue;
-                   });
+                });
               },
             ),
           ),
@@ -748,6 +1124,6 @@ class _SnagState extends State<NewProgressEntry2> {
 ]
 )
 )
-);
+);});
 }
 }

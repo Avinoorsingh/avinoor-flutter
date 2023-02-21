@@ -171,10 +171,12 @@ class _ProgressState extends State<EditProgressEntryOffline> {
     getProgressTrade();
     super.initState();
     try {
-      print("jjjjjjjqjsqj");
-      print(widget.editModel);
-      print(widget.editModel['progress_filter']['locationName']);
-      print("ERFVEEWFWEFsss");
+      if (kDebugMode) {
+        print("jjjjjjjqjsqj");
+        print(widget.editModel);
+        print(widget.editModel['progress_filter']['locationName']);
+        print("ERFVEEWFWEFsss");
+      }
     locationController.text=widget.editModel['progress_filter']['locationName']??"";
     subLocationController.text=widget.editModel['progress_filter']['subLocationName']??"";
     subSubLocationController.text=widget.editModel['progress_filter']['subSubLocationName']??"";

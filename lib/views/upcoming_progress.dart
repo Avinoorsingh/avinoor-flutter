@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:colab/config.dart';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/controller/signInController.dart';
-import 'package:colab/models/check_activity.dart';
 import 'package:colab/models/upcoming_progress.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:dio/dio.dart';
@@ -47,13 +46,10 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   int _page = 1;
   final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
 
-  
-  // Function to perform the POST request and update the data list
   Future<void> _getData() async {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var token=sharedPreferences.getString('token');
-    // Set up the POST request body
     Map<String, String> body = {
       'cid':'1',
       'pid':'1',
@@ -63,14 +59,11 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
       "Accept": "application/json",
       "Authorization": "Bearer $token",
     };
-
-    // Perform the POST request
     var response = await http.post(
       Uri.parse(Config.getUpcomingProgress),
       body: body,
       headers: requestHeaders,
     );
-    // Update the data list with the response data
     setState(() {
      progressData = UpcomingProgress1.fromJson(jsonDecode(response.body));
      if(progressData!.data!=null){
@@ -88,7 +81,6 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
  void initState(){
   super.initState();
   scrollController.addListener(_scrollController);
-    // Get the initial data
     _getData();
  }
 
@@ -105,7 +97,6 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
  @override
   void dispose() {
     scrollController.dispose();
-    // Dispose of the PageController
     super.dispose();
   }
 
@@ -123,7 +114,6 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
     child:(signInController.getSnagDataList!.data!=null)?
     ListView(
       controller: scrollController,
-      // physics: const NeverScrollableScrollPhysics(),
       children: [
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,),
             child:
@@ -195,7 +185,6 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                         }
                                                       );
                                                 if(res.body.isNotEmpty){
-                                                CheckActivityData cData=CheckActivityData.fromJson(jsonDecode(res.body));
                                                 if (kDebugMode) {
                                                   print(jsonDecode(res.body)['data'][0]['id'].toString());
                                                 }
