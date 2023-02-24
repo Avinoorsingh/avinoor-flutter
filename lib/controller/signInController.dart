@@ -29,6 +29,7 @@ import '../models/login_response_model.dart';
 import '../models/login_user.dart';
 import '../models/ongoing_ongoing_progress_data.dart';
 import '../models/progress_activityHead_data.dart';
+import '../models/progress_count.dart';
 import '../models/progress_location_data.dart';
 import '../models/progress_subSublocation_data.dart';
 import '../models/progress_trade_data.dart';
@@ -72,6 +73,7 @@ class SignInController extends GetxController {
   SnagData? getSnagDataList;
   SnagData? getDeSnagDataList;
   SnagCount? getSnagCount;
+  ProgressCount1? getProgressCount;
   SnagData? getSnagDataOpenedList;
   SnagData? getDeSnagDataOpenedList;
   SnagData? getSnagDataClosedList;

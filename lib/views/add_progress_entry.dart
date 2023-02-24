@@ -78,7 +78,7 @@ class _AddProgressState extends State<AddProgressEntry> {
   List<int> contractorID=[];
   Map<int, List<int>> contractorLabourLinkingId={};
   List<int> debitToID=[];
-
+  final getProgressCount=Get.find<GetProgressCount>();
  ////////////////////////////Progress Trade-Handler things//////////////////////
   Map<String, List<String>> groupedList = {};
   List groupedMapToList=[];
@@ -152,7 +152,7 @@ class _AddProgressState extends State<AddProgressEntry> {
   bool progressCreatedFlag=false;
   TextEditingController achivedController=TextEditingController();
   TextEditingController comulativeController=TextEditingController();
-
+  bool resFlag=false;
   File? image;
   CroppedFile? croppedFile;
   var groupedViewpoints = {};
@@ -295,7 +295,7 @@ class _AddProgressState extends State<AddProgressEntry> {
       appBar: AppBar(
       foregroundColor: Colors.black,
       backgroundColor:AppColors.primary,
-      title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+      title: Text("CREATE NEW PROGRESS ENTRY", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
       body: SingleChildScrollView(
         child:
@@ -440,7 +440,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                       child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
                           color: priority[index].toString()==priorityController.text?Colors.black:AppColors.primary,
-                          fontSize: 16
+                          fontSize: 14
                         ),
                       ),
                     ),
@@ -474,7 +474,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                           fontSize: 20)
                         ),
                       ),
-              popupProps: PopupPropsMultiSelection.menu(
+                     popupProps: PopupPropsMultiSelection.menu(
                         showSelectedItems: true,
                         showSearchBox: true,
                         searchFieldProps: TextFieldProps(
@@ -705,16 +705,246 @@ class _AddProgressState extends State<AddProgressEntry> {
                           }
                         }
                         if (hasLinkActivityIdOne(result4.data)) {
-                            EasyLoading.showToast("Progress Already created",toastPosition: EasyLoadingToastPosition.bottom);
                             progressCreatedFlag=true;
+                             await EasyLoading.showToast("Progress Already created",toastPosition: EasyLoadingToastPosition.bottom);
+                            if(resFlag==false){
+                               // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                            }
                           }
                         else{}
                     }
                   } catch (e) {
                     if (kDebugMode) {
                         print(e);
-                      }
+                  }
                 }
+                 try {
+                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                    var tokenValue=sharedPreferences.getString('token');
+                    var res=await http.get(
+                          Uri.parse('${Config.getCheckActivityStart}${activityID.text}/${linkingActivityId.text}'),
+                          headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "Authorization": "Bearer $tokenValue",
+                          }
+                        );
+                    if(res.body.isNotEmpty && jsonDecode(res.body)['success']==true){
+                  resFlag=true;
+                showDialog(
+                useSafeArea: true,
+                context: context,
+                builder: (context1) {
+                  return 
+                  // ignore: sized_box_for_whitespace
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: 
+                    AlertDialog(
+                          insetPadding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                          actionsPadding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                          contentPadding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                          title:
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                            Text('Do you want to trigger quality inspection ?',style: TextStyle(fontWeight: FontWeight.normal,fontSize: 14),),
+                          ]),
+                          shape: const RoundedRectangleBorder(
+                          borderRadius:
+                            BorderRadius.all(
+                            Radius.circular(10.0))),
+                          content:Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [ 
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment(-0.95, 0.0),
+                                    end: Alignment(1.0, 0.0),
+                                    colors: [Color.fromRGBO(49,140,231, 0.7),Color.fromRGBO(21, 96, 198, 2.0)],
+                                    stops: [0.0, 1.0],
+                                  ),
+                                ),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                  backgroundColor: Colors.transparent,
+                                  splashFactory: NoSplash.splashFactory,
+                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                  shadowColor: Colors.transparent,
+                                ),
+                                onPressed: () async {
+                                if(res.body.isNotEmpty){
+                                if (kDebugMode) {
+                                  print(res.body);
+                                  // print(jsonDecode(res.body)['data'][0]['id'].toString());
+                                }
+                                List data=[];
+                                for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
+                                data.add({
+                                    "checklist_id":jsonDecode(res.body)['data'][i]['id'],
+                                    "checklist_section_id": jsonDecode(res.body)['data'][i]['check_sec_id'],
+                                    "checklist_section_linking_id":jsonDecode(res.body)['data'][i]['check_sec_link_id'],
+                                    "trigger_id":jsonDecode(res.body)['data'][i]['trigger_id'],
+                                    "link_activity_id": linkingActivityId.text,
+                                    "activity_head_id": activityID.text,
+                                    "created_by": jsonDecode(res.body)['data'][i]['created_by'],
+                                });
+                                }
+                                if (kDebugMode) {
+                                  print(data);
+                                }
+                                var res2=await http.post(
+                                      Uri.parse(Config.saveManualCheckList),
+                                      headers: {
+                                      "Accept": "application/json",
+                                      "Authorization": "Bearer $tokenValue",
+                                      },
+                                    body: jsonEncode([data])
+                                  );
+                                var projectID=sharedPreferences.getString('projectIdd');
+                                var clientID=sharedPreferences.getString('client_id');
+                                var id=sharedPreferences.getString('id');
+                                if(res2.statusCode==200){
+                                var dio=Dio();
+                                FormData formData=FormData();
+                                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                                  {
+                                    "id": "",
+                                    "client_id": clientID,
+                                    "project_id": projectID,
+                                    "link_activity_id": linkingActivityId.text,
+                                    "achived_quantity": "",
+                                    "total_quantity": totalQuantity.text,
+                                    "contractor_id": "",
+                                    "remarks": "",
+                                    "progress_percentage": "",
+                                    "debet_contactor":"",
+                                    "progress_date": DateTime.now().toString(),
+                                    "cumulative_quantity": "",
+                                    "type": "2",
+                                    "created_by": id.toString(),
+                                    "contractorLabourDetails": [
+                                        {
+                                            "contractor_labour_linking_id": "",
+                                            "time": ""
+                                        }
+                                    ],
+                                    "PWRLabourDetails": [
+                                        {
+                                            "pwr_type": "0",
+                                            "labour_count": ""
+                                        }
+                                    ],
+                                    "save_type": "save",
+                                    "progressDetails": [
+                                        {
+                                            "contractor_id": "",
+                                            "labours": [],
+                                            "contractorLabourDetails": [
+                                                {
+                                                    "contractor_labour_linking_id": "",
+                                                    "time": ""
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                                )),);
+                                formData.fields.add(const MapEntry('progress_image', ""));
+                                await dio.post(
+                                  Config.saveLabourSupplyProgressApi,
+                                  data: formData,
+                                  options: Options(
+                                    followRedirects: false,
+                                    validateStatus: (status) {
+                                      return status! < 500;
+                                    },
+                                    headers: {
+                                      "authorization": "Bearer $tokenValue",
+                                      "Content-type": "application/json",
+                                    },
+                                  ),
+                                );
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context1);
+                                await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                                // ignore: use_build_context_synchronously
+                                // context.pushNamed('ACTIVITIES');
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context);
+                                setState(() {});
+                                }
+                              else{
+                                EasyLoading.showToast('Something went wrong',toastPosition: EasyLoadingToastPosition.bottom);
+                                }
+                              }
+                                else{
+                                EasyLoading.showToast('Something went wrong',toastPosition: EasyLoadingToastPosition.bottom);
+                                }
+                                }, child:const Text("   Trigger   ",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12),),
+                              )),
+                                Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment(-0.95, 0.0),
+                                    end: Alignment(1.0, 0.0),
+                                    colors: [Color.fromARGB(175, 215, 78, 78),Color.fromARGB(249, 236, 97, 97)],
+                                    stops: [0.0, 1.0],
+                                  ),
+                                ),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                  backgroundColor: Colors.transparent,
+                                  splashFactory: NoSplash.splashFactory,
+                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                  shadowColor: Colors.transparent,
+                                ),
+                                onPressed: (){
+                                    Navigator.pop(context1);
+                                }, child:const Text("Don't Trigger",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
+                              )),
+                                Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment(-0.95, 0.0),
+                                    end: Alignment(1.0, 0.0),
+                                    colors: [Color.fromARGB(177, 0, 0, 0),Color.fromARGB(253, 195, 210, 231)],
+                                    stops: [0.0, 1.0],
+                                  ),
+                                ),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                  backgroundColor: Colors.transparent,
+                                  splashFactory: NoSplash.splashFactory,
+                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                  shadowColor: Colors.transparent,
+                                ),
+                                onPressed: (){
+                                  Navigator.pop(context1);
+                                }, child:const Text("    Cancel   ",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
+                              ))
+                            // ignore: sized_box_for_whitespace
+                        ]
+                      ),
+                    ),
+                  );
+                }
+              );
+              }
+                 } catch (e) {
+                  if (kDebugMode) {
+                    print(e);
+                  } 
+                 }
             }
             else if(locationController.text.isEmpty){
               EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
@@ -784,7 +1014,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uOfName.text.isEmpty?"UNIT":uOfName.text}",style: textStyleBodyText1),
+              Text("${comulativeController.text} ${  uOfName.text.isEmpty?"UNIT":uOfName.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
@@ -1177,14 +1407,15 @@ class _AddProgressState extends State<AddProgressEntry> {
                     ),
                       SizedBox(           
                       width: 60,
-                      height: 55,
-                      child:
+                      height: 50,
+                      child:Center(child: 
                       CustomTextFieldForNumber(
                           controller: _controllers[index],
                           onSubmitted: (value){
                             enteredValues[index]=value.toString();
                           },
                         )
+                      )
                       )
                     ,]);
                     },
@@ -1233,10 +1464,10 @@ class _AddProgressState extends State<AddProgressEntry> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text("REMARK",style: textStyleBodyText1,),
+                Text("REMARK", style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextField(enabled: true,controller: remarkController,hintText: "Enter here",)
+               CustomTextField(enabled: true, controller: remarkController,hintText: "Enter here",)
           ])
             ),
             if(priorityController.text=="Labour Supply" || priorityController.text=="Misc.")...{
@@ -1422,6 +1653,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                 }
                 else{
                 if(progressCreatedFlag!=true){
+                EasyLoading.show(maskType: EasyLoadingMaskType.black);
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var projectID=sharedPreferences.getString('projectIdd');
@@ -1591,12 +1823,15 @@ class _AddProgressState extends State<AddProgressEntry> {
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 }
+                await getProgressCount.getProgressData(context: context);
+                print("hereeeee");
                 await getCompletedSiteProgressDataController.getCompletedListData(context: context);
                 await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
                 await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
                  Get.put(GetCompletedSiteProgress());
                  Get.put(GetOnGoingSiteProgress());
                  Get.put(GetInEqualitySiteProgress());
+                 EasyLoading.dismiss();
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               }else{

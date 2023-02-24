@@ -17,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorHeight: 20,
       enabled: enabled,
       controller: controller,
       textAlign: TextAlign.center,
@@ -63,6 +64,7 @@ class CustomTextFieldGrey extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorHeight: 20,
       enabled: enabled,
       controller: controller,
       textAlign: TextAlign.center,
@@ -110,6 +112,7 @@ class CustomTextField3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return 
     TextField(
+      cursorHeight: 20,
       enabled: enabled,
       controller: controller,
       textAlign: TextAlign.start,
@@ -158,6 +161,7 @@ class CustomTextFieldArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return
     TextField(
+      cursorHeight: 20,
       enabled: enabled,
       controller: controller,
       textAlign: TextAlign.start,
@@ -208,6 +212,7 @@ class CustomTextField2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorHeight: 20,
       onChanged: onChanged,
       enabled: enabled,
       controller: controller,
@@ -265,6 +270,7 @@ class CustomTextFieldForNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorHeight: 20,
       onSubmitted: onSubmitted,
       keyboardType:TextInputType.number,
       onChanged: onChanged,
@@ -294,7 +300,7 @@ class CustomTextFieldForNumber extends StatelessWidget {
       ),
       ),
        maxLines: null,
-       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,height: 0),
     );
   }
 }
@@ -325,6 +331,7 @@ class CustomTextFieldForNumber2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      cursorHeight: 20,
       readOnly: readOnly,
       onSubmitted: onSubmitted,
       keyboardType:TextInputType.number,
@@ -355,7 +362,7 @@ class CustomTextFieldForNumber2 extends StatelessWidget {
       ),
       ),
        maxLines: null,
-       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,height: 0),
     );
   }
 }

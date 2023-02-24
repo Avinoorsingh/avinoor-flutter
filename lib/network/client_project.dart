@@ -7,6 +7,7 @@ import 'package:colab/models/location_list.dart';
 import 'package:colab/models/login_response_model.dart';
 import 'package:colab/models/login_user.dart';
 import 'package:colab/models/progress_contractor.dart';
+import 'package:colab/models/progress_count.dart';
 import 'package:colab/models/progress_location_data.dart';
 import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_data.dart';
@@ -474,6 +475,52 @@ class GetSnagsCount extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting snag counts");
+                print(e);
+              }
+            }
+  }
+}
+
+class GetProgressCount extends GetxController{
+  final signInController = Get.find<SignInController>();
+  static var client=http.Client();
+  Future getProgressData({token, required BuildContext context}) async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     var id=sharedPreferences.getString('id');
+     var isClient=false;
+     if(isClientSignedIn==true){
+      isClient=true;
+     }
+      bool? isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+        isClient=false;
+      }
+      isClient;
+      try {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var projectID=sharedPreferences.getString('projectIdd');
+     var clientID=sharedPreferences.getString('client_id');
+     var token=sharedPreferences.getString('token');
+     var res=await http.get(
+            Uri.parse('${Config.getProgressCount}$clientID/$projectID'),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            }
+          );
+          Map<String,dynamic> cData4=jsonDecode(res.body);
+          ProgressCount1 result5=ProgressCount1.fromJson(cData4);
+          signInController.getProgressCount=result5;
+          if (kDebugMode) {
+            print("getting progress count");
+          }
+          update(); 
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting progress counts");
                 print(e);
               }
             }

@@ -1,14 +1,25 @@
-import 'package:colab/network/onGoingSiteProgress/ongoing_site_network.dart';
-import 'package:go_router/go_router.dart';
-import 'package:colab/constants/colors.dart';
+
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:colab/theme/text_styles.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../config.dart';
+import '../constants/colors.dart';
 import '../controller/signInController.dart';
 import '../models/ongoing_upcoming_progress.dart';
-import '../theme/text_styles.dart';
+import '../network/onGoingSiteProgress/ongoing_site_network.dart';
+import '../network/progress_network.dart';
 
 class UpComingInsideOnGoing extends StatefulWidget {
   const UpComingInsideOnGoing({Key? key, this.cID,this.pID,this.locID, this.subLocID, this.subSubLocID}) : super(key: key);
@@ -62,6 +73,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
   TextEditingController subLocationController=TextEditingController();
   TextEditingController subSubLocationController=TextEditingController();
   List<OnGoingUpcomingData> list1=[];
+  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
   List upComingModel=[];
   int _page = 1;
  
@@ -144,20 +156,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
     Container(margin: const EdgeInsets.only(top: 90),
     child:  ListView(
       controller: scrollController,
-      // physics: const NeverScrollableScrollPhysics(),
       children: [
-      //      CustomContainer3(child: 
-      //       Column(children: [
-      //         Center(child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //           Center(child: Text("${locationController.text} / ${subLocationController.text} / ${subSubLocationController.text}",style: textStyleBodyText1.copyWith(color: AppColors.white,))),
-      //           ]
-      //         )
-      //       )
-      //     ]
-      //   )
-      // ),
         Padding(padding: const EdgeInsets.only(left: 10,right: 10,top: 60),
             child:
             ListView.builder(
@@ -170,10 +169,233 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                           children: [
                             InkWell(
                               onTap: (){
-                                context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index]);
-                                if (kDebugMode) {
-                                  print(upComingModel[index]);
+                                // print(list1[index].startTrigger);
+                                  if(list1[index].startTrigger!=null){
+                                showDialog(
+                                useSafeArea: true,
+                                context: context,
+                                builder: (context1) {
+                                  return 
+                                  // ignore: sized_box_for_whitespace
+                                  Container(
+                                    height: 200,
+                                    width: 200,
+                                    child: 
+                                    AlertDialog(
+                                          insetPadding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                                          actionsPadding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                                          contentPadding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                                          title:
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: const [
+                                            Text('Do you want to trigger quality inspection ?',style: TextStyle(fontWeight: FontWeight.normal,fontSize: 14),),
+                                          ]),
+                                          shape: const RoundedRectangleBorder(
+                                          borderRadius:
+                                            BorderRadius.all(
+                                           Radius.circular(10.0))),
+                                          content:Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [ 
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  gradient: const LinearGradient(
+                                                    begin: Alignment(-0.95, 0.0),
+                                                    end: Alignment(1.0, 0.0),
+                                                    colors: [Color.fromRGBO(49,140,231, 0.7),Color.fromRGBO(21, 96, 198, 2.0)],
+                                                    stops: [0.0, 1.0],
+                                                  ),
+                                                ),
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                                  backgroundColor: Colors.transparent,
+                                                  splashFactory: NoSplash.splashFactory,
+                                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                                  shadowColor: Colors.transparent,
+                                                ),
+                                                onPressed: () async {
+                                                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                                  var tokenValue=sharedPreferences.getString('token');
+                                                  var res=await http.get(
+                                                        Uri.parse('${Config.getCheckActivityStart}${list1[index].activityId}/${list1[index].linkingActivityId}'),
+                                                        headers: {
+                                                          "Content-Type": "application/json",
+                                                          "Accept": "application/json",
+                                                          "Authorization": "Bearer $tokenValue",
+                                                        }
+                                                      );
+                                                if(res.body.isNotEmpty){
+                                                if (kDebugMode) {
+                                                  print(jsonDecode(res.body)['data'][0]['id'].toString());
+                                                }
+                                                List data=[];
+                                                for(int i=0;i<jsonDecode(res.body)['data'].length;i++){
+                                                data.add({
+                                                    "checklist_id":jsonDecode(res.body)['data'][i]['id'],
+                                                    "checklist_section_id": jsonDecode(res.body)['data'][i]['check_sec_id'],
+                                                    "checklist_section_linking_id":jsonDecode(res.body)['data'][i]['check_sec_link_id'],
+                                                    "trigger_id":jsonDecode(res.body)['data'][i]['trigger_id'],
+                                                    "link_activity_id": list1[index].linkingActivityId,
+                                                    "activity_head_id": list1[index].activityId,
+                                                    "created_by": jsonDecode(res.body)['data'][i]['created_by'],
+                                                });
+                                                }
+                                                if (kDebugMode) {
+                                                  print(data);
+                                                }
+                                                var res2=await http.post(
+                                                      Uri.parse(Config.saveManualCheckList),
+                                                      headers: {
+                                                      "Accept": "application/json",
+                                                      "Authorization": "Bearer $tokenValue",
+                                                      },
+                                                    body: jsonEncode([data])
+                                                  );
+                                                var projectID=sharedPreferences.getString('projectIdd');
+                                                var clientID=sharedPreferences.getString('client_id');
+                                                var id=sharedPreferences.getString('id');
+                                               if(res2.statusCode==200){
+                                                var dio=Dio();
+                                                FormData formData=FormData();
+                                                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                                                  {
+                                                    "id": "",
+                                                    "client_id": clientID,
+                                                    "project_id": projectID,
+                                                    "link_activity_id": list1[index].linkingActivityId,
+                                                    "achived_quantity": "",
+                                                    "total_quantity": list1[index].quantity,
+                                                    "contractor_id": "",
+                                                    "remarks": "",
+                                                    "progress_percentage": "",
+                                                    "debet_contactor":"",
+                                                    "progress_date": DateTime.now().toString(),
+                                                    "cumulative_quantity": "",
+                                                    "type": "2",
+                                                    "created_by": id.toString(),
+                                                    "contractorLabourDetails": [
+                                                        {
+                                                            "contractor_labour_linking_id": "",
+                                                            "time": ""
+                                                        }
+                                                    ],
+                                                    "PWRLabourDetails": [
+                                                        {
+                                                            "pwr_type": "0",
+                                                            "labour_count": ""
+                                                        }
+                                                    ],
+                                                    "save_type": "save",
+                                                    "progressDetails": [
+                                                        {
+                                                            "contractor_id": "",
+                                                            "labours": [],
+                                                            "contractorLabourDetails": [
+                                                                {
+                                                                    "contractor_labour_linking_id": "",
+                                                                    "time": ""
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                                )),);
+                                                formData.fields.add(const MapEntry('progress_image', ""));
+                                                await dio.post(
+                                                  Config.saveLabourSupplyProgressApi,
+                                                  data: formData,
+                                                  options: Options(
+                                                    followRedirects: false,
+                                                    validateStatus: (status) {
+                                                      return status! < 500;
+                                                    },
+                                                    headers: {
+                                                      "authorization": "Bearer $tokenValue",
+                                                      "Content-type": "application/json",
+                                                    },
+                                                  ),
+                                                );
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.pop(context1);
+                                                await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                                                // ignore: use_build_context_synchronously
+                                                context.pushNamed('ACTIVITIES');
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.pop(context);
+                                                  // ignore: use_build_context_synchronously
+                                                // Navigator.pop(context);
+                                                setState(() {});
+                                               }
+                                              else{
+                                                EasyLoading.showToast('Something went wrong',toastPosition: EasyLoadingToastPosition.bottom);
+                                               }
+                                              }
+                                               else{
+                                                EasyLoading.showToast('Something went wrong',toastPosition: EasyLoadingToastPosition.bottom);
+                                               }
+                                                }, child:const Text("   Trigger   ",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12),),
+                                              )),
+                                                Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  gradient: const LinearGradient(
+                                                    begin: Alignment(-0.95, 0.0),
+                                                    end: Alignment(1.0, 0.0),
+                                                    colors: [Color.fromARGB(175, 215, 78, 78),Color.fromARGB(249, 236, 97, 97)],
+                                                    stops: [0.0, 1.0],
+                                                  ),
+                                                ),
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                                  backgroundColor: Colors.transparent,
+                                                  splashFactory: NoSplash.splashFactory,
+                                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                                  shadowColor: Colors.transparent,
+                                                ),
+                                                onPressed: (){
+                                                    Navigator.pop(context1);
+                                                }, child:const Text("Don't Trigger",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
+                                              )),
+                                                Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  gradient: const LinearGradient(
+                                                    begin: Alignment(-0.95, 0.0),
+                                                    end: Alignment(1.0, 0.0),
+                                                    colors: [Color.fromARGB(177, 0, 0, 0),Color.fromARGB(253, 195, 210, 231)],
+                                                    stops: [0.0, 1.0],
+                                                  ),
+                                                ),
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(100)),),
+                                                  backgroundColor: Colors.transparent,
+                                                  splashFactory: NoSplash.splashFactory,
+                                                  disabledForegroundColor: Colors.transparent.withOpacity(0.38), disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+                                                  shadowColor: Colors.transparent,
+                                                ),
+                                                onPressed: (){
+                                                  Navigator.pop(context1);
+                                                }, child:const Text("    Cancel   ",style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
+                                              ))
+                                            // ignore: sized_box_for_whitespace
+                                        ]
+                                      ),
+                                    ),
+                                  );
                                 }
+                              );
+                            }else{
+                                context.pushNamed("NEWPROGRESSENTRY2",extra: list1[index]);
+                            }
+                                // context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index]);
+                                // if (kDebugMode) {
+                                //   print(upComingModel[index]);
+                                // }
                               },
                               child: 
                               Card(

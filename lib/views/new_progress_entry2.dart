@@ -839,10 +839,11 @@ class _SnagState extends State<NewProgressEntry2> {
               Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
             ],),
             const SizedBox(height: 20,),
-            SizedBox(height:100,
+            SizedBox(
             width: MediaQuery.of(context).size.width,
             child:
             ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _items.length,
                 itemBuilder: (context, index) {

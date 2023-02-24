@@ -59,4 +59,5 @@ class Config{
   static const String getPwrClientList="http://nodejs.hackerkernel.com/colab/api/pwrClientList/";
   static const String getProgressLabourLinkingData="http://nodejs.hackerkernel.com/colab/api/progress_labour_linking2/";
   static const String getSnagsCount="http://nodejs.hackerkernel.com/colab/api/get_snag_count/";
+  static const String getProgressCount="http://nodejs.hackerkernel.com/colab/api/progress_count_for_app/";
 }

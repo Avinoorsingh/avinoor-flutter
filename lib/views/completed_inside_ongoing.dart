@@ -83,7 +83,6 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
   Future<void> _getData() async {
      EasyLoading.show(maskType: EasyLoadingMaskType.black);
      await getDataController.getDetail(cID: widget.cID, pID: widget.pID, locID: widget.locID, subLocID: widget.subLocID, subSubLocID: widget.subSubLocID, pageNumber: _page.toString());
-    setState(() {
      if(signInController.getOnGoingCompletedData!.data!=null){
      list1=list1+signInController.getOnGoingCompletedData!.data!;
      EasyLoading.dismiss();
@@ -91,7 +90,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
      else if(signInController.getOnGoingCompletedData!.data==null){
      EasyLoading.dismiss();
      }
-    });
+     setState(() {});
   }
 
   @override

@@ -390,7 +390,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
             width:250,
             height: 30,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text(triggerID[index]==1?"Checklist New":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text(triggerID[index]!=null?"Checklist New":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
             )
           )
         ),

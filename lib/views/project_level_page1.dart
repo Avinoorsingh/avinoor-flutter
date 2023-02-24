@@ -16,8 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 import '../controller/signInController.dart';
-import '../network/client_project.dart';
-import '../network/client_project.dart';
 
 // ignore: must_be_immutable
 class ProjectLevelPage1 extends StatefulWidget {
@@ -42,6 +40,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
   final getClientProjectsController = Get.find<GetClientProject>();
   final getSnagCount=Get.find<GetSnagsCount>();
+  final getProgressCount=Get.find<GetProgressCount>();
   TextEditingController snagCount=TextEditingController();
   TextEditingController deSnagCount=TextEditingController();
   final signInController=Get.find<SignInController>();
@@ -108,6 +107,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
       isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
       if(isProjectSignedIn==true){
        await getSnagCount.getSnagData(context: context);
+       await getProgressCount.getProgressData(context: context);
        snagCount.text=signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount.toString():"0";
        deSnagCount.text=signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount.toString():"";
       }
@@ -148,7 +148,6 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     setState(() {});
   }
-  print("hello");
   return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
     EasyLoading.dismiss();
@@ -273,7 +272,28 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                               ),
                             ),
                         },
-                        if(i!=5)...{
+                        if(i==1)...{
+                        GetBuilder<GetProgressCount>(
+                        builder: (_){
+                        return
+                         Positioned(
+                              top: 40,
+                              left: 10,
+                              right: 10,
+                              child: InkWell(
+                                onTap: () {},
+                                child: Center(
+                                  child: CircleAvatar(
+                                    backgroundColor:AppColors.primary,
+                                    radius: 12.0,
+                                    child: Text((signInController.getProgressCount!=null?signInController.getProgressCount!.progressCount![0].progressCount ?? "0":"0").toString(), style: TextStyle(color: Colors.black),),
+                                  ),
+                                ),
+                              ),
+                          );
+                        })
+                        },
+                        if(i!=5 && i!=1)...{
                          Positioned(
                               top: 40,
                               left: 10,

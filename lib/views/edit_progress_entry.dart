@@ -119,6 +119,7 @@ class _ProgressState extends State<EditProgressEntry> {
   Map<String, dynamic> itemsDebit={};
   String dropdownvalueDebitTo = 'Select Debit to'; 
   final debitToController=TextEditingController(); 
+  final debitToController2=TextEditingController();
   List<int> locationID=[];
   List<int> contractorID=[];
   Map<int, List<int>> contractorLabourLinkingId={};
@@ -189,6 +190,10 @@ class _ProgressState extends State<EditProgressEntry> {
     comulativeQuantity1.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     _sliderValue=double.parse(widget.editModel?.progressPercentage.toString()??"0.0");
     remarkController.text=widget.editModel?.remarks??"";
+    print("#################################");
+    print(widget.editModel.contractorId);
+    print(widget.editModel.debetContactor);
+    print("#################################");
     progressID.text=widget.editModel?.progressId.toString()??"";
     type.text=widget.editModel?.type.toString()??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
@@ -211,7 +216,6 @@ class _ProgressState extends State<EditProgressEntry> {
         pwrContractorName.text=jsonDecode(res.body)['data'][0]['contractor_name'];
       }
     }
-    print(widget.editModel.dailyId);
     var res2=await http.get(
          Uri.parse('${Config.getProgressLabourLinkingData}${widget.editModel.dailyId}'),
          headers: {
@@ -273,6 +277,16 @@ class _ProgressState extends State<EditProgressEntry> {
           debitTo.add(data.contractorName!);
           debitToID.add(data.pid!);
         }
+        print(debitTo);
+        print(debitToID);
+         if(widget.editModel.debetContactor!=null){
+        for(int i=0;i<debitTo.length;i++){
+         if(int.parse(widget.editModel.debetContactor.toString())==debitToID[i]){
+           debitToController2.text=debitTo[i];
+           print(debitToController.text);
+         }
+        }
+         }
         debitTo.toSet().toList();
         debitToID.toSet().toList();
         }
@@ -1085,10 +1099,11 @@ class _ProgressState extends State<EditProgressEntry> {
               Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),),
             ],),
             const SizedBox(height: 20,),
-            SizedBox(height:100,
+            SizedBox(
             width: MediaQuery.of(context).size.width,
             child:
             ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _items.length,
                 itemBuilder: (context, index) {
@@ -1197,6 +1212,7 @@ class _ProgressState extends State<EditProgressEntry> {
           ])
             ),
             const SizedBox(height: 10,),
+          if(priorityController.text!="PRW")...{
           CustomContainer2(child:
           Column(children: [
               Center(child: Row(
@@ -1208,7 +1224,7 @@ class _ProgressState extends State<EditProgressEntry> {
              Container(
            margin: const EdgeInsets.only(top: 20),
            padding: const EdgeInsets.only(bottom: 20,),
-            child: 
+            child: update==true?
            DropdownButtonFormField(
              value: debitToController.text.isNotEmpty?debitToController.text:null,
              icon: const Padding(
@@ -1238,13 +1254,30 @@ class _ProgressState extends State<EditProgressEntry> {
               onChanged: (String? newValue) async {
                 setState(() {
                   debitToController.text=newValue!;
+                  // debitToController2.text=newValue;
                   dropdownvalueDebitTo = newValue;
                 });
               },
+            ): TextField(
+              readOnly: true,
+             controller: debitToController2,
+            style: const TextStyle(
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+              fontSize: 16,
+            ), 
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+            ),
             ),
           ),
           ])
             ),
+          },
             const SizedBox(height: 20,),
           if(_selectedImage != null)
             Container(
@@ -1354,7 +1387,7 @@ class _ProgressState extends State<EditProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:(){},
-              child: Text("Save As Draft",style: textStyleBodyText4.copyWith(color: AppColors.black)),
+              child: Text("Save As Draft1",style: textStyleBodyText4.copyWith(color: AppColors.black)),
              ),
               ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -1363,6 +1396,13 @@ class _ProgressState extends State<EditProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:()async {
+                if(remarkController.text.isEmpty){
+                  EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(priorityController.text!="PRW" && (debitToController.text.isEmpty || debitToController2.text.isEmpty)){
+                  EasyLoading.showToast("Debit To is required",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var projectID=sharedPreferences.getString('projectIdd');
@@ -1538,6 +1578,7 @@ class _ProgressState extends State<EditProgressEntry> {
                   EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 }
+              }
               },
               child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )

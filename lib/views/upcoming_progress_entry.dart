@@ -329,7 +329,7 @@ class _SnagState extends State<UpComingEntry>{
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+      title: Text("CREATE NEW PROGRESS ENTRY", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
       body: SingleChildScrollView(
         child: Column(

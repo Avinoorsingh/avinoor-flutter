@@ -43,6 +43,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final getSnagCount=Get.find<GetSnagsCount>();
+  final getProgressCount=Get.find<GetProgressCount>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
   final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
@@ -347,6 +348,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
         sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
         getClientProfileController.getUserProfile(context: context);
          getSnagCount.getSnagData(context: context);
+         getProgressCount.getProgressData(context: context);
         // getLabourDataContractorListController.getContractorListData(context: context);
         // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
         getClientProjectsController.getUpcomingProjects(context: context);

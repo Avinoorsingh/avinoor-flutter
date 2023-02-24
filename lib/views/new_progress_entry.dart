@@ -176,15 +176,7 @@ class _SnagState extends State<NewProgressEntry> {
       var inputDate = inputFormat.parse(date);
       var outputFormat = DateFormat('yyyy-MM-dd');
     return outputFormat.format(inputDate);
-    }
- 
-   void clearCache()async{
-    EasyLoading.show();
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.clear();
-       // ignore: use_build_context_synchronously
-       context.pushNamed('LOGINPAGE');
-      }
+  }
 
   bool iconPressed=false;
   @override
