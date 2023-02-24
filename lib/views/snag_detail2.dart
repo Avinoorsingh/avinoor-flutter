@@ -33,7 +33,7 @@ class SnagDetail2 extends StatefulWidget {
 class _SnagState2 extends State<SnagDetail2> {
   final getSnag = Get.find<GetNewSnag>();
   final getDeSnag=Get.find<GetNewDeSnag>();
-  final getOpenedSnag = Get.find<GetOpenedSnag>();
+  final getOpenedSnag = Get.find<GetOpenedDeSnag>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -140,7 +140,7 @@ class _SnagState2 extends State<SnagDetail2> {
     }
     markController.text=widget.snagModel?.markupFile??"";
     remarkController.text=widget.snagModel?.remark??"";
-    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"Not any Remark";
+    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
@@ -384,17 +384,22 @@ class _SnagState2 extends State<SnagDetail2> {
                           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}' , context));
                         },
                       child: 
-                      Container(
-                        margin:const EdgeInsets.only(top: 10,bottom: 10),
-                        height: 100,
-                        width: 30,
+                        SizedBox(
+                        height: 150,
+                        width: 80,
                         child:
-                        FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
-                        height: 10,
-                        width: 30,),),
-                      ));
+                          FittedBox(
+                          child:
+                          Container(
+                          margin: const EdgeInsets.only(top:10),
+                          height: 150,
+                          width: 65,
+                          child: FadeInImage(
+                            // width: 10,
+                            placeholder:const ExactAssetImage('assets/images/loader.gif'),
+                          image: NetworkImage("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
+                          )),),
+                          )));
                           }
                          )
                       )
@@ -414,7 +419,7 @@ class _SnagState2 extends State<SnagDetail2> {
                        itemCount: groupedDeSnagImages[outerKey]?.length,
                        itemBuilder: (context, innerIndex) {
                        return
-                       widget.from=='desnagnew'?
+                       widget.from=='desnagnew' || widget.from=='openedDeSnag'?
                        GestureDetector(
                       onTap: () async {},
                       child: 
@@ -423,7 +428,7 @@ class _SnagState2 extends State<SnagDetail2> {
               children: <Widget>[
                 if(groupedDeSnagImages[outerKey]![innerIndex]!=null && groupedOnlyDeSnag[outerKey]![innerIndex]=='null')...{
                   SizedBox(
-                   height: 100,
+                  //  height: 100,
                    child:
                   InkWell(
                       onTap:() async {
@@ -433,14 +438,23 @@ class _SnagState2 extends State<SnagDetail2> {
                           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
                         },
                         child:
-                        Container(
-                        margin:const EdgeInsets.only(top: 10,bottom: 10),
-                        height: 100,
-                        width: 50,
+                         SizedBox(
+                        height: 150,
+                        width: 80,
                         child:
-                          Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
-                          height: 10,
-                          width: 30,
+                          FittedBox(
+                          child:
+                          Container(
+                          margin: const EdgeInsets.only(top:10),
+                          height: 150,
+                          width: 65,
+                          child: FadeInImage(
+                            // width: 10,
+                            placeholder:const ExactAssetImage('assets/images/loader.gif'),
+                            image:NetworkImage("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
+                            )
+                          )
+                        )
                       ),),
                       )
                     ),
@@ -469,10 +483,11 @@ class _SnagState2 extends State<SnagDetail2> {
                       )
                     ),
                 },
+                if(widget.from!='openedDeSnag')
                 Container(
                 height: 35,
-                margin: const EdgeInsets.only(top:15,bottom: 15,left:5,right: 10),
-                width: MediaQuery.of(context).size.width/4.5,
+                margin: const EdgeInsets.only(top:15,bottom: 15,left:0,right: 10),
+                // width: MediaQuery.of(context).size.width/4.5,
                 decoration: widget.from=='desnagnew'? BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   gradient: const LinearGradient(
@@ -606,7 +621,7 @@ class _SnagState2 extends State<SnagDetail2> {
                   },
                   child: const Center(
                     child: Text (
-                      'Upload Image',
+                      'Upload',
                       style: TextStyle(
                         fontSize: 10,
                         color: Color(0xffffffff),
@@ -614,12 +629,27 @@ class _SnagState2 extends State<SnagDetail2> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ): SizedBox(
-                      height: 100,
-                      width: 10,
-                      child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
-                    ),
+                ):widget.from!='openedDeSnag'?   SizedBox(
+                        height: 150,
+                        width: 80,
+                        child:
+                          FittedBox(
+                          child:
+                          Container(
+                          margin: const EdgeInsets.only(top:10),
+                          height: 150,
+                          width: 65,
+                          child: FadeInImage(
+                            // width: 10,
+                            placeholder:const ExactAssetImage('assets/images/loader.gif'),
+                            image: NetworkImage("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}"),
+                          ),
+                        ),
+                      ),
+                    ):Container(width: 0,),
               ),
+               if(widget.from=='openedDeSnag')
+               Container(width: 40,),
                   ]
                 ),
               ):Container();
@@ -661,7 +691,8 @@ class _SnagState2 extends State<SnagDetail2> {
                 Text("DE-SNAG REMARK", style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextFieldGrey(enabled: false,controller: deSnagRemarkController,)
+              if(deSnagRemarkController.text.isNotEmpty)
+               CustomTextFieldGrey(enabled: false,controller: deSnagRemarkController,hintText: "Enter-DeSnag Remark",)
           ])
             ),
             },
@@ -892,10 +923,10 @@ class _SnagState2 extends State<SnagDetail2> {
                     }
                   }
                 }
-                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="Not any Remark" && flag==true){
+                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="" && flag==true){
                   try {
-                    await http.post(
-                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change1"),
+                    var res=await http.post(
+                    Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
                      headers: {
                               "Accept": "application/json",
                               "Authorization": "Bearer $token",
@@ -923,7 +954,9 @@ class _SnagState2 extends State<SnagDetail2> {
                     );
                     EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom); 
                     await getDeSnag.getSnagData(context: context);
-                    Get.put(GetNewDeSnag()); 
+                    await getOpenedSnag.getOpenedSnagData(context: context);
+                    Get.put(GetNewDeSnag());
+                    Get.put(GetOpenedDeSnag());
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);               
                     } catch (e) {

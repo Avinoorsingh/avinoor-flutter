@@ -19,7 +19,8 @@ bool show=false;
 // ignore: prefer_typing_uninitialized_variables
 late var tapped;
 
-class _NewSnagState extends State<ClosedSnags> {
+class _NewSnagState extends State<ClosedSnags>{
+  final signInController=Get.find<SignInController>();
   final getSnag = Get.find<GetClosedSnag>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
@@ -36,17 +37,9 @@ class _NewSnagState extends State<ClosedSnags> {
  void initState(){
   super.initState();
   getSnag.getClosedSnagData(context: context);
- }
-
-  @override
-  Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return GetBuilder<GetClosedSnag>(builder: (_){
-      final signInController=Get.find<SignInController>();
-      if(signInController.getSnagDataClosedList!=null){
-        if(signInController.getSnagDataClosedList!.data!=null){
-     if(signInController.getSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
+    if(signInController.getSnagDataClosedList!=null){
+    if(signInController.getSnagDataClosedList!.data!=null){
+    if(signInController.getSnagDataClosedList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getSnagDataClosedList!.data!.length;i++){
        subLocationName.add(signInController.getSnagDataClosedList!.data![i].subLocation!.subLocationName);
        subSubLocationName.add(signInController.getSnagDataClosedList!.data![i].subSubLocation!.subSubLocationName);
@@ -60,8 +53,14 @@ class _NewSnagState extends State<ClosedSnags> {
        dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getSnagDataClosedList!.data![i].createdAt!)).inDays+1);
       }
      }
-        }
-      }
+    }
+  }
+ }
+
+  @override
+  Widget build(BuildContext context) {
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
     EasyLoading.dismiss();
     return 
     Scaffold(
@@ -199,6 +198,4 @@ class _NewSnagState extends State<ClosedSnags> {
         ),
       );
     }
-  );
-}
 }

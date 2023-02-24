@@ -16,10 +16,24 @@ class BottomTabBar2 extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar2 > {
-   final getSnag = Get.find<GetNewDeSnag>();
-   final getOpenedSnag=Get.find<GetOpenedDeSnag>();
-   final getClosedSnag=Get.find<GetClosedDeSnag>();
-   final signInController=Get.find<SignInController>();
+    final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+    final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+    final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
+
+  
+    @override
+    void initState(){
+      getDeSnags();
+      super.initState();
+    }
+
+    getDeSnags()async{
+    await getNewDeSnagDataController.getSnagData(context: context);
+    await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
+    await getClosedDeSnagDataController.getClosedSnagData(context: context);
+    // setState(() {});
+  }
+  final signInController=Get.find<SignInController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,6 +56,7 @@ class _BottomTabBarState extends State<BottomTabBar2 > {
         ),
         child: TabBar(
           onTap: (int i) {
+            getDeSnags();
             setState(() {});
           },  
           padding: const EdgeInsets.all(0),

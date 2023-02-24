@@ -203,7 +203,7 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                         children: [
                         Container(
                         height: 30,
-                        margin: const EdgeInsets.only(left: 10,right: 10),
+                        margin: const EdgeInsets.only(left: 10,right: 0),
                         padding:const EdgeInsets.symmetric(vertical: 0),
                         color:AppColors.primary,
                         child:
@@ -218,7 +218,8 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                         Text("${list1[index].progressPercentage}%",style: textStyleBodyText1.copyWith(color:AppColors.white,fontSize: 18),),
                         ),
                         ]),
-                        subtitle:
+                        expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+                        subtitle: 
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -237,14 +238,17 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                           ),
                           ]),
                           ),
-                            const SizedBox(height: 10,),
-                            Container(
+                          const SizedBox(height: 10,),
+                          Container(
                               width: double.infinity,
-                              margin: const EdgeInsets.only(top: 0,bottom: 0),
+                              margin: const EdgeInsets.only(top: 0,bottom: 0,right:0),
                               padding:const EdgeInsets.symmetric(vertical: 0),
                               color:list1[index].contractorId!=null?AppColors.green:Colors.grey,
-                              child: Center(child: Text(list1[index].contractorId!=null?"CheckList Available":"CheckList NA", style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
-                            ]),
+                              child: Center(child: Text(list1[index].contractorId!=null?"CheckList Available":"CheckList NA", style: textStyleBodyText2.copyWith(color: AppColors.black),
+                              )
+                            ),
+                          )
+                          ]),
                             children: [
                               InkWell(
                                 onTap: (){
@@ -265,9 +269,9 @@ class CompletedParticularProgressState extends State<CompletedParticularProgress
                             ])
                               ),
                             Container(
-                                    padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
-                                    color:AppColors.lightGrey,
-                                    child: 
+                              padding:const EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+                              color:AppColors.lightGrey,
+                              child: 
                             Column(
                               children: [
                                   Row(

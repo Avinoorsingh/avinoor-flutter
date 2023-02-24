@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:colab/constants/colors.dart';
 import 'package:colab/network/area_of_concern_network.dart';
+import 'package:colab/network/client_project.dart';
 import 'package:colab/network/labourData/labour_data_network.dart';
 import 'package:colab/network/progress_network.dart';
 import 'package:colab/network/quality_network.dart';
@@ -15,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 import '../controller/signInController.dart';
+import '../network/client_project.dart';
 import '../network/client_project.dart';
 
 // ignore: must_be_immutable
@@ -39,6 +41,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
   final getClosedSnagDataController=Get.find<GetClosedSnag>();
   final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
   final getClientProjectsController = Get.find<GetClientProject>();
+  final getSnagCount=Get.find<GetSnagsCount>();
+  TextEditingController snagCount=TextEditingController();
+  TextEditingController deSnagCount=TextEditingController();
+  final signInController=Get.find<SignInController>();
    final List<ChartData> chartData = [   
             ChartData('David', 60,"60.0\n Balance %",Colors.green,),
             ChartData('Steve', 40,"40.0\n Work \nDone %",AppColors.primary),
@@ -64,6 +70,11 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
  List<String> iconText = [];
  late List<ExpenseData> _chartData=[];
  late String _selectedDate;
+ bool? isClientSignedIn;
+ bool? isProjectSignedIn;
+ final getNewQualityDataController=Get.find<GetNewCheckList>();
+ final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
+ final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
 
   @override
   void initState() {
@@ -71,17 +82,36 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     getClientProjectsController.getSelectedProjects(context:context);
     // _chartData = getChartData(_selectedDate);
-    getClientProfileController.getUserProfile(context: context);
+    // getClientProjectsController.getSelectedProjects(context:context);
+    // getClientProfileController.getUserProfile(context: context);
     getClientProfileController.getUserProfile(context: context);
     // getLabourDataContractorListController.getContractorListData(context: context);
     // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
     getNewSnagDataController.getSnagData(context: context);
     getNewDeSnagDataController.getSnagData(context: context);
+    // getSnagCount.getSnagData(context: context);
+    getSnagCountFunc();
     // getOpenedSnagDataController.getOpenedSnagData(context: context);
     // getOpenedDeSnagDataController.getOpenedSnagData(context: context);
     // getClosedSnagDataController.getClosedSnagData(context: context);
     // getClosedDeSnagDataController.getClosedSnagData(context: context);
     super.initState();
+  }
+
+  getSnagCountFunc() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     if(isClientSignedIn==true){
+       snagCount.text=(signInController.getProjectData!.snagCount!=null?signInController.getProjectData!.snagCount!:"0").toString();
+       deSnagCount.text="0";
+     }
+      isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+       await getSnagCount.getSnagData(context: context);
+       snagCount.text=signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount.toString():"0";
+       deSnagCount.text=signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount.toString():"";
+      }
+      setState(() {});
   }
 
   List<String> myToolsData=[];
@@ -118,25 +148,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     setState(() {});
   }
-  final getNewSnagDataController=Get.find<GetNewSnag>();
-  final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
-  final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
-  final getLabourDataTodayController=Get.find<GetLabourDataToday>();
-  final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
-  final getNewQualityDataController=Get.find<GetNewCheckList>();
-  // final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
-  // final getInQualitySiteProgressDataController=Get.find<GetInEqualitySiteProgress>();
-  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
-  final getAreaOfConcernDataController=Get.find<GetAreaOfConcern>();
-  // final getOpenedQualityDataController=Get.find<GetOpenedCheckList>();
-  // final getClosedQualityDataController=Get.find<GetClosedCheckList>();
-  // final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
-  // final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
+  print("hello");
   return GetBuilder<GetUserProfileNetwork>(
       builder: (_){
-      final signInController=Get.find<SignInController>();
-      getClientProjectsController.getSelectedProjects(context:context);
-     EasyLoading.dismiss();
+    EasyLoading.dismiss();
     return
     signInController.getProjectData?.clientid!=null?
     ListView(
@@ -279,13 +294,16 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         ),
                         ),
                         },
-                         if(i==3)...{
-                          FittedBox(child:
+                        if(i==3)...{
+                        GetBuilder<GetSnagsCount>(
+                        builder: (_){
+                        return
+                        FittedBox(child:
                         Row(
                           children:[ 
                             GestureDetector(
                               onTap: ()async{
-                                await getNewSnagDataController.getSnagData(context: context);
+                                // await getNewSnagDataController.getSnagData(context: context);
                                 // await getOpenedSnagDataController.getOpenedSnagData(context: context);
                                 // await getClosedSnagDataController.getClosedSnagData(context: context);
                                // ignore: use_build_context_synchronously
@@ -305,7 +323,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           elevation: 10,
                           child: 
                         MaterialButton(onPressed: () async {
-                          await getNewSnagDataController.getSnagData(context: context);
+                          // await getNewSnagDataController.getSnagData(context: context);
                           // await getOpenedSnagDataController.getOpenedSnagData(context: context);
                           // await getClosedSnagDataController.getClosedSnagData(context: context);
                           // ignore: use_build_context_synchronously
@@ -334,7 +352,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     child: CircleAvatar(
                         backgroundColor:AppColors.primary,
                         radius: 12.0,
-                        child: Text((signInController.getProjectData!.snagTotalCount!=null?signInController.getProjectData!.snagTotalCount!-1:"0").toString(),style: const TextStyle(color: Colors.black),),
+                        child: Text((signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount.toString():signInController.getProjectData!.snagCount!=null?signInController.getProjectData!.snagCount!:"0").toString(),style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
@@ -345,7 +363,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     ),
                     GestureDetector(
                         onTap: () async{
-                        await getNewDeSnagDataController.getSnagData(context: context);
+                        // await getNewDeSnagDataController.getSnagData(context: context);
                         // await getOpenedDeSnagDataController.getOpenedSnagData(context: context);
                         // await getClosedDeSnagDataController.getClosedSnagData(context: context);
                         // ignore: use_build_context_synchronously
@@ -389,27 +407,25 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         top: 40,
                         left: 10,
                         right: 10,
-                              // bottom: 20,
-                              // left: 310,
-                              //MediaQuery.of(context).size.width/1.22,
                         child: InkWell(
                           onTap: () {},
-                          child:  const Center(
+                          child: Center(
                                 child: CircleAvatar(
                                 backgroundColor:AppColors.primary,
                                 radius: 12.0,
-                                child: Text("0",style: TextStyle(color: Colors.black),),
+                                child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount.toString():deSnagCount.text.isNotEmpty?deSnagCount.text:"0").toString(),style: const TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                          ]
                         )
                       ),
                     ),
                   ]
                 ),
-              )
+              );
+             })
             },
           ],
         ),

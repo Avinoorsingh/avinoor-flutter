@@ -16,6 +16,7 @@ class DependencyInjector {
   static final getLabourDataofSelectContractor=Get.put(GetSelectedContractorData());
   static final getLabourDataToday=Get.put(GetLabourDataToday());
   static final getDeSnagData=Get.put(GetNewDeSnag());
+  static final getSnagCount=Get.put(GetSnagsCount());
   static final getNewQualityCheckData=Get.put(GetNewCheckList());
   static final getCompletedSiteProgress=Get.put(GetCompletedSiteProgress());
   static final getOnGoingOnGoingData=Get.put(GetOnGoingDetail());
@@ -36,6 +37,7 @@ class DependencyInjector {
     Get.put(GetClientProject());
     Get.put(GetUserProfileNetwork());
     Get.put(GetNewSnag());
+    Get.put(GetSnagsCount());
     Get.put(GetNewDeSnag());
     Get.put(GetNewCheckList());
     Get.put(GetOpenedSnag());

@@ -5,11 +5,14 @@ import 'package:colab/services/bottom_tab_bar2.dart';
 import 'package:colab/views/closed_desnags.dart';
 import 'package:colab/views/new_deSnags.dart';
 import 'package:colab/views/opened_de_snags.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../network/client_project.dart';
 import '../services/helper/dependency_injector.dart';
 // ignore: non_constant_identifier_names
 GlobalKey<ScaffoldState> ScaffoldStateKey = GlobalKey<ScaffoldState>();
@@ -22,21 +25,22 @@ class DeSnags extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<DeSnags> {
+    final getNewDeSnagDataController=Get.find<GetNewDeSnag>();
+    final getOpenedDeSnagDataController=Get.find<GetOpenedDeSnag>();
+    final getClosedDeSnagDataController=Get.find<GetClosedDeSnag>();
 
     @override
   void initState() {
-    super.initState(); 
-    DependencyInjector.initializeControllers();
+    // DependencyInjector.initializeControllers();
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    getDeSnags();
+    super.initState(); 
   }
- 
-   void clearCache()async{
-    EasyLoading.show();
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.clear();
-       // ignore: use_build_context_synchronously
-       context.pushNamed('LOGINPAGE');
-      }
+
+   getDeSnags()async{
+    await getNewDeSnagDataController.getSnagData(context: context);
+    setState(() {});
+  }
 
   bool iconPressed=false;
   @override

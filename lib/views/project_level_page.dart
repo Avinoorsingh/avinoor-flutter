@@ -42,6 +42,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   final signInController=Get.find<SignInController>();
   final getClientProjectsController = Get.find<GetClientProject>();
   final getClientProfileController = Get.find<GetUserProfileNetwork>();
+  final getSnagCount=Get.find<GetSnagsCount>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
   final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
@@ -77,6 +78,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
           if (isDeviceConnected){
             await saveData();
+            print("hello");
           }
           else if (!isDeviceConnected && isAlertSet == false){
             showDialogBox();
@@ -148,7 +150,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
           var localData=await databaseProvider.getSnagModel();
           if(localData.isEmpty){
           await databaseProvider.insertSnagModel(res.body);
@@ -169,7 +171,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
             var localData=await databaseProvider.getupcomingOfflineModel();
             if(localData.isEmpty){
              await databaseProvider.insertUpcomingOfflineModel(res.body);
@@ -192,7 +194,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             }
           );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
           await databaseProvider.insertCategoryModel(res.body);
           }
     } catch (e) {
@@ -211,7 +213,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             }
           );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
           await databaseProvider.insertContractorModel(res.body);
           }
     } catch (e) {
@@ -229,7 +231,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false){
+          if(res.statusCode==200 && jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
           await databaseProvider.insertEmployeeModel(res.body);
           }
             } catch (e) {
@@ -269,7 +271,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "project_id":projectID,
             }
             );
-           if(jsonDecode(res.body)['success']!=false){
+           if(jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
            databaseProvider.insertContractorForDebit(res.body);
               }
             } catch (e) {
@@ -288,7 +290,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
               "Authorization": "Bearer $tokenValue",
             },
             );
-            if(jsonDecode(res.body)['success']!=false){
+            if(jsonDecode(res.body)['success']!=false && jsonDecode(res.body)['data']!=null){
             databaseProvider.insertLabourAttendanceToday(res.body);
             }
             } catch (e) {
@@ -313,7 +315,18 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     databaseProvider = DatabaseProvider();
     databaseProvider.init();
     clientDataGet=widget.clientData;
+    try {
+    getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
+    getClientProjectsController.getSelectedProjects(context:context);
+    getConnectivity();
+      } catch (e) {
+        getConnectivity();
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    // getClientProjectsController.getUpcomingProjects(context: context);
     getClientProfileController.getUserProfile(context: context);
     // getLabourDataContractorListController.getContractorListData(context: context);
     // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
@@ -333,6 +346,7 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     if(widget.clientData.projectid!=null){
         sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
         getClientProfileController.getUserProfile(context: context);
+         getSnagCount.getSnagData(context: context);
         // getLabourDataContractorListController.getContractorListData(context: context);
         // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
         getClientProjectsController.getUpcomingProjects(context: context);
@@ -370,22 +384,9 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   int current = 0;
   @override
   Widget build(BuildContext context) {
-    if(mounted){
-    try {
-    getClientProfileController.getUserProfile(context: context);
-    getClientProjectsController.getUpcomingProjects(context: context);
-    getClientProjectsController.getSelectedProjects(context:context);
-    getConnectivity();
-      } catch (e) {
-        getConnectivity();
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    }
     return 
       GetBuilder<GetUserProfileNetwork>(builder: (_){
-      final signInController=Get.find<SignInController>();
+      // final signInController=Get.find<SignInController>();
       return signInController.getClientProfile?.clientid!=null? Scaffold(
         appBar: AppBar(
            flexibleSpace: 

@@ -52,7 +52,8 @@ class _AddProgressState extends State<AddProgressEntry> {
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
-  final locationController = TextEditingController();
+  final locationController = TextEditingController(text: "Select Location");
+  final locationController2 = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
   final linkingActivityId=TextEditingController();
@@ -297,7 +298,9 @@ class _AddProgressState extends State<AddProgressEntry> {
       title: Text("CREATE NEW PROGRESS ENTRY",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child:
+        StatefulBuilder(builder: (context, setState){
+        return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -336,8 +339,8 @@ class _AddProgressState extends State<AddProgressEntry> {
                     );
                      }, 
                     initialDate: DateTime.now(),
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(2100));
+                    firstDate:  DateTime.now().subtract(const Duration(days: 1)),
+                    lastDate: DateTime.now());
                 if (pickedDate != null) {
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                   setState(() {
@@ -367,9 +370,61 @@ class _AddProgressState extends State<AddProgressEntry> {
             isCardEnabled2.add(false);
             return GestureDetector(
                 onTap: (){
-                  isCardEnabled2.replaceRange(0, isCardEnabled2.length, [for(int i = 0; i < isCardEnabled2.length; i++)false]);
-                  isCardEnabled2[index]=true;
-                  priorityController.text=(priority[index]);
+                    isCardEnabled2.replaceRange(0, isCardEnabled2.length, [for(int i = 0; i < isCardEnabled2.length; i++)false]);
+                    isCardEnabled2[index]=true;
+                    priorityController.text=(priority[index]);
+                    subV="";
+                    subSubV="";
+                    subLocationController.text="";
+                    subSubLocationController.text="";
+                    linkingActivityId.text="";
+                    pwrContractorId.text="";
+                    pwrContractorName.text="";
+                    remarkController.text="";
+                    deSnagRemarkController.text="";
+                    closingRemarkController.text="";
+                    markController.text="";
+                    debitToController.text="";
+                    debitToIDController.text="";
+                    debitAmountController.text="";
+                    snagAssignedByController.text="";
+                    snagAssignedToController.text="";
+                    contractorIDIndex.text="";
+                    activityID.text="";
+                    dropdownvalue = 'Select Contractor Name';  
+                    locationController2.text="";
+                    dropdownvalue2 = 'Select Sub Location';  
+                    dropdownvalue3 = 'Select Activity Head';  
+                    dropdownvalueDebitTo = 'Select Debit to';  
+                    locationController.text="Select Location";
+                    contractorController.text="";
+                    uOfName.text="";
+                    totalQuantity.text="";
+                    progressCreatedFlag=false;
+                    achivedController.text="";
+                    comulativeController.text="";
+                    groupedList.clear();
+                    groupedMapToList.clear();
+                    labourList.clear();
+                    labourList.add("Item 1");
+                    _items.clear();
+                    _items.add('Item 1');
+                    _selectedDropdownValues.clear();
+                    _selectedDropdownValues.add('Please Select');
+                    _selectedDropdownValuesID.clear();
+                    _selectedDropdownValuesID.add(0);
+                    enteredValues.clear();
+                    enteredValues.add("");
+                    _items2.clear();
+                    mainDropdownValue.clear();
+                    _dropdownValues2.clear();
+                    _selectedDropdownValues2.clear();
+                    _controllers.clear();
+                    _controllers.add(TextEditingController(text: "1",));
+                    _controllers2.clear();
+                    contractorLabourDetails.clear();
+                    keyExists = false;
+                    _sliderValue=0.0;
                   setState(() {});
                 },
                 child: SizedBox(
@@ -401,9 +456,11 @@ class _AddProgressState extends State<AddProgressEntry> {
            padding: const EdgeInsets.only(bottom: 20,),
             child:
               DropdownSearch<String>(
+              selectedItem: locationController.text,
               autoValidateMode: AutovalidateMode.onUserInteraction,
               items: locationList,
               dropdownDecoratorProps: const DropDownDecoratorProps(
+                baseStyle: TextStyle(fontSize: 14),
                         dropdownSearchDecoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -414,7 +471,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                           hintText: "Select Location",
                           hintStyle: TextStyle(fontWeight: FontWeight.normal,
                           color: Colors.black,
-                          fontSize: 14)
+                          fontSize: 20)
                         ),
                       ),
               popupProps: PopupPropsMultiSelection.menu(
@@ -422,6 +479,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                         showSearchBox: true,
                         searchFieldProps: TextFieldProps(
                           decoration: InputDecoration(
+                            labelStyle: const TextStyle(fontSize: 16),
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.clear),
                               onPressed: () {
@@ -439,6 +497,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                   setState(() {
                   locationController.text=newValue!;
                   dropdownvalue = newValue;
+                  locationController2.text=newValue;
                    });
                   try {
                     locationId.text=locationID[locationList.indexOf(newValue!)].toString();
@@ -472,7 +531,7 @@ class _AddProgressState extends State<AddProgressEntry> {
             child: 
             InkWell(
              onTap: () async {
-             if(locationController.text.isNotEmpty){
+             if(locationController2.text.isNotEmpty){
              String value= await Navigator.of(context).push(_createRoute(locationId.text));
              setState(() {
                   if(value.isNotEmpty){
@@ -514,7 +573,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                             }
                           }
                       }
-                      else if(locationController.text.isEmpty){
+                      else if(locationController2.text.isEmpty){
                         EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
                       }
             },
@@ -555,7 +614,7 @@ class _AddProgressState extends State<AddProgressEntry> {
           ),
           Container(
            margin: const EdgeInsets.only(left:20,right:20),
-           padding: const EdgeInsets.only(top: 20,bottom: 20),
+           padding: const EdgeInsets.only(top: 20,bottom: 10),
             child:
              InkWell(
               onTap: () async {
@@ -696,7 +755,7 @@ class _AddProgressState extends State<AddProgressEntry> {
             ),
              ),
           ),
-           CustomContainer2(
+          CustomContainer2(
             child:
           Column(children: [
             Row(
@@ -869,33 +928,33 @@ class _AddProgressState extends State<AddProgressEntry> {
                       contractorIDIndex.text=contractorList.indexOf(newValue).toString();
                       groupedMapToList=groupedList.values.toList();
                       for (var sublist in groupedMapToList) {
-                              sublist.insert(0, "Please Select");
+                        sublist.insert(0, "Please Select");
                        }
                       // ignore: unused_local_variable
                       for (var sublist in groupedMapToList) {
-                              _selectedDropdownValues2.add(["Please Select"]);
-                              _controllers2.add([TextEditingController()]);
+                          _selectedDropdownValues2.add(["Please Select"]);
+                          _controllers2.add([TextEditingController()]);
                        }
                       finalList.insert(outerIndex,groupedList[contractorController.text]!);
                     }
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
                    }else{}}):null;
                    if(newValue!="Select Contractor Name"){
-                   for (var i = 0; i < subItems.length; i++) {
+                   for(var i = 0; i < subItems.length; i++) {
                         for (var j = 0; j < subItems[i].length; j++) {
-                          if (subItems[i][j] != 'Please Select'){
-                            _selectedDropdownValues2[i].add('Please Select');
-                            _controllers2[i].add(TextEditingController());
-                          }
-                        }
+                        if (subItems[i][j] != 'Please Select'){
+                        _selectedDropdownValues2[i].add('Please Select');
+                        _controllers2[i].add(TextEditingController());
                       }
-                   }
+                    }
+                  }
+                }
               },
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
           if(subItems.isNotEmpty)
-          if(subItems[outerIndex].isNotEmpty)
+          if(subItems[outerIndex].isNotEmpty && _items2.isNotEmpty)
           ListView.builder(
               physics:const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -936,17 +995,8 @@ class _AddProgressState extends State<AddProgressEntry> {
                     ))
                     .toList(),
                     onChanged: (newValue) {
-                       if(newValue!="Please Select"){
-                      // print("-------------------------------------------");
-                      // print("contractorID");
-                      // print(contractorID[outerIndex+1]);
-                      // print("-------------------------------------------");
-                      // print("Selected value");
-                      // print(newValue);
-                      // print("-----------------------------------");
-                      // print("contractor labour linking id");
+                      if(newValue!="Please Select"){
                       contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
-                      // print(contractorLabourLinkingIDText.text);
                     setState(() {
                     // ignore: unused_local_variable
                     int index1;
@@ -1015,9 +1065,12 @@ class _AddProgressState extends State<AddProgressEntry> {
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                     onPressed: () {
                     setState(() {
+                      print("hello");
+                      print(_items2[outerIndex].values.toList().length);
+                      print(_selectedDropdownValues2[outerIndex]);
                          if(_items2[outerIndex].containsKey('$outerIndex')){
                             _items2[outerIndex]['$outerIndex']!.add('Item ${_items2[outerIndex].length + 1}');
-                          }else{
+                          } else{
                             _items2[outerIndex] = ['Item ${_items2[outerIndex].length + 1}'];
                           }
                        _addMore2(outerIndex,index);
@@ -1037,10 +1090,10 @@ class _AddProgressState extends State<AddProgressEntry> {
                       _deleteMore2(outerIndex,index); 
                         if (kDebugMode) {}
                        });}else{
-                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.showToast("Atleast one is required", toastPosition: EasyLoadingToastPosition.bottom);
                        }
                        } else {
-                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.showToast("Please select before deleting", toastPosition: EasyLoadingToastPosition.bottom);
                           if (kDebugMode) {
                             print(_items2[outerIndex]['$outerIndex']);
                           }
@@ -1052,11 +1105,11 @@ class _AddProgressState extends State<AddProgressEntry> {
                           }
                       }
                     }
-                    ),
-                    ]),
-                    ]);
-                    },
-                    ),
+                  ),
+                ]),
+              ]);
+            },
+           ),
           },
           if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
           CustomContainer(
@@ -1075,10 +1128,11 @@ class _AddProgressState extends State<AddProgressEntry> {
               Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
             ],),
             const SizedBox(height: 20,),
-            SizedBox(height:100,
+            SizedBox(
             width: MediaQuery.of(context).size.width,
             child:
             ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: _items.length,
                 itemBuilder: (context, index) {
@@ -1086,7 +1140,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     SizedBox(
-                      height: 65,
+                      // height: 65,
                       width: 250,
                       child:
                     Container(
@@ -1172,6 +1226,7 @@ class _AddProgressState extends State<AddProgressEntry> {
           ],
           );
           }),
+          const SizedBox(height: 10,),
             CustomContainer2(
             child: 
             Column(children: [
@@ -1185,6 +1240,7 @@ class _AddProgressState extends State<AddProgressEntry> {
           ])
             ),
             if(priorityController.text=="Labour Supply" || priorityController.text=="Misc.")...{
+           const SizedBox(height: 10,),
           CustomContainer2(
             child:
           Column(children: [
@@ -1495,7 +1551,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                       "achived_quantity": achivedController.text,
                       "total_quantity":int.parse(totalQuantity.text),
                       "remarks": remarkController.text,
-                      "contractor_id": int.parse(pwrContractorId.text),
+                      "contractor_id":pwrContractorId.text.isNotEmpty?int.parse(pwrContractorId.text):0,
                       "progress_percentage": _sliderValue.toInt().toString(),
                       "debet_contactor":"0",
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -1552,6 +1608,8 @@ class _AddProgressState extends State<AddProgressEntry> {
              )
              )
             ]
+            );
+           }
           )
         )
       );

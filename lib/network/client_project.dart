@@ -10,6 +10,7 @@ import 'package:colab/models/progress_contractor.dart';
 import 'package:colab/models/progress_location_data.dart';
 import 'package:colab/models/progress_trade_data.dart';
 import 'package:colab/models/snag_data.dart';
+import 'package:colab/models/snags_count.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -26,7 +27,6 @@ class GetClientProject extends GetxController {
   bool isLoading = true;
   var clientProjects = <ClientProfileData>[];
   ClientProfileData? getSingleProjectData;
-
   getUpcomingProjects(
       {
       required BuildContext context,
@@ -48,7 +48,6 @@ class GetClientProject extends GetxController {
               'id':id.toString(),
             }
             );
-
            var resSuccess=jsonDecode(res.body);
            if(resSuccess['data'].length>1){
             clientProjects.clear();
@@ -79,6 +78,7 @@ class GetClientProject extends GetxController {
      }) async {
     try {
       isLoading = true;
+      print("I am here");
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
           var tokenValue=sharedPreferences.getString('token');
           var clientId=sharedPreferences.getString('client_id');
@@ -109,7 +109,7 @@ class GetClientProject extends GetxController {
             if(index!=null){
             signInController.getProjectData= clientProjects[int.parse(index)];
             update();
-            }
+          }
       if(getClientProjects.isEmpty){
       getClientProjects = clientProjects.toSet().toList();
       }
@@ -230,13 +230,14 @@ class GetUserProfileNetwork extends GetxController{
           Map<String,dynamic> cData3=jsonDecode(res.body);
           LocationList result3=LocationList.fromJson(cData3['data']);
           signInController.getLocationList=result3;
+          // print("hello---hello");
           update();
-            } catch (e) {
+        } catch (e) {
               if (kDebugMode) {
-                print("error in getting location list");
-                print(e);
-              }
-            }
+        print("error in getting location list");
+        print(e);
+      }
+    }
     try {
      var getProgressLocationListUrl=Uri.parse(Config.getProgressLocationListApi);
         var res=await http.post(
@@ -377,13 +378,17 @@ class GetNewSnag extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getSnagDataList=result5;
+          
+          if (kDebugMode) {
+            print("Fetching new snag list");
+          }
           update(); 
-            } catch (e) {
-              if (kDebugMode) {
-                print("error in getting new snag list");
-                print(e);
-              }
-            }
+        } catch (e) {
+          if (kDebugMode) {
+            print("error in getting new snag list");
+            print(e);
+          }
+        }
   }
 }
 
@@ -406,8 +411,10 @@ class GetNewDeSnag extends GetxController{
       }
       isClient;
       try {
-      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/N");
-        var res=await http.get(
+      var projectID=sharedPreferences.getString('projectIdd');
+      var clientID=sharedPreferences.getString('client_id');
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$clientID/$projectID/N");
+      var res=await http.get(
             getSnagsUrl,
             headers:{
               "Accept": "application/json",
@@ -421,6 +428,52 @@ class GetNewDeSnag extends GetxController{
             } catch (e) {
               if (kDebugMode) {
                 print("error in getting new de snag list");
+                print(e);
+              }
+            }
+  }
+}
+
+class GetSnagsCount extends GetxController{
+  final signInController = Get.find<SignInController>();
+  static var client=http.Client();
+  Future getSnagData({token, required BuildContext context}) async {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var token=sharedPreferences.getString('token');
+     bool? isClientSignedIn=sharedPreferences.getBool('isClientSignedIn');
+     var id=sharedPreferences.getString('id');
+     var isClient=false;
+     if(isClientSignedIn==true){
+      isClient=true;
+     }
+      bool? isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
+      if(isProjectSignedIn==true){
+        isClient=false;
+      }
+      isClient;
+      try {
+     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+     var projectID=sharedPreferences.getString('projectIdd');
+     var clientID=sharedPreferences.getString('client_id');
+     var token=sharedPreferences.getString('token');
+     var res=await http.get(
+            Uri.parse('${Config.getSnagsCount}$clientID/$projectID'),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "Authorization": "Bearer $token",
+            }
+          );
+          Map<String,dynamic> cData4=jsonDecode(res.body);
+          SnagCount result5=SnagCount.fromJson(cData4);
+          signInController.getSnagCount=result5;
+          if (kDebugMode) {
+            print("getting snag count");
+          }
+          update(); 
+            } catch (e) {
+              if (kDebugMode) {
+                print("error in getting snag counts");
                 print(e);
               }
             }
@@ -487,7 +540,9 @@ class GetOpenedDeSnag extends GetxController{
       isClient;
        update(); 
       try {
-      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/O");
+      var projectID=sharedPreferences.getString('projectIdd');
+      var clientID=sharedPreferences.getString('client_id');
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$clientID/$projectID/O");
         var res=await http.get(
             getSnagsUrl,
             headers:{
@@ -570,7 +625,9 @@ class GetClosedDeSnag extends GetxController{
       }
       isClient;
       try {
-      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$id/C");
+     var projectID=sharedPreferences.getString('projectIdd');
+     var clientID=sharedPreferences.getString('client_id');
+      var getSnagsUrl=Uri.parse("${Config.getDeSnagByStatusApi}$clientID/$projectID/C");
         var res=await http.get(
             getSnagsUrl,
             headers:{
@@ -581,6 +638,8 @@ class GetClosedDeSnag extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getDeSnagDataClosedList=result5;
+          print("))(((((((((");
+          print(result5);
           update();   
             } catch (e) {
               if (kDebugMode) {

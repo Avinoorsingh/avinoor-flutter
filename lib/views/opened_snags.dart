@@ -21,6 +21,7 @@ late var tapped;
 
 class _NewSnagState extends State<OpenedSnags> {
   final getSnag = Get.find<GetOpenedSnag>();
+  final signInController=Get.find<SignInController>();
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
@@ -35,14 +36,6 @@ class _NewSnagState extends State<OpenedSnags> {
  void initState(){
   super.initState();
   getSnag.getOpenedSnagData(context: context);
- }
-
-  @override
-  Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return GetBuilder<GetOpenedSnag>(builder: (_){
-      final signInController=Get.find<SignInController>();
     if(signInController.getSnagDataOpenedList!=null){
       if(signInController.getSnagDataOpenedList!.data!=null){
      if(signInController.getSnagDataOpenedList!.data!.isNotEmpty && subLocationName.isEmpty){
@@ -60,6 +53,12 @@ class _NewSnagState extends State<OpenedSnags> {
      }
       }
     }
+ }
+
+  @override
+  Widget build(BuildContext context) {
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
     EasyLoading.dismiss();
     return 
     Scaffold(
@@ -192,7 +191,5 @@ class _NewSnagState extends State<OpenedSnags> {
       ],
     )),
    );
-      }
-      );
   }
 }

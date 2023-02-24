@@ -30,20 +30,13 @@ class _NewSnagState extends State<OpenedDeSnags> {
   List<String?> deSnagRemark=[];
   List snagData=[];
   List dateDifference=[];
+  final signInController=Get.find<SignInController>();
  
  @override
  void initState(){
   super.initState();
   getSnag.getOpenedSnagData(context: context);
- }
-
-  @override
-  Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return GetBuilder<GetOpenedDeSnag>(builder: (_){
-      final signInController=Get.find<SignInController>();
-      if(signInController.getDeSnagDataOpenedList!=null){
+    if(signInController.getDeSnagDataOpenedList!=null){
         if(signInController.getDeSnagDataOpenedList!.data!=null){
      if(signInController.getDeSnagDataOpenedList!.data!.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<signInController.getDeSnagDataOpenedList!.data!.length;i++){
@@ -60,6 +53,12 @@ class _NewSnagState extends State<OpenedDeSnags> {
      }
       }
       }
+ }
+
+  @override
+  Widget build(BuildContext context) {
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
     EasyLoading.dismiss();
     return 
     Scaffold(
@@ -190,7 +189,5 @@ class _NewSnagState extends State<OpenedDeSnags> {
       ],
     )),
    );
-      }
-      );
   }
 }

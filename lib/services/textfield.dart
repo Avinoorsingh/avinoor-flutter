@@ -69,7 +69,7 @@ class CustomTextFieldGrey extends StatelessWidget {
       decoration: InputDecoration(
       filled: true,
       fillColor: Colors.grey[200],
-      hintStyle: const TextStyle(color: Colors.grey,),
+      hintStyle: const TextStyle(color: Colors.black,),
       enabledBorder: OutlineInputBorder(
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
@@ -88,7 +88,7 @@ class CustomTextFieldGrey extends StatelessWidget {
       ),
       ),
        maxLines: null,
-       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,color: Colors.grey),
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,color: Colors.black),
     );
   }
 }
@@ -249,11 +249,14 @@ class CustomTextFieldForNumber extends StatelessWidget {
   final onChanged;
   // ignore: prefer_typing_uninitialized_variables
   final onSubmitted;
+  // ignore: prefer_typing_uninitialized_variables
+  final readOnly;
 
   const CustomTextFieldForNumber({Key? key, 
      this.label,
      this.hintText,
      this.enabled,
+     this.readOnly,
      this.controller,
      this.onChanged,
      this.onSubmitted,
@@ -262,6 +265,67 @@ class CustomTextFieldForNumber extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: onSubmitted,
+      keyboardType:TextInputType.number,
+      onChanged: onChanged,
+      enabled: enabled,
+      controller: controller,
+      textAlign: TextAlign.start,
+      decoration: InputDecoration(
+      filled: true,
+      hintText: hintText,
+      fillColor: Colors.grey[200],
+      hintStyle: const TextStyle(color: Colors.grey,),
+      enabledBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!), 
+              ),
+      focusedBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!),
+              ),
+      errorBorder: InputBorder.none,
+      disabledBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderSide: BorderSide(
+            width: 1, color:Colors.grey[300]!), 
+      ),
+      ),
+       maxLines: null,
+       style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
+    );
+  }
+}
+
+
+class CustomTextFieldForNumber2 extends StatelessWidget {
+  final String? label;
+  final String? hintText;
+  final bool? enabled;
+  final TextEditingController? controller;
+  // ignore: prefer_typing_uninitialized_variables
+  final onChanged;
+  // ignore: prefer_typing_uninitialized_variables
+  final onSubmitted;
+  // ignore: prefer_typing_uninitialized_variables
+  final readOnly;
+
+  const CustomTextFieldForNumber2({Key? key, 
+     this.label,
+     this.hintText,
+     this.enabled,
+     this.readOnly,
+     this.controller,
+     this.onChanged,
+     this.onSubmitted,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      readOnly: readOnly,
       onSubmitted: onSubmitted,
       keyboardType:TextInputType.number,
       onChanged: onChanged,

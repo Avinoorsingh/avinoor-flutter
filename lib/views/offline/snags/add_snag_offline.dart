@@ -236,13 +236,15 @@ class _MyProfilePageState extends State<AddSnagOffline> {
       }
       }
       }
-       if(allOfflineData.isNotEmpty && locationList.isEmpty){
+       if(allOfflineData.isNotEmpty && locationList.isEmpty && allOfflineData[0].locationOfflineData!=null){
         locationList.add("Select Location");
         locationListID.add(999098);
+        if(allOfflineData[0].locationOfflineData!=null){
         for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
           locationList.add(allOfflineData[0].locationOfflineData![i].locationName!);
           locationListID.add(allOfflineData[0].locationOfflineData![i].locationId!); 
-        }
+       }
+       }
        }
         if(allOfflineData.isNotEmpty && subLocationList.isEmpty){
         for(int i=0;i<allOfflineData[0].locationOfflineData!.length;i++){
@@ -257,10 +259,10 @@ class _MyProfilePageState extends State<AddSnagOffline> {
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
               activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
             }
+           }
           }
-          }
+         }
         }
-       }
        } catch (e) {
         if (kDebugMode) {
           print(e);

@@ -6,6 +6,9 @@ import 'package:colab/views/opened_snags.dart';
 import 'package:colab/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../network/client_project.dart';
 import '../services/bottom_tab_bar.dart';
 
 // ignore: non_constant_identifier_names
@@ -19,11 +22,25 @@ class Snags extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<Snags> {
+  final getNewSnagDataController=Get.find<GetNewSnag>();
+  final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+  final getClosedSnagDataController=Get.find<GetClosedSnag>();
   
     @override
   void initState() {
-    super.initState(); 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    getSnags();
+    super.initState(); 
+  }
+
+  getSnags() async {
+    await getNewSnagDataController.getSnagData(context: context);
+    setState(() {});
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   bool iconPressed=false;
@@ -37,7 +54,7 @@ class _MyProfilePageState extends State<Snags> {
         appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor:AppColors.primary,
-      title: Text("Snags",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+      title: Text("Snags", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
         key: ScaffoldStateKey,
         body: TabBarView(

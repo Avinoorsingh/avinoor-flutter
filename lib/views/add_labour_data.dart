@@ -338,17 +338,18 @@ class _AddLabourDataState extends State<AddLabourData> {
                      List finalList = [];
                      for (int i = 0; i < otRate.length; i++) {
                       finalList.add({
-                              "client_id":clientID.toString(),
-                              "project_id":projectID.toString(),
+                              "client_id":int.parse(clientID.toString()),
+                              "project_id":int.parse(projectID.toString()),
                               "contractor_id": int.parse(contractorID[i].toString()),
                               "contractor_labour_linking_id":int.parse(contractorLabourLinkingID[i].toString()),
                               "in_time":  DateFormat("HH:mm").format(DateFormat("h:mm a").parse(inTime[i])).toString(),
                               "labour_date": DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
                               "out_time": null,
-                              "working_hours": int.parse(hours[i]!),
-                              "ot":int.parse(otRate[i]!),
-                          });
-                        }
+                              "working_hours": int.parse(hours[i]!).toString(),
+                              "ot":int.parse(otRate[i]!).toString(),
+                          });    
+                      } 
+                    print(finalList);
                     var res=await http.post(
                     Uri.parse(Config.saveLabourDataApi),
                      headers: {
@@ -356,9 +357,9 @@ class _AddLabourDataState extends State<AddLabourData> {
                               "Authorization": "Bearer $token",
                             },
                       body:jsonEncode(finalList)
-                          );
+                      );
                     if (kDebugMode) {
-                      print(res);
+                      print(res.body);
                       print(finalList);
                       print(res.body);
                       print("hello");

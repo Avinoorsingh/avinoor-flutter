@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:colab/constants/colors.dart';
 import 'package:colab/controller/signInController.dart';
 import 'package:colab/models/client_response.dart';
@@ -243,24 +242,19 @@ class _ClientLevelPageState extends State<ClientLevelPage> {
                      }, 
                     initialDate: DateTime.now(),
                     firstDate: DateTime(1950),
-                    //DateTime.now() - not to allow to choose before today.
                     lastDate: DateTime(2100));
  
                 if (pickedDate != null) {
-                //pickedDate output format => 2021-03-10 00:00:00.000
                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                  //formatted date output using intl package =>  2021-03-16
                   if(formattedDate.isNotEmpty){
                   setState(() {
                     dateInput.text ="Date:   $formattedDate";
                      });
                     getClientProjectsController.getSelectedProjects(context: context,selectedDate: formattedDate);
                     clientData=getClientProjectsController.getClientProjects.toSet().toList();
-                     //set output date to TextField value.
                   }
                 } else {}
               },
-             // "Date:  ${getFormatedDate(DateTime.now().toString())}",
               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 22),
             ),
           ),

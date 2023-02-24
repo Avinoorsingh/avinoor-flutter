@@ -165,7 +165,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
       //     ]
       //   )
       // ),
-            Padding(padding: const EdgeInsets.only(left: 10,right: 10,top: 60),
+            Padding(padding: const EdgeInsets.only(top: 60),
             child:
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -257,6 +257,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                         Column(
                           children: [
                             const Text(""),
+                            const SizedBox(height: 10,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [Text("Quantity: 0.0 ${uomName[index]} | 8.0 ${uomName[index]}",style: textStyleBodyText1.copyWith(fontSize: 14),)],
@@ -410,7 +411,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
         Positioned(
           left: 0,
           right: 20,
-          top: 80,
+          top:MediaQuery.of(context).size.height/9.2,
           child: Center(
         child:Container(
             decoration: BoxDecoration(

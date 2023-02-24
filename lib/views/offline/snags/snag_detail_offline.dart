@@ -134,7 +134,7 @@ class _SnagState extends State<SnagDetailOffline> {
     }
     markController.text=widget.snagModel?.markupFile??"";
     remarkController.text=widget.snagModel?.remark??"";
-    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"Not any Remark";
+    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
@@ -190,7 +190,7 @@ class _SnagState extends State<SnagDetailOffline> {
     }
     markController.text=widget.snagModel?.markupFile??"";
     remarkController.text=widget.snagModel?.remark??"";
-    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"Not any Remark";
+    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
@@ -840,7 +840,7 @@ class _SnagState extends State<SnagDetailOffline> {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
-                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="Not any Remark"){
+                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!=""){
                   try {
                     await http.post(
                     Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),

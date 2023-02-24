@@ -56,4 +56,7 @@ class Config{
   static const String getUpcomingProgress="http://nodejs.hackerkernel.com/colab/api/get_upcoming_progress_add";
   static const String getCheckActivityStart="http://nodejs.hackerkernel.com/colab/api/checkActivityStart/";
   static const String saveManualCheckList="http://nodejs.hackerkernel.com/colab/api/save_manual_checklist";
+  static const String getPwrClientList="http://nodejs.hackerkernel.com/colab/api/pwrClientList/";
+  static const String getProgressLabourLinkingData="http://nodejs.hackerkernel.com/colab/api/progress_labour_linking2/";
+  static const String getSnagsCount="http://nodejs.hackerkernel.com/colab/api/get_snag_count/";
 }

@@ -15,15 +15,24 @@ class BottomTabBar extends StatefulWidget {
 }
 
 class _BottomTabBarState extends State<BottomTabBar> {
-   final getSnag = Get.find<GetNewSnag>();
-   final getOpenedSnag=Get.find<GetOpenedSnag>();
-   final getClosedSnag=Get.find<GetClosedSnag>();
+   final getNewSnagDataController=Get.find<GetNewSnag>();
+   final getOpenedSnagDataController=Get.find<GetOpenedSnag>();
+   final getClosedSnagDataController=Get.find<GetClosedSnag>();
    final signInController=Get.find<SignInController>();
 
 @override
 void initState(){
+   getSnags();
   super.initState();
 }
+
+ getSnags() async {
+    print("---------");
+    await getNewSnagDataController.getSnagData(context: context);
+    await getOpenedSnagDataController.getOpenedSnagData(context: context);
+    await getClosedSnagDataController.getClosedSnagData(context: context);
+    // setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +55,8 @@ void initState(){
           ],
         ),
         child: TabBar(
-          onTap: (int i) {
+          onTap: (int i){ 
+            getSnags(); 
             setState(() {});
           },  
           padding: const EdgeInsets.all(0),

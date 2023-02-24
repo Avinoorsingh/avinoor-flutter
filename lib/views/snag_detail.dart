@@ -32,8 +32,10 @@ class SnagDetail extends StatefulWidget {
 
 class _SnagState extends State<SnagDetail> {
   final getSnag = Get.find<GetNewSnag>();
-  final getDeSnag=Get.find<GetNewDeSnag>();
+  final getOpenedSnag2=Get.find<GetOpenedSnag>();
+  final getNewDeSnag=Get.find<GetNewDeSnag>();
   final getOpenedSnag = Get.find<GetOpenedSnag>();
+  final getClosedSnag=Get.find<GetClosedSnag>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
@@ -138,7 +140,7 @@ class _SnagState extends State<SnagDetail> {
     }
     markController.text=widget.snagModel?.markupFile??"";
     remarkController.text=widget.snagModel?.remark??"";
-    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"Not any Remark";
+    deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
     debitToController.text="";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
@@ -357,8 +359,8 @@ class _SnagState extends State<SnagDetail> {
                         ListView.builder(
                         physics:const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                          itemCount: groupedViewpoints[outerKey]?.length,
-                          itemBuilder: (context, innerIndex) {
+                        itemCount: groupedViewpoints[outerKey]?.length,
+                        itemBuilder: (context, innerIndex) {
                           return
                         GestureDetector(
                       onTap: () async {
@@ -368,17 +370,26 @@ class _SnagState extends State<SnagDetail> {
                           builder: (_) => imageDialog('Snag Image','https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}' , context));
                         },
                       child: 
-                      Container(
-                        margin:const EdgeInsets.only(top: 10,bottom: 10),
-                        height: 100,
-                        width: 30,
+                    SizedBox(
+                        height: 150,
+                        width: 80,
                         child:
-                        FittedBox(
-                          fit: BoxFit.fill,
-                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}", 
-                        height: 10,
-                        width: 30,
-                        ),
+                          FittedBox(
+                          child:
+                          Container(
+                          margin: const EdgeInsets.only(top:10),
+                          height: 150,
+                          width: 65,
+                          child: FadeInImage(
+                            // width: 10,
+                            placeholder:const ExactAssetImage('assets/images/loader.gif'),
+                            image: NetworkImage("https://nodejs.hackerkernel.com/colab${groupedViewpoints[outerKey][innerIndex]}"), 
+                                  //  height: 10,
+                                  //  width: 30,
+                                  // ) as ImageProvider,
+                            // fit: BoxFit.cover,
+                            ),
+                            )
                         ),
                         )
                         );
@@ -598,16 +609,22 @@ class _SnagState extends State<SnagDetail> {
                           context: context,
                           builder: (_) => imageDialog('Snag Image', 'https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}' , context));
                         },
-                      child:  Container(
-                        margin:const EdgeInsets.only(top: 10,bottom: 10),
-                        height: 10,
-                        width: 30,
-                        child:
+                      child: SizedBox(
+                          height: 150,
+                          width: 80,
+                          child:
                         FittedBox(
-                          fit: BoxFit.cover,
-                          child: Image.network("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
-                          height: 25,
-                          width: 20,
+                            child:
+                            Container(
+                          margin: const EdgeInsets.only(top:10),
+                          height: 150,
+                          width: 65,
+                          child: FadeInImage(
+                            // width: 10,
+                            placeholder:const ExactAssetImage('assets/images/loader.gif'),
+                            image:NetworkImage("https://nodejs.hackerkernel.com/colab${groupedDeSnagImages[outerKey][innerIndex]}",
+                            )
+                           )
                           ),
                         ),
                       )
@@ -844,7 +861,7 @@ class _SnagState extends State<SnagDetail> {
                 Text("DE-SNAG REMARK",style: textStyleBodyText1.copyWith(fontSize: 14),),
               ],),),
             const SizedBox(height: 10,),
-            CustomTextFieldGrey(enabled: true,controller: deSnagRemarkController,)
+            CustomTextFieldGrey(enabled: true,controller: deSnagRemarkController,hintText: "Enter-DeSnag Remark",)
           ])
             ),
             Container(
@@ -868,9 +885,10 @@ class _SnagState extends State<SnagDetail> {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                 var createdById=sharedPreferences.getString('id');
-                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!="Not any Remark"){
+                if(deSnagRemarkController.text.isNotEmpty && deSnagRemarkController.text!=""){
+                    EasyLoading.show(maskType: EasyLoadingMaskType.black);
                   try {
-                    await http.post(
+                   var res=await http.post(
                     Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
                      headers: {
                               "Accept": "application/json",
@@ -898,8 +916,15 @@ class _SnagState extends State<SnagDetail> {
                             }
                         );
                     EasyLoading.showToast("Sent for review",toastPosition: EasyLoadingToastPosition.bottom); 
-                    await getDeSnag.getSnagData(context: context);
-                    Get.put(GetNewDeSnag()); 
+                    await getNewDeSnag.getSnagData(context: context);
+                    await getOpenedSnag.getOpenedSnagData(context: context);
+                    Get.put(GetNewDeSnag());
+                    Get.put(GetOpenedDeSnag()); 
+                    EasyLoading.dismiss();
+                    if (kDebugMode) {
+                      print("i am in desnag");
+                      print(res.body);
+                    }
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);               
                     } catch (e) {
@@ -1038,6 +1063,7 @@ class _SnagState extends State<SnagDetail> {
                   ),
                   onPressed: ()async{
                     if(closingRemarkController.text.isNotEmpty){
+                        EasyLoading.show(maskType: EasyLoadingMaskType.black);
                       try {
                      var res=await http.post(
                     Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
@@ -1073,6 +1099,7 @@ class _SnagState extends State<SnagDetail> {
                         EasyLoading.showToast("Closed with debit",toastPosition: EasyLoadingToastPosition.bottom); 
                         await getOpenedSnag.getOpenedSnagData(context: context);
                         Get.put(GetOpenedSnag()); 
+                        EasyLoading.dismiss();
                             // ignore: use_build_context_synchronously
                         Navigator.of(context1, rootNavigator: true).pop();
                         // ignore: use_build_context_synchronously
@@ -1221,6 +1248,7 @@ class _SnagState extends State<SnagDetail> {
                             ),
                             onPressed: ()async{
                               if(closingRemarkController.text.isNotEmpty){
+                                EasyLoading.show(maskType: EasyLoadingMaskType.black);
                                 try {
                               var res=await http.post(
                               Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
@@ -1255,7 +1283,10 @@ class _SnagState extends State<SnagDetail> {
                               }
                               EasyLoading.showToast("Closed without debit",toastPosition: EasyLoadingToastPosition.bottom); 
                               await getOpenedSnag.getOpenedSnagData(context: context);
+                              await getClosedSnag.getClosedSnagData(context: context);
                               Get.put(GetOpenedSnag()); 
+                              Get.put(GetClosedSnag());
+                              EasyLoading.dismiss();
                                   // ignore: use_build_context_synchronously
                               Navigator.of(context1, rootNavigator: true).pop();
                               // ignore: use_build_context_synchronously
@@ -1297,7 +1328,7 @@ class _SnagState extends State<SnagDetail> {
                 minimumSize: Size(MediaQuery.of(context).size.width/2,60),
                 backgroundColor: AppColors.white
               ),
-              child: const Text("Close without debit",style: TextStyle(color: Colors.black),)),
+              child: const Text("Close without debit", style: TextStyle(color: Colors.black),)),
               ],),
                 const SizedBox(height: 10,),
                 //--------------------------------------------------------------
@@ -1405,6 +1436,7 @@ class _SnagState extends State<SnagDetail> {
                                     ),
                                     onPressed: ()async{
                                       if(rejectedRemarkController.text.isNotEmpty){
+                                          EasyLoading.show(maskType: EasyLoadingMaskType.black);
                                         try {
                                       var res=await http.post(
                                       Uri.parse("http://nodejs.hackerkernel.com/colab/api/snags_status_change"),
@@ -1438,8 +1470,11 @@ class _SnagState extends State<SnagDetail> {
                                       }
                                       EasyLoading.showToast("Rejected",toastPosition: EasyLoadingToastPosition.bottom);   
                                       // ignore: use_build_context_synchronously
-                                      await getOpenedSnag.getOpenedSnagData(context: context);
-                                      Get.put(GetOpenedSnag()); 
+                                      await getSnag.getSnagData(context: context);
+                                      await getOpenedSnag2.getOpenedSnagData(context: context);
+                                      Get.put(GetNewSnag()); 
+                                      Get.put(GetOpenedSnag());
+                                      EasyLoading.dismiss();
                                           // ignore: use_build_context_synchronously
                                       Navigator.of(context1, rootNavigator: true).pop();
                                         // ignore: use_build_context_synchronously

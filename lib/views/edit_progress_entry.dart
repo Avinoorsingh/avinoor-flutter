@@ -61,6 +61,7 @@ class _ProgressState extends State<EditProgressEntry> {
   TextEditingController comulativeController=TextEditingController();
   TextEditingController contractorIDIndex = TextEditingController();
   TextEditingController progressID = TextEditingController();
+  TextEditingController oldCommulative=TextEditingController();
   final uomName=TextEditingController();
   final type=TextEditingController();
   List<bool> isCardEnabled2 = [];
@@ -70,6 +71,7 @@ class _ProgressState extends State<EditProgressEntry> {
    ];
   TextEditingController achivedQuantity=TextEditingController();
   TextEditingController comulativeQuantity=TextEditingController(); 
+  TextEditingController comulativeQuantity1=TextEditingController(); 
   var _sliderValue=0.0;
   bool? update=false;
   List<String> contractorList=[];
@@ -104,6 +106,11 @@ class _ProgressState extends State<EditProgressEntry> {
   final List<List<String>> _selectedDropdownValues2 = [];
   final List<TextEditingController> _controllers = [TextEditingController(text: "1",)];
   final List<List<TextEditingController>> _controllers2 = [];
+  final List<TextEditingController> _controllers3 = [];
+  final List<TextEditingController> _controllers4=[];
+  List<String> trade=[];
+  List<String> trade2=[];
+  final labourSupplyContractorName=TextEditingController();
   List<List> contractorLabourDetails=[];
   bool keyExists = false;
   final contractorLabourLinkingIDText=TextEditingController();
@@ -158,6 +165,8 @@ class _ProgressState extends State<EditProgressEntry> {
     super.initState(); 
     EasyLoading.dismiss();
     locationController.text=widget.editModel?.locationName??"";
+    getContractorName();
+    oldCommulative.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
     subSubLocationController.text=widget.editModel?.subSubLocationName ?? "";
     activityController.text=widget.editModel?.activity??"";
@@ -175,14 +184,62 @@ class _ProgressState extends State<EditProgressEntry> {
     projectID.text=widget.editModel?.projectId.toString()??"";
     clientID.text=widget.editModel?.clientId.toString()??"";
     activityID.text=widget.editModel?.linkActivityId.toString()??"";
-    achivedQuantity.text=widget.editModel?.achivedQuantity.toDouble().toString()??"";
+    achivedQuantity.text=(0.0).toString();
     comulativeQuantity.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
+    comulativeQuantity1.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     _sliderValue=double.parse(widget.editModel?.progressPercentage.toString()??"0.0");
     remarkController.text=widget.editModel?.remarks??"";
     progressID.text=widget.editModel?.progressId.toString()??"";
     type.text=widget.editModel?.type.toString()??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
+  }
+
+  getContractorName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var tokenValue=sharedPreferences.getString('token');
+    var res=await http.get(
+         Uri.parse('${Config.getPwrClientList}${widget.editModel.linkActivityId}/${widget.editModel?.clientId}/${widget.editModel?.projectId}'),
+         headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer $tokenValue",
+         }
+      );
+    if(res.body.isNotEmpty){
+      if(jsonDecode(res.body)['success']==true){
+        pwrContractorName.text=jsonDecode(res.body)['data'][0]['contractor_name'];
+      }
+    }
+    print(widget.editModel.dailyId);
+    var res2=await http.get(
+         Uri.parse('${Config.getProgressLabourLinkingData}${widget.editModel.dailyId}'),
+         headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer $tokenValue",
+         }
+      );
+    if(priorityController.text=="PRW"){
+      if(jsonDecode(res2.body)['data2']!=null){
+      for(int i=0;i<jsonDecode(res2.body)['data2'].length;i++){
+        _controllers3.add(TextEditingController(text:jsonDecode(res2.body)['data2'][i]['labour_count']!=null?jsonDecode(res2.body)['data2'][i]['labour_count'].toString():"0"));
+        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled");
+      } 
+      }
+    }
+    if(priorityController.text=="Labour Supply"){
+      if(jsonDecode(res2.body)['mainData']!=null){
+      for(int i=0;i<jsonDecode(res2.body)['mainData'][0]['labourDetails'].length;i++){
+        _controllers4.add(TextEditingController(text:jsonDecode(res2.body)['mainData'][0]['labourDetails'][i]['time'] ?? "0"));
+        trade2.add(jsonDecode(res2.body)['mainData'][0]['labourDetails'][i]['name']??"N/A");
+        labourSupplyContractorName.text=jsonDecode(res2.body)['mainData'][0]['contractor_name'];
+      } 
+      }
+    }
+    print(_controllers4);
+    print(trade2);
+    setState(() {});
   }
    
 
@@ -419,7 +476,6 @@ class _ProgressState extends State<EditProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"D Series (D01- D06)":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 18),),),
-              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             CustomContainer(child: 
@@ -427,7 +483,7 @@ class _ProgressState extends State<EditProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(subLocationController.text.isEmpty?"Sub Level/D-01":'${subLocationController.text} / ${subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 18))),
-             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            //  const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -435,7 +491,6 @@ class _ProgressState extends State<EditProgressEntry> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
-            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           const SizedBox(height: 10,),
@@ -445,7 +500,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Quantity: ${_sliderValue.toInt()} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
+                Text("Quantity: ${_sliderValue.toInt()} %",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
             SizedBox(height: 50,
             width: 350,
@@ -460,24 +515,25 @@ class _ProgressState extends State<EditProgressEntry> {
               inactiveColor: AppColors.lightGrey,
                 value: _sliderValue,
                 onChanged: (newValue) {
-                  setState(() {
                    if(update==true){
-                    double calculatepercentage(double amount, double taxPercent) {
-                      if (amount == 0 || taxPercent == 0) {
+                    double calculatepercentage(double amount, double sliderValue1) {
+                      if (amount == 0 || sliderValue1 == 0) {
                         return 0;
                       } else {
-                        return (taxPercent * amount) / 100;
+                        return (sliderValue1 * amount) / 100;
                       }
                     }
                     totalQuantity1=double.parse(quantityController.text);
-                    taxPercent1=double.parse(comulativeQuantity.text);
-                    achievedQuantity1 =calculatepercentage(totalQuantity1!, _sliderValue.toDouble());
-                    cumulativeQuantity1 = (totalQuantity1! - achievedQuantity1!);
+                    taxPercent1=double.parse(_sliderValue.toString());
+                    cumulativeQuantity1 = calculatepercentage(totalQuantity1!, _sliderValue.toDouble());
+                    achievedQuantity1 = (cumulativeQuantity1! - double.parse(comulativeQuantity1.text));
                     _sliderValue = newValue;
                     achivedQuantity.text=(achievedQuantity1!.toStringAsFixed(2));
                     comulativeQuantity.text= (cumulativeQuantity1!.toStringAsFixed(2));
                    }
                    else{}
+                  setState(() {
+                    
                   });
                 },
                 min: 0,
@@ -488,7 +544,7 @@ class _ProgressState extends State<EditProgressEntry> {
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uomName.text}",style: textStyleBodyText1),
+              Text("${comulativeQuantity.text} ${uomName.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
@@ -525,7 +581,7 @@ class _ProgressState extends State<EditProgressEntry> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Achived",style: textStyleBodyText4,),),
+              Center(child: Text("Achived", style: textStyleBodyText4,),),
               ]),
               Column(children: [
                 Card(
@@ -542,14 +598,208 @@ class _ProgressState extends State<EditProgressEntry> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Cumulative",style: textStyleBodyText4,),),
+              Center(child: Text("Cumulative", style: textStyleBodyText4,),),
               ])
             ],
           )
             ),
-            
           ],) 
             ),
+          /////////////////////////////////////////////////////////////////////
+          if(update!=true &&   widget.editModel.triggerId!=1)...{
+          const SizedBox(height: 10,),
+          ListView.builder(
+          physics:const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: labourList.length,
+          itemBuilder: (context, outerIndex) {
+            finalList.add(outerIndex);
+            finalList.insert(outerIndex,groupedList[contractorController.text]);
+            // finalList.add(outerIndex);
+          return 
+          Column(children: [
+          CustomContainer2(
+            child:
+          Column(children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
+            ],),
+            if((priorityController.text=='Labour Supply' || priorityController.text=="Misc." ) && labourSupplyContractorName.text.isNotEmpty)...{
+          Container(
+           margin: const EdgeInsets.only(top: 20,),
+           padding: const EdgeInsets.only(bottom: 10,),
+           child: 
+           TextField(
+            style:const TextStyle(fontWeight: FontWeight.normal),
+             controller:labourSupplyContractorName,
+          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+              ),
+            ),
+              onChanged:null,
+            ),
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time', style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+          ListView.builder(
+              physics:const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: _controllers4.length,
+              itemBuilder: (context, index){
+              return 
+                Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  SizedBox(
+                    height: 65,
+                    width: 250,
+                    child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    onTap: null,
+                    isExpanded: true,
+                    underline: Container(),
+                    value: trade2[index],
+                    items: trade2
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: null,
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 60,
+                      child:
+                      CustomTextFieldForNumber2(
+                        readOnly: true,
+                        controller: _controllers4[index],
+                        ),
+                      )
+                ]),
+               ]);
+              },
+            ),
+          },
+          if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
+          CustomContainer(
+            child: 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected",style: textStyleBodyText1,),),
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            ])
+          ),
+            const SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
+            ],),
+            const SizedBox(height: 20,),
+            SizedBox(
+            // height:100,
+            width: MediaQuery.of(context).size.width,
+            child:
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _controllers3.length,
+                itemBuilder: (context, index) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    SizedBox(
+                      height: 65,
+                      width: 250,
+                      child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    onTap: null,
+                    isExpanded: true,
+                    underline: Container(),
+                    value: trade[index],
+                    items: trade
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: null,
+                    )
+                      )
+                    ),
+                      SizedBox(           
+                      width: 60,
+                      height: 55,
+                      child:
+                      CustomTextFieldForNumber2(
+                          readOnly: true,
+                          controller: _controllers3[index],
+                        )
+                      )
+                    ,]);
+                    },
+                    ),
+                    ),
+          },
+             if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+              if(labourList.length+2<=contractorList.length)...{
+            IconButton(onPressed: (){
+              setState(() {
+                _items2.add({'${outerIndex+1}':['Item ${_items2.length+1}']});
+                contractorLabourDetails.add([]);
+                labourList.add("1");
+              });
+            }, icon:const Icon(Icons.add_circle)),
+              },
+            IconButton(onPressed: (){
+              setState(() {
+                if(outerIndex==1){
+                labourList.removeAt(outerIndex);
+                }
+              });
+            }, icon:const Icon(Icons.delete)),
+           ])
+          }
+          ],
+          )
+          ),
+          ],
+          );
+          }),
+            },
+          /////////////////////////////////////////////////////////////////////
           if(update==true)...{
           const SizedBox(height: 20,),
           ListView.builder(
@@ -832,7 +1082,7 @@ class _ProgressState extends State<EditProgressEntry> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
+              Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),),
             ],),
             const SizedBox(height: 20,),
             SizedBox(height:100,
@@ -877,9 +1127,9 @@ class _ProgressState extends State<EditProgressEntry> {
                     _selectedDropdownValues[index] = newValue.toString();
                     _selectedDropdownValuesID[index]=_dropdownValuesID[_dropdownValues.indexOf(_selectedDropdownValues[index])];
                     });
-                    },
-                    )
-                      )
+                  },
+                  )
+                   )
                     ),
                       SizedBox(           
                       width: 60,
@@ -1015,6 +1265,7 @@ class _ProgressState extends State<EditProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:(){
+                if(widget.editModel.triggerId!=1){
                     showDialog(
                    context: context,
                    builder: (BuildContext context) {
@@ -1069,6 +1320,7 @@ class _ProgressState extends State<EditProgressEntry> {
                        );
                      },
                    );
+                }
               },
               child: Text("Add Image",style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )

@@ -1,4 +1,5 @@
 import 'package:colab/constants/colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -31,22 +32,19 @@ class _NewSnagState extends State<NewSnag> {
   List<String?> remark=[];
   List snagData=[];
   List dateDifference=[];
+  var outputFormat = DateFormat('dd/MM/yyyy');
+  var outputFormat1 = DateFormat('dd/MM/yyyy');
+  final signInController=Get.find<SignInController>();
  
  @override
  void initState(){
   super.initState();
   getSnag.getSnagData(context: context);
- }
-
-  @override
-  Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return 
-    GetBuilder<GetNewSnag>(builder: (_){
-      final signInController=Get.find<SignInController>();
-     if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
-      for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
+  if (kDebugMode) {
+    print("here 11");
+  }
+  if(signInController.getSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
+    for(int i=0;i<signInController.getSnagDataList!.data!.length;i++){
        subLocationName.add(signInController.getSnagDataList!.data![i].subLocation!.subLocationName);
        subSubLocationName.add(signInController.getSnagDataList!.data![i].subSubLocation!.subSubLocationName);
        locationName.add(signInController.getSnagDataList!.data![i].location!.locationName);
@@ -56,12 +54,26 @@ class _NewSnagState extends State<NewSnag> {
        snagData.add(signInController.getSnagDataList!.data![i]);
        dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getSnagDataList!.data![i].createdAt!)).inDays);
       }
-     }
-    EasyLoading.dismiss();
+    }
+  EasyLoading.dismiss();
+ }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context2) {
+    if (kDebugMode) {
+      print("rebuild");
+    }
     return 
     Scaffold(
-    body: 
-    Container(margin: const EdgeInsets.only(top: 110),
+    resizeToAvoidBottomInset: false,
+    body:
+    Container(
+    margin: const EdgeInsets.only(top: 110),
     child:
     ListView(
       children: [
@@ -147,8 +159,8 @@ class _NewSnagState extends State<NewSnag> {
                             ),
                           ],
                         ),
-                              ),
-                              if(show==true && index==tapped)
+                        ),
+                      if(show==true && index==tapped)
                         Container(
                             padding: const EdgeInsets.only(left: 10,right: 10,top: 0),
                             margin: const EdgeInsets.only(bottom: 20),
@@ -183,13 +195,12 @@ class _NewSnagState extends State<NewSnag> {
     )),
     floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // Navigator.of(context).pushNamed('ADDSNAG');
           context.pushNamed('ADDSNAG');
-          // Add your onPressed code here!
         },
         backgroundColor:AppColors.primary,
-        child: const Icon(Icons.add,color: Colors.black,),
-      ),);
-      }
-      );
+        child: const Icon(Icons.add, color: Colors.black,),
+      ),
+    );
   }
 }

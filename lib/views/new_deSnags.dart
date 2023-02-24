@@ -23,6 +23,7 @@ late var tapped;
 class _NewSnagState extends State<NewDeSnag> {
   final getSnag = Get.find<GetNewDeSnag>();
   List<String?> locationName=[];
+  final signInController=Get.find<SignInController>();
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
   List<String?> dueDates=[];
@@ -34,16 +35,8 @@ class _NewSnagState extends State<NewDeSnag> {
  void initState(){
   super.initState();
   getSnag.getSnagData(context: context);
- }
-
-  @override
-  Widget build(BuildContext context) {
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    var outputFormat1 = DateFormat('dd/MM/yyyy');
-    return GetBuilder<GetNewDeSnag>(builder: (_){
-      final signInController=Get.find<SignInController>();
-     if(signInController.getDeSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
-      for(int i=0;i<signInController.getDeSnagDataList!.data!.length;i++){
+  if(signInController.getDeSnagDataList!.data!.isNotEmpty && subLocationName.isEmpty){
+    for(int i=0;i<signInController.getDeSnagDataList!.data!.length;i++){
        subLocationName.add(signInController.getDeSnagDataList!.data![i].subLocation!.subLocationName);
        subSubLocationName.add(signInController.getDeSnagDataList!.data![i].subSubLocation!.subSubLocationName);
        locationName.add(signInController.getDeSnagDataList!.data![i].location!.locationName);
@@ -54,6 +47,12 @@ class _NewSnagState extends State<NewDeSnag> {
        dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getDeSnagDataList!.data![i].createdAt!)).inDays);
       }
      }
+ }
+
+  @override
+  Widget build(BuildContext context) {
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    var outputFormat1 = DateFormat('dd/MM/yyyy');
     EasyLoading.dismiss();
     return 
     Scaffold(
@@ -177,8 +176,6 @@ class _NewSnagState extends State<NewDeSnag> {
         ),
       ],
     )),
-      );
-      }
-      );
+    );
   }
 }

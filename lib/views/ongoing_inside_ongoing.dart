@@ -117,18 +117,10 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
        uomName.add(list1[i].uomName??"");
        editData.add(list1[i]);
      }
-     if(list1.isNotEmpty){
-    //  locationController.text=list1[0].locationName!;
-    //  subLocationController.text=list1[0].subLocationName!;
-    //  subSubLocationController.text=list1[0].subSubLocationName!;
-     }
-     else{
-           EasyLoading.show(maskType: EasyLoadingMaskType.black);
-     }
-     }
+    }
     EasyLoading.dismiss();
     return 
-     Scaffold(
+    Scaffold(
     body: (list1.isNotEmpty)?
     Container(margin: const EdgeInsets.only(top: 150,),
     child: ListView(
@@ -227,6 +219,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
                         Column(
                           children: [
                             const Text(""),
+                             const SizedBox(height: 10,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [Text("Quantity: 0.0 ${uomName[index]} | 8.0 ${uomName[index]}",style: textStyleBodyText1.copyWith(fontSize: 14),)],
@@ -364,7 +357,13 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
          Positioned(
           top: 30,
           right: 5,
-          child: Container(
+          child: 
+           InkWell(
+        onTap: (){
+            context.pushNamed('EDITPROGRESSENTRY',extra: editData[index]);
+          },
+        child:
+          Container(
             decoration: BoxDecoration(
               color: AppColors.navyblue,
               borderRadius: BorderRadius.circular(10),
@@ -377,10 +376,11 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
           )
         ),
         ),
+      ),
         Positioned(
           left: 0,
           right: 20,
-          top: 80,
+          top: MediaQuery.of(context).size.height/9.2,
           child: Center(
         child:Container(
             decoration: BoxDecoration(
@@ -390,7 +390,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
             width:250,
             height: 30,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text(triggerID[index]==1?"Checklist New":"Checklist NA",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text(triggerID[index]==1?"Checklist New":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
             )
           )
         ),

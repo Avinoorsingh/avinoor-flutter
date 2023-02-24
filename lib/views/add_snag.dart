@@ -6,6 +6,8 @@ import 'package:colab/constants/colors.dart';
 import 'package:colab/models/activity_head.dart';
 import 'package:colab/models/sub_location_list.dart';
 import 'package:colab/models/viewpoints.dart';
+import 'package:colab/views/project_level_page1.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_painter/image_painter.dart';
@@ -16,7 +18,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:colab/theme/text_styles.dart';
@@ -29,7 +30,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../controller/signInController.dart';
 import '../models/category_list.dart';
+import '../models/progress_contractor.dart';
 import '../network/client_project.dart';
+import '../services/container2.dart';
+import '../services/textfield.dart';
 
 // ignore: must_be_immutable
 class AddSnag extends StatefulWidget {
@@ -43,12 +47,14 @@ class AddSnag extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<AddSnag> {
+  final signInController=Get.find<SignInController>();
+  final getClientProjectsController = Get.find<GetClientProject>();
   final getSnag = Get.find<GetNewSnag>();
-   final getClientProjectsController = Get.find<GetClientProject>();
+  final getSnagCount=Get.find<GetSnagsCount>();
   late String subV="";
   late String subSubV="";
   final categoryController=TextEditingController();
-  final locationController = TextEditingController();
+  final locationController = TextEditingController(text:"Select Location");
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
   final locationId=TextEditingController();
@@ -59,9 +65,9 @@ class _MyProfilePageState extends State<AddSnag> {
   final categoryIDController=TextEditingController();
   // ignore: non_constant_identifier_names
   final linking_activity_id=TextEditingController();
-  final remarkController = TextEditingController();
+  TextEditingController remarkController = TextEditingController();
   final debitToController=TextEditingController();
-  final debitAmountController=TextEditingController();
+  TextEditingController debitAmountController=TextEditingController();
   final snapAssignedToController=TextEditingController();
   final priorityController=TextEditingController();
   final assetImageController=TextEditingController();
@@ -75,7 +81,9 @@ class _MyProfilePageState extends State<AddSnag> {
   String dropdownvalue2 = 'Select Sub Location';  
   final location3 = ["Select Sub Sub Location", "Tower 1", "Tower 2", "Tower 3", "Tower 4"];
   String dropdownvalue3 = 'Select Activity Head';  
-  final debitTo = ["Select Debit to", "Person 1", "Person 2", "Person 3", "Person 4"];
+  List<String> debitTo = [];
+  Map<String, dynamic> itemsDebit={};
+  List<int> debitToID=[];
   String dropdownvalueDebitTo = 'Select Debit to';  
   final assignedTo=["Select Name","Name 1"];
   String dropdownvalueAssignedTo="Select Name";
@@ -143,26 +151,12 @@ setState(() => this.image = imageTemp);
   
     @override
   void initState() {
-    super.initState(); 
     isSelected=[true,false,false];
+    print('called');
     dateInput.text =getFormatedDate(DateTime.now().toString()); 
     dateInput1.text =getFormatedDate(DateTime.now().toString()); 
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
-  }
-    final f = DateFormat('yyyy-MM-dd hh:mm a');
-   getFormatedDate(date) {
-      var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
-      var inputDate = inputFormat.parse(date);
-      var outputFormat = DateFormat('yyyy-MM-dd');
-    return outputFormat.format(inputDate);
-    }
-
-  bool iconPressed=false;
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<GetUserProfileNetwork>(builder: (_){
-      final signInController=Get.find<SignInController>();
-      if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
+    if(signInController.getEmployeeList!.data!.isNotEmpty && assignedToList.isEmpty){
         assignedToList.add("Select Name");
         assignedToListIndex.add(8989898);
         for(int i=0;i<signInController.getEmployeeList!.data!.length;i++){
@@ -190,16 +184,52 @@ setState(() => this.image = imageTemp);
           locationListID.add(data.locationId!);
         }
       }
-     EasyLoading.dismiss();
-   // print(dropDownNotifier.value);
+       if(signInController.getProgressContractorList!.data!.isNotEmpty && debitTo.isEmpty){
+        List<ProgressDataContractorListData>? debitToList1=signInController.getProgressContractorList?.data;
+        if(debitTo.isEmpty){
+        debitTo.add("Select Debit to");
+        debitToID.add(99999);
+        itemsDebit={};
+        for(var data in debitToList1!){
+          itemsDebit[data.pid.toString()] = data.contractorName;
+          debitTo.add(data.contractorName!);
+          debitToID.add(data.pid!);
+        }
+        debitTo.toSet().toList();
+        debitToID.toSet().toList();
+        }
+      }
+       super.initState(); 
+  }
+    final f = DateFormat('yyyy-MM-dd hh:mm a');
+   getFormatedDate(date) {
+      var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+      var inputDate = inputFormat.parse(date);
+      var outputFormat = DateFormat('yyyy-MM-dd');
+    return outputFormat.format(inputDate);
+    }
+
+     @override
+  void dispose() {
+  remarkController.dispose();
+  debitToController.dispose();
+  debitAmountController.dispose();
+    super.dispose();
+  }
+  bool iconPressed=false;
+  @override
+  Widget build(BuildContext context) {
+    EasyLoading.dismiss();
     return Scaffold(
+       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.primary,
-        title: Text("Create Snag",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
+        title: Text("Create Snag", style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body:SingleChildScrollView(
+        child: StatefulBuilder(builder: (context, setState){
+        return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -218,10 +248,10 @@ setState(() => this.image = imageTemp);
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,),
+                disabledBorder: InputBorder.none,
+                ),
                 readOnly: true,
-               controller: dateInput1,
-             // "Date:  ${getFormatedDate(DateTime.now().toString())}",
+                controller: dateInput1,
               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 22),
             ),
           ),
@@ -232,8 +262,8 @@ setState(() => this.image = imageTemp);
           ),
           SizedBox(height: 90,child: 
           ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(15),
           itemCount: categoryNew.length,
           itemBuilder: (BuildContext context, int index){
@@ -278,34 +308,67 @@ setState(() => this.image = imageTemp);
           Container(
            margin: const EdgeInsets.only(left:20,right:20,),
            padding: const EdgeInsets.only(bottom: 20,),
-            child: 
-            DropdownButtonFormField(
-              value: locationList[0],
-              icon: const Padding( 
-                padding: EdgeInsets.only(left:20),
-                child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-              ), 
-              iconEnabledColor: Colors.grey,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14
-              ), 
-              dropdownColor: AppColors.white,
-              decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
+            child: DropdownSearch<String>(
+              selectedItem: locationController.text,
+              autoValidateMode: AutovalidateMode.onUserInteraction,
+              items: locationList,
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                baseStyle: TextStyle(fontSize: 14),
+                        dropdownSearchDecoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                          ),
+                          hintText: "Select Location",
+                          hintStyle: TextStyle(fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          fontSize: 20)
+                        ),
+                      ),
+              popupProps: PopupPropsMultiSelection.menu(
+                        showSelectedItems: true,
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            labelStyle: const TextStyle(fontSize: 16),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ),
                 ),
-              ),
-              isExpanded: true,
-              items: locationList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
+            // DropdownButtonFormField(
+            //   value: locationList[0],
+            //   icon: const Padding( 
+            //     padding: EdgeInsets.only(left:20),
+            //     child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+            //   ), 
+            //   iconEnabledColor: Colors.grey,
+            //   style: const TextStyle(
+            //     color: Colors.black,
+            //     fontSize: 14
+            //   ), 
+            //   dropdownColor: AppColors.white,
+            //   decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+            //   borderSide: BorderSide(color: Colors.grey, width: 1),
+            //   ),
+            //   focusedBorder: OutlineInputBorder(
+            //   borderSide: BorderSide(color: Colors.grey, width: 1),
+            //     ),
+            //   ),
+            //   isExpanded: true,
+            //   items: locationList.map((String items){
+            //     return
+            //     DropdownMenuItem(
+            //       value: items,
+            //       child: Text(items),
+            //     );
+            //   }).toList(),
               onChanged: (String? newValue) async{
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
@@ -337,15 +400,15 @@ setState(() => this.image = imageTemp);
                             );
                   Map<String,dynamic> cData3=jsonDecode(res.body);
                   SubLocationList result3=SubLocationList.fromJson(cData3['data']);
-                  signInController.getSubLocationList=result3; 
+                  signInController.getSubLocationList=result3;
                   } catch (e) {
-                      if (kDebugMode) {
-                        print(e);
-                      }
+                    if (kDebugMode) {
+                      print(e);
+                    }
                   }
-              },
+                },
+              ),
             ),
-          ),
            Container(
            margin: const EdgeInsets.only(left:20,right:20),
             child: 
@@ -484,7 +547,7 @@ setState(() => this.image = imageTemp);
                             "sub_loc_id":  subLocationId.text,
                             "sub_sub_location_id":subSubLocationId.text,
                       }
-                            );
+                    );
                   Map<String,dynamic> cData6=jsonDecode(res.body);
                   ViewPointsApi result7=ViewPointsApi.fromJson(cData6);
                   if(res.body.isNotEmpty){
@@ -504,7 +567,7 @@ setState(() => this.image = imageTemp);
                       }
                     }
                   }
-                  setState(() {});
+                  //setState(() {});
                 } catch (e) {
                     if (kDebugMode) {
                         print(e);
@@ -833,6 +896,10 @@ setState(() => this.image = imageTemp);
                                               ],),),
                                               const SizedBox(height: 10,),
                                             TextField(
+                                              onSubmitted: (value){
+                                                setState;
+                                              },
+                                              onChanged: null,
                                               controller: remarkController,
                                               textAlign: TextAlign.center,
                                               decoration: InputDecoration(
@@ -855,61 +922,58 @@ setState(() => this.image = imageTemp);
                                                 disabledBorder: InputBorder.none,),
                                               maxLines: null,
                                               style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-                                            ),
+                                            )
                                           ])
                                             ),
-                                            const SizedBox(height: 10,),
-                                            Container(
-                                            width: double.infinity,
-                                              margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
-                                          padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(width: 1, color: Colors.black),
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            child: 
-                                            Column(children: [
+                                           CustomContainer2(
+                                            child:
+                                          Column(children: [
                                               Center(child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                 Text("DEBIT TO",style: textStyleBodyText1,),
                                               ],),),
                                               const SizedBox(height: 10,),
-                                                  DropdownButtonFormField(
-                                                    value: dropdownvalueDebitTo,
-                                                    icon: const Padding( 
-                                                    padding: EdgeInsets.only(left:20),
-                                                    child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-                                                    ), 
-                                                  iconEnabledColor: Colors.grey,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14
-                                                  ), 
-                                                  dropdownColor: AppColors.white,
-                                                  decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.grey, width: 1),
-                                                    ),
-                                                    focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.grey, width: 1),
-                                                  ),
-                                                ),
-                                                isExpanded: true,
-                                                items: debitTo.map((String items){
-                                                  return DropdownMenuItem(
-                                                    value: items,
-                                                    child: Text(items),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (String? newValue){
-                                                  setState(() {
-                                                    dropdownvalueDebitTo = newValue!;
-                                                    debitToController.text=newValue;
-                                                  });
-                                                },
+                                            Container(
+                                          margin: const EdgeInsets.only(top: 20),
+                                          padding: const EdgeInsets.only(bottom: 20,),
+                                            child: 
+                                          DropdownButtonFormField(
+                                            value:debitToController.text.isNotEmpty?debitToController.text:null,
+                                            icon: const Padding(
+                                              padding: EdgeInsets.only(left:20),
+                                              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
+                                            ), 
+                                            iconEnabledColor: Colors.grey,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14
+                                            ), 
+                                          dropdownColor: AppColors.white,
+                                          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.grey, width: 1),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.grey, width: 1),
                                               ),
-                                            ])
+                                            ),
+                                              isExpanded: true,
+                                              items: itemsDebit.keys.map<DropdownMenuItem<String>>((String key) {
+                                              return DropdownMenuItem<String>(
+                                                value: key,
+                                                child: Text(itemsDebit[key]),
+                                              );
+                                            }).toList(),
+                                              onChanged: (String? newValue) async {
+                                                setState(() {
+                                                  debitToController.text=newValue!;
+                                                  dropdownvalueDebitTo = newValue;
+                                                });
+                                              },
+                                            ),
                                           ),
+                                          ])),
+                                        const SizedBox(height: 10,),
                                         Column(children: [
                                         Container(
                                           margin: const EdgeInsets.only(left: 20,right: 20),
@@ -981,7 +1045,13 @@ setState(() => this.image = imageTemp);
                                           Text("\u20B9 *",style: textStyleBodyText1.copyWith(color: Colors.red),)
                                         ],),),
                                         const SizedBox(height: 10,),
+                                      StatefulBuilder(builder: (context, setState) {
+                                      return
                                       TextField(
+                                        onSubmitted: (value){
+                                          setState;
+                                        },
+                                        onChanged: null,
                                         keyboardType:TextInputType.number,
                                         controller: debitAmountController,
                                         inputFormatters: [
@@ -1009,7 +1079,8 @@ setState(() => this.image = imageTemp);
                                           disabledBorder: InputBorder.none,),
                                         maxLines: null,
                                         style: textStyleHeadline2.copyWith(fontWeight: FontWeight.w400,fontSize: 16,),
-                                      ),
+                                      );
+                                      })
                                     ])
                                   ),
                                   Container(
@@ -1030,6 +1101,8 @@ setState(() => this.image = imageTemp);
                                           Text("Snag Assigned To",style: textStyleBodyText1,),
                                         ],),),
                                         const SizedBox(height: 10,),
+                                        StatefulBuilder(builder: (context, setState) {
+                                        return
                                         DropdownButtonFormField(
                                           value: dropdownvalueAssignedTo,
                                           icon: const Padding( 
@@ -1062,9 +1135,11 @@ setState(() => this.image = imageTemp);
                                               dropdownvalueAssignedTo = newValue.toString();
                                             });
                                           },
-                                        ),
+                                        );})
                                         ])
                                       ),
+                                    StatefulBuilder(builder: (context, setState) {
+                                     return
                                       Container(
                                       width: double.infinity,
                                       margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
@@ -1123,7 +1198,7 @@ setState(() => this.image = imageTemp);
                                       ),
                                     ]
                                   ),
-                                ),
+                                );}),
                               Container(
                                   width: double.infinity,
                                   margin: const EdgeInsets.only(left:20.0,right: 20.0,bottom: 20.0),
@@ -1170,6 +1245,7 @@ setState(() => this.image = imageTemp);
                                         EasyLoading.showToast("Please assign priority",toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else {
+                                        EasyLoading.show(maskType: EasyLoadingMaskType.black);
                                       // ignore: non_constant_identifier_names
                                       List VID=[];
                                       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -1207,7 +1283,7 @@ setState(() => this.image = imageTemp);
                                             "activity_head_id": 1,
                                             "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
                                             "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
-                                            'debet_contractor_id':2,
+                                            'debet_contractor_id':int.parse(debitToController.text),
                                             "remark": remarkController.text,
                                             "debit_note": "this is debit note",
                                             "debit_amount":int.parse(debitAmountController.text),
@@ -1224,27 +1300,30 @@ setState(() => this.image = imageTemp);
                                       print(formData.fields);
                                   }
                                   try {
-                                    await dio.post(
+                                  var res=await dio.post(
                                   "http://nodejs.hackerkernel.com/colab/api/add_snags",
                                   data: formData,
                                   options: Options(
                                     followRedirects: false,
-                                    validateStatus: (status) {
+                                    validateStatus: (status){
                                       return status! < 500;
                                     },
                                     headers: {
                                       "authorization": "Bearer ${token!}",
                                       "Content-type": "application/json",
-                                    },
-                                  ),
-                                    );
-                                    EasyLoading.showToast("Snag Saved",toastPosition: EasyLoadingToastPosition.bottom); 
-                                    await getSnag.getSnagData(context: context);
-                                    await getClientProjectsController.getSelectedProjects(context:context);
-                                    Get.put(GetNewSnag()); 
-                                        // ignore: use_build_context_synchronously
-                                    Navigator.pop(context);
-                                    } catch (e) {
+                                     },
+                                    ),
+                                  );
+                                  EasyLoading.dismiss();
+                                  EasyLoading.showToast("Snag Saved", toastPosition: EasyLoadingToastPosition.bottom); 
+                                  await getSnag.getSnagData(context: context);
+                                  await getSnagCount.getSnagData(context: context);
+                                  // await getClientProjectsController.getSelectedProjects(context:context);
+                                  Get.put(GetNewSnag()); 
+                                  Get.put(GetSnagsCount());
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pop(context);
+                                  } catch (e) {
                                       EasyLoading.showToast("server error occured",toastPosition: EasyLoadingToastPosition.bottom);
                                       EasyLoading.dismiss();
                                     if (kDebugMode) {
@@ -1262,11 +1341,9 @@ setState(() => this.image = imageTemp);
                           )
                         )   
                       ]
-                    )
-                  )
+                    );
+                  }))
                 );
-              }
-            );
           }
       }
 

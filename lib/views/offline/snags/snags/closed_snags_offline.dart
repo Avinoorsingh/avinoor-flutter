@@ -54,6 +54,7 @@ class _NewSnagState extends State<ClosedSnagsOffline> {
     var outputFormat1 = DateFormat('dd/MM/yyyy');
     if(snagData.isNotEmpty && subLocationName.isEmpty){
       for(int i=0;i<snagData.length;i++){
+         if(snagData[0].data!.isNotEmpty){
          if(snagData[0].data![i].snagStatus=="C"){
        subLocationName.add(snagData[0].data![i].subLocation!.subLocationName);
        subSubLocationName.add(snagData[0].data![i].subSubLocation!.subSubLocationName);
@@ -65,6 +66,7 @@ class _NewSnagState extends State<ClosedSnagsOffline> {
        createdDates.add(snagData[0].data![i].createdAt);
        snagData2.add(snagData[0].data![i]);
        dateDifference.add(DateTime.now().difference(DateTime.parse(snagData[0].data![i].createdAt!)).inDays+1);
+      }
       }
       }
      }

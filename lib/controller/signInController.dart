@@ -33,6 +33,7 @@ import '../models/progress_location_data.dart';
 import '../models/progress_subSublocation_data.dart';
 import '../models/progress_trade_data.dart';
 import '../models/section_detail.dart';
+import '../models/snags_count.dart';
 import '../network/client_project.dart';
 import '../services/helper/dependency_injector.dart';
 
@@ -70,6 +71,7 @@ class SignInController extends GetxController {
   ClientEmployee? getEmployeeList;
   SnagData? getSnagDataList;
   SnagData? getDeSnagDataList;
+  SnagCount? getSnagCount;
   SnagData? getSnagDataOpenedList;
   SnagData? getDeSnagDataOpenedList;
   SnagData? getSnagDataClosedList;

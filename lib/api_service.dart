@@ -7,10 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/client_response.dart';
 
-class APIService{
+class APIService {
   static var client=http.Client();
   List clientData=[];
-  static Future<String> login(LoginUserModel model) async{
+  static Future<String> login(LoginUserModel model) async {
     var clientData= <ClientProfileData>[];
     Map<String, String> requestHeaders={
       'Content-Type':'application/json',

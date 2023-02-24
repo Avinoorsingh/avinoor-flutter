@@ -368,13 +368,6 @@ class CustomRouter {
           qualityModel: state.extra,
         ),
       ),
-      //   GoRoute(
-      //   name: 'SNAGS',
-      //   path: subSubLocation,
-      //   builder: (context, state) => Snags(
-      //     key: state.pageKey,
-      //   ),
-      // ),
       GoRoute(
         name: 'ADDSNAG',
         path: addSnags,
