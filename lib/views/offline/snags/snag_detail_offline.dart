@@ -1036,7 +1036,7 @@ class _SnagState extends State<SnagDetailOffline> {
                       "created_by": createdById,
                       "close_snag_remark":closingRemarkController.text,
                       "de_snag_remark":deSnagRemarkController.text,
-                      "snag_status": "CWD",
+                      "snag_status": "C",
                             }
                               );
                         if (kDebugMode) {
@@ -1219,7 +1219,7 @@ class _SnagState extends State<SnagDetailOffline> {
                                 "created_by": createdById,
                                 "close_snag_remark":closingRemarkController.text,
                                 "de_snag_remark":deSnagRemarkController.text,
-                                "snag_status": "C",
+                                "snag_status": "CWD",
                                       }
                                     );
                               if (kDebugMode) {

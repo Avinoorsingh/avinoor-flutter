@@ -453,6 +453,46 @@ setState(() => this.image = imageTemp);
                               print(e);
                             }
                           }
+                          try {
+                    var getViewPointsUrl=Uri.parse(Config.getViewpoints);
+                    var res=await http.post(
+                     getViewPointsUrl,
+                     headers: {
+                              "Accept": "application/json",
+                              "Authorization": "Bearer $token",
+                            },
+                      body: {
+                            "loc_id":locationId.text,
+                            "sub_loc_id":  subLocationId.text,
+                            "sub_sub_location_id":subSubLocationId.text,
+                      }
+                    );
+                  Map<String,dynamic> cData6=jsonDecode(res.body);
+                  ViewPointsApi result7=ViewPointsApi.fromJson(cData6);
+                  if(res.body.isNotEmpty){
+                    try {
+                      if(viewpoints.isEmpty && viewpointsID.isEmpty){
+                        for(int i=0;i<result7.data!.length;i++){
+                          viewpoints2.add({'index':result7.data![i].viewpoint,'image':[]});
+                          viewpoints.add(result7.data![i].viewpoint!);
+                          viewpointsID.add(result7.data![i].viewpointNameId.toString());
+                          viewpointsName.add(result7.data![i].viewpoint.toString());
+                          viewpointImagesUrl.add(result7.data![i].masterFile.toString());
+                          setState(() {});
+                        }
+                      }
+                    } catch (e) {
+                      if (kDebugMode) {
+                        print(e);
+                      }
+                    }
+                  }
+                  //setState(() {});
+                } catch (e) {
+                    if (kDebugMode) {
+                        print(e);
+                      }
+                   }
                       }
                   else if(locationController.text.isEmpty){
                       EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
@@ -534,51 +574,12 @@ setState(() => this.image = imageTemp);
                     contractorInput.text="";
                   }
                   }
-                    try {
-                    var getViewPointsUrl=Uri.parse(Config.getViewpoints);
-                    var res=await http.post(
-                     getViewPointsUrl,
-                     headers: {
-                              "Accept": "application/json",
-                              "Authorization": "Bearer $token",
-                            },
-                      body: {
-                            "loc_id":locationId.text,
-                            "sub_loc_id":  subLocationId.text,
-                            "sub_sub_location_id":subSubLocationId.text,
-                      }
-                    );
-                  Map<String,dynamic> cData6=jsonDecode(res.body);
-                  ViewPointsApi result7=ViewPointsApi.fromJson(cData6);
-                  if(res.body.isNotEmpty){
-                    try {
-                      if(viewpoints.isEmpty && viewpointsID.isEmpty){
-                        for(int i=0;i<result7.data!.length;i++){
-                          viewpoints2.add({'index':result7.data![i].viewpoint,'image':[]});
-                          viewpoints.add(result7.data![i].viewpoint!);
-                          viewpointsID.add(result7.data![i].viewpointNameId.toString());
-                          viewpointImagesUrl.add(result7.data![i].masterFile.toString());
-                          setState(() {});
-                        }
-                      }
-                    } catch (e) {
-                      if (kDebugMode) {
-                        print(e);
-                      }
-                    }
-                  }
-                  //setState(() {});
-                } catch (e) {
-                    if (kDebugMode) {
-                        print(e);
-                      }
-                   }
             }
              else if(locationController.text.isEmpty){
               EasyLoading.showToast("Please Select Location", toastPosition: EasyLoadingToastPosition.bottom);
             }
             else if(subLocationId.text.isEmpty){
-              EasyLoading.showToast("Please Select SubLocation",toastPosition: EasyLoadingToastPosition.bottom);
+              EasyLoading.showToast("Please Select SubLocation", toastPosition: EasyLoadingToastPosition.bottom);
             }
                 },
               child:  
@@ -705,7 +706,7 @@ setState(() => this.image = imageTemp);
                             margin: const EdgeInsets.all(20.0),
                             padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
                             child: 
-                              Text("VIEWPOINT: View ${index1+1}",style: textStyleBodyText1,)
+                              Text("VIEWPOINT: ${viewpointsName[index1]}",style: textStyleBodyText1,)
                             )
                           ],),
                           Container(
@@ -829,7 +830,6 @@ setState(() => this.image = imageTemp);
                                                               onPressed: () async {
                                                                       // Call the _pickImage function with the camera source
                                                                 final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
-
                                                                 final File imagefile = File(image!.path);
                                                                 viewpoints2[index1]['image'].add(imagefile);
                                                                 setState(() { });
@@ -1218,16 +1218,16 @@ setState(() => this.image = imageTemp);
                                     child: const Text("Cancel",style: TextStyle(color: Colors.black,fontSize: 14, fontWeight: FontWeight.normal),)),
                                     ElevatedButton(onPressed: () async {
                                       if(categoryIDController.text.isEmpty){
-                                        EasyLoading.showToast("Please select Category",toastPosition: EasyLoadingToastPosition.bottom);
+                                        EasyLoading.showToast("Please select Category", toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else if(locationId.text.isEmpty){
-                                        EasyLoading.showToast("Please select Location",toastPosition: EasyLoadingToastPosition.bottom);
+                                        EasyLoading.showToast("Please select Location", toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else if(subLocationId.text.isEmpty){
-                                        EasyLoading.showToast("Please select Sub Location",toastPosition: EasyLoadingToastPosition.bottom);
+                                        EasyLoading.showToast("Please select Sub Location", toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else if(subSubLocationId.text.isEmpty){
-                                        EasyLoading.showToast("Please select Activity Head",toastPosition: EasyLoadingToastPosition.bottom);
+                                        EasyLoading.showToast("Please select Activity Head", toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else if(remarkController.text.isEmpty){
                                         EasyLoading.showToast("Please enter a remark",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1237,6 +1237,9 @@ setState(() => this.image = imageTemp);
                                       }
                                       else if(snapAssignedToController.text.isEmpty){
                                         EasyLoading.showToast("Please assign snag",toastPosition: EasyLoadingToastPosition.bottom);
+                                      }
+                                      else if(debitToController.text.isEmpty){
+                                         EasyLoading.showToast("DebitTo is required", toastPosition: EasyLoadingToastPosition.bottom);
                                       }
                                       else if(viewpoints2.isNotEmpty && viewpoints2[0]['image'].isEmpty){
                                         EasyLoading.showToast("Please upload atleast one snag image",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1407,7 +1410,8 @@ return Dialog(
       SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height/1.4,
-        child: ImagePainter.network(
+        child:
+         ImagePainter.network(
           '$path',
            controlsAtTop: false,
            initialColor: Colors.red,

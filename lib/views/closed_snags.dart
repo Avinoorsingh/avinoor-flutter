@@ -50,7 +50,7 @@ class _NewSnagState extends State<ClosedSnags>{
        dueDates.add(signInController.getSnagDataClosedList!.data![i].dueDate);
        createdDates.add(signInController.getSnagDataClosedList!.data![i].createdAt);
        snagData.add(signInController.getSnagDataClosedList!.data![i]);
-       dateDifference.add(DateTime.now().difference(DateTime.parse(signInController.getSnagDataClosedList!.data![i].createdAt!)).inDays+1);
+       dateDifference.add(DateTime.parse(signInController.getSnagDataClosedList!.data![i].dueDate!).difference(DateTime.parse(signInController.getSnagDataClosedList!.data![i].createdAt!)).inDays);
       }
      }
     }
@@ -143,7 +143,7 @@ class _NewSnagState extends State<ClosedSnags>{
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
                                     child: Center(child:
-                                    Text(dateDifference[index].toString(),style: textStyleBodyText1,)),
+                                    Text(dateDifference[index].toString(),style: textStyleBodyText1.copyWith(fontSize: 12),)),
                                   ),
                                 ),
                               ),

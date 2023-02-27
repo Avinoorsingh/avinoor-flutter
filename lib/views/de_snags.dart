@@ -56,7 +56,7 @@ class _MyProfilePageState extends State<DeSnags> {
       title: Text("De-snags",style: textStyleHeadline3.copyWith(color: Colors.black,fontWeight: FontWeight.w400),),
       ),
         key: ScaffoldStateKey,
-        body:  TabBarView(
+        body: TabBarView(
           key: Key(Random().nextInt(1000).toString()),
                 physics:const NeverScrollableScrollPhysics(),
                 children: const [

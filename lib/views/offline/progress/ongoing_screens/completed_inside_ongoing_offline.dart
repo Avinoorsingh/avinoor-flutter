@@ -407,7 +407,7 @@ class _OnProgressState extends State<CompletedInsideOnGoingOffline> {
             height:40,
             width:50,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text("${percentage[index]} %",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text("${percentage[index]} %",style: textStyleBodyText1.copyWith(color: AppColors.white,fontSize: 12),
             )
           )
         ),

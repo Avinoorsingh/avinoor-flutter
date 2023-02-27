@@ -104,6 +104,7 @@ class GetOnGoingCompletedDetail extends GetxController{
           var cData4=jsonDecode(res.body);
           OnGoingCompletedProgress result5=OnGoingCompletedProgress.fromJson(cData4);
           signInController.getOnGoingCompletedData=result5;
+          print(cData4);
             } catch (e) {
               if (kDebugMode) {
                 print("error in completed data inside on-going");

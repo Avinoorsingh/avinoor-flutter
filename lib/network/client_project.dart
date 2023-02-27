@@ -122,7 +122,7 @@ class GetClientProject extends GetxController {
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               String id=resSuccess['data'][0]['project_id'].toString();
               if(id.isNotEmpty){
-              sharedPreferences.setString("projectIdd",id);
+              await sharedPreferences.setString("projectIdd",id);
               }
               if(resSuccess['data'][0]!=null){
                var result= ClientProfileData.fromJson(resSuccess['data'][0]);
@@ -379,7 +379,6 @@ class GetNewSnag extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagData result5=SnagData.fromJson(cData4['data']);
           signInController.getSnagDataList=result5;
-          
           if (kDebugMode) {
             print("Fetching new snag list");
           }
@@ -468,9 +467,6 @@ class GetSnagsCount extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           SnagCount result5=SnagCount.fromJson(cData4);
           signInController.getSnagCount=result5;
-          if (kDebugMode) {
-            print("getting snag count");
-          }
           update(); 
             } catch (e) {
               if (kDebugMode) {
@@ -514,9 +510,6 @@ class GetProgressCount extends GetxController{
           Map<String,dynamic> cData4=jsonDecode(res.body);
           ProgressCount1 result5=ProgressCount1.fromJson(cData4);
           signInController.getProgressCount=result5;
-          if (kDebugMode) {
-            print("getting progress count");
-          }
           update(); 
             } catch (e) {
               if (kDebugMode) {

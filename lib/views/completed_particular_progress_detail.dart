@@ -238,7 +238,7 @@ class _ProgressState extends State<CompletedParticularProgressDetail> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Archived",style: textStyleBodyText4,),),
+              Center(child: Text("Achived",style: textStyleBodyText4,),),
               ]),
               Column(children: [
                 Card(

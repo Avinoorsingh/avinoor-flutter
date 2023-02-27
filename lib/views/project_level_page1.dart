@@ -28,7 +28,7 @@ class ProjectLevelPage1 extends StatefulWidget {
 }
 
 class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
-   final getClientProfileController = Get.find<GetUserProfileNetwork>();
+  final getClientProfileController = Get.find<GetUserProfileNetwork>();
   final getNewSnagDataController=Get.find<GetNewSnag>();
   final getLabourDataContractorListController=Get.find<GetLabourDataContractor>();
   final getLabourDataOfSelectedContractorController=Get.find<GetSelectedContractorData>();
@@ -103,7 +103,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
      if(isClientSignedIn==true){
        snagCount.text=(signInController.getProjectData!.snagCount!=null?signInController.getProjectData!.snagCount!:"0").toString();
        deSnagCount.text="0";
-     }
+      }
       isProjectSignedIn=sharedPreferences.getBool('isProjectSignedIn');
       if(isProjectSignedIn==true){
        await getSnagCount.getSnagData(context: context);
@@ -149,7 +149,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
     setState(() {});
   }
   return GetBuilder<GetUserProfileNetwork>(
-      builder: (_){
+    builder: (_){
     EasyLoading.dismiss();
     return
     signInController.getProjectData?.clientid!=null?
@@ -178,8 +178,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                   Column(
                   children: [
                         Container(
-                          height: 90,
-                          width: 100,
+                        height: 90,
+                        width: 100,
                         padding: const EdgeInsets.all(10),
                         child: Image.asset(items[i].toString(),
                         fit: BoxFit.fill,
@@ -266,7 +266,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   child: CircleAvatar(
                                     backgroundColor:AppColors.primary,
                                     radius: 12.0,
-                                    child: Text(signInController.getProjectData!.areaOfConernTotal!=null?signInController.getProjectData!.areaOfConernTotal.toString():"0", style:const TextStyle(color: Colors.black),),
+                                    child: Text(signInController.getProjectData!.areaOfConernTotal!=null?signInController.getProjectData!.areaOfConernTotal.toString():"0", style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
                                   ),
                                 ),
                               ),
@@ -277,16 +277,21 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         builder: (_){
                         return
                          Positioned(
-                              top: 40,
+                              top: 35,
                               left: 10,
                               right: 10,
                               child: InkWell(
                                 onTap: () {},
                                 child: Center(
-                                  child: CircleAvatar(
-                                    backgroundColor:AppColors.primary,
-                                    radius: 12.0,
-                                    child: Text((signInController.getProgressCount!=null?signInController.getProgressCount!.progressCount![0].progressCount ?? "0":"0").toString(), style: TextStyle(color: Colors.black),),
+                                  child: Container(
+                                    height: 30,
+                                    width:30,
+                                    decoration: BoxDecoration(
+                                      color:AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child:
+                                    Center(child:Text((signInController.getProgressCount!=null?signInController.getProgressCount!.progressCount![0].progressCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),),
                                   ),
                                 ),
                               ),
@@ -304,8 +309,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   child: CircleAvatar(
                                     backgroundColor:AppColors.primary,
                                     radius: 12.0,
-                                    child: Text("0", style: TextStyle(color: Colors.black),),
-                                  ),
+                                    child: Text("0", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                                   ),
                                 ),
                               ),
                             ),
@@ -337,7 +342,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child:
                           Stack(children: [
                         Card(
-                          margin: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(left:8,right: 8,bottom:20),
                           shadowColor: Colors.transparent,
                           color: AppColors.white,
                           elevation: 10,
@@ -363,20 +368,25 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     ),
                   ),
                 Positioned(
-                  top: 40,
+                  top: 30,
                   left: 10,
                   right: 10,
                   child: InkWell(
                     onTap: () {},
                     child:  Center(
-                    child: CircleAvatar(
-                        backgroundColor:AppColors.primary,
-                        radius: 12.0,
-                        child: Text((signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount.toString():signInController.getProjectData!.snagCount!=null?signInController.getProjectData!.snagCount!:"0").toString(),style: const TextStyle(color: Colors.black),),
-                                  ),
-                                ),
-                              ),
+                    child:Center(
+                          child: Container(
+                            height: 35,
+                            width:35,
+                            decoration: BoxDecoration(
+                              color:AppColors.primary,
+                              borderRadius: BorderRadius.circular(100),
                             ),
+                            child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),),
+                          ),
+                        ),
+                          )
+                        ))
                           ]
                         )
                       ),
@@ -397,7 +407,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child:
                          Stack(children: [
                         Card(
-                          margin: const EdgeInsets.all(8),
+                         margin: const EdgeInsets.only(left:8,right: 8,bottom:20),
                           shadowColor: Colors.transparent,
                           color: AppColors.white,
                           elevation: 10,
@@ -424,19 +434,23 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     ),
                   ),
                   Positioned(
-                        top: 40,
+                        top: 30,
                         left: 10,
                         right: 10,
                         child: InkWell(
                           onTap: () {},
-                          child: Center(
-                                child: CircleAvatar(
-                                backgroundColor:AppColors.primary,
-                                radius: 12.0,
-                                child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount.toString():deSnagCount.text.isNotEmpty?deSnagCount.text:"0").toString(),style: const TextStyle(color: Colors.black),),
-                                  ),
+                             child:  Center(
+                              child: Container(
+                                height: 30,
+                                width:30,
+                                decoration: BoxDecoration(
+                                  color:AppColors.primary,
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
+                                child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),),
                               ),
+                            ),
+                              )
                             )
                          ]
                         )

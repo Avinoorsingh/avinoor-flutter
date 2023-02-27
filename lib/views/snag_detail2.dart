@@ -39,6 +39,8 @@ class _SnagState2 extends State<SnagDetail2> {
   final categoryController=TextEditingController();
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
+  final activityController = TextEditingController();
+  final activityHeadController = TextEditingController();
   final subSubLocationController = TextEditingController();
   final remarkController = TextEditingController();
   final deSnagRemarkController=TextEditingController();
@@ -66,7 +68,7 @@ class _SnagState2 extends State<SnagDetail2> {
    Map<int, List<dynamic>> newGroupedDeSnagImages = {};
    Map<int, List<dynamic>> newGroupedDeImages = {};
    List<String> imageData=[];
- 
+   List viewpointName=[];
    List<bool> isCardEnabled = [];
    List<bool> isCardEnabled2 = [];
    List<String> deSnagImages=[];
@@ -138,16 +140,19 @@ class _SnagState2 extends State<SnagDetail2> {
     if(widget.snagModel?.contractorInfo!=null){
     contractorInput.text=widget.snagModel?.contractorInfo?.ownerName??"";
     }
+    activityHeadController.text=widget.snagModel.projectActivityHead.activityHead??"";
+    activityController.text=widget.snagModel.projectActivity.activity??"";
     markController.text=widget.snagModel?.markupFile??"";
     remarkController.text=widget.snagModel?.remark??"";
     deSnagRemarkController.text=widget.snagModel?.deSnagRemark??"";
-    debitToController.text="";
+    debitToController.text=widget.snagModel?.debetcontractorInfo.contractorName??"";
     debitAmountController.text=widget.snagModel?.debitAmount.toString()??"";
     snagAssignedByController.text=widget.snagModel?.createdBy1?.name??"";
     snagAssignedToController.text=widget.snagModel?.employee?.name??"";
     priorityController.text=widget.snagModel?.snagPriority;
     if(widget.snagModel?.snagViewpoint?.length!=0 && widget.snagModel?.snagViewpoint!=null){
       for(int i=0;i<widget.snagModel?.snagViewpoint?.length;i++){
+        viewpointName.add(widget.snagModel.snagViewpoint[i].viewpoint);
         viewpoints.add({'fileName': widget.snagModel.snagViewpoint[i].viewpointFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,'deSnagImage':[],'viewID':widget.snagModel.snagViewpoint[i].id});
         deSnagImage.add({'deSnagImage':widget.snagModel.snagViewpoint[i].desnagsFileName,'image':[],'id':widget.snagModel.snagViewpoint[i].viewpointId,});
         if(!viewpointID.contains(widget.snagModel.snagViewpoint[i].viewpointId)){
@@ -247,7 +252,7 @@ class _SnagState2 extends State<SnagDetail2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(categoryController.text.isEmpty?"Category":categoryController.text,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+              // const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
             CustomContainer(child: 
@@ -255,23 +260,23 @@ class _SnagState2 extends State<SnagDetail2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location":locationController.text,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            //  const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
-          CustomContainer(child: 
+                CustomContainer(child: 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subLocationController.text.isEmpty?"Sub Location":subLocationController.text,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            Center(child: Text('${subLocationController.text.isEmpty?"Sub Location":subLocationController.text} ${subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text}',style: textStyleBodyText1.copyWith(fontSize: 14),),),
+            // const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child:
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text,style: textStyleBodyText1.copyWith(fontSize: 14),),),
-            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            Center(child: Text(' ${activityHeadController.text.isEmpty?"Sub Sub Location":activityHeadController.text} ${activityController.text.isEmpty?"Activity":activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 14),),),
+            // const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -337,7 +342,7 @@ class _SnagState2 extends State<SnagDetail2> {
               children: [
                 const SizedBox(height: 20,),
                 Row(children: [
-                  Text("VIEWPOINT:  View ${outerIndex+1}",style: textStyleBodyText1.copyWith(fontSize: 14),)
+                  Text("VIEWPOINT: ${viewpointName[outerIndex]}", style: textStyleBodyText1.copyWith(fontSize: 14),)
                 ],),
                 const SizedBox(height: 10,),
                   Container(
@@ -710,7 +715,7 @@ class _SnagState2 extends State<SnagDetail2> {
                 Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-              Center(child: Text("Select debit to", textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14),),),
+              Center(child: Text(debitToController.text, textAlign: TextAlign.center,style: textStyleBodyText1.copyWith(fontSize: 14),),),
               const Icon(Icons.arrow_drop_down_outlined, size: 30,color: Colors.grey,),
               ]))
           ])
@@ -1125,7 +1130,7 @@ class _SnagState2 extends State<SnagDetail2> {
                       "created_by": createdById,
                       "close_snag_remark":closingRemarkController.text,
                       "de_snag_remark":deSnagRemarkController.text,
-                      "snag_status": "CWD",
+                      "snag_status": "C",
                             }
                           );
                     if (kDebugMode) {
@@ -1308,7 +1313,7 @@ class _SnagState2 extends State<SnagDetail2> {
                       "created_by": createdById,
                       "close_snag_remark":closingRemarkController.text,
                       "de_snag_remark":deSnagRemarkController.text,
-                      "snag_status": "C",
+                      "snag_status": "CWD",
                             }
                           );
                     if (kDebugMode) {

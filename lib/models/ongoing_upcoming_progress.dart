@@ -32,6 +32,7 @@ class OnGoingUpcomingData {
   String? locationName;
   String? contractorName;
   String? subLocationName;
+  String? uomName;
   String? subSubLocationName;
   String? activityHead;
   int? startTrigger;
@@ -60,6 +61,7 @@ class OnGoingUpcomingData {
       this.locationName,
       this.contractorName,
       this.subLocationName,
+      this.uomName,
       this.subSubLocationName,
       this.activityHead,
       this.startTrigger,
@@ -88,6 +90,7 @@ class OnGoingUpcomingData {
     locationName = json['location_name'];
     contractorName = json['contractor_name'];
     subLocationName = json['sub_location_name'];
+    uomName=json['uom_name'];
     subSubLocationName = json['sub_sub_location_name'];
     activityHead = json['activity_head'];
     startTrigger = json['start_trigger'];
@@ -118,6 +121,7 @@ class OnGoingUpcomingData {
     data['location_name'] = locationName;
     data['contractor_name'] = contractorName;
     data['sub_location_name'] = subLocationName;
+    data['uom_name']=uomName;
     data['sub_sub_location_name'] = subSubLocationName;
     data['activity_head'] = activityHead;
     data['start_trigger'] = startTrigger;

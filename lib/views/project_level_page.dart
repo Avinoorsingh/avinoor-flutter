@@ -79,7 +79,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
           isDeviceConnected = await InternetConnectionChecker().hasConnection;
           if (isDeviceConnected){
             await saveData();
-            print("hello");
           }
           else if (!isDeviceConnected && isAlertSet == false){
             showDialogBox();
@@ -90,9 +89,6 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
 
   saveData () async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    await getClientProfileController.getUserProfile(context: context);
-    await getClientProjectsController.getUpcomingProjects(context: context);
-    await getClientProjectsController.getSelectedProjects(context:context);
      var tokenValue=sharedPreferences.getString('token');
      var clientId=sharedPreferences.getString('client_id');
      var projectID=sharedPreferences.getString('projectIdd');
@@ -310,6 +306,14 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     super.dispose();
   }
 
+  initializeData()async{
+    await getClientProfileController.getUserProfile(context: context);
+    await getClientProjectsController.getUpcomingProjects(context: context);
+    await getClientProjectsController.getSelectedProjects(context:context);
+    await getSnagCount.getSnagData(context: context);
+    await getProgressCount.getProgressData(context: context);
+  }
+
   @override
   void initState(){
     super.initState();
@@ -317,11 +321,15 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     databaseProvider.init();
     clientDataGet=widget.clientData;
     try {
+    getSnagCount.getSnagData(context: context);
+    getProgressCount.getProgressData(context: context);
     getClientProfileController.getUserProfile(context: context);
     getClientProjectsController.getUpcomingProjects(context: context);
     getClientProjectsController.getSelectedProjects(context:context);
+    initializeData();
     getConnectivity();
       } catch (e) {
+        initializeData();
         getConnectivity();
         if (kDebugMode) {
           print(e);
@@ -345,13 +353,13 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(widget.clientData!=null){
     if(widget.clientData.projectid!=null){
-        sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
-        getClientProfileController.getUserProfile(context: context);
-         getSnagCount.getSnagData(context: context);
-         getProgressCount.getProgressData(context: context);
+        await sharedPreferences.setString("projectIdd",widget.clientData.projectid.toString());
+        await getClientProfileController.getUserProfile(context: context);
         // getLabourDataContractorListController.getContractorListData(context: context);
         // getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);
-        getClientProjectsController.getUpcomingProjects(context: context);
+        await getClientProjectsController.getUpcomingProjects(context: context);
+        await getSnagCount.getSnagData(context: context);
+        await getProgressCount.getProgressData(context: context);
         // getNewSnagDataController.getSnagData(context: context);
         // getNewDeSnagDataController.getSnagData(context: context);
         // getOpenedSnagDataController.getOpenedSnagData(context: context);
@@ -387,7 +395,12 @@ class _ProjectLevelPageState extends State<ProjectLevelPage> {
   @override
   Widget build(BuildContext context) {
     return 
-      GetBuilder<GetUserProfileNetwork>(builder: (_){
+      GetBuilder<GetUserProfileNetwork>(
+        initState: ((state) {
+          getSnagCount.getSnagData(context: context);
+          getProgressCount.getProgressData(context: context);
+        }),
+        builder: (_){
       // final signInController=Get.find<SignInController>();
       return signInController.getClientProfile?.clientid!=null? Scaffold(
         appBar: AppBar(

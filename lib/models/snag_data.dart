@@ -1062,6 +1062,7 @@ class SnagViewpoint {
   var deSnagDate;
   String? createdAt;
   String? updatedAt;
+  String? viewpoint;
 
   SnagViewpoint(
       {this.id,
@@ -1071,7 +1072,8 @@ class SnagViewpoint {
       this.desnagsFileName,
       this.deSnagDate,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.viewpoint});
 
   SnagViewpoint.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -1082,6 +1084,7 @@ class SnagViewpoint {
     deSnagDate = json['de_snag_date'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    viewpoint=json['viewpoint_name'];
   }
 
   Map<String, dynamic> toJson() {

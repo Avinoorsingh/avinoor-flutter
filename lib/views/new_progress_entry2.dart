@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:colab/network/client_project.dart';
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -16,12 +18,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../config.dart';
 import '../constants/colors.dart';
 import '../controller/signInController.dart';
 import '../models/labour_attendance.dart';
 import '../models/progress_contractor.dart';
 import '../models/progress_location_data.dart';
 import '../models/progress_trade_data.dart';
+import '../network/progress_network.dart';
 
 // ignore: must_be_immutable
 class NewProgressEntry2 extends StatefulWidget {
@@ -43,6 +47,9 @@ class NewProgressEntry2 extends StatefulWidget {
 class _SnagState extends State<NewProgressEntry2> {
   late String subV="";
   late String subSubV="";
+  final getCompletedSiteProgressDataController=Get.find<GetCompletedSiteProgress>();
+  final getInQualitySiteProgressDataController=Get.find<GetInEqualitySiteProgress>();
+  final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
   final categoryController=TextEditingController();
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
@@ -52,6 +59,7 @@ class _SnagState extends State<NewProgressEntry2> {
   final closingRemarkController=TextEditingController();
   final markController=TextEditingController();
   final debitToController=TextEditingController();
+  final getProgressCount=Get.find<GetProgressCount>();
   final debitAmountController=TextEditingController();
   final snagAssignedByController=TextEditingController();
   final snagAssignedToController=TextEditingController();
@@ -216,7 +224,9 @@ class _SnagState extends State<NewProgressEntry2> {
     subLocationController.text=widget.snagModel?.subLocationName??"";
     subSubLocationController.text=widget.snagModel?.subSubLocationName ?? "";
     activityController.text=widget.snagModel?.activity??"";
-    activityHeadController.text=widget.snagModel?.activityHead??"";
+    activityHeadController.text=widget.snagModel?.activityHead.toString()??"";
+    linkingActivityId.text=widget.snagModel?.linkingActivityId.toString()??"0";
+    activityID.text=widget.snagModel?.activityId.toString()??"0";
     contractorNameController.text=widget.snagModel?.contractorName??"";
     try {
       totalQuantity.text=widget.snagModel?.totalQuantity.toString()??"";
@@ -234,8 +244,7 @@ class _SnagState extends State<NewProgressEntry2> {
     _sliderValue=double.parse("0.0");
     remarkController.text=widget.snagModel?.description??"";
     progressID.text=widget.snagModel?.progressId.toString()??"";
-  
-    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.snagModel?.createdAt??DateTime.now()));
+    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.now());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
   }
     final f = DateFormat('yyyy-MM-dd hh:mm a');
@@ -424,7 +433,7 @@ class _SnagState extends State<NewProgressEntry2> {
                       child: Text(priority[index],textAlign: TextAlign.center,
                         style: TextStyle(
                           color: priority[index].toString()==priorityController.text?Colors.black:AppColors.primary,
-                          fontSize: 16
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -440,7 +449,7 @@ class _SnagState extends State<NewProgressEntry2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text(locationController.text.isEmpty?"Location":locationController.text,style: textStyleBodyText1,),),
-             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            //  const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -448,7 +457,7 @@ class _SnagState extends State<NewProgressEntry2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
             Center(child: Text('${subLocationController.text.isEmpty?"Sub Location":subLocationController.text} / ${subSubLocationController.text.isEmpty?"Sub Sub Location":subSubLocationController.text}',style: textStyleBodyText1,),),
-            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            // const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           CustomContainer(child: 
@@ -456,7 +465,7 @@ class _SnagState extends State<NewProgressEntry2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
              Center(child: Text(activityHeadController.text.isEmpty?"Sub Structure/Excavation":'${activityHeadController.text} / ${activityController.text}',style: textStyleBodyText1.copyWith(fontSize: 18),),),
-            const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            // const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
           const SizedBox(height: 10,),
@@ -489,7 +498,7 @@ class _SnagState extends State<NewProgressEntry2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uomName.text}",style: textStyleBodyText1),
+              Text("${comulativeController.text} ${uomName.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
@@ -553,7 +562,7 @@ class _SnagState extends State<NewProgressEntry2> {
             ),
           },
           const SizedBox(height: 10,),
-           ListView.builder(
+            ListView.builder(
           physics:const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: labourList.length,
@@ -633,33 +642,33 @@ class _SnagState extends State<NewProgressEntry2> {
                       contractorIDIndex.text=contractorList.indexOf(newValue).toString();
                       groupedMapToList=groupedList.values.toList();
                       for (var sublist in groupedMapToList) {
-                              sublist.insert(0, "Please Select");
+                        sublist.insert(0, "Please Select");
                        }
                       // ignore: unused_local_variable
                       for (var sublist in groupedMapToList) {
-                              _selectedDropdownValues2.add(["Please Select"]);
-                              _controllers2.add([TextEditingController()]);
+                          _selectedDropdownValues2.add(["Please Select"]);
+                          _controllers2.add([TextEditingController()]);
                        }
                       finalList.insert(outerIndex,groupedList[contractorController.text]!);
                     }
                     subItems.insert(outerIndex,groupedList[contractorController.text]);
                    }else{}}):null;
                    if(newValue!="Select Contractor Name"){
-                   for (var i = 0; i < subItems.length; i++) {
+                   for(var i = 0; i < subItems.length; i++) {
                         for (var j = 0; j < subItems[i].length; j++) {
-                          if (subItems[i][j] != 'Please Select'){
-                            _selectedDropdownValues2[i].add('Please Select');
-                            _controllers2[i].add(TextEditingController());
-                          }
-                        }
+                        if (subItems[i][j] != 'Please Select'){
+                        _selectedDropdownValues2[i].add('Please Select');
+                        _controllers2[i].add(TextEditingController());
                       }
-                   }
+                    }
+                  }
+                }
               },
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time',style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
           if(subItems.isNotEmpty)
-          if(subItems[outerIndex].isNotEmpty)
+          if(subItems[outerIndex].isNotEmpty && _items2.isNotEmpty)
           ListView.builder(
               physics:const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -700,17 +709,8 @@ class _SnagState extends State<NewProgressEntry2> {
                     ))
                     .toList(),
                     onChanged: (newValue) {
-                       if(newValue!="Please Select"){
-                      // print("-------------------------------------------");
-                      // print("contractorID");
-                      // print(contractorID[outerIndex+1]);
-                      // print("-------------------------------------------");
-                      // print("Selected value");
-                      // print(newValue);
-                      // print("-----------------------------------");
-                      // print("contractor labour linking id");
+                      if(newValue!="Please Select"){
                       contractorLabourLinkingIDText.text= (contractorLabourLinkingId[contractorID[int.parse(contractorIDIndex.text)]]![subItems[outerIndex].indexOf(newValue)-1]).toString();
-                      // print(contractorLabourLinkingIDText.text);
                     setState(() {
                     // ignore: unused_local_variable
                     int index1;
@@ -779,9 +779,12 @@ class _SnagState extends State<NewProgressEntry2> {
                     style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                     onPressed: () {
                     setState(() {
+                      print("hello");
+                      print(_items2[outerIndex].values.toList().length);
+                      print(_selectedDropdownValues2[outerIndex]);
                          if(_items2[outerIndex].containsKey('$outerIndex')){
                             _items2[outerIndex]['$outerIndex']!.add('Item ${_items2[outerIndex].length + 1}');
-                          }else{
+                          } else{
                             _items2[outerIndex] = ['Item ${_items2[outerIndex].length + 1}'];
                           }
                        _addMore2(outerIndex,index);
@@ -801,10 +804,10 @@ class _SnagState extends State<NewProgressEntry2> {
                       _deleteMore2(outerIndex,index); 
                         if (kDebugMode) {}
                        });}else{
-                          EasyLoading.showToast("First contractor cannot be deleted",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.showToast("Atleast one is required", toastPosition: EasyLoadingToastPosition.bottom);
                        }
                        } else {
-                          EasyLoading.showToast("Please select before deleting",toastPosition: EasyLoadingToastPosition.bottom);
+                          EasyLoading.showToast("Please select before deleting", toastPosition: EasyLoadingToastPosition.bottom);
                           if (kDebugMode) {
                             print(_items2[outerIndex]['$outerIndex']);
                           }
@@ -816,11 +819,11 @@ class _SnagState extends State<NewProgressEntry2> {
                           }
                       }
                     }
-                    ),
-                    ]),
-                    ]);
-                    },
-                    ),
+                  ),
+                ]),
+              ]);
+            },
+           ),
           },
           if(priorityController.text!='Labour Supply' && priorityController.text!="Misc.")...{
           CustomContainer(
@@ -828,7 +831,7 @@ class _SnagState extends State<NewProgressEntry2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(contractorNameController.text.isNotEmpty? contractorNameController.text:"No Contractor Selected",style: textStyleBodyText1,),),
+            Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected",style: textStyleBodyText1,),),
              const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -851,7 +854,7 @@ class _SnagState extends State<NewProgressEntry2> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     SizedBox(
-                      height: 65,
+                      // height: 65,
                       width: 250,
                       child:
                     Container(
@@ -888,14 +891,15 @@ class _SnagState extends State<NewProgressEntry2> {
                     ),
                       SizedBox(           
                       width: 60,
-                      height: 55,
-                      child:
+                      height: 50,
+                      child:Center(child: 
                       CustomTextFieldForNumber(
                           controller: _controllers[index],
                           onSubmitted: (value){
                             enteredValues[index]=value.toString();
                           },
                         )
+                      )
                       )
                     ,]);
                     },
@@ -1116,7 +1120,202 @@ class _SnagState extends State<NewProgressEntry2> {
                 backgroundColor:  AppColors.green,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:()async{
+                 if(linkingActivityId.text.isEmpty){
+                  EasyLoading.showToast("Linking Activity ID is required",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(remarkController.text.isEmpty){
+                  EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(debitToController.text.isEmpty && priorityController.text=="Labour Supply"){
+                  EasyLoading.showToast("Debit To is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                }
+                else if(contractorLabourDetails.isEmpty && priorityController.text=="Labour Supply"){
+                  EasyLoading.showToast("Atleast one contractor is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                }
+                else{
+                EasyLoading.show(maskType: EasyLoadingMaskType.black);
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                FormData formData=FormData(); 
+                var dio = Dio();
+                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
+                List progressDetails = [];
+                for (var subList in contractorLabourDetails) {
+                  for (var map in subList) {
+                    // ignore: non_constant_identifier_names
+                    var contractor_id = map.values.first[0];
+                    var contractorLabourDetails1 = {
+                      "contractor_labour_linking_id": map.keys.first.toString(),
+                      "time": map.values.first[1].toString()
+                    };
+                    bool contractorExist = false;
+                    for (var progress in progressDetails) {
+                      if (progress['contractor_id'] == contractor_id) {
+                        contractorExist = true;
+                        progress['contractorLabourDetails'].add(contractorLabourDetails1);
+                        break;
+                      }
+                    }
+                    if (!contractorExist) {
+                      progressDetails.add({
+                        "contractor_id": contractor_id.toString(),
+                        "contractorLabourDetails": [contractorLabourDetails1]
+                      });
+                    }
+                  }
+                }
+                List<Map<String, dynamic>> newList = [];
+                for (Map<String, dynamic> map in progressDetails) {
+                  bool contractorExists = false;
+                  for (Map<String, dynamic> newMap in newList) {
+                    if (newMap["contractor_id"] == map["contractor_id"]) {
+                      newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
+                      contractorExists = true;
+                      break;
+                    }
+                  }
+                  if (!contractorExists) {
+                    newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
+                  }
+                }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":linkingActivityId.text.isNotEmpty?int.parse(linkingActivityId.text):"",
+                      "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
+                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                      "remarks": remarkController.text,
+                      "contractor_id": "7",
+                      "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
+                      "debet_contactor":int.parse(debitToController.text),
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeController.text,
+                      "type":priorityController.text=="Misc."?1:0,
+                      "save_type": "save",
+                      "created_by":int.parse(clientID),
+                      "PWRLabourDetails": [
+                          {
+                              "labour_count": 1,
+                              "pwr_type": 0
+                          }
+                      ],
+                      "contractorLabourDetails": [],
+                      "progressDetails": newList,
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+                if(priorityController.text=="PRW"){
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                  List pWRLabourDetailsList = [];
+                    for(int i=0; i<_selectedDropdownValuesID.length; i++){
+                      pWRLabourDetailsList.add({
+                        "labour_count": enteredValues[i],
+                        "pwr_type": _selectedDropdownValuesID[i]
+                      });
+                    }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":int.parse(linkingActivityId.text),
+                      "achived_quantity": achivedController.text,
+                      "total_quantity":int.parse(totalQuantity.text),
+                      "remarks": remarkController.text,
+                      "contractor_id":pwrContractorId.text.isNotEmpty?int.parse(pwrContractorId.text):0,
+                      "progress_percentage": _sliderValue.toInt().toString(),
+                      "debet_contactor":"0",
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeController.text,
+                      "type": 2,
+                      "save_type": "save",
+                      "created_by":int.parse(clientID),
+                      "PWRLabourDetails": pWRLabourDetailsList,
+                      "contractorLabourDetails": [],
+                      "progressDetails": [],
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+                await getProgressCount.getProgressData(context: context);
+                print("hereeeee");
+                await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+                await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
+                 Get.put(GetCompletedSiteProgress());
+                 Get.put(GetOnGoingSiteProgress());
+                 Get.put(GetInEqualitySiteProgress());
+                 EasyLoading.dismiss();
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+               }},
               child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )
              ]

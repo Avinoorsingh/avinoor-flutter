@@ -204,7 +204,7 @@ class _AddProgressState extends State<AddProgressEntryOffline> {
      ProgressContractor? contractorData;
      ClientEmployee? employeeData;
      var subLocationList=[];
-     List<int> locationListID=[];
+     List<num> locationListID=[];
      var activityHead=[];
     // ignore: non_constant_identifier_names
     final linking_activity_id=TextEditingController();

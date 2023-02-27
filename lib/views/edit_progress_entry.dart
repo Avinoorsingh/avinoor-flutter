@@ -233,7 +233,7 @@ class _ProgressState extends State<EditProgressEntry> {
       }
     }
     if(priorityController.text=="Labour Supply"){
-      if(jsonDecode(res2.body)['mainData']!=null){
+      if(jsonDecode(res2.body)['mainData']!=null && jsonDecode(res2.body)['mainData'].isNotEmpty){
       for(int i=0;i<jsonDecode(res2.body)['mainData'][0]['labourDetails'].length;i++){
         _controllers4.add(TextEditingController(text:jsonDecode(res2.body)['mainData'][0]['labourDetails'][i]['time'] ?? "0"));
         trade2.add(jsonDecode(res2.body)['mainData'][0]['labourDetails'][i]['name']??"N/A");
@@ -343,7 +343,7 @@ class _ProgressState extends State<EditProgressEntry> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(widget.editModel.triggerId!=1)
+            if(widget.editModel.triggerId!=null)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

@@ -79,7 +79,6 @@ class _AddProgressState extends State<AddProgressEntry> {
   Map<int, List<int>> contractorLabourLinkingId={};
   List<int> debitToID=[];
   final getProgressCount=Get.find<GetProgressCount>();
- ////////////////////////////Progress Trade-Handler things//////////////////////
   Map<String, List<String>> groupedList = {};
   List groupedMapToList=[];
   List<dynamic> finalList=[];
@@ -872,6 +871,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                                 );
                                 // ignore: use_build_context_synchronously
                                 Navigator.pop(context1);
+                                await getProgressCount.getProgressData(context: context);
                                 await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
                                 // ignore: use_build_context_synchronously
                                 // context.pushNamed('ACTIVITIES');

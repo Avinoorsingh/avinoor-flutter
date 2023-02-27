@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../network/client_project.dart';
 import '../network/progress_network.dart';
 
 
@@ -44,6 +45,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   final scrollController=ScrollController();
   // ignore: prefer_final_fields
   int _page = 1;
+  final getProgressCount=Get.find<GetProgressCount>();
   final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
 
   Future<void> _getData() async {
@@ -277,6 +279,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                 );
                                                 // ignore: use_build_context_synchronously
                                                 Navigator.pop(context1);
+                                                await getProgressCount.getProgressData(context: context);
                                                 await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
                                                 // ignore: use_build_context_synchronously
                                                 context.pushNamed('ACTIVITIES');

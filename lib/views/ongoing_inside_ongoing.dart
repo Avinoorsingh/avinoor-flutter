@@ -371,7 +371,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
             height:40,
             width:50,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text("${percentage[index]} %",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text("${percentage[index]} %",style: textStyleBodyText1.copyWith(color: AppColors.white,fontSize: 12),
             )
           )
         ),
@@ -384,7 +384,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
           child: Center(
         child:Container(
             decoration: BoxDecoration(
-              color:triggerID[index]==1?AppColors.primary:Colors.grey,
+              color:triggerID[index]!=null?AppColors.primary:Colors.grey,
               borderRadius: BorderRadius.circular(10),
             ),
             width:250,

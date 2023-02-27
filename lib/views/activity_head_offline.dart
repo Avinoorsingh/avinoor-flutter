@@ -15,15 +15,18 @@ class _ActivityHeadPageState extends State<ActivityHeadOffline> {
   Widget build(BuildContext context) {
       final signInController=Get.find<SignInController>();
       List<String> activityHead=[];
-      List<String> activityID=[];
+      List activityID=[];
       var activityHeadActivity=[];
        if(signInController.getActivityHeadList!.isNotEmpty && activityHead.isEmpty){
         var subLocationList=signInController.getActivityHeadList;
           for(var data2 in subLocationList[0]){
           activityHead.add(data2.activityHead);
           activityHeadActivity.add(subLocationList[0]);
-          activityID.add(data2.activity);
+          activityID.add(data2.activities);
           }
+          print("%%%%%%%%%%%");
+          print(activityID[0][0].activity);
+          // print(activityHeadActivity);
       }
     return Scaffold(
       body: ListView.builder(
@@ -35,12 +38,12 @@ class _ActivityHeadPageState extends State<ActivityHeadOffline> {
               Column(
                 children: [ 
                   if(activityHeadActivity[i].isNotEmpty)
-                  for(int j=0;j<activityHeadActivity[i].length;j++)...{
+                  for(int j=0;j<activityID[i].length;j++)...{
                   ListTile(
                     onTap: () {
-                    Navigator.pop(context,"${activityHead[i]}/${activityHeadActivity[i][j].activity}}${activityHeadActivity[i][j].linkingActivityId}:${activityID[i]}|");
+                    Navigator.pop(context,"${activityHead[i]}/${activityID[i][j].activity}}${activityID[i][j].linkingActivityId}:${activityID[i]}|");
                     },
-                    title: Text(activityHeadActivity[i][j].activity, style: const TextStyle(fontSize: 12.0,color: Colors.black54),),
+                    title: Text(activityID[i][j].activity, style: const TextStyle(fontSize: 12.0,color: Colors.black54),),
                   ),
               }
               ],

@@ -1,6 +1,7 @@
 
 
 import 'dart:convert';
+import 'package:colab/network/client_project.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/theme/text_styles.dart';
 import 'package:dio/dio.dart';
@@ -74,6 +75,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
   TextEditingController subSubLocationController=TextEditingController();
   List<OnGoingUpcomingData> list1=[];
   final getOnGoingSiteProgressDataController=Get.find<GetOnGoingSiteProgress>();
+  final getProgressCount=Get.find<GetProgressCount>();
   List upComingModel=[];
   int _page = 1;
  
@@ -89,7 +91,6 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
    Future<void> _getData() async {
     //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
      await getDataController.getDetail(cID: widget.cID, pID: widget.pID, locID: widget.locID, subLocID: widget.subLocID, subSubLocID: widget.subSubLocID, pageNumber: _page.toString());
-    setState(() {
      if(signInController.getOnGoingUpComingData!.data!=null){
      list1=list1+signInController.getOnGoingUpComingData!.data!;
      EasyLoading.dismiss();
@@ -97,6 +98,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
      else if(signInController.getOnGoingUpComingData!.data==null){
       EasyLoading.dismiss();
      }
+     setState(() {
     });
   }
   
@@ -128,7 +130,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
       final signInController=Get.find<SignInController>();
       for(int i=0;i<list1.length;i++){
         if(signInController.getOnGoingUpComingData!.data!=null){
-      list1=signInController.getOnGoingUpComingData!.data!;
+           list1=signInController.getOnGoingUpComingData!.data!;
         }
        activityHead.add(list1[i].activityHead!);
        activity.add(list1[i].activity!);
@@ -140,14 +142,6 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
        plannedDates.add(list1[i].createdAt.toString());
        finishDates.add(list1[i].updatedAt.toString());
        upComingModel.add(list1[i]);
-     }
-     if(list1.isNotEmpty){
-     locationController.text=list1[0].locationName!;
-     subLocationController.text=list1[0].subLocationName!;
-     subSubLocationController.text=list1[0].subSubLocationName!;
-     }
-     else{
-           EasyLoading.show(maskType: EasyLoadingMaskType.black);
      }
     EasyLoading.dismiss();
     return 
@@ -162,7 +156,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: locationName.length,
+              itemCount: list1.length,
               itemBuilder: (BuildContext context, int index){
                 return Stack(
                           clipBehavior: Clip.none,
@@ -204,7 +198,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                                                   gradient: const LinearGradient(
                                                     begin: Alignment(-0.95, 0.0),
                                                     end: Alignment(1.0, 0.0),
-                                                    colors: [Color.fromRGBO(49,140,231, 0.7),Color.fromRGBO(21, 96, 198, 2.0)],
+                                                    colors: [Color.fromRGBO(49,140,231, 0.7), Color.fromRGBO(21, 96, 198, 2.0)],
                                                     stops: [0.0, 1.0],
                                                   ),
                                                 ),
@@ -320,6 +314,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                                                 );
                                                 // ignore: use_build_context_synchronously
                                                 Navigator.pop(context1);
+                                                await getProgressCount.getProgressData(context: context);
                                                 await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
                                                 // ignore: use_build_context_synchronously
                                                 context.pushNamed('ACTIVITIES');
@@ -392,10 +387,6 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                             }else{
                                 context.pushNamed("NEWPROGRESSENTRY2",extra: list1[index]);
                             }
-                                // context.pushNamed("UPCOMINGPROGRESSENTRY",extra:upComingModel[index]);
-                                // if (kDebugMode) {
-                                //   print(upComingModel[index]);
-                                // }
                               },
                               child: 
                               Card(

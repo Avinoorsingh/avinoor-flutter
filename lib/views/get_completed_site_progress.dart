@@ -240,7 +240,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
               Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-              Text("0 ${uomName.text}",style: textStyleBodyText1),
+              Text("${comulativeQuantity.text} ${uomName.text}",style: textStyleBodyText1),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),
               Text("",style: textStyleBodyText1,),

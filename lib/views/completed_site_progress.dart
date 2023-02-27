@@ -95,13 +95,13 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                         ExpansionTile(
                         key:Key(selectedIndex.toString()),
                         initiallyExpanded: index == selectedIndex,
-                        childrenPadding:const EdgeInsets.only(left: 10,right: 10),
-                        tilePadding: const EdgeInsets.only(bottom: 20,left: 10),
+                       childrenPadding:const EdgeInsets.only(left: 10,right: 10),
+                        tilePadding: const EdgeInsets.only(bottom: 20,left: 10,right: 10),
                         collapsedBackgroundColor: AppColors.navyblue,
-                        collapsedIconColor: Colors.transparent,
-                        iconColor: Colors.transparent,
+                        collapsedIconColor: AppColors.white,
+                        iconColor: AppColors.white,
                         backgroundColor: AppColors.navyblue,
-                        trailing: null,
+                        // trailing: null,
                         maintainState: false,
                         title: Text('${locationName[index]}',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
                         onExpansionChanged:

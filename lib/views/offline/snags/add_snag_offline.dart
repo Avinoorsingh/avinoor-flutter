@@ -84,7 +84,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
    List<String> categoryNew=[];
    List<int> categoryID=[];
    List<String> locationList=[];
-   List<int> locationListID=[];
+   List<num> locationListID=[];
    var subLocationList=[];
    var activityHead=[];
    List<int> subSubLocationListID=[];
@@ -257,7 +257,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
           if(allOfflineData[0].locationOfflineData!.isNotEmpty){
           for(int j=0;j<allOfflineData[0].locationOfflineData![i].subLocationInfo!.length;j++){
             for(int k=0;k<allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo!.length;k++) {
-              activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].subSubLocationActivity!);
+              activityHead.add(allOfflineData[0].locationOfflineData![i].subLocationInfo![j].subSubLocationInfo![k].activityArray!);
             }
            }
           }
@@ -426,13 +426,14 @@ class _MyProfilePageState extends State<AddSnagOffline> {
              String value= await Navigator.of(context).push(_createRoute());
              setState(() {
                   if(value.isNotEmpty){
+                  
                   subSubLocationId.text=value.substring(value.indexOf('?')+1,value.indexOf('&'));
                   clientId.text=value.substring(value.indexOf('&')+1,value.indexOf('*'));
                   projectId.text=value.substring(value.indexOf('*')+1,value.indexOf('#'));
                   locationId.text =value.substring(value.indexOf("#")+1,value.indexOf(":"));
                   subLocationId.text=value.substring(value.indexOf(":")+1,value.indexOf("@"));
                   subV=value.substring(0,value.indexOf('?')); 
-                  subLocationController.text=value.substring(0,value.indexOf('?'));
+                  subLocationController.text=value.substring(0, value.indexOf('?'));
                   }
                 });
                 try {
@@ -493,6 +494,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   String value= await Navigator.of(context).push(_createRoute2());
                   setState((){
                     if (kDebugMode) {
+                      print("##############");
                       print(value);
                     }
                     linking_activity_id.text=value.substring(value.indexOf('}')+1,value.indexOf(':'));
@@ -512,7 +514,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                     for (var i = 0; i < allOfflineData.length; i++) {
                       if (allOfflineData[0].locationOfflineData![i].locationId == int.parse(locationId.text)) {
                         subLocationInfo = allOfflineData[0].locationOfflineData![i].subLocationInfo!;
-                        masterImage=allOfflineData[0].masterImageOfSnag!;
+                        masterImage=allOfflineData[0].masterImageOfSnag ?? [];
                         break;
                       }
                     }
@@ -528,7 +530,9 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                           subSubLocationInfo[i].subLocId == int.parse(subLocationId.text) &&
                           subSubLocationInfo[i].subLocationId == int.parse(subSubLocationId.text)){
                           viewPointNumberList = subSubLocationInfo[i].viewPointNumberlist;
+                          if(masterImage.isNotEmpty){
                           viewpointImagesUrl.add(masterImage[i].masterFile.toString());
+                          }
                           break;
                       }
                     }
@@ -546,7 +550,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                       if(viewpoints.isEmpty && viewpointsID.isEmpty){
                         for(int i=0;i<viewPointNumberList.length;i++){
                           viewpoints2.add({'index':viewPointNumberList[i].viewpoint,'image':[]});
-                          viewpoints.add(viewPointNumberList[i].viewpoint!);
+                          viewpoints.add(viewPointNumberList[i].viewpoint);
                           viewpointsID.add(viewPointNumberList[i].id.toString());
                           setState(() {});
                         }
@@ -560,6 +564,7 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                   setState(() {});
                   } catch (e) {
                       if (kDebugMode) {
+                        print("Here");
                         print(e);
                       }
                     }
@@ -1209,9 +1214,6 @@ class _MyProfilePageState extends State<AddSnagOffline> {
                       "createdBy": "The Lake Admin",
                    });
                     if (kDebugMode) {
-                      print("{{{{{{{{{{{{{}}}");
-                      print(snagData);
-                      print("{{{{{{{{{{{{{}}}");
                     }
                   try {
                     await databaseProvider.insertSnagFormData(snagData);
