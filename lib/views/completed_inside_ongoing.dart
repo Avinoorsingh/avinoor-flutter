@@ -134,14 +134,6 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
             finishDates.add(list1[i].updatedAt.toString());
             editModel.add(list1[i]);
           }
-          if(list1.isNotEmpty){
-          locationController.text=list1[0].locationName!;
-          subLocationController.text=list1[0].subLocationName!;
-          subSubLocationController.text=list1[0].subSubLocationName!;
-          }
-     else{
-           EasyLoading.show(maskType: EasyLoadingMaskType.black);
-     }
      }
     EasyLoading.dismiss();
     return 

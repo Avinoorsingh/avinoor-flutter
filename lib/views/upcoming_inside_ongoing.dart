@@ -164,7 +164,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                             InkWell(
                               onTap: (){
                                 // print(list1[index].startTrigger);
-                                  if(list1[index].startTrigger!=null){
+                                if(list1[index].startTrigger!=null){
                                 showDialog(
                                 useSafeArea: true,
                                 context: context,
@@ -415,7 +415,7 @@ class _OnProgressState extends State<UpComingInsideOnGoing> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4)
                                    ), 
-                                    child:Center(child: Text('${activity[index]} ${activityHead[index]}',
+                                    child:Center(child: Text('${activityHead[index]} ${activity[index]} ',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child:Text('${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}',style: textStyleBodyText2),),

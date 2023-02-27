@@ -559,6 +559,7 @@ setState(() => this.image = imageTemp);
                   Map<String,dynamic> cData5=jsonDecode(res.body);
                   if(res.body.isNotEmpty){
                     try {
+                    print(res.body);
                     contractorInput.text=cData5['data'][0]['contractor_name'];
                     contractorID.text=cData5['data'][0]['id'].toString();
                     } catch (e) {
@@ -809,7 +810,7 @@ setState(() => this.image = imageTemp);
                                                       Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
                                                     ],
                                                   ),
-                                                onPressed: () async{
+                                                onPressed: () async {
                                                   // Call the _pickImage function with the gallery source
                                                     final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
                                                     final File imagefile = File(image!.path);
@@ -1285,7 +1286,7 @@ setState(() => this.image = imageTemp);
                                             "sub_sub_loc_id": int.parse(subSubLocationId.text),
                                             "activity_head_id": 1,
                                             "activity_id":int.parse(signInController.getActivityHeadList!.data![0].activityId.toString()),
-                                            "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString())-1:"",
+                                            "contractor_id":contractorID.text.isNotEmpty? int.parse(contractorID.text.toString()):"",
                                             'debet_contractor_id':int.parse(debitToController.text),
                                             "remark": remarkController.text,
                                             "debit_note": "this is debit note",
@@ -1339,7 +1340,7 @@ setState(() => this.image = imageTemp);
                                 minimumSize: const Size(150,40),
                                 backgroundColor:const Color.fromARGB(255, 84, 216, 88)
                               ),
-                              child: const Text("Save",style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
+                              child: const Text("Save", style: TextStyle(color: Colors.black,fontSize: 14,fontWeight: FontWeight.normal),))
                             ],
                           )
                         )   

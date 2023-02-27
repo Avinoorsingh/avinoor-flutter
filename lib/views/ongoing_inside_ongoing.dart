@@ -45,6 +45,8 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<num?> triggerID=[];
+  List<num?> checkStatus=[];
+  List<num?> cmID=[];
   List<String?> remark=[];
   List editData=[];
   List dateDifference=[];
@@ -72,7 +74,6 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
   Future<void> _getData() async {
     //  EasyLoading.show(maskType: EasyLoadingMaskType.black);
      await getDataController.getDetail(cID: widget.cID, pID: widget.pID, locID: widget.locID, subLocID: widget.subLocID, subSubLocID: widget.subSubLocID, pageNumber: _page.toString());
-    setState(() {
      if(signInController.getOnGoingOnGoingData!.data!=null){
      list1=list1+signInController.getOnGoingOnGoingData!.data!;
      EasyLoading.dismiss();
@@ -80,6 +81,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
      else if(signInController.getOnGoingOnGoingData!.data==null){
       EasyLoading.dismiss();
      }
+        setState(() {
     });
   }
 
@@ -112,7 +114,9 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
        list1=signInController.getOnGoingOnGoingData!.data!;
        activityHead.add(list1[i].activityHead!);
        activity.add(list1[i].activity!);
-       triggerID.add(list1[i].triggerId??0);
+       triggerID.add(list1[i].triggerId);
+       checkStatus.add(list1[i].checkStatus);
+       cmID.add(list1[i].cmId??0);
        percentage.add(list1[i].progressPercentage);
        uomName.add(list1[i].uomName??"");
        editData.add(list1[i]);
@@ -201,14 +205,14 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
                             color: AppColors.navyblue,
                           ),
                         ],
-                      )
-                    ),
+                        )
+                        ),
                         const SizedBox(height: 30,),
                         ]),
                         children: [
                           InkWell(
                             onTap: (){
-                              context.pushNamed('EDITPROGRESSENTRY',extra: editData[index]);
+                              context.pushNamed('EDITPROGRESSENTRY', extra: editData[index]);
                             },
                             child:
                         Column(children: [
@@ -384,13 +388,13 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
           child: Center(
         child:Container(
             decoration: BoxDecoration(
-              color:triggerID[index]!=null?AppColors.primary:Colors.grey,
+              color:((cmID[index] != null && triggerID[index] == 1 && (checkStatus[index]==null||checkStatus[index]==0)))?AppColors.primary:Colors.grey,
               borderRadius: BorderRadius.circular(10),
             ),
             width:250,
             height: 30,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text(triggerID[index]!=null?"Checklist New":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text((cmID[index] != null && triggerID[index] == 1) ?  checkStatus[index] == null ?  "Checklist New" : checkStatus[index] == 0 ? "Checklist Open" : checkStatus[index] == 1 ? "Checklist Closed" : "Checklist NA":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
             )
           )
         ),

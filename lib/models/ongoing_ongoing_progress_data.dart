@@ -32,6 +32,7 @@ class OnGoingOnGoingData {
   String? locationName;
   String? subLocationName;
   String? subSubLocationName;
+  String? fileName;
   String? activity;
   String? activityHead;
   String? uomName;
@@ -67,6 +68,7 @@ class OnGoingOnGoingData {
       this.locationName,
       this.subLocationName,
       this.subSubLocationName,
+      this.fileName,
       this.activity,
       this.activityHead,
       this.uomName,
@@ -100,6 +102,7 @@ class OnGoingOnGoingData {
     locationName = json['location_name'];
     subLocationName = json['sub_location_name'];
     subSubLocationName = json['sub_sub_location_name'];
+    fileName=json['file_name'];
     activity = json['activity'];
     activityHead = json['activity_head'];
     uomName = json['uom_name'];

@@ -378,7 +378,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4),
                                    ), 
-                                    child:Center(child: Text('${list1[index].activityHead!} ${list1[index].activity!}',
+                                    child:Center(child: Text(' ${list1[index].activity!} ${list1[index].activityHead!}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child:Text('${list1[index].locationName!} / ${list1[index].subLocationName!} / ${list1[index].subSubLocationName!}',style: textStyleBodyText2),),

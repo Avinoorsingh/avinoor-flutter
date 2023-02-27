@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
 import 'package:colab/services/textfield.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../config.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
@@ -34,7 +37,17 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
   final statusController = TextEditingController();
   final quantityController=TextEditingController();
   final priorityController=TextEditingController();
+  final List<TextEditingController> _controllers3 = [];
+  final List<TextEditingController> _controllers4=[];
+  List<String> trade=[];
+  List<String> trade2=[];
+  List<String> labourSupplyContractorName=[];
+  List<List> contractorLabourDetails=[];
   TextEditingController dateInput=TextEditingController();
+  final pwrContractorId=TextEditingController();
+  final pwrContractorName=TextEditingController();
+  final previousContractorId=TextEditingController();
+  final previousContractorName=TextEditingController();
   final uomName=TextEditingController();
   final type=TextEditingController();
   List<bool> isCardEnabled2 = [];
@@ -44,6 +57,9 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
    ];
   TextEditingController achivedQuantity=TextEditingController();
   TextEditingController comulativeQuantity=TextEditingController(); 
+  Map<String, List<String>> labourNames = {};
+  Map<String, List<String>> labourCounts = {};
+  final debitToController=TextEditingController(); 
   var _sliderValue=0.0;
   bool? update=false;
   List<String> contractorList=["Select Contractor Name"];
@@ -62,12 +78,14 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
   void initState() {
     super.initState(); 
     EasyLoading.dismiss();
+    getContractorName();
     locationController.text=widget.editModel?.locationName??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
     subSubLocationController.text=widget.editModel?.subSubLocationName??"";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
     quantityController.text=widget.editModel?.totalQuantity.toString()??"";
+    debitToController.text=widget.editModel?.debetContactor.toString()??"";
     uomName.text=widget.editModel?.uomName??"";
     achivedQuantity.text=widget.editModel?.achivedQuantity.toDouble().toString()??"";
     comulativeQuantity.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
@@ -76,6 +94,66 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
     type.text=widget.editModel?.type.toString()??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt??DateTime.now()));
+  }
+
+   getContractorName() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var tokenValue=sharedPreferences.getString('token');
+    var res=await http.get(
+         Uri.parse('${Config.getPwrClientList}${widget.editModel.linkActivityId}/${widget.editModel?.clientId}/${widget.editModel?.projectId}'),
+         headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer $tokenValue",
+         }
+      );
+    if(res.body.isNotEmpty){
+      print("********************************");
+      print(res.body);
+      print('${Config.getPwrClientList}${widget.editModel.linkActivityId}/${widget.editModel.clientId}/${widget.editModel.projectId}');
+      print("********************************");     
+      if(jsonDecode(res.body)['success']==true){
+        pwrContractorName.text=jsonDecode(res.body)['data'][0]['contractor_name'];
+      }
+    }
+    var res2=await http.get(
+         Uri.parse('${Config.getProgressLabourLinkingData}${widget.editModel.dailyId}'),
+         headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Bearer $tokenValue",
+         }
+      );
+    if(priorityController.text=="PRW"){
+      if(jsonDecode(res2.body)['data2']!=null){
+      for(int i=0;i<jsonDecode(res2.body)['data2'].length;i++){
+        _controllers3.add(TextEditingController(text:jsonDecode(res2.body)['data2'][i]['labour_count']!=null?jsonDecode(res2.body)['data2'][i]['labour_count'].toString():"0"));
+        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled $i");
+      } 
+      }
+    }
+    if(priorityController.text=="Labour Supply"){
+      if(jsonDecode(res2.body)['mainData']!=null && jsonDecode(res2.body)['mainData'].isNotEmpty){
+          for (var contractor in jsonDecode(res2.body)['mainData']) {
+            if (!labourNames.containsKey(contractor["contractor_name"])) {
+                labourNames[contractor["contractor_name"]] = [];
+                labourCounts[contractor["contractor_name"]]=[];
+              }
+              for(int j=0;j<contractor['labourDetails'].length;j++){
+                  labourNames[contractor["contractor_name"]]!.add(contractor['labourDetails'][j]['name']);
+                  labourCounts[contractor["contractor_name"]]!.add(contractor['labourDetails'][j]['time'].toString());
+                  }
+            }
+       for(int j=0;j<jsonDecode(res2.body)['mainData'].length;j++){
+        for(int i=0;i<jsonDecode(res2.body)['mainData'][j]['labourDetails'].length;i++){
+          _controllers4.add(TextEditingController(text:jsonDecode(res2.body)['mainData'][j]['labourDetails'][i]['time'] ?? "0"));
+          trade2.add(jsonDecode(res2.body)['mainData'][j]['labourDetails'][i]['name']??"N/A");
+          } 
+         labourSupplyContractorName.add(jsonDecode(res2.body)['mainData'][j]['contractor_name']);
+        }
+      }
+    }
+    setState(() {});
   }
    
 
@@ -302,191 +380,214 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
             
           ],) 
             ),
-          const SizedBox(height: 20,),
-            if(update==true)...{
+          const SizedBox(height: 10,),
             if(priorityController.text=='Labour Supply')...{
-            CustomContainer2(
-           child: Column(children: [
-            const SizedBox(height: 20,),
-            const Text("LABOUR",style: TextStyle(color: Colors.grey,fontSize: 16),),
-           DropdownButtonFormField(
-              value: contractorList[0],
-              icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 17
-            ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey, width: 1),
-            ),
-            ),
-              isExpanded: true,
-              items: contractorList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String? newValue) async {
-                setState(() {
-                  contractorController.text=newValue!;
-                  dropdownvalue = newValue;
-                   });
-              },
-            ),
-            const Text("Over-Time",style: TextStyle(color: Colors.grey,fontSize: 16),),
-            const SizedBox(height: 20,),
-            ])
-          ),
-            }
-            },
-            if(update==true)...{
-              if(priorityController.text=="PRW")...{
-                  CustomContainer2(
+          const SizedBox(height: 10,),
+          ListView.builder(
+          padding: const EdgeInsets.only(bottom: 10),
+          physics:const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: labourSupplyContractorName.length,
+          itemBuilder: (context, outerIndex) {
+            // finalList.add(outerIndex);
+          return 
+          Column(children: [
+          CustomContainer2(
             child:
           Column(children: [
-            Row(
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text("LABOUR", style: textStyleBodyText1.copyWith(fontSize: 18),)
+            ],),
+            if((priorityController.text=='Labour Supply' || priorityController.text=="Misc." ) && labourSupplyContractorName.isNotEmpty)...{
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time', style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+                Column(children: [
+            Container(
+            margin: const EdgeInsets.only(top: 20,bottom: 10),
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            decoration :  BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                  ),
+                ],
+              ),
+            child:Center(child:Text(labourSupplyContractorName[outerIndex], style: textStyleBodyText1,)),
+              ),
+              ListView.builder(
+              physics:const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: labourNames.values.toList()[outerIndex].length,
+              itemBuilder: (context, innerIndex){
+              return 
+                Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  SizedBox(
+                    height: 65,
+                    width: 250,
+                    child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    ),
+                    width: 200,
+                    child: DropdownButton(
+                    onTap: null,
+                    isExpanded: true,
+                    underline: Container(),
+                    value: labourNames.values.toList()[outerIndex][innerIndex],
+                    items: labourNames.values.toList()[outerIndex]
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: null,
+                    )
+                      )
+                    ),
+                    Container(           
+                      width: MediaQuery.of(context).size.width/7,
+                      height: 55,
+                      decoration :  BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                      ),],
+                      ),
+                      child:Center(child:
+                      Text(labourCounts.values.toList()[outerIndex][innerIndex],
+                      style: textStyleBodyText1,)
+                      ),
+                      )
+                ]),
+                ]);})
+               ])
+          },
+          if((priorityController.text=="Labour Supply"||priorityController.text=="Misc.") && contractorController.text.isNotEmpty)...{
+          }
+          ],
+          )
+          ),
+          ],
+          );
+          }),
+          if(priorityController.text!='Labour Supply' && priorityController.text!="Misc." && trade.isNotEmpty)...{
+           Column(children: [
+          CustomContainer2(
+            child:
+          Column(children: [
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
               Text("LABOUR",style: textStyleBodyText1.copyWith(fontSize: 18),)
             ],),
-             Container(
-           margin: const EdgeInsets.only(left:20,right:20,top: 20),
-           padding: const EdgeInsets.only(bottom: 10,),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Over-Time', style: textStyleBodyText1.copyWith(color: Colors.grey),)],),
+                Column(children: [
+          CustomContainer(
             child: 
-           DropdownButtonFormField(
-              value: contractorList[0],
-             icon: const Padding( 
-              padding: EdgeInsets.only(left:20),
-              child:Icon(Icons.arrow_drop_down_outlined,size: 30)
-             ), 
-            iconEnabledColor: Colors.grey,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 17
-            ), 
-          dropdownColor: AppColors.white,
-          decoration: const InputDecoration(enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey, width: 1),
-      ),
-    ),
-              isExpanded: true,
-              items: contractorList.map((String items){
-                return
-                DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              onChanged: (String? newValue) async {
-                setState(() {
-                  contractorController.text=newValue!;
-                  dropdownvalue = newValue;
-                   });
-              },
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            Center(child: Text(pwrContractorName.text.isNotEmpty?pwrContractorName.text:"No Contractor Selected 1",style: textStyleBodyText1),),
+             const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
+            ])
           ),
             const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text("Over-Time",style: textStyleBodyText1.copyWith(fontSize: 16),)
+              Text("Over-Time", style: textStyleBodyText1.copyWith(fontSize: 16),),
             ],),
             const SizedBox(height: 20,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Skilled',style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+            SizedBox(
+            // height:100,
+            width: MediaQuery.of(context).size.width,
+            child:
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: trade.length,
+                itemBuilder: (context, index) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    SizedBox(
+                      height: 65,
+                      width: 250,
+                      child:
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
                     ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
+                    width: 200,
+                    child: DropdownButton(
+                    onTap: null,
+                    isExpanded: true,
+                    underline: Container(),
+                    value: trade[index],
+                    items: trade
+                    .map((value) => DropdownMenuItem(
+                    value: value,
+                    child: Padding(padding:const EdgeInsets.only(left: 10),child: Text(value,style: textStyleBodyText1,)),
+                    ))
+                    .toList(),
+                    onChanged: null,
+                    )
+                      )
                     ),
-                  )
-                ),
-              ],
-            ),
-                 Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                    width: 120,
-                    height: 40,
-                    child:Center(child: Text('Unskilled',style: textStyleBodyText1.copyWith(fontSize: 16,color: Colors.grey),),),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: AppColors.lightGrey, borderRadius: BorderRadius.all(Radius.circular(10.0)),),
-                  height: 40,
-                  width: 120,
-                  child: 
-                 TextField(
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Labour count',
-                      hintStyle:const TextStyle(fontSize: 14),
-                      enabledBorder:OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                    Container(           
+                      width: MediaQuery.of(context).size.width/7,
+                      height: 55,
+                      decoration :  BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(
-                          width: 1, color:Colors.grey[300]!), //<-- SEE HERE
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                      ),],
+                      ),
+                      child:Center(child:
+                      Text(_controllers3[index].text,
+                      style: textStyleBodyText1,)
+                      ),
+                      )
+                    ,]);
+                    },
                     ),
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
                     ),
-                  )
-                ),
-              ],
-            )
-          ],) 
-            ),
-              }
-            },
+                  ])
+          ]))])},
           // const SizedBox(height: 20,),
             CustomContainer2(
             child: 
@@ -511,7 +612,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-            Center(child: Text(assignedToController.text.isEmpty?"":assignedToController.text,style: textStyleBodyText1,),),
+            Center(child: Text(debitToController.text.isEmpty?"":debitToController.text,style: textStyleBodyText1,),),
               const Icon(Icons.arrow_drop_down_outlined,size: 30,color: Colors.grey,)
             ])
           ),
@@ -622,7 +723,9 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
                 ],
               ),
             ),
+            // ignore: equal_elements_in_set
             const SizedBox(height: 20,),
+            }
           ]
         ),
       )

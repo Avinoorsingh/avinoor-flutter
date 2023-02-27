@@ -491,7 +491,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               onChanged: (String? newValue) async {
                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   var token=sharedPreferences.getString('token');
-                  var projectID=sharedPreferences.getString('projectIdd');
+                  var projectID= sharedPreferences.getString('projectIdd');
                   var clientID=sharedPreferences.getString('client_id');
                   setState(() {
                   locationController.text=newValue!;
@@ -1051,7 +1051,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                 ),
               ),
               const SizedBox(height: 10,),
-              Center(child: Text("Achived",style: textStyleBodyText4,),),
+              Center(child: Text("Achived", style: textStyleBodyText4,),),
               ]),
               Column(children: [
                 Card(
@@ -1411,7 +1411,10 @@ class _AddProgressState extends State<AddProgressEntry> {
                       child:Center(child: 
                       CustomTextFieldForNumber(
                           controller: _controllers[index],
-                          onSubmitted: (value){
+                          onChanged : (value){
+                            print("##############################");
+                            print(value);
+                                print("##############################");
                             enteredValues[index]=value.toString();
                           },
                         )
@@ -1553,10 +1556,9 @@ class _AddProgressState extends State<AddProgressEntry> {
                             child: 
                             Column(
                                 children: <Widget>[
-                                  
                                   const SizedBox(width: 10),
                                   const Icon(Icons.image,size: 70,color: Colors.grey,),
-                                  Text("Gallery",style: textStyleBodyText1.copyWith(color: Colors.grey),),
+                                  Text("Gallery", style: textStyleBodyText1.copyWith(color: Colors.grey),),
                                 ],
                               ),
                              onPressed: () {
@@ -1599,9 +1601,10 @@ class _AddProgressState extends State<AddProgressEntry> {
                      },
                    );
               },
-              child: Text("Add Image",style: textStyleBodyText1.copyWith(color: AppColors.black),),
+              child: Text("Add Image", style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
+            if(priorityController.text!="Misc.")...{
             Container(
             height: 45,
             width: MediaQuery.of(context).size.width,
@@ -1612,9 +1615,10 @@ class _AddProgressState extends State<AddProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:(){},
-              child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
+              child: Text("Add 360 Images", style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
+            },
             Container(
             height: 35,
             width: MediaQuery.of(context).size.width,
@@ -1629,27 +1633,18 @@ class _AddProgressState extends State<AddProgressEntry> {
                 backgroundColor: const Color.fromARGB(255, 0, 203, 173),
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
-              child: Text("Save As Draft",style: textStyleBodyText4.copyWith(color: AppColors.black)),
-             ),
-              ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
-                backgroundColor:  AppColors.green,
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
               onPressed:() async {
-                if(linkingActivityId.text.isEmpty){
-                  EasyLoading.showToast("Linking Activity ID is required",toastPosition: EasyLoadingToastPosition.bottom);
+                 if(linkingActivityId.text.isEmpty && (priorityController.text=="Labour Supply" || priorityController.text=="PRW")){
+                  EasyLoading.showToast("Linking Activity ID is required", toastPosition: EasyLoadingToastPosition.bottom);
                 }
                 else if(remarkController.text.isEmpty){
-                  EasyLoading.showToast("Remark is required",toastPosition: EasyLoadingToastPosition.bottom);
+                  EasyLoading.showToast("Remark is required", toastPosition: EasyLoadingToastPosition.bottom);
                 }
-                else if(debitToController.text.isEmpty && priorityController.text=="Labour Supply"){
-                  EasyLoading.showToast("Debit To is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                else if(debitToController.text.isEmpty && (priorityController.text=="Labour Supply" || priorityController.text=="Misc.")){
+                  EasyLoading.showToast("Debit To is required", toastPosition: EasyLoadingToastPosition.bottom);  
                 }
-                else if(contractorLabourDetails.isEmpty && priorityController.text=="Labour Supply"){
-                  EasyLoading.showToast("Atleast one contractor is required",toastPosition: EasyLoadingToastPosition.bottom);  
+                else if(contractorLabourDetails.isEmpty && (priorityController.text=="Labour Supply"|| priorityController.text=="Misc.")){
+                  EasyLoading.showToast("Atleast one contractor is required", toastPosition: EasyLoadingToastPosition.bottom);  
                 }
                 else{
                 if(progressCreatedFlag!=true){
@@ -1713,7 +1708,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                       "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
                       "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
                       "remarks": remarkController.text,
-                      "contractor_id": "7",
+                      "contractor_id": pwrContractorId.text,
                       "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
                       "debet_contactor":int.parse(debitToController.text),
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -1766,9 +1761,247 @@ class _AddProgressState extends State<AddProgressEntry> {
                   List pWRLabourDetailsList = [];
                     for(int i=0; i<_selectedDropdownValuesID.length; i++){
                       pWRLabourDetailsList.add({
-                        "labour_count": enteredValues[i],
+                        "labour_count":int.parse((enteredValues[i].isNotEmpty?enteredValues[i]!="0"?enteredValues[i]:"1":"1")),
                         "pwr_type": _selectedDropdownValuesID[i]
                       });
+                    }
+                    List newList=[];
+                    print(pWRLabourDetailsList);
+                    if(pWRLabourDetailsList.isNotEmpty){
+                     newList = [
+                        {
+                          "contractor_id": pwrContractorId.text,
+                          "labours": [],
+                          "contractorLabourDetails":[
+                            {
+                              "contractor_labour_linking_id": "",
+                              "time": ""
+                            }
+                          ]
+                        }
+                      ];
+                    }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":int.parse(linkingActivityId.text),
+                      "achived_quantity": achivedController.text,
+                      "total_quantity":int.parse(totalQuantity.text),
+                      "remarks": remarkController.text,
+                      "contractor_id":pwrContractorId.text.isNotEmpty?int.parse(pwrContractorId.text):0,
+                      "progress_percentage": _sliderValue.toInt().toString(),
+                      "debet_contactor":"0",
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeController.text,
+                      "type": 2,
+                      "save_type": "saveasdraft",
+                      "created_by":int.parse(clientId.text),
+                      "PWRLabourDetails": pWRLabourDetailsList,
+                      "contractorLabourDetails": [],
+                      "progressDetails": newList,
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+                await getProgressCount.getProgressData(context: context);
+                await getCompletedSiteProgressDataController.getCompletedListData(context: context);
+                await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
+                await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
+                 Get.put(GetCompletedSiteProgress());
+                 Get.put(GetOnGoingSiteProgress());
+                 Get.put(GetInEqualitySiteProgress());
+                 EasyLoading.dismiss();
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              }else{
+                EasyLoading.showToast("Progress Already Created",toastPosition: EasyLoadingToastPosition.bottom);
+              }}
+              },
+              child: Text("Save As Draft",style: textStyleBodyText4.copyWith(color: AppColors.black)),
+             ),
+              ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize:Size(MediaQuery.of(context).size.width/2.5,40),
+                backgroundColor:  AppColors.green,
+              elevation: 0,
+              splashFactory: NoSplash.splashFactory),
+              onPressed:() async {
+                if(linkingActivityId.text.isEmpty && (priorityController.text=="Labour Supply" || priorityController.text=="PRW")){
+                  EasyLoading.showToast("Linking Activity ID is required", toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(remarkController.text.isEmpty){
+                  EasyLoading.showToast("Remark is required", toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(debitToController.text.isEmpty && (priorityController.text=="Labour Supply" || priorityController.text=="Misc.")){
+                  EasyLoading.showToast("Debit To is required", toastPosition: EasyLoadingToastPosition.bottom);  
+                }
+                else if(contractorLabourDetails.isEmpty && (priorityController.text=="Labour Supply"|| priorityController.text=="Misc.")){
+                  EasyLoading.showToast("Atleast one contractor is required", toastPosition: EasyLoadingToastPosition.bottom);  
+                }
+                else{
+                if(progressCreatedFlag!=true){
+                EasyLoading.show(maskType: EasyLoadingMaskType.black);
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                FormData formData=FormData(); 
+                var dio = Dio();
+                if(priorityController.text=="Labour Supply"||priorityController.text=="Misc."){
+                List progressDetails = [];
+                for (var subList in contractorLabourDetails) {
+                  for (var map in subList) {
+                    // ignore: non_constant_identifier_names
+                    var contractor_id = map.values.first[0];
+                    var contractorLabourDetails1 = {
+                      "contractor_labour_linking_id": map.keys.first.toString(),
+                      "time": map.values.first[1].toString()
+                    };
+                    bool contractorExist = false;
+                    for (var progress in progressDetails) {
+                      if (progress['contractor_id'] == contractor_id) {
+                        contractorExist = true;
+                        progress['contractorLabourDetails'].add(contractorLabourDetails1);
+                        break;
+                      }
+                    }
+                    if (!contractorExist) {
+                      progressDetails.add({
+                        "contractor_id": contractor_id.toString(),
+                        "contractorLabourDetails": [contractorLabourDetails1]
+                      });
+                    }
+                  }
+                }
+                List<Map<String, dynamic>> newList = [];
+                for (Map<String, dynamic> map in progressDetails) {
+                  bool contractorExists = false;
+                  for (Map<String, dynamic> newMap in newList) {
+                    if (newMap["contractor_id"] == map["contractor_id"]) {
+                      newMap["contractorLabourDetails"].addAll(map["contractorLabourDetails"]);
+                      contractorExists = true;
+                      break;
+                    }
+                  }
+                  if (!contractorExists){
+                    newList.add({ "contractor_id": map["contractor_id"], "contractorLabourDetails": map["contractorLabourDetails"] });
+                  }
+                }
+                try {
+                formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
+                } catch (e) {
+                  formData.fields.add(const MapEntry('progress_image', ''));
+                }
+                formData.fields.add(MapEntry('progress_data', jsonEncode(
+                    {
+                      "client_id": int.parse(clientID!),
+                      "project_id": int.parse(projectID!),
+                      "link_activity_id":linkingActivityId.text.isNotEmpty?int.parse(linkingActivityId.text):"",
+                      "achived_quantity": achivedController.text.isNotEmpty? achivedController.text:"",
+                      "total_quantity":totalQuantity.text.isNotEmpty?int.parse(totalQuantity.text):"",
+                      "remarks": remarkController.text,
+                      "contractor_id": pwrContractorId.text,
+                      "progress_percentage":_sliderValue!=0.0?_sliderValue.toInt().toString():"",
+                      "debet_contactor":int.parse(debitToController.text),
+                      "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                      "cumulative_quantity": comulativeController.text,
+                      "type":priorityController.text=="Misc."?1:0,
+                      "save_type": "save",
+                      "created_by":int.parse(clientID),
+                      "PWRLabourDetails": [
+                          {
+                              "labour_count": 1,
+                              "pwr_type": 0
+                          }
+                      ],
+                      "contractorLabourDetails": [],
+                      "progressDetails": newList,
+                    }
+                   )
+                   )
+                   );
+                  try {
+                  var res= await dio.post(
+                  Config.saveLabourSupplyProgressApi,
+                  data: formData,
+                  options: Options(
+                    followRedirects: false,
+                    validateStatus: (status) {
+                      return status! < 500;
+                    },
+                    headers: {
+                      "authorization": "Bearer ${token!}",
+                      "Content-type": "application/json",
+                    },
+                  ),
+                    );
+                    if(res.statusCode==200){
+                    EasyLoading.showToast(priorityController.text=="Misc."?"Misc. Progress Saved":"Labour Supply Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                    else{
+                       EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                    }
+                }catch(e){
+                  EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                }
+                if(priorityController.text=="PRW"){
+                SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                var token=sharedPreferences.getString('token');
+                var projectID=sharedPreferences.getString('projectIdd');
+                var clientID=sharedPreferences.getString('client_id');
+                  List pWRLabourDetailsList = [];
+                    for(int i=0; i<_selectedDropdownValuesID.length; i++){
+                      pWRLabourDetailsList.add({
+                        "labour_count":int.parse(enteredValues[i].isNotEmpty?enteredValues[i]!="0"?enteredValues[i]:"1":"1"),
+                        "pwr_type": _selectedDropdownValuesID[i]
+                      });
+                    }
+                    List newList=[];
+                    if(pWRLabourDetailsList.isNotEmpty){
+                     newList = [
+                        {
+                          "contractor_id": pwrContractorId.text,
+                          "labours": [],
+                          "contractorLabourDetails":[
+                            {
+                              "contractor_labour_linking_id": "",
+                              "time": ""
+                            }
+                          ]
+                        }
+                      ];
                     }
                 try {
                 formData.files.add(MapEntry("progress_image", await MultipartFile.fromFile(_selectedImage!.path, filename: "issueFile_image")));
@@ -1793,7 +2026,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                       "created_by":int.parse(clientId.text),
                       "PWRLabourDetails": pWRLabourDetailsList,
                       "contractorLabourDetails": [],
-                      "progressDetails": [],
+                      "progressDetails": newList,
                     }
                    )
                    )
@@ -1813,8 +2046,11 @@ class _AddProgressState extends State<AddProgressEntry> {
                     },
                   ),
                     );
+                    print("###############################");
+                    print(formData.fields);
+                      print("###############################");
                     if(res.statusCode==200){
-                    EasyLoading.showToast("PRW Progress saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    EasyLoading.showToast("PRW Progress saved", toastPosition: EasyLoadingToastPosition.bottom);
                     }
                     else{
                        EasyLoading.showToast("Something went wrong",toastPosition: EasyLoadingToastPosition.bottom);
@@ -1824,7 +2060,6 @@ class _AddProgressState extends State<AddProgressEntry> {
                 }
                 }
                 await getProgressCount.getProgressData(context: context);
-                print("hereeeee");
                 await getCompletedSiteProgressDataController.getCompletedListData(context: context);
                 await getOnGoingSiteProgressDataController.getOnGoingListData(context: context);
                 await getInQualitySiteProgressDataController.getInEqualityListData(context: context);
@@ -1837,7 +2072,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               }else{
                 EasyLoading.showToast("Progress Already Created",toastPosition: EasyLoadingToastPosition.bottom);
               }}},
-              child: Text("Save",style: textStyleBodyText4.copyWith(color: AppColors.black),),
+              child: Text("Save", style: textStyleBodyText4.copyWith(color: AppColors.black),),
              )
              ]
              )
