@@ -68,6 +68,9 @@ class GetOnUpComingData extends GetxController{
           );
           var cData4=jsonDecode(res.body);
           OnGoingUpcomingProgress result=OnGoingUpcomingProgress.fromJson(cData4);
+          print("####################################");
+          print(cData4);
+          print("####################################");
           signInController.getOnGoingUpComingData=result;
           update();
             } catch (e) {

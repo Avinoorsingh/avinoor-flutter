@@ -347,16 +347,16 @@ class _AddLabourDataState extends State<AddLabourData> {
                               "out_time": null,
                               "working_hours": int.parse(hours[i]!).toString(),
                               "ot":int.parse(otRate[i]!).toString(),
-                          });    
-                      } 
-                    print(finalList);
+                        }
+                      );    
+                    }
                     var res=await http.post(
                     Uri.parse(Config.saveLabourDataApi),
                      headers: {
                               "Accept": "application/json",
                               "Authorization": "Bearer $token",
                             },
-                      body:jsonEncode(finalList)
+                     body:jsonEncode(finalList)
                       );
                     if (kDebugMode) {
                       print(res.body);
@@ -365,7 +365,7 @@ class _AddLabourDataState extends State<AddLabourData> {
                       print("hello");
                     }
                     if(res.statusCode==200){
-                    EasyLoading.showToast("Saved",toastPosition: EasyLoadingToastPosition.bottom);
+                    EasyLoading.showToast("Saved", toastPosition: EasyLoadingToastPosition.bottom);
                     } 
                     await getLabourDataContractorListController.getContractorListData(context: context);
                     await getLabourDataOfSelectedContractorController.getSelectedContractorData(context: context);

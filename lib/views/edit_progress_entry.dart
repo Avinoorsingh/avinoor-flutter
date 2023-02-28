@@ -11,6 +11,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:colab/services/container.dart';
 import 'package:colab/services/container2.dart';
@@ -128,7 +129,9 @@ class _ProgressState extends State<EditProgressEntry> {
   List<int> debitToID=[];
   Map<String, List<String>> labourNames = {};
   Map<String, List<String>> labourCounts = {};
-
+  final locationId=TextEditingController();
+  final subSubLocationId = TextEditingController();
+  final subLocationId = TextEditingController();
   double calculatepercentage(double amount, double taxPercent) {
     if (amount == 0 || taxPercent == 0) {
       return 0;
@@ -167,11 +170,14 @@ class _ProgressState extends State<EditProgressEntry> {
   void initState() {
     super.initState(); 
     EasyLoading.dismiss();
-    locationController.text=widget.editModel?.locationName??"";
     getContractorName();
+    locationController.text=widget.editModel?.locationName??"";
     oldCommulative.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     subLocationController.text=widget.editModel?.subLocationName??"";
     subSubLocationController.text=widget.editModel?.subSubLocationName ?? "";
+    locationId.text=widget.editModel?.locationID.toString()??"";
+    subLocationId.text=widget.editModel?.subLocationID.toString()??"";
+    subSubLocationId.text=widget.editModel?.subSubLocationID.toString()??"";
     activityController.text=widget.editModel?.activity??"";
     activityHeadController.text=widget.editModel?.activityHead??"";
     try {
@@ -196,7 +202,7 @@ class _ProgressState extends State<EditProgressEntry> {
     type.text=widget.editModel?.type.toString()??"";
     networkImage.text=widget.editModel.fileName??"";
     type.text=="0"?priorityController.text="Labour Supply":priorityController.text="PRW";
-    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.createdAt ?? DateTime.now().toString()));
+    dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.editModel?.progressDate ?? DateTime.now().toString()));
   }
 
   getContractorName() async {
@@ -227,14 +233,11 @@ class _ProgressState extends State<EditProgressEntry> {
           "Authorization": "Bearer $tokenValue",
          }
       );
-    print("((((((((((((((((((((((((((((((())))))))");
-    print(res2.body);
-    print("((((((((((((((((((((((((((((((())))))))");
     if(priorityController.text=="PRW"){
       if(jsonDecode(res2.body)['data2']!=null){
       for(int i=0;i<jsonDecode(res2.body)['data2'].length;i++){
         _controllers3.add(TextEditingController(text:jsonDecode(res2.body)['data2'][i]['labour_count']!=null?jsonDecode(res2.body)['data2'][i]['labour_count'].toString():"0"));
-        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled $i");
+        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled");
       } 
       }
     }
@@ -359,7 +362,7 @@ class _ProgressState extends State<EditProgressEntry> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if((widget.editModel.cmId != null && widget.editModel.triggerId == 1 && widget.editModel.checkStatus == 1)||(widget.editModel.cmId == null))...{
+            if((widget.editModel.cmId != null && widget.editModel.triggerId == 1 && widget.editModel.checkStatus == 1)||(widget.editModel.cmId == null && widget.editModel.draftStatus == 0))...{
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -384,7 +387,7 @@ class _ProgressState extends State<EditProgressEntry> {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                  try {
-                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${clientID.text}/${projectID.text}/${activityID.text}');
+                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${activityID.text}/${clientID.text}/${projectID.text}');
                     var res=await http.get(
                      getContractorForPwRApiUrl,
                      headers: {
@@ -550,13 +553,11 @@ class _ProgressState extends State<EditProgressEntry> {
               inactiveColor: AppColors.lightGrey,
                 value: _sliderValue,
                 onChanged: (newValue)async {
-                   if(update==true){
+                   if(update==true || widget.editModel.draftStatus==1){
                       double calculatepercentage(double amount, double sliderValue1) {
                       if (amount == 0 || sliderValue1 == 0) {
                         return 0;
                       } else {
-                        print(sliderValue1);
-                        print(amount);
                         return (sliderValue1 * amount) / 100;
                       }
                     }
@@ -1267,7 +1268,7 @@ class _ProgressState extends State<EditProgressEntry> {
                 Text("Remark",style: textStyleBodyText1,),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextField3(enabled:update==true? true:false,controller: remarkController,hintText: "Enter here",)
+               CustomTextField3(enabled:(update==true || widget.editModel.draftStatus==1)? true:false,controller: remarkController,hintText: "Enter here",)
           ])
             ),
             const SizedBox(height: 10,),
@@ -1367,7 +1368,7 @@ class _ProgressState extends State<EditProgressEntry> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed:(){
-                if(update==true){
+                if(update==true || widget.editModel.draftStatus==1){
                     showDialog(
                    context: context,
                    builder: (BuildContext context) {
@@ -1436,11 +1437,33 @@ class _ProgressState extends State<EditProgressEntry> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:(){
+              if(update==true){
+                if(locationId.text.isEmpty){
+                  EasyLoading.showToast('Location ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subSubLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubSubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
+                    context.pushNamed('ADD360IMAGE', queryParams: {
+                    "locId": locationId.text,
+                    "subLocId":subLocationId.text,
+                    "subSubLocId":subSubLocationId.text,
+                    "locName":locationController.text,
+                    "subLocName":subLocationController.text,
+                    "subSubLocName":subSubLocationController.text
+              },);
+                }
+                }
+              },
               child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
-             if(update==true)
+             if(update==true || widget.editModel.draftStatus==1)
             Container(
             height: 35,
             width: MediaQuery.of(context).size.width,

@@ -32,6 +32,11 @@ class OnGoingUpcomingData {
   String? locationName;
   String? contractorName;
   String? subLocationName;
+  num? locationID;
+  num? subLocationID;
+  num? subSubLocationID;
+  num? clientId;
+  num? projectId;
   String? uomName;
   String? subSubLocationName;
   String? activityHead;
@@ -61,6 +66,11 @@ class OnGoingUpcomingData {
       this.locationName,
       this.contractorName,
       this.subLocationName,
+      this.locationID,
+      this.subLocationID,
+      this.subSubLocationID,
+      this.clientId,
+      this.projectId,
       this.uomName,
       this.subSubLocationName,
       this.activityHead,
@@ -90,6 +100,11 @@ class OnGoingUpcomingData {
     locationName = json['location_name'];
     contractorName = json['contractor_name'];
     subLocationName = json['sub_location_name'];
+    locationID = json['location_id'];
+    subLocationID = json['sub_loc_id'];
+    subSubLocationID = json['sub_location_id'];
+    clientId=json['client_id'];
+    projectId=json['project_id'];
     uomName=json['uom_name'];
     subSubLocationName = json['sub_sub_location_name'];
     activityHead = json['activity_head'];

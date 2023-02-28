@@ -33,6 +33,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
   List<String?> activityHead=[];
   List<String?> activity=[];
   List<String?> uomName=[];
+  List<num?> draftStatus=[];
   List<String?> subactivityHead=[];
   List<int?> subLocationCount=[];
   List<int?> subLocationID=[];
@@ -119,6 +120,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
        cmID.add(list1[i].cmId??0);
        percentage.add(list1[i].progressPercentage);
        uomName.add(list1[i].uomName??"");
+       draftStatus.add(list1[i].draftStatus);
        editData.add(list1[i]);
      }
     }
@@ -192,7 +194,7 @@ class _OnProgressState extends State<OnGoingInsideOnGoing> {
                           Container(
                             width: 90,
                             height: 5,
-                            color: Colors.grey,
+                            color:draftStatus[index]==1?Colors.green:Colors.grey,
                           ),
                           Container(
                             width: 90,

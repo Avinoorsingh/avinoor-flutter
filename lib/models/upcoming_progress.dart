@@ -33,6 +33,8 @@ class UpcomingProgressData {
   String? contractorName;
   String? subLocationName;
   String? subSubLocationName;
+  num? clientId;
+  num? projectId;
   String? activityHead;
   int? startTrigger;
   int? linkingActivityId;
@@ -43,9 +45,9 @@ class UpcomingProgressData {
   int? uomId;
   String? description;
   String? corel;
-  int? locationId;
-  int? subLocId;
-  int? subSubLocId;
+  int? locationID;
+  int? subLocationID;
+  int? subSubLocationID;
   int? status;
   int? import;
   int? createdBy;
@@ -63,6 +65,8 @@ class UpcomingProgressData {
       this.contractorName,
       this.subLocationName,
       this.subSubLocationName,
+      this.clientId,
+      this.projectId,
       this.activityHead,
       this.startTrigger,
       this.linkingActivityId,
@@ -73,9 +77,9 @@ class UpcomingProgressData {
       this.uomId,
       this.description,
       this.corel,
-      this.locationId,
-      this.subLocId,
-      this.subSubLocId,
+      this.locationID,
+      this.subLocationID,
+      this.subSubLocationID,
       this.status,
       this.import,
       this.createdBy,
@@ -102,9 +106,11 @@ class UpcomingProgressData {
     uomId = json['uom_id'];
     description = json['description'];
     corel = json['corel'];
-    locationId = json['location_id'];
-    subLocId = json['sub_loc_id'];
-    subSubLocId = json['sub_sub_loc_id'];
+    locationID = json['location_id'];
+    subLocationID = json['sub_loc_id'];
+    subSubLocationID = json['sub_location_id'];
+    clientId=json['client_id'];
+    projectId=json['project_id'];
     status = json['status'];
     import = json['import'];
     createdBy = json['created_by'];
@@ -132,9 +138,9 @@ class UpcomingProgressData {
     data['uom_id'] = uomId;
     data['description'] = description;
     data['corel'] = corel;
-    data['location_id'] = locationId;
-    data['sub_loc_id'] = subLocId;
-    data['sub_sub_loc_id'] = subSubLocId;
+    // data['location_id'] = locationId;
+    // data['sub_loc_id'] = subLocId;
+    // data['sub_sub_loc_id'] = subSubLocId;
     data['status'] = status;
     data['import'] = import;
     data['created_by'] = createdBy;

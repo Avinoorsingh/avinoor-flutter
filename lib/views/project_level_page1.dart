@@ -168,7 +168,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                 borderRadius: BorderRadius.circular(16.0),
               ),
             child: Container(
-            height: 290,
+            height: 210,
             width: 350,
             decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50)),
@@ -188,7 +188,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         if(i!=3)...{
                         Center(child: 
                         Container(
-                          padding: const EdgeInsets.only(left: 5,right: 5,top: 8,bottom: 8),
+                          padding: const EdgeInsets.only(left: 5,right: 5,top: 8,bottom:8),
                            decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
@@ -266,7 +266,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   child: CircleAvatar(
                                     backgroundColor:AppColors.primary,
                                     radius: 12.0,
-                                    child: Text(signInController.getProjectData!.areaOfConernTotal!=null?signInController.getProjectData!.areaOfConernTotal.toString():"0", style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                                    child: Text(signInController.getProjectData!.areaOfConernTotal!=null?signInController.getProjectData!.areaOfConernTotal.toString():"0", style:const TextStyle(color: Colors.black,fontWeight: FontWeight.normal),),
                                   ),
                                 ),
                               ),
@@ -291,7 +291,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                       borderRadius: BorderRadius.circular(100),
                                     ),
                                     child:
-                                    Center(child:Text((signInController.getProgressCount!=null?signInController.getProgressCount!.progressCount![0].progressCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),),
+                                    Center(child:Text((signInController.getProgressCount!=null?signInController.getProgressCount!.progressCount![0].progressCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.normal),),),
                                   ),
                                 ),
                               ),
@@ -309,7 +309,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                   child: CircleAvatar(
                                     backgroundColor:AppColors.primary,
                                     radius: 12.0,
-                                    child: Text("0", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                                    child: Text("0", style: TextStyle(color: Colors.black,fontWeight: FontWeight.normal),),
                                    ),
                                 ),
                               ),
@@ -323,7 +323,8 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         GetBuilder<GetSnagsCount>(
                         builder: (_){
                         return
-                        FittedBox(child:
+                        FittedBox(
+                          child:
                         Row(
                           children:[ 
                             GestureDetector(
@@ -340,9 +341,10 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                             borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
                         child:
-                          Stack(children: [
+                          Stack(
+                            children: [
                         Card(
-                          margin: const EdgeInsets.only(left:8,right: 8,bottom:20),
+                          margin: const EdgeInsets.only(left:8,right: 8,bottom:40,top: 25),
                           shadowColor: Colors.transparent,
                           color: AppColors.white,
                           elevation: 10,
@@ -368,21 +370,24 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     ),
                   ),
                 Positioned(
-                  top: 30,
+                  top: 55,
                   left: 10,
                   right: 10,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                       context.pushNamed('SNAGS');
+                    },
                     child:  Center(
                     child:Center(
                           child: Container(
+                            // margin:const EdgeInsets.only(bottom: 10),
                             height: 35,
                             width:35,
                             decoration: BoxDecoration(
                               color:AppColors.primary,
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),),
+                            child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.snagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black,fontWeight: FontWeight.normal),),),
                           ),
                         ),
                           )
@@ -407,7 +412,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                         child:
                          Stack(children: [
                         Card(
-                         margin: const EdgeInsets.only(left:8,right: 8,bottom:20),
+                         margin: const EdgeInsets.only(left:8,right: 8,bottom:40,top: 25),
                           shadowColor: Colors.transparent,
                           color: AppColors.white,
                           elevation: 10,
@@ -434,20 +439,22 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                     ),
                   ),
                   Positioned(
-                        top: 30,
+                        top: 55,
                         left: 10,
                         right: 10,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                             context.pushNamed('DESNAGS');
+                          },
                              child:  Center(
                               child: Container(
-                                height: 30,
-                                width:30,
+                                height: 35,
+                                width:35,
                                 decoration: BoxDecoration(
                                   color:AppColors.primary,
                                   borderRadius: BorderRadius.circular(100),
                                 ),
-                                child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),),
+                                child:Center(child:Text((signInController.getSnagCount!=null?signInController.getSnagCount!.deSnagCount ?? "0":"0").toString(), style:const TextStyle(color: Colors.black, fontWeight: FontWeight.normal),),),
                               ),
                             ),
                               )
@@ -492,7 +499,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           child: 
                         Column(children: [
                           const SizedBox(height: 10,),
-                          Center(child: Text("WORK SUMMERY",style: textStyleBodyText1.copyWith(fontWeight: FontWeight.bold),),),
+                          Center(child: Text("WORK SUMMERY",style: textStyleBodyText1.copyWith(fontWeight: FontWeight.normal),),),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -529,7 +536,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                                 dataLabelSettings: const DataLabelSettings(
                                     // Renders the data label
                                     textStyle: TextStyle(fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.normal,
                                     color: AppColors.white),
                                     isVisible: true
                                 )
@@ -557,7 +564,7 @@ class _ProjectLevelPage1State extends State<ProjectLevelPage1> {
                           child: 
                         Column(children: [
                           const SizedBox(height: 10,),
-                          Center(child: Text("WORK TREND",style: textStyleBodyText1.copyWith(fontWeight: FontWeight.bold),),),
+                          Center(child: Text("WORK TREND",style: textStyleBodyText1.copyWith(fontWeight: FontWeight.normal),),),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

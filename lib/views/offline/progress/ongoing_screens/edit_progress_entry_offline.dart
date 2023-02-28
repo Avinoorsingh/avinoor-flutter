@@ -334,7 +334,7 @@ class _ProgressState extends State<EditProgressEntryOffline> {
                 SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                 var token=sharedPreferences.getString('token');
                  try {
-                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${clientID.text}/${projectID.text}/${activityID.text}');
+                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${activityID.text}/${clientID.text}/${projectID.text}');
                     var res=await http.get(
                      getContractorForPwRApiUrl,
                      headers: {

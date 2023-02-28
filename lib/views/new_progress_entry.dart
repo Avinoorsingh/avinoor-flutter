@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 
 // ignore: must_be_immutable
@@ -32,6 +31,9 @@ class _SnagState extends State<NewProgressEntry> {
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
+  final locationId=TextEditingController();
+  final subSubLocationId = TextEditingController();
+  final subLocationId = TextEditingController();
   final remarkController = TextEditingController();
   final deSnagRemarkController=TextEditingController();
   final closingRemarkController=TextEditingController();
@@ -132,6 +134,12 @@ class _SnagState extends State<NewProgressEntry> {
     locationController.text=widget.snagModel?.location.locationName??"";
     subLocationController.text=widget.snagModel?.subLocation.subLocationName??"";
     subSubLocationController.text=widget.snagModel?.subSubLocation.subSubLocationName??"";
+    locationId.text=widget.snagModel?.locationID.toString()??"";
+    subLocationId.text=widget.snagModel?.subLocationID.toString()??"";
+    subSubLocationId.text=widget.snagModel?.subSubLocationID.toString()??"";
+    print(locationId.text);
+    print(subLocationId.text);
+    print(subSubLocationId.text);
     if(widget.snagModel?.contractorInfo!=null){
     contractorInput.text=widget.snagModel?.contractorInfo?.ownerName??"";
     }
@@ -708,7 +716,27 @@ class _SnagState extends State<NewProgressEntry> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:(){
+                 if(locationId.text.isEmpty){
+                  EasyLoading.showToast('Location ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subSubLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubSubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
+                    context.pushNamed('ADD360IMAGE', queryParams: {
+                    "locId": locationId.text,
+                    "subLocId":subLocationId.text,
+                    "subSubLocId":subSubLocationId.text,
+                    "locName":locationController.text,
+                    "subLocName":subLocationController.text,
+                    "subSubLocName":subSubLocationController.text
+              },);
+                }
+              },
               child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),

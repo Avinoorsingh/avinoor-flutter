@@ -630,7 +630,7 @@ class _AddProgressState extends State<AddProgressEntry> {
               SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
               var token=sharedPreferences.getString('token');
                  try {
-                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${signInController.getProjectData?.clientid.toString()}/${projectId.text}/${linkingActivityId.text}');
+                    var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${linkingActivityId.text}/${signInController.getProjectData?.clientid.toString()}/${projectId.text}');
                     var res=await http.get(
                      getContractorForPwRApiUrl,
                      headers: {
@@ -1614,7 +1614,27 @@ class _AddProgressState extends State<AddProgressEntry> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:(){
+                if(locationId.text.isEmpty){
+                  EasyLoading.showToast('Please select Location',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast('Please select SubLocation',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subSubLocationId.text.isEmpty){
+                  EasyLoading.showToast('Please select SubSubLocation',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
+                    context.pushNamed('ADD360IMAGE', queryParams: {
+                    "locId": locationId.text,
+                    "subLocId":subLocationId.text,
+                    "subSubLocId":subSubLocationId.text,
+                    "locName":locationController.text,
+                    "subLocName":subLocationController.text,
+                    "subSubLocName":subSubLocationController.text
+              },);
+                }
+              },
               child: Text("Add 360 Images", style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
@@ -1714,7 +1734,7 @@ class _AddProgressState extends State<AddProgressEntry> {
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
                       "cumulative_quantity": comulativeController.text,
                       "type":priorityController.text=="Misc."?1:0,
-                      "save_type": "save",
+                      "save_type": "saveasdraft",
                       "created_by":int.parse(clientID),
                       "PWRLabourDetails": [
                           {

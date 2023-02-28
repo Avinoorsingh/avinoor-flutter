@@ -55,6 +55,9 @@ class _SnagState extends State<NewProgressEntry2> {
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
+  final locationId=TextEditingController();
+  final subSubLocationId = TextEditingController();
+  final subLocationId = TextEditingController();
   final remarkController = TextEditingController();
   final deSnagRemarkController=TextEditingController();
   final closingRemarkController=TextEditingController();
@@ -225,6 +228,9 @@ class _SnagState extends State<NewProgressEntry2> {
     subLocationController.text=widget.snagModel?.subLocationName??"";
     subSubLocationController.text=widget.snagModel?.subSubLocationName ?? "";
     activityController.text=widget.snagModel?.activity??"";
+    locationId.text=widget.snagModel?.locationID.toString()??"";
+    subLocationId.text=widget.snagModel?.subLocationID.toString()??"";
+    subSubLocationId.text=widget.snagModel?.subSubLocationID.toString()??"";
     activityHeadController.text=widget.snagModel?.activityHead.toString()??"";
     linkingActivityId.text=widget.snagModel?.linkingActivityId.toString()??"0";
     activityID.text=widget.snagModel?.activityId.toString()??"0";
@@ -245,6 +251,8 @@ class _SnagState extends State<NewProgressEntry2> {
     comulativeQuantity.text="";
     _sliderValue=double.parse("0.0");
     remarkController.text=widget.snagModel?.description??"";
+    clientID.text=widget.snagModel?.clientId.toString()??"";
+    projectID.text=widget.snagModel?.projectId.toString()??"";
     progressID.text=widget.snagModel?.progressId.toString()??"";
     dateInput.text= DateFormat('dd/MM/yyyy').format(DateTime.now());
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
@@ -269,7 +277,7 @@ class _SnagState extends State<NewProgressEntry2> {
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       var token=sharedPreferences.getString('token');
         try {
-          var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${clientID.text}/${projectID.text}/${activityID.text}');
+          var getContractorForPwRApiUrl=Uri.parse('${Config.getProgressPwrClientApi}${activityID.text}/${clientID.text}/${projectID.text}');
           var res=await http.get(
             getContractorForPwRApiUrl,
             headers: {
@@ -279,6 +287,7 @@ class _SnagState extends State<NewProgressEntry2> {
                 );
             if (kDebugMode) {
               print(getContractorForPwRApiUrl);
+              print(res.body);
             }
                   if(res.statusCode==200){
                   try{
@@ -1131,7 +1140,27 @@ class _SnagState extends State<NewProgressEntry2> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey,
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
-              onPressed:(){},
+              onPressed:(){
+                 if(locationId.text.isEmpty){
+                  EasyLoading.showToast('Location ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else if(subSubLocationId.text.isEmpty){
+                  EasyLoading.showToast('SubSubLocation ID required',toastPosition: EasyLoadingToastPosition.bottom);
+                }
+                else{
+                    context.pushNamed('ADD360IMAGE', queryParams: {
+                    "locId": locationId.text,
+                    "subLocId":subLocationId.text,
+                    "subSubLocId":subSubLocationId.text,
+                    "locName":locationController.text,
+                    "subLocName":subLocationController.text,
+                    "subSubLocName":subSubLocationController.text
+              },);
+                }
+              },
               child: Text("Add 360 Images",style: textStyleBodyText1.copyWith(color: AppColors.black),),
              )
              ),
@@ -1229,7 +1258,7 @@ class _SnagState extends State<NewProgressEntry2> {
                       "progress_date": DateFormat('yyyy-MM-dd').format(DateTime.now()),
                       "cumulative_quantity": comulativeController.text,
                       "type":priorityController.text=="Misc."?1:0,
-                      "save_type": "save",
+                      "save_type": "saveasdraft",
                       "created_by":int.parse(clientID),
                       "PWRLabourDetails": [
                           {

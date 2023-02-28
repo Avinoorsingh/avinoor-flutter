@@ -26,12 +26,18 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
   List<int?> locationID=[];
   TextEditingController locationIDController=TextEditingController();
   List<String?> subLocationName=[];
+  List<int?> subLocationCount=[];
   List<int?> subLocationID=[];
+  List<int?> subLocationDraft=[];
   List<String?> subSubLocationName=[];
+  List<int?> subSubLocationCount=[];
+  List<int?> subSubLocationDraft=[];
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<String?> remark=[];
   List completedData=[];
+  List<int?> locationCount=[];
+  List<int?> locationDraft=[];
   List dateDifference=[];
   int? selectedIndex=-1;
   int? selectedIndex1=-1;
@@ -61,6 +67,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
        locationName.add(signInController.getCompletedProgressData!.data![i].locationName!);
        locationID.add(signInController.getCompletedProgressData!.data![i].locationId!);
        completedData.add(signInController.getCompletedProgressData!.data![i]);
+       locationCount.add(signInController.getCompletedProgressData!.data![i].count??0);
+       locationDraft.add(signInController.getCompletedProgressData!.data![i].draftCount??0);
       }
      }
     }
@@ -103,7 +111,12 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                         backgroundColor: AppColors.navyblue,
                         // trailing: null,
                         maintainState: false,
-                        title: Text('${locationName[index]}',style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                        Text(locationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 18),),
+                        locationCount[index]!=0?Text("${locationCount[index]} Activities ( ${locationDraft[index]} drafts )  ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
+                        ]),
                         onExpansionChanged:
                          (bool t)async{
                           if(t==true){
@@ -131,9 +144,13 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                     if(cData4!=null){
                                       subLocationName.clear();
                                       subLocationID.clear();
+                                      subLocationCount.clear();
+                                      subLocationDraft.clear();
                                       for(int i=0;i<cData4['data'].length;i++){
                                       subLocationName.add(cData4['data'][i]['sub_location_name']);
                                       subLocationID.add(cData4['data'][i]['sub_loc_id']);
+                                      subLocationCount.add(cData4['data'][i]['draft_count']);
+                                      subLocationDraft.add(cData4['data'][i]['count']);
                                     }
                                     }
                                     setState(() {});
@@ -178,6 +195,8 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                              if(t==true){
                              setState(() {selectedIndex1 = index;});
                              subSubLocationName.clear();
+                             subSubLocationCount.clear();
+                             subSubLocationDraft.clear();
                              subSubLocationID.clear();
                              subLocationIDController.text=subLocationID[index].toString();
                              subLocationNameController.text=subLocationName[index].toString();
@@ -196,10 +215,14 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                     );
                                     var cData4=jsonDecode(res.body);
                                     subSubLocationName.clear();
+                                    subSubLocationCount.clear();
+                                    subSubLocationDraft.clear();
                                     subSubLocationID.clear();
                                     if(cData4!=null){
                                       for(int i=0;i<cData4['data'].length;i++){
                                       subSubLocationName.add(cData4['data'][i]['sub_sub_location_name']);
+                                      subSubLocationCount.add(cData4['data'][i]['count']);
+                                      subSubLocationDraft.add(cData4['data'][i]['draft_count']);
                                       subSubLocationID.add(cData4['data'][i]['sub_location_id'].toString());
                                     }
                                     }
@@ -220,7 +243,13 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                      selectedIndex1=-1;
                                   });
                                  }},
-                              title: Text(subLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
+                              title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(subLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
+                            // ignore: unrelated_type_equality_checks
+                            (subLocationDraft[index]!=null)?Text("${subLocationDraft[index]} Activities ( ${subLocationCount[index]} drafts )    ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
+                            ]),
                               children: [
                               ListView.builder(
                                 key: Key(selectedIndex2.toString()),
@@ -254,7 +283,12 @@ class _CompletedSiteProgressState extends State<CompletedSiteProgress> {
                                    queryParams:{"cID":clientIDController.text,"pID":projectIDController.text,"locID":locationIDController.text.toString(),"subLocID":subLocationIDController.text.toString(),"subSubLocID":subSubLocationID[index]!,"loc":locationNameController.text,"subLoc":subLocationNameController.text,"subSubLoc":subSubLocationName[index]!}
                                   );
                                 },
-                                child: Text(subSubLocationName[index]!,style: textStyleHeadline3.copyWith(color: AppColors.white,fontSize: 14,fontWeight: FontWeight.normal),),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                  Text(subSubLocationName[index]!,style: textStyleHeadline4.copyWith(color: AppColors.white,fontSize: 16,fontWeight: FontWeight.normal),),
+                                  subSubLocationCount[index]!=null?Text("${subSubLocationCount[index]} Activities ( ${subSubLocationDraft[index]} drafts )    ",style: textStyleBodyText3.copyWith(color: AppColors.white,fontWeight: FontWeight.w300,fontSize: 12),):const Text("")
+                                  ]),
                                 ),
                               )
                             )

@@ -35,6 +35,8 @@ class CompletedProgressData {
   String? updatedAt;
   int? createdBy;
   int? updatedBy;
+  int? count;
+  int? draftCount;
 
   CompletedProgressData(
       {this.locationId,
@@ -44,7 +46,9 @@ class CompletedProgressData {
       this.createdAt,
       this.updatedAt,
       this.createdBy,
-      this.updatedBy});
+      this.updatedBy,
+      this.count,
+      this.draftCount});
 
   CompletedProgressData.fromJson(Map<String, dynamic> json) {
     locationId = json['location_id'];
@@ -55,6 +59,8 @@ class CompletedProgressData {
     updatedAt = json['updated_at'];
     createdBy = json['created_by'];
     updatedBy = json['updated_by'];
+     count = json['count'];
+    draftCount = json['draft_count'];
   }
 
   Map<String, dynamic> toJson() {

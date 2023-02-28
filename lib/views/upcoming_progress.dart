@@ -35,6 +35,10 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
   List<String?> locationName=[];
   List<String?> subLocationName=[];
   List<String?> subSubLocationName=[];
+  final pwrContractorId=TextEditingController();
+  final pwrContractorName=TextEditingController();
+  final previousContractorId=TextEditingController();
+  final previousContractorName=TextEditingController();
   List<String?> dueDates=[];
   List<String?> createdDates=[];
   List<String?> remark=[];
@@ -178,6 +182,20 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                 onPressed: () async {
                                                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                                                   var tokenValue=sharedPreferences.getString('token');
+                                                    var res3=await http.get(
+                                                        Uri.parse('${Config.getPwrClientList}${list1[index].linkingActivityId}/${list1[index].clientId}/${list1[index].projectId}'),
+                                                        headers: {
+                                                          "Content-Type": "application/json",
+                                                          "Accept": "application/json",
+                                                          "Authorization": "Bearer $tokenValue",
+                                                        }
+                                                      );
+                                                    if(res3.body.isNotEmpty){ 
+                                                      if(jsonDecode(res3.body)['success']==true){
+                                                        pwrContractorName.text=jsonDecode(res3.body)['data'][0]['contractor_name'];
+                                                        pwrContractorId.text=(jsonDecode(res3.body)['data'][0]['Pid']).toString();
+                                                      }
+                                                    }
                                                   var res=await http.get(
                                                         Uri.parse('${Config.getCheckActivityStart}${list1[index].activityId}/${list1[index].linkingActivityId}'),
                                                         headers: {
@@ -211,7 +229,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                       "Accept": "application/json",
                                                       "Authorization": "Bearer $tokenValue",
                                                       },
-                                                    body: jsonEncode([data])
+                                                    body:jsonEncode(data)
                                                   );
                                                 var projectID=sharedPreferences.getString('projectIdd');
                                                 var clientID=sharedPreferences.getString('client_id');
@@ -227,7 +245,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                     "link_activity_id": list1[index].linkingActivityId,
                                                     "achived_quantity": "",
                                                     "total_quantity": list1[index].quantity,
-                                                    "contractor_id": "",
+                                                    "contractor_id": pwrContractorId.text.isNotEmpty? int.parse(pwrContractorId.text):"",
                                                     "remarks": "",
                                                     "progress_percentage": "",
                                                     "debet_contactor":"",
@@ -250,7 +268,7 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                                     "save_type": "save",
                                                     "progressDetails": [
                                                         {
-                                                            "contractor_id": "",
+                                                            "contractor_id": pwrContractorId.text.isNotEmpty? int.parse(pwrContractorId.text):"",
                                                             "labours": [],
                                                             "contractorLabourDetails": [
                                                                 {
@@ -378,11 +396,11 @@ class _UpcomingProgressState extends State<UpcomingProgress> {
                                     border: Border.all(width: 0.5),
                                     borderRadius: BorderRadius.circular(4),
                                    ), 
-                                    child:Center(child: Text(' ${list1[index].activity!} ${list1[index].activityHead!}',
+                                    child:Center(child: Text(' ${list1[index].activityHead!} ${list1[index].activity!}',
                                     style: textStyleHeadline4.copyWith(fontSize: 14,color: AppColors.white),),),),
                                     const SizedBox(height: 10,),
                                     Center(child:Text('${list1[index].locationName!} / ${list1[index].subLocationName!} / ${list1[index].subSubLocationName!}',style: textStyleBodyText2),),
-                                    Center(child:Text(list1[index].contractorName??"No Contractor",style: textStyleBodyText2,),),
+                                    Center(child:Text(list1[index].contractorName??"No Contractor", style: textStyleBodyText2,),),
                                     Container(width: 200, 
                                     decoration:BoxDecoration(
                                     color:list1[index].startTrigger!=null?const Color.fromARGB(255, 6, 203, 6):Colors.grey,

@@ -60,6 +60,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
   Map<String, List<String>> labourNames = {};
   Map<String, List<String>> labourCounts = {};
   final debitToController=TextEditingController(); 
+  TextEditingController networkImage=TextEditingController();
   var _sliderValue=0.0;
   bool? update=false;
   List<String> contractorList=["Select Contractor Name"];
@@ -87,6 +88,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
     quantityController.text=widget.editModel?.totalQuantity.toString()??"";
     debitToController.text=widget.editModel?.debetContactor.toString()??"";
     uomName.text=widget.editModel?.uomName??"";
+    networkImage.text=widget.editModel.fileName??"";
     achivedQuantity.text=widget.editModel?.achivedQuantity.toDouble().toString()??"";
     comulativeQuantity.text=widget.editModel?.cumulativeQuantity.toDouble().toString()??"";
     _sliderValue=double.parse(widget.editModel?.progressPercentage.toString()??"0.0");
@@ -128,7 +130,7 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
       if(jsonDecode(res2.body)['data2']!=null){
       for(int i=0;i<jsonDecode(res2.body)['data2'].length;i++){
         _controllers3.add(TextEditingController(text:jsonDecode(res2.body)['data2'][i]['labour_count']!=null?jsonDecode(res2.body)['data2'][i]['labour_count'].toString():"0"));
-        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled $i");
+        trade.add(jsonDecode(res2.body)['data2'][i]['trade'] ?? "Unskilled");
       } 
       }
     }
@@ -618,6 +620,15 @@ class _ProgressState extends State<GetCompletedSiteProgress> {
           ),
           ])
             ),
+          if(networkImage.text.isNotEmpty)
+            Container(
+              margin:const EdgeInsets.only(top: 20),
+              child: 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Image.network('https://nodejs.hackerkernel.com/colab${networkImage.text}',height: 200,width: 100,),
+            ],),),
             if(_selectedImage != null)
             Container(
               margin:const EdgeInsets.only(top: 20),

@@ -32,6 +32,10 @@ class OnGoingCompletedData {
   String? locationName;
   String? subLocationName;
   String? subSubLocationName;
+  num? locationID;
+  num? subLocationID;
+  num? subSubLocationID;
+  String? fileName;
   String? activity;
   String? activityHead;
   String? uomName;
@@ -66,6 +70,10 @@ class OnGoingCompletedData {
       this.locationName,
       this.subLocationName,
       this.subSubLocationName,
+      this.locationID,
+      this.subLocationID,
+      this.subSubLocationID,
+      this.fileName,
       this.activity,
       this.activityHead,
       this.uomName,
@@ -99,6 +107,10 @@ class OnGoingCompletedData {
     locationName = json['location_name'];
     subLocationName = json['sub_location_name'];
     subSubLocationName = json['sub_sub_location_name'];
+    locationID = json['location_id'];
+    subLocationID = json['sub_loc_id'];
+    subSubLocationID = json['sub_location_id'];
+    fileName=json['file_name'];
     activity = json['activity'];
     activityHead = json['activity_head'];
     uomName = json['uom_name'];

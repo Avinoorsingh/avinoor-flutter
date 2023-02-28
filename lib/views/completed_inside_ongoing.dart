@@ -50,6 +50,9 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
   List<String?> subSubLocationName=[];
   List<String?> contractorName=[];
   List<String?> checkListAvail=[];
+  List<num?> draftStatus=[];
+  List<num?> checkStatus=[];
+  List<num?> cmID=[];
   List<int?> subSubLocationCount=[];
   List<int?> subSubLocationDraft=[];
   List<String?> plannedDates=[];
@@ -132,7 +135,10 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
             percentage.add(list1[i].progressPercentage);
             uomName.add(list1[i].uomName??"");
             finishDates.add(list1[i].updatedAt.toString());
+            draftStatus.add(list1[i].draftStatus);
             editModel.add(list1[i]);
+            checkStatus.add(list1[i].checkStatus);
+            cmID.add(list1[i].cmId??0);
           }
      }
     EasyLoading.dismiss();
@@ -144,18 +150,6 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
     ListView(
       controller: scrollController,
       children: [
-      //    CustomContainer3(child: 
-      //       Column(children: [
-      //         Center(child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //           Center(child: Text("${locationController.text} / ${subLocationController.text} / ${subSubLocationController.text}",style: textStyleBodyText1.copyWith(color: AppColors.white,))),
-      //           ]
-      //         )
-      //       )
-      //     ]
-      //   )
-      // ),
             Padding(padding: const EdgeInsets.only(top: 60),
             child:
             ListView.builder(
@@ -217,7 +211,7 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
                           Container(
                             width: 90,
                             height: 5,
-                            color: Colors.grey,
+                            color:draftStatus[index]==1?Colors.green:Colors.grey,
                           ),
                           Container(
                             width: 90,
@@ -406,230 +400,19 @@ class _OnProgressState extends State<CompletedInsideOngoing> {
           child: Center(
         child:Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color:((cmID[index] != null && triggerID[index] == 1 && (checkStatus[index]==null||checkStatus[index]==0)))?AppColors.primary:Colors.grey,
               borderRadius: BorderRadius.circular(10),
             ),
             width:250,
             height: 30,
             margin: const EdgeInsets.only(top: 0,bottom: 0),
-            child: Center(child: Text(triggerID[index]!=0?"Checklist Closed":"Checklist NA",style: textStyleBodyText1.copyWith(color: AppColors.white),
+            child: Center(child: Text((cmID[index] != null && triggerID[index] == 1) ?  checkStatus[index] == null ?  "Checklist New" : checkStatus[index] == 0 ? "Checklist Open" : checkStatus[index] == 1 ? "Checklist Closed" : "Checklist NA":"Checklist NA", style: textStyleBodyText1.copyWith(color: AppColors.white),
             )
           )
         ),
           )
         )
       ]);
-//       Card(
-//                         shape: RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(5.0),
-//                         ),
-//                       child:
-//                       ClipRRect(
-//                       borderRadius: BorderRadius.circular(5.0),
-//                       child: 
-//                         ExpansionTile(
-//                         tilePadding:const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
-//                         collapsedBackgroundColor: AppColors.navyblue,
-//                         collapsedIconColor: Colors.transparent,
-//                         iconColor: Colors.transparent,
-//                         backgroundColor: AppColors.navyblue,
-//                         collapsedTextColor: AppColors.black,
-//                         trailing: null,
-//                         title:
-//                         Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                         Container(
-//                         height: 30,
-//                         margin: const EdgeInsets.only(left: 10,right: 10),
-//                         padding:const EdgeInsets.symmetric(vertical: 0),
-//                         color:AppColors.primary,
-//                         child:
-//                         Row(children: [
-//                         Text(' ${activityHead[index]} ${activity[index]}                  ',
-//                         style: textStyleBodyText1.copyWith(color: AppColors.black),
-//                         overflow: TextOverflow.ellipsis,),
-//                         ])),
-//                         Container(
-//                           margin:const EdgeInsets.only(right: 10),
-//                           child: 
-//                         Text("100%",style: textStyleBodyText1.copyWith(color:AppColors.white,fontSize: 18),),
-//                         ),
-//                         ]),
-//                         subtitle:
-//                         Column(
-//                           mainAxisAlignment: MainAxisAlignment.end,
-//                           children: [
-//                         Center(
-//                           child: 
-//                         Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                         Column(
-//                           crossAxisAlignment: CrossAxisAlignment.center,
-//                           children:[
-//                             Text("",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-//                             Text("${locationName[index]} / ${subLocationName[index]} / ${subSubLocationName[index]}",style: textStyleBodyText2.copyWith(color: AppColors.white),),
-//                             Text(contractorName[index]!=null?"Contractor Available":"Contractor Not Available",style: textStyleBodyText2.copyWith(color: AppColors.white),)
-//                           ],
-//                           ),
-//                           ]),
-//                           ),
-//                             const SizedBox(height: 10,),
-//                             Container(
-//                               width: double.infinity,
-//                               margin: const EdgeInsets.only(top: 0,bottom: 0),
-//                               padding:const EdgeInsets.symmetric(vertical: 0),
-//                               color: Colors.grey,
-//                               child: Center(child: Text("CheckList NA", style: textStyleBodyText2.copyWith(color: AppColors.black),)),)
-//                             ]),
-//                             children: [
-//                               InkWell(
-//                                 onTap: (){ 
-//                                   context.pushNamed('GETCOMPLETEDPROGRESSENTRY', extra: editModel[index]);
-//                                 },
-//                                 child:
-//                             Column(children: [
-//                               Container(
-//                                 padding:const EdgeInsets.only(left: 20, right: 20),
-//                                 color:AppColors.lightGrey,
-//                                 child: 
-//                             Column(
-//                               children: [
-//                                 const Text(""),
-//                                 Row(
-//                                   children: [Text("Quantity- 20 MT / 80 MT", style: textStyleBodyText1.copyWith(fontSize: 14),)],
-//                                 ),
-//                               ])
-//                             ),
-//                             Container(
-//                               padding:const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-//                               color:AppColors.lightGrey,
-//                                 child: 
-//                                 Column(
-//                                   children: [
-//                                     Row(
-//                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                       Column(
-//                                         mainAxisAlignment: MainAxisAlignment.start,
-//                                         children: [
-//                                         Text("Productivity",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("Rs. 600 / MT",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                       Column(
-//                                         mainAxisAlignment: MainAxisAlignment.start,
-//                                         children: [
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                       Column(
-//                                         mainAxisAlignment: MainAxisAlignment.start,
-//                                         children: [
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                       Column(
-//                                         mainAxisAlignment: MainAxisAlignment.start,
-//                                         children: [
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                       Column(
-//                                         crossAxisAlignment: CrossAxisAlignment.start,
-//                                         children: [
-//                                         Text("Material consum.",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("40%",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                         Column(
-//                                         mainAxisAlignment: MainAxisAlignment.start,
-//                                         children: [
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),),
-//                                         Text("",style: textStyleBodyText1.copyWith(fontSize: 14),)
-//                                       ],),
-//                                     ],),
-//                                   ]
-//                                 )
-//                               ),
-//                                 Container(
-//                                     padding:const EdgeInsets.only(left: 20,right: 20,top: 10),
-//                                     color:AppColors.lightGrey,
-//                                     child: 
-//                                 Column(
-//                                   children: [
-//                                     Row(
-//                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                       Column(
-//                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                                         children: [
-//                                         Row(
-//                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                                         children: [
-//                                         Column(
-//                                         crossAxisAlignment: CrossAxisAlignment.start,
-//                                         children: [
-//                                         Text("Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-//                                         Text("20 dec - 21",style: textStyleBodyText2.copyWith(fontSize: 12),),
-//                                         Text("PL Start",style: textStyleBodyText2.copyWith(fontSize: 12),),
-//                                         Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-//                                         ]),
-//                                         ]),
-//                                       ],),
-//                                     Column(
-//                                       children: [
-//                                         Container(
-//                                           height: 20,
-//                                           width: 20,
-//                                           color: Colors.deepOrangeAccent,
-//                                           child:Center(child:FittedBox(child:Text("-10",style: textStyleBodyText4.copyWith(color: AppColors.white),)),))],),
-//                                     Column(
-//                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                         Row(
-//                                           mainAxisAlignment: MainAxisAlignment.start,
-//                                           children: [
-//                                         Column(
-//                                           crossAxisAlignment: CrossAxisAlignment.start,
-//                                           children: [
-//                                         Text("Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-//                                         Text("20 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),),
-//                                         Text("PL Start",style:textStyleBodyText1.copyWith(fontSize: 12),),
-//                                         Text("22 dec - 21",style: textStyleBodyText1.copyWith(fontSize: 12),)
-//                                         ]
-//                                       ),
-//                                     ]
-//                                   ),
-//                                 ],
-//                               ),
-//                             Column(children: [
-//                               Container(
-//                                 height: 20,
-//                                 width: 20,
-//                                 color: Colors.greenAccent,
-//                                 child:Center(child:
-//                                 FittedBox(child: 
-//                                 Text("+26",
-//                                 style: textStyleBodyText4.copyWith(
-//                                   color: AppColors.white),
-//                                 )
-//                               ),
-//                             )
-//                           )
-//                         ],
-//                       ),
-//                     ],
-//                     ),
-//                   ],
-//                 )
-//               )
-//             ]
-//           )
-//         )
-//       ]
-//     )
-//   )
-// );
 }
 )
 )

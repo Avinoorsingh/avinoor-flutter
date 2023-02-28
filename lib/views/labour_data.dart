@@ -238,7 +238,7 @@ class _LabourState extends State<LabourData> {
                     ));
                     }
                   )
-        ):Center(child:Container(margin:const EdgeInsets.only(top: 100), child: Text("No data Available for this date.",style: textStyleBodyText3,),),),
+        ):Center(child:Container(margin:const EdgeInsets.only(top: 100), child: Text("No data Available for this date.", style: textStyleBodyText3,),),),
       ],
     )),
     floatingActionButton: FloatingActionButton(
